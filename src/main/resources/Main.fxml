@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-font-family: Arial;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <HBox spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox>
+               <children>
+                  <Label text="Monatlich" />
+                  <TableView fx:id="monthlyTable">
+                    <columns>
+                      <TableColumn fx:id="monthlyPositionCol" prefWidth="75.0" text="Position" />
+                      <TableColumn fx:id="monthlyValueCol" prefWidth="75.0" text="Ausgabe" />
+                        <TableColumn fx:id="monthlyTypeCol" prefWidth="75.0" text="Art" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+                  <Label text="Summe: 32,68 €" />
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label text="Diesen Monat" />
+                  <TableView>
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="Position" />
+                      <TableColumn prefWidth="75.0" text="Ausgabe" />
+                        <TableColumn prefWidth="75.0" text="Art" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+                  <Label text="Summe: 30,00 €" />
+                  <Label text="Gesamt: 62,68 €" />
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label text="Nächsten Monat" />
+                  <TableView>
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="Position" />
+                      <TableColumn prefWidth="75.0" text="Ausgabe" />
+                        <TableColumn prefWidth="75.0" text="Art" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+                  <Label text="Summe: 30,00 €" />
+                  <Label text="Gesamt: 62,68 €" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </center>
+</BorderPane>
