@@ -17,15 +17,15 @@ public class ExpenseAdapter {
         this.type = JavaBeanStringPropertyBuilder.create().bean(expense).name("type").build();
     }
 
-    public String getPosition() {
-        return position.get();
+    public StringProperty positionProperty() {
+        return this.position;
     }
 
-    public double getValue() {
-        return value.get();
+    public DoubleProperty valueProperty() {
+        return this.value;
     }
 
-    public String getType() {
-        return type.get();
+    public StringProperty typeProperty() {
+        return this.type;
     }
 }

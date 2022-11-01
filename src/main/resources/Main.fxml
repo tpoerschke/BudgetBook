@@ -14,7 +14,7 @@
             <VBox>
                <children>
                   <Label text="Monatlich" />
-                  <TableView fx:id="monthlyTable" prefWidth="320.0">
+                  <TableView fx:id="monthlyTable" editable="true" prefWidth="320.0">
                     <columns>
                       <TableColumn fx:id="monthlyPositionCol" prefWidth="120.0" resizable="false" text="Position" />
                       <TableColumn fx:id="monthlyValueCol" prefWidth="75.0" resizable="false" text="Ausgabe" />

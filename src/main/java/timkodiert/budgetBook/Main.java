@@ -20,7 +20,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
 
 /**
  * Hello world!
@@ -29,7 +32,9 @@ import javafx.stage.Stage;
 public class Main extends Application implements Initializable {
 
     @FXML
-    private TableColumn monthlyPositionCol, monthlyValueCol, monthlyTypeCol;
+    private TableColumn<ExpenseAdapter, String> monthlyPositionCol, monthlyTypeCol;
+    @FXML
+    private TableColumn<ExpenseAdapter, Double> monthlyValueCol;
     @FXML
     private TableView monthlyTable;
 
@@ -51,15 +56,17 @@ public class Main extends Application implements Initializable {
             new Expense(2, "Weitere Ausgabe", 4.99, "jährlich")
         );
 
-        expenses.get(0).setPosition("TEST");
-
         final ObservableList<ExpenseAdapter> data = FXCollections.observableArrayList(expenses.get(0).getAdapter(), expenses.get(1).getAdapter());
 
         monthlyPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
+        monthlyPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("value"));
+        monthlyValueCol.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         monthlyTypeCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("type"));
 
         monthlyTable.getItems().addAll(data);
+
+        expenses.get(0).setPosition("TEST");
 
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure() // configures settings from hibernate.cfg.xml
