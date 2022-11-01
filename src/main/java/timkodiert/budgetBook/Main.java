@@ -1,7 +1,14 @@
 package timkodiert.budgetBook;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -24,7 +31,7 @@ public class Main extends Application implements Initializable {
     @FXML
     private TableColumn monthlyPositionCol, monthlyValueCol, monthlyTypeCol;
     @FXML
-    private TableView monthlyTable; 
+    private TableView monthlyTable;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -39,16 +46,40 @@ public class Main extends Application implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        final ObservableList<Expense> data = FXCollections.observableArrayList(
-            new Expense("Netflix", 7.00, "monatlich"),
-            new Expense("Weitere Ausgabe", 4.99, "jährlich")
+        List<Expense> expenses = List.of(
+            new Expense(1, "Netflix", 7.00, "monatlich"),
+            new Expense(2, "Weitere Ausgabe", 4.99, "jährlich")
         );
 
-        monthlyPositionCol.setCellValueFactory(new PropertyValueFactory<Expense, String>("position"));
-        monthlyValueCol.setCellValueFactory(new PropertyValueFactory<Expense, Double>("value"));
-        monthlyTypeCol.setCellValueFactory(new PropertyValueFactory<Expense, String>("type"));
+        expenses.get(0).setPosition("TEST");
+
+        final ObservableList<ExpenseAdapter> data = FXCollections.observableArrayList(expenses.get(0).getAdapter(), expenses.get(1).getAdapter());
+
+        monthlyPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
+        monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("value"));
+        monthlyTypeCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("type"));
 
         monthlyTable.getItems().addAll(data);
+
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                .configure() // configures settings from hibernate.cfg.xml
+                .build();
+
+        try {
+            SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.persist(expenses.get(0));
+            session.persist(expenses.get(1));
+            session.getTransaction().commit();
+            session.close();
+        } catch (Exception e) {
+            // The registry would be destroyed by the SessionFactory, but we had trouble
+            // building the SessionFactory
+            // so destroy it manually.
+            e.printStackTrace();
+            StandardServiceRegistryBuilder.destroy(registry);
+        }
     }
 
     public static void main(String[] args) {

@@ -14,11 +14,11 @@
             <VBox>
                <children>
                   <Label text="Monatlich" />
-                  <TableView fx:id="monthlyTable">
+                  <TableView fx:id="monthlyTable" prefWidth="320.0">
                     <columns>
-                      <TableColumn fx:id="monthlyPositionCol" prefWidth="75.0" text="Position" />
-                      <TableColumn fx:id="monthlyValueCol" prefWidth="75.0" text="Ausgabe" />
-                        <TableColumn fx:id="monthlyTypeCol" prefWidth="75.0" text="Art" />
+                      <TableColumn fx:id="monthlyPositionCol" prefWidth="120.0" resizable="false" text="Position" />
+                      <TableColumn fx:id="monthlyValueCol" prefWidth="75.0" resizable="false" text="Ausgabe" />
+                        <TableColumn fx:id="monthlyTypeCol" prefWidth="120.0" resizable="false" text="Art" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -30,7 +30,7 @@
             <VBox>
                <children>
                   <Label text="Diesen Monat" />
-                  <TableView>
+                  <TableView prefWidth="320.0">
                     <columns>
                       <TableColumn prefWidth="75.0" text="Position" />
                       <TableColumn prefWidth="75.0" text="Ausgabe" />
@@ -47,7 +47,7 @@
             <VBox>
                <children>
                   <Label text="Nächsten Monat" />
-                  <TableView>
+                  <TableView prefWidth="320.0">
                     <columns>
                       <TableColumn prefWidth="75.0" text="Position" />
                       <TableColumn prefWidth="75.0" text="Ausgabe" />
