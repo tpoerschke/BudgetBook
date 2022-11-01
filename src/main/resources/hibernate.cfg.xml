@@ -29,7 +29,8 @@
         <property name="hbm2ddl.auto">create</property>
 
         <!-- Names the annotated entity class -->
-        <mapping class="timkodiert.budgetBook.Expense"/>
+        <mapping class="timkodiert.budgetBook.domain.model.Expense"/>
+        <mapping class="timkodiert.budgetBook.domain.model.FixedExpense"/>
 
     </session-factory>
 

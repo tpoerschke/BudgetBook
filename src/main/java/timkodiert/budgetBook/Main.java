@@ -1,6 +1,7 @@
 package timkodiert.budgetBook;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -22,8 +23,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
+import timkodiert.budgetBook.domain.model.Expense;
+import timkodiert.budgetBook.domain.model.ExpenseAdapter;
+import timkodiert.budgetBook.domain.model.FixedExpense;
 
 /**
  * Hello world!
@@ -52,8 +55,8 @@ public class Main extends Application implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         List<Expense> expenses = List.of(
-            new Expense(1, "Netflix", 7.00, "monatlich"),
-            new Expense(2, "Weitere Ausgabe", 4.99, "jährlich")
+            new FixedExpense(1, "Netflix", 7.00, "monatlich", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)),
+            new FixedExpense(2, "Weitere Ausgabe", 4.99, "halbjährlich", List.of(2, 7))
         );
 
         final ObservableList<ExpenseAdapter> data = FXCollections.observableArrayList(expenses.get(0).getAdapter(), expenses.get(1).getAdapter());
