@@ -1,5 +1,6 @@
 package timkodiert.budgetBook;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -89,6 +91,20 @@ public class Main extends Application implements Initializable {
             // so destroy it manually.
             e.printStackTrace();
             StandardServiceRegistryBuilder.destroy(registry);
+        }
+
+        try {
+            Stage stage = new Stage();
+            // Das Template laden
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/NewExpense.fxml"));
+            Parent parent = (Parent)loader.load();
+            
+            Scene scene = new Scene(parent, 600, 600);
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch(IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
