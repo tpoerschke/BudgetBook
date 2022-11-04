@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-font-family: Arial;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
@@ -13,32 +17,51 @@
          <children>
             <VBox>
                <children>
-                  <Label text="Monatlich" />
+                  <Label style="-fx-font-weight: bold;" text="Monatlich" />
                   <TableView fx:id="monthlyTable" editable="true" prefWidth="320.0">
                     <columns>
-                      <TableColumn fx:id="monthlyPositionCol" prefWidth="120.0" resizable="false" text="Position" />
-                      <TableColumn fx:id="monthlyValueCol" prefWidth="75.0" resizable="false" text="Ausgabe" />
-                        <TableColumn fx:id="monthlyTypeCol" prefWidth="120.0" resizable="false" text="Art" />
+                      <TableColumn fx:id="monthlyPositionCol" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" text="Position" />
+                      <TableColumn fx:id="monthlyValueCol" maxWidth="80.0" minWidth="80.0" resizable="false" text="Ausgabe" />
+                        <TableColumn fx:id="monthlyTypeCol" maxWidth="98.0" minWidth="98.0" prefWidth="98.0" resizable="false" text="Art" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
                   </TableView>
-                  <Label text="Summe: 32,68 €" />
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label fx:id="monthlySumLabel" text="32,68 €" GridPane.columnIndex="1" />
+                        <Label text="Summe:" />
+                     </children>
+                  </GridPane>
                </children>
             </VBox>
             <VBox>
                <children>
-                  <Label text="Diesen Monat" />
+                  <Label style="-fx-font-weight: bold;" text="Diesen Monat" />
                   <TableView prefWidth="320.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="Position" />
-                      <TableColumn prefWidth="75.0" text="Ausgabe" />
-                        <TableColumn prefWidth="75.0" text="Art" />
+                      <TableColumn maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" text="Position" />
+                      <TableColumn maxWidth="80.0" minWidth="80.0" resizable="false" text="Ausgabe" />
+                        <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Art" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
                   </TableView>
                   <Label text="Summe: 30,00 €" />
                   <Label text="Gesamt: 62,68 €" />
@@ -46,22 +69,42 @@
             </VBox>
             <VBox>
                <children>
-                  <Label text="Nächsten Monat" />
-                  <TableView prefWidth="320.0">
+                  <Label style="-fx-font-weight: bold;" text="Nächsten Monat" />
+                  <TableView fx:id="nextMonthTable" editable="true" prefWidth="320.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="Position" />
-                      <TableColumn prefWidth="75.0" text="Ausgabe" />
-                        <TableColumn prefWidth="75.0" text="Art" />
+                      <TableColumn fx:id="nextMonthPositionCol" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" text="Position" />
+                      <TableColumn fx:id="nextMonthValueCol" maxWidth="80.0" minWidth="80.0" resizable="false" text="Ausgabe" />
+                        <TableColumn fx:id="nextMonthTypeCol" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Art" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
                   </TableView>
-                  <Label text="Summe: 30,00 €" />
-                  <Label text="Gesamt: 62,68 €" />
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="30,00 €" GridPane.columnIndex="1" />
+                        <Label text="62,68 €" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Summe:" />
+                        <Label text="Gesamt:" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
                </children>
             </VBox>
          </children>
       </HBox>
    </center>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </BorderPane>
