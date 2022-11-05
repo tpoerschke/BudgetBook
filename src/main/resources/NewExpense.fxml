@@ -62,25 +62,25 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <Label text="1. Monat" />
+                  <Label fx:id="month1Label" text="1. Monat" />
                   <ChoiceBox fx:id="month1ChoiceBox" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </ChoiceBox>
-                  <Label text="2. Monat" />
+                  <Label fx:id="month2Label" text="2. Monat" />
                   <ChoiceBox fx:id="month2ChoiceBox" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </ChoiceBox>
-                  <Label text="3. Monat" />
+                  <Label fx:id="month3Label" text="3. Monat" />
                   <ChoiceBox fx:id="month3ChoiceBox" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </ChoiceBox>
-                  <Label text="4. Monat" />
+                  <Label fx:id="month4Label" text="4. Monat" />
                   <ChoiceBox fx:id="month4ChoiceBox" prefWidth="150.0" />
                </children>
             </VBox>
