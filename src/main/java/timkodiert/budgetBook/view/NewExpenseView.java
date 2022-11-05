@@ -6,13 +6,16 @@ import java.util.ResourceBundle;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class NewExpenseView implements Initializable {
 
@@ -57,6 +60,11 @@ public class NewExpenseView implements Initializable {
             }
         });
         typeChoiceBox.getSelectionModel().select(0);
+    }
+
+    @FXML
+    private void closeWindow(ActionEvent e) {
+        ((Stage)((Button)e.getSource()).getScene().getWindow()).close();
     }
 
     private void manageChoiceBoxes(List<Control> elementsToShow, List<Control> elementsToHide) {

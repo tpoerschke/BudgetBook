@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.NewExpenseView">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.NewExpenseView">
    <center>
       <GridPane hgap="30.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -41,7 +41,7 @@
                         <TextField fx:id="valueTextField" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="180.0" />
                         <Label text="€">
                            <padding>
-                              <Insets left="5.0" top="5.0" />
+                              <Insets left="5.0" top="8.0" />
                            </padding>
                         </Label>
                      </children>
@@ -88,9 +88,9 @@
       </GridPane>
    </center>
    <bottom>
-      <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
+      <HBox alignment="BOTTOM_RIGHT" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Abbrechen" />
+            <Button mnemonicParsing="false" onAction="#closeWindow" text="Abbrechen" />
             <Button mnemonicParsing="false" text="Speichern" />
          </children>
          <padding>

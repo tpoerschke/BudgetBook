@@ -128,7 +128,7 @@ public class Main extends Application implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/NewExpense.fxml"));
             Parent parent = (Parent) loader.load();
 
-            Scene scene = new Scene(parent, 600, 600);
+            Scene scene = new Scene(parent);
             stage.setScene(scene);
             stage.show();
         } catch (IOException ioe) {
