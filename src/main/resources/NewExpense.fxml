@@ -14,8 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-font-family: Arial;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.NewExpenseView">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.NewExpenseView">
    <center>
       <GridPane hgap="30.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -31,7 +30,7 @@
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Label text="Position" />
-                  <TextField maxWidth="1.7976931348623157E308" />
+                  <TextField fx:id="positionTextField" maxWidth="1.7976931348623157E308" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
@@ -39,7 +38,7 @@
                   <Label text="Höhe" />
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <TextField maxWidth="-Infinity" minWidth="-Infinity" prefWidth="180.0" />
+                        <TextField fx:id="valueTextField" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="180.0" />
                         <Label text="€">
                            <padding>
                               <Insets left="5.0" top="5.0" />
@@ -52,37 +51,37 @@
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
                <children>
                   <Label text="Anmerkung" />
-                  <TextArea maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="180.0" />
+                  <TextArea fx:id="noteTextField" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="180.0" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Label text="Typ" />
-                  <ChoiceBox prefWidth="150.0" />
+                  <ChoiceBox fx:id="typeChoiceBox" prefWidth="150.0" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
                   <Label text="1. Monat" />
-                  <ChoiceBox prefWidth="150.0">
+                  <ChoiceBox fx:id="month1ChoiceBox" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </ChoiceBox>
                   <Label text="2. Monat" />
-                  <ChoiceBox prefWidth="150.0">
+                  <ChoiceBox fx:id="month2ChoiceBox" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </ChoiceBox>
                   <Label text="3. Monat" />
-                  <ChoiceBox prefWidth="150.0">
+                  <ChoiceBox fx:id="month3ChoiceBox" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </ChoiceBox>
                   <Label text="4. Monat" />
-                  <ChoiceBox prefWidth="150.0" />
+                  <ChoiceBox fx:id="month4ChoiceBox" prefWidth="150.0" />
                </children>
             </VBox>
          </children>
