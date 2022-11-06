@@ -18,8 +18,8 @@ public class FixedExpense extends Expense {
     @Setter
     private List<Integer> datesOfPayment; // Enthält zunächst nur die Monate, in denen zu zahlen ist
     
-    public FixedExpense(int id, String position, double value, String type, List<Integer> datesOfPayment) {
-        super(id, position, value);
+    public FixedExpense(String position, double value, String type, List<Integer> datesOfPayment) {
+        super(position, value);
         this.type = type;
         this.datesOfPayment = datesOfPayment;
 

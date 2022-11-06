@@ -78,8 +78,8 @@ public class Main extends Application implements Initializable {
         nextMonthTypeCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("type"));
 
         List<FixedExpense> expenses = List.of(
-            new FixedExpense(1, "Netflix", 7.00, "monatlich", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)),
-            new FixedExpense(2, "Weitere Ausgabe", 4.99, "halbjährlich", List.of(6, 12))
+            new FixedExpense("Netflix", 7.00, "monatlich", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)),
+            new FixedExpense("Weitere Ausgabe", 4.99, "halbjährlich", List.of(6, 12))
         );
 
         // Monatliche Ausgaben anzeigen

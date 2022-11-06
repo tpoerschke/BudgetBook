@@ -1,32 +1,35 @@
 package timkodiert.budgetBook.domain.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
 // Das Model
+@Getter
 @Entity
 public abstract class Expense {
 
-    @Getter
     @Id
-    protected final int id;
+    @GeneratedValue(generator="increment")
+    @GenericGenerator(name="increment", strategy = "increment")
+    protected int id;
 
-    @Getter
     @Setter
     protected String position;
-    @Getter
     @Setter
     protected double value;
+    @Setter
+    protected String note;
 
-    @Getter
     @Transient
     protected ExpenseAdapter adapter;
 
-    public Expense(int id, String position, double value) {
-        this.id = id;
+    public Expense(String position, double value) {
         this.position = position;
         this.value = value;
     }
