@@ -1,7 +1,9 @@
 package timkodiert.budgetBook.view;
 
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ObservableValue;
@@ -15,7 +17,9 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
+import javafx.util.converter.CurrencyStringConverter;
 
 public class NewExpenseView implements Initializable {
 
@@ -34,6 +38,10 @@ public class NewExpenseView implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        // ValueTextField initialisieren
+        valueTextField.setTextFormatter(new TextFormatter<>(new CurrencyStringConverter(NumberFormat.getInstance(Locale.GERMAN))));
+
+        // Monatsauswahlen initialisieren
         List<String> monthList = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
         month1ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
         month2ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
@@ -60,6 +68,13 @@ public class NewExpenseView implements Initializable {
             }
         });
         typeChoiceBox.getSelectionModel().select(0);
+    }
+
+    @FXML
+    private void createNewExpense(ActionEvent e) {
+        String position = positionTextField.getText().trim();
+        if(position.equals("")) {
+        }
     }
 
     @FXML

@@ -92,6 +92,7 @@
 			<version>1.18.24</version>
 			<scope>compile</scope>
 		</dependency>
+		<!-- JavaFX -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -110,6 +111,7 @@
 			<version>18</version>
 			<scope>compile</scope>
 		</dependency>
+		<!-- Databases -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -120,10 +122,27 @@
             <artifactId>h2</artifactId>
             <version>1.4.200</version>
         </dependency>
+		<!-- Theme -->
 		<dependency>
 			<groupId>io.github.mkpaz</groupId>
 			<artifactId>atlantafx-base</artifactId>
 			<version>1.1.0</version>
+		</dependency>
+		<!-- Validation -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>7.0.5.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>jakarta.el</artifactId>
+			<version>4.0.1</version>
 		</dependency>
 	</dependencies>
 </project>

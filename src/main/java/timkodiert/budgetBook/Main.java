@@ -5,8 +5,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,6 +14,10 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import atlantafx.base.theme.PrimerLight;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.metadata.BeanDescriptor;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -134,6 +137,17 @@ public class Main extends Application implements Initializable {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+
+        FixedExpense expense = new FixedExpense(null, -1, null, null);
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<FixedExpense>> violations = validator.validate(expense);
+        for(ConstraintViolation<FixedExpense> v : violations) {
+            System.out.print(v.getInvalidValue() + " / ");
+            System.out.println(v.getMessage());
+        }
+
+        BeanDescriptor bd = validator.getConstraintsForClass(FixedExpense.class);
+        System.out.println(bd);
     }
 
     public static void main(String[] args) {

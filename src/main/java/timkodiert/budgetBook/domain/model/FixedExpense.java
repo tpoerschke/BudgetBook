@@ -1,6 +1,5 @@
 package timkodiert.budgetBook.domain.model;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Entity;
