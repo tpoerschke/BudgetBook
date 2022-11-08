@@ -19,6 +19,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.metadata.BeanDescriptor;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -35,6 +36,7 @@ import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
+import timkodiert.budgetBook.domain.model.ExpenseType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 
 /**
@@ -72,17 +74,17 @@ public class Main extends Application implements Initializable {
         monthlyPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("value"));
         monthlyValueCol.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        monthlyTypeCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("type"));
+        monthlyTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
 
         nextMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         nextMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         nextMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("value"));
         nextMonthValueCol.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        nextMonthTypeCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("type"));
+        nextMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
 
         List<FixedExpense> expenses = List.of(
-            new FixedExpense("Netflix", 7.00, "monatlich", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)),
-            new FixedExpense("Weitere Ausgabe", 4.99, "halbjährlich", List.of(6, 12))
+            new FixedExpense("Netflix", 7.00, ExpenseType.MONTHLY, List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)),
+            new FixedExpense("Weitere Ausgabe", 4.99, ExpenseType.SEMIANNUAL, List.of(6, 12))
         );
 
         // Monatliche Ausgaben anzeigen
@@ -96,7 +98,7 @@ public class Main extends Application implements Initializable {
         int nextMonth = LocalDate.now().plusMonths(1).getMonth().getValue();
         List<FixedExpense> expensesNextMonth = expenses
             .stream()
-            .filter(exp -> exp.getType() != "monatlich")
+            .filter(exp -> !exp.getType().equals(ExpenseType.MONTHLY))
             .filter(exp -> exp.getDatesOfPayment().contains(nextMonth))
             .toList();
 
