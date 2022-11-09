@@ -22,16 +22,20 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 import timkodiert.budgetBook.domain.model.Expense;
@@ -55,10 +59,13 @@ public class Main extends Application implements Initializable {
     @FXML 
     private Label monthlySumLabel;
 
+    private Stage primaryStage;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 
+        this.primaryStage = primaryStage;
         FXMLLoader templateLoader = new FXMLLoader();
         templateLoader.setLocation(getClass().getResource("/Main.fxml"));
         templateLoader.setController(this);
@@ -127,19 +134,6 @@ public class Main extends Application implements Initializable {
             StandardServiceRegistryBuilder.destroy(registry);
         }
 
-        try {
-            Stage stage = new Stage();
-            // Das Template laden
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/NewExpense.fxml"));
-            Parent parent = (Parent) loader.load();
-
-            Scene scene = new Scene(parent);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
         FixedExpense expense = new FixedExpense(null, -1, null, null);
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<FixedExpense>> violations = validator.validate(expense);
@@ -154,5 +148,23 @@ public class Main extends Application implements Initializable {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @FXML
+    private void openNewExpenseView(ActionEvent event) {
+        try {
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(this.primaryStage);
+            // Das Template laden
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/NewExpense.fxml"));
+            Parent parent = (Parent)loader.load();
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.show();
+        } catch(Exception e) {
+            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            alert.showAndWait();
+        }
     }
 }
