@@ -5,7 +5,11 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -20,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import javafx.util.converter.CurrencyStringConverter;
+import timkodiert.budgetBook.domain.model.FixedExpense;
 
 public class NewExpenseView implements Initializable {
 
@@ -72,8 +77,22 @@ public class NewExpenseView implements Initializable {
 
     @FXML
     private void createNewExpense(ActionEvent e) {
+        positionTextField.getStyleClass().remove("validation-error");
+        valueTextField.getStyleClass().remove("validation-error");
+
         String position = positionTextField.getText().trim();
-        if(position.equals("")) {
+        double value = Double.parseDouble(valueTextField.getText());
+        FixedExpense newExpense = new FixedExpense(position, value, null, null);
+
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<FixedExpense>> violations = validator.validate(newExpense);
+        if(!violations.isEmpty()) {
+            violations.stream().forEach(violation -> {
+                switch(violation.getPropertyPath().toString()) {
+                    case "position": positionTextField.getStyleClass().add("validation-error"); break;
+                    case "value": valueTextField.getStyleClass().add("validation-error"); break;
+                }
+            });
         }
     }
 

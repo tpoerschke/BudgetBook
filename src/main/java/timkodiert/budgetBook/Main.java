@@ -67,16 +67,16 @@ public class Main extends Application implements Initializable {
 
         this.primaryStage = primaryStage;
         FXMLLoader templateLoader = new FXMLLoader();
-        templateLoader.setLocation(getClass().getResource("/Main.fxml"));
+        templateLoader.setLocation(getClass().getResource("/fxml/Main.fxml"));
         templateLoader.setController(this);
         primaryStage.setScene(new Scene(templateLoader.load()));
-        primaryStage.setTitle("Test");
+        primaryStage.setTitle("Ausgabenübersicht");
         primaryStage.show();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        // TODO: In Klasse MainView auslagern
         monthlyPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         monthlyPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("value"));
@@ -157,7 +157,7 @@ public class Main extends Application implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(this.primaryStage);
             // Das Template laden
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/NewExpense.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/NewExpense.fxml"));
             Parent parent = (Parent)loader.load();
             Scene scene = new Scene(parent);
             stage.setScene(scene);

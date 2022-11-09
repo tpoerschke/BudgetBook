@@ -1,0 +1,4 @@
+.validation-error {
+    -fx-border-color: #f00;
+    -fx-border-radius: 4px;
+}
