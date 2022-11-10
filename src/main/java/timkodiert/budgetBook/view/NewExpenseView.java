@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -24,6 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import javafx.util.converter.CurrencyStringConverter;
+import timkodiert.budgetBook.domain.model.ExpenseType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 
 public class NewExpenseView implements Initializable {
@@ -94,7 +97,19 @@ public class NewExpenseView implements Initializable {
 
         String position = positionTextField.getText().trim();
         double value = Double.parseDouble(valueTextField.getText());
-        FixedExpense newExpense = new FixedExpense(position, value, null, null);
+        List<Integer> datesOfPayment = IntStream.rangeClosed(1, 12).boxed().toList();
+        if(!typeChoiceBox.getSelectionModel().getSelectedItem().equals("monatlich")) {
+            datesOfPayment = List.of(month1ChoiceBox, month2ChoiceBox, month3ChoiceBox, month4ChoiceBox)
+                .stream()
+                .map(box -> box.getSelectionModel().getSelectedIndex())
+                .filter(selectedIndex -> selectedIndex > -1)
+                .map(selectedIndex -> selectedIndex + 1)
+                .toList();
+        }
+
+        ExpenseType type = ExpenseType.fromString(typeChoiceBox.getSelectionModel().getSelectedItem());
+
+        FixedExpense newExpense = new FixedExpense(position, value, type, datesOfPayment);
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<FixedExpense>> violations = validator.validate(newExpense);

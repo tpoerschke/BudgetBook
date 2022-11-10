@@ -19,4 +19,14 @@ public final class ExpenseType {
     @Getter
     @NonNull
     private String type;
+
+    public static ExpenseType fromString(String type) {
+        switch(type) {
+            case "monatlich": return MONTHLY;
+            case "jährlich": return ANNUAL;
+            case "halbjährlich": return SEMIANNUAL;
+            case "vierteljährlich": return QUARTERLY;
+            default: return null;
+        }
+    }
 }
