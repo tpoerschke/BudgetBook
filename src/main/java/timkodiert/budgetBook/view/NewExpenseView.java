@@ -53,6 +53,18 @@ public class NewExpenseView implements Initializable {
         month3ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
         month4ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
 
+        month1ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> obs, Number oldIndex, Number newIndex) -> {
+            int month = newIndex.intValue();
+            if(typeChoiceBox.getSelectionModel().getSelectedItem().equals("halbjährlich")) {
+                month2ChoiceBox.getSelectionModel().select(((month + 6) % 12));
+            }
+            else if(typeChoiceBox.getSelectionModel().getSelectedItem().equals("vierteljährlich")) {
+                month2ChoiceBox.getSelectionModel().select(((month + 3) % 12));
+                month3ChoiceBox.getSelectionModel().select(((month + 6) % 12));
+                month4ChoiceBox.getSelectionModel().select(((month + 9) % 12));
+            }
+        });
+
         List<String> typeList = List.of("monatlich", "jährlich", "halbjährlich", "vierteljährlich");
         typeChoiceBox.getItems().addAll(typeList);
         // Monatsboxen mit ChangeListener ausblenden
