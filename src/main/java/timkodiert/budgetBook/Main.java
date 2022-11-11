@@ -1,17 +1,10 @@
 package timkodiert.budgetBook;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import atlantafx.base.theme.PrimerLight;
 import jakarta.validation.ConstraintViolation;
@@ -42,6 +35,7 @@ import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
 import timkodiert.budgetBook.domain.model.ExpenseType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.util.EntityManager;
 
 /**
  * Hello world!
@@ -114,25 +108,29 @@ public class Main extends Application implements Initializable {
 
         expenses.get(0).setPosition("TEST");
 
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure() // configures settings from hibernate.cfg.xml
-                .build();
+        EntityManager em = EntityManager.getInstance();
+        em.persist(expenses.get(0));
+        em.persist(expenses.get(1));
 
-        try {
-            SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-            Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            session.persist(expenses.get(0));
-            session.persist(expenses.get(1));
-            session.getTransaction().commit();
-            session.close();
-        } catch (Exception e) {
-            // The registry would be destroyed by the SessionFactory, but we had trouble
-            // building the SessionFactory
-            // so destroy it manually.
-            e.printStackTrace();
-            StandardServiceRegistryBuilder.destroy(registry);
-        }
+        // final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+        //         .configure() // configures settings from hibernate.cfg.xml
+        //         .build();
+
+        // try {
+        //     SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        //     Session session = sessionFactory.openSession();
+        //     session.beginTransaction();
+        //     session.persist(expenses.get(0));
+        //     session.persist(expenses.get(1));
+        //     session.getTransaction().commit();
+        //     session.close();
+        // } catch (Exception e) {
+        //     // The registry would be destroyed by the SessionFactory, but we had trouble
+        //     // building the SessionFactory
+        //     // so destroy it manually.
+        //     e.printStackTrace();
+        //     StandardServiceRegistryBuilder.destroy(registry);
+        // }
 
         FixedExpense expense = new FixedExpense(null, -1, null, null);
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -144,6 +142,8 @@ public class Main extends Application implements Initializable {
 
         BeanDescriptor bd = validator.getConstraintsForClass(FixedExpense.class);
         System.out.println(bd);
+
+        this.primaryStage.setOnCloseRequest(windowEvent -> EntityManager.getInstance().closeSession());
     }
 
     public static void main(String[] args) {
