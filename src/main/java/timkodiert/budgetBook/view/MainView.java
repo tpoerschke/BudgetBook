@@ -97,9 +97,7 @@ public class MainView implements Initializable {
         final ObservableList<ExpenseAdapter> nextMonthData = FXCollections.observableArrayList(expensesNextMonth.stream().map(Expense::getAdapter).toList());
         nextMonthTable.getItems().addAll(nextMonthData);
 
-        // TODO: Persist sollte Liste akzeptieren
-        entityManager.persist(expenses.get(0));
-        entityManager.persist(expenses.get(1));
+        entityManager.persist(expenses.toArray());
     }
 
     @FXML

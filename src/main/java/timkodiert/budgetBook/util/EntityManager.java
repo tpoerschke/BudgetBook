@@ -1,5 +1,6 @@
 package timkodiert.budgetBook.util;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -41,11 +42,9 @@ public class EntityManager {
         return this.session.createQuery(criteriaQuery).list();
     }
 
-    public void persist(Object object) {
-        // Im Kontext dieser Applikation wird stets nur
-        // eine Entity (oder wenige) gleichzeitig persistiert
+    public void persist(Object ...objects) {
         this.session.beginTransaction();
-        this.session.persist(object);
+        Arrays.stream(objects).forEach(this.session::persist);
         this.session.getTransaction().commit();
     }
 }
