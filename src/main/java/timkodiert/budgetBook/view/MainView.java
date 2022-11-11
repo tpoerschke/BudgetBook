@@ -45,10 +45,10 @@ public class MainView implements Initializable {
 
     private Stage primaryStage;
 
-    private EntityManager entityManager;
+    private FixedExpenseController fixedExpenseController;
 
     public MainView(Stage primaryStage) throws IOException {
-        this.entityManager = EntityManager.getInstance();
+        this.fixedExpenseController = new FixedExpenseController();
         this.primaryStage = primaryStage;
         this.primaryStage.setOnCloseRequest(windowEvent -> EntityManager.getInstance().closeSession());
 
@@ -74,30 +74,13 @@ public class MainView implements Initializable {
         nextMonthValueCol.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         nextMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
 
-        List<FixedExpense> expenses = List.of(
-            new FixedExpense("Netflix", 7.00, ExpenseType.MONTHLY, List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)),
-            new FixedExpense("Weitere Ausgabe", 4.99, ExpenseType.SEMIANNUAL, List.of(6, 12))
-        );
-
         // Monatliche Ausgaben anzeigen
-        final ObservableList<ExpenseAdapter> data = FXCollections.observableArrayList(expenses.stream().map(Expense::getAdapter).toList());
-        monthlyTable.getItems().addAll(data);
+        monthlyTable.setItems(fixedExpenseController.getMonthlyExpenses());
 
-        double monthlySum = expenses.stream().mapToDouble(Expense::getValue).sum();
-        monthlySumLabel.setText(monthlySum + "€");
+        // double monthlySum = expenses.stream().mapToDouble(Expense::getValue).sum();
+        // monthlySumLabel.setText(monthlySum + "€");
 
-        // Ausgaben des nächsten Monats anzeigen
-        int nextMonth = LocalDate.now().plusMonths(1).getMonth().getValue();
-        List<FixedExpense> expensesNextMonth = expenses
-            .stream()
-            .filter(exp -> !exp.getType().equals(ExpenseType.MONTHLY))
-            .filter(exp -> exp.getDatesOfPayment().contains(nextMonth))
-            .toList();
-
-        final ObservableList<ExpenseAdapter> nextMonthData = FXCollections.observableArrayList(expensesNextMonth.stream().map(Expense::getAdapter).toList());
-        nextMonthTable.getItems().addAll(nextMonthData);
-
-        entityManager.persist(expenses.toArray());
+        nextMonthTable.setItems(fixedExpenseController.getNextMonthExpenses());
     }
 
     @FXML
@@ -120,10 +103,6 @@ public class MainView implements Initializable {
 
     @FXML
     private void reloadData(ActionEvent event) {
-        EntityManager em = EntityManager.getInstance();
-        List<FixedExpense> expenses = em.findAll(FixedExpense.class);
-
-        final ObservableList<ExpenseAdapter> data = FXCollections.observableArrayList(expenses.stream().map(Expense::getAdapter).toList());
-        monthlyTable.getItems().setAll(data);
+        fixedExpenseController.loadAll();
     }
 }

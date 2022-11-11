@@ -10,11 +10,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 // Das Model
 @Getter
 @Entity
+@NoArgsConstructor
 public abstract class Expense {
 
     @Id
@@ -42,4 +44,6 @@ public abstract class Expense {
         this.value = value;
         this.type = type;
     }
+
+    protected abstract void initAdapter();
 }
