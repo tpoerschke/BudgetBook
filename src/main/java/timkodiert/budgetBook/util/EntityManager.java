@@ -1,10 +1,14 @@
 package timkodiert.budgetBook.util;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+
+import jakarta.persistence.criteria.CriteriaQuery;
 
 public class EntityManager {
 
@@ -29,6 +33,12 @@ public class EntityManager {
 
     public void closeSession() {
         this.session.close();
+    }
+
+    public <T> List<T> findAll(Class<T> entityClass) {
+        CriteriaQuery<T> criteriaQuery = this.session.getCriteriaBuilder().createQuery(entityClass);
+        criteriaQuery.from(entityClass);
+        return this.session.createQuery(criteriaQuery).list();
     }
 
     public void persist(Object object) {

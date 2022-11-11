@@ -118,6 +118,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#openNewExpenseView" text="Ausgabe hinzufügen" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Daten">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#reloadData" text="Aktualisieren" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>

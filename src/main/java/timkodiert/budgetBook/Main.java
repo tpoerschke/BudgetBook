@@ -167,4 +167,13 @@ public class Main extends Application implements Initializable {
             alert.showAndWait();
         }
     }
+
+    @FXML
+    private void reloadData(ActionEvent event) {
+        EntityManager em = EntityManager.getInstance();
+        List<FixedExpense> expenses = em.findAll(FixedExpense.class);
+
+        final ObservableList<ExpenseAdapter> data = FXCollections.observableArrayList(expenses.stream().map(Expense::getAdapter).toList());
+        monthlyTable.getItems().setAll(data);
+    }
 }
