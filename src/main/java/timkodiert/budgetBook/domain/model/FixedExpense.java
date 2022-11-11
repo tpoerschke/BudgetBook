@@ -3,6 +3,7 @@ package timkodiert.budgetBook.domain.model;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ public class FixedExpense extends Expense {
 
     @Getter
     @Setter
+    @NotEmpty
     private List<Integer> datesOfPayment; // Enthält zunächst nur die Monate, in denen zu zahlen ist
     
     public FixedExpense(String position, double value, ExpenseType type, List<Integer> datesOfPayment) {

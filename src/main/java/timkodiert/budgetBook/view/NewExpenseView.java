@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
@@ -24,10 +25,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.util.converter.CurrencyStringConverter;
 import timkodiert.budgetBook.domain.model.ExpenseType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.util.EntityManager;
 
 public class NewExpenseView implements Initializable {
 
@@ -94,6 +97,11 @@ public class NewExpenseView implements Initializable {
     private void createNewExpense(ActionEvent e) {
         positionTextField.getStyleClass().remove("validation-error");
         valueTextField.getStyleClass().remove("validation-error");
+        typeChoiceBox.getStyleClass().remove("validation-error");
+        month1ChoiceBox.getStyleClass().remove("validation-error"); 
+        month2ChoiceBox.getStyleClass().remove("validation-error");
+        month3ChoiceBox.getStyleClass().remove("validation-error");
+        month4ChoiceBox.getStyleClass().remove("validation-error");
 
         String position = positionTextField.getText().trim();
         double value = Double.parseDouble(valueTextField.getText());
@@ -118,8 +126,22 @@ public class NewExpenseView implements Initializable {
                 switch(violation.getPropertyPath().toString()) {
                     case "position": positionTextField.getStyleClass().add("validation-error"); break;
                     case "value": valueTextField.getStyleClass().add("validation-error"); break;
+                    case "type": typeChoiceBox.getStyleClass().add("validation-error"); break;
+                    case "datesOfPayment": 
+                        month1ChoiceBox.getStyleClass().add("validation-error"); 
+                        month2ChoiceBox.getStyleClass().add("validation-error");
+                        month3ChoiceBox.getStyleClass().add("validation-error");
+                        month4ChoiceBox.getStyleClass().add("validation-error");
+                        break;
                 }
             });
+        }
+        else {
+            EntityManager em = EntityManager.getInstance();
+            em.persist(newExpense);
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setContentText("Ausgabe \"" + newExpense.getPosition() + "\" hinzugefügt.");
+            alert.showAndWait();
         }
     }
 
