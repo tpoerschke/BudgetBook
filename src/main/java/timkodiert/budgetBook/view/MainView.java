@@ -95,6 +95,22 @@ public class MainView implements Initializable {
     }
 
     @FXML
+    private void openAnnualOverviewView(ActionEvent event) {
+        try {
+            Stage stage = new Stage();
+            // Das Template laden
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AnnualOverview.fxml"));
+            Parent parent = (Parent)loader.load();
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.show();
+        } catch(Exception e) {
+            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
     private void reloadData(ActionEvent event) {
         fixedExpenseController.loadAll();
     }

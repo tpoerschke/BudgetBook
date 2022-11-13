@@ -14,6 +14,7 @@ import timkodiert.budgetBook.util.EntityManager;
 
 public class FixedExpenseController {
 
+    @Getter
     private final ObservableList<FixedExpense> allExpenses;
     @Getter
     private final ObservableList<ExpenseAdapter> monthlyExpenses;
