@@ -2,14 +2,10 @@ package timkodiert.budgetBook.view;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import atlantafx.base.util.DoubleStringConverter;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,10 +21,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
-import timkodiert.budgetBook.domain.model.ExpenseType;
-import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.EntityManager;
 
 public class MainView implements Initializable {
