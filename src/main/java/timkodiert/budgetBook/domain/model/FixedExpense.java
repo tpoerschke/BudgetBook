@@ -1,8 +1,15 @@
 package timkodiert.budgetBook.domain.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +20,11 @@ public class FixedExpense extends Expense {
     @Getter
     @Setter
     @NotEmpty
-    private List<Integer> datesOfPayment; // Enthält zunächst nur die Monate, in denen zu zahlen ist
+    @ElementCollection
+    @CollectionTable(name = "payments", joinColumns = {@JoinColumn(name = "expense_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "month")
+    @Column(name = "value")
+    private Map<Integer, Double> payments = new HashMap<>();
     
     public FixedExpense() {
         super();
@@ -22,7 +33,11 @@ public class FixedExpense extends Expense {
 
     public FixedExpense(String position, double value, ExpenseType type, List<Integer> datesOfPayment) {
         super(position, value, type);
-        this.datesOfPayment = datesOfPayment;
+
+        for(int month : datesOfPayment) {
+            payments.put(month, value);
+        }
+        
         initAdapter();
     }
 

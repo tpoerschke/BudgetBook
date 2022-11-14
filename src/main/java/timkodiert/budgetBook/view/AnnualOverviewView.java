@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
+import java.util.stream.IntStream;
 
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import timkodiert.budgetBook.domain.model.ExpenseType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 
 public class AnnualOverviewView implements Initializable {
@@ -19,20 +20,20 @@ public class AnnualOverviewView implements Initializable {
     @FXML
     private TableView<FixedExpense> mainTable;
     @FXML
-    private TableColumn<FixedExpense, String> positionColumn, typeColumn;
+    private TableColumn<FixedExpense, String> positionColumn;
 
-    private List<TableColumn<FixedExpense, Number>> monthColumns = new ArrayList<>();
+    private List<TableColumn<FixedExpense, String>> monthColumns = new ArrayList<>();
+    private TableColumn<FixedExpense, String> cumulativeColumn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         positionColumn.setCellValueFactory(cellData -> cellData.getValue().getAdapter().positionProperty());
-        typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType().getType()));
 
         FixedExpenseController fixedExpenseController = new FixedExpenseController();
         fixedExpenseController.loadAll();
 
-        List<String> monthNames = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "November", "Dezember");
+        List<String> monthNames = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
 
         // Hätte gerne sowas wie in Python:
         // for i, month in enumerate(monthNames):
@@ -43,20 +44,41 @@ public class AnnualOverviewView implements Initializable {
             int index = iterator.nextIndex();
             String month = iterator.next();
 
-            TableColumn<FixedExpense, Number> tableColumn = new TableColumn<>(month);
+            TableColumn<FixedExpense, String> tableColumn = new TableColumn<>(month);
             tableColumn.setPrefWidth(90);
             tableColumn.setResizable(false);
+            tableColumn.getStyleClass().add("annual-overview-tablecolumn");
             tableColumn.setCellValueFactory(cellData -> {
                 FixedExpense expense = cellData.getValue();
-                if(expense.getDatesOfPayment().contains(index+1)) {
-                    return expense.getAdapter().valueProperty();
+                if(expense.getPayments().keySet().contains(index+1)) {
+                    return new ReadOnlyStringWrapper(expense.getPayments().get(index+1) + "€");
                 }
-                return new SimpleDoubleProperty(0.0);
+                return new ReadOnlyStringWrapper("-");
             });
             monthColumns.add(tableColumn);
             mainTable.getColumns().add(tableColumn);
         }
 
+        // Kummulative Spalte
+        cumulativeColumn = new TableColumn<>("Gesamt");
+        cumulativeColumn.setCellValueFactory(cellData -> {
+            FixedExpense expense = cellData.getValue();
+            return new ReadOnlyStringWrapper(expense.getPayments().values().stream().reduce((v1, v2) -> v1 + v2).get() + "€");
+        });
+        mainTable.getColumns().add(cumulativeColumn);
+        // Kummulative Zeile
+        FixedExpense cumulativeExpense = new FixedExpense("Gesamt", 0, ExpenseType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList());
+        IntStream.range(1, 12).forEach(i -> cumulativeExpense.getPayments().put(i, 0.0));
+        IntStream.range(1, 12).forEach(i -> {
+            for(FixedExpense expense : fixedExpenseController.getAllExpenses()) {
+                if(expense.getPayments().keySet().contains(i)) {
+                    double added = cumulativeExpense.getPayments().get(i) + expense.getPayments().get(i);
+                    cumulativeExpense.getPayments().put(i, added);
+                }
+            }
+        });
+
         mainTable.getItems().addAll(fixedExpenseController.getAllExpenses());
+        mainTable.getItems().add(cumulativeExpense);
     }
 }
