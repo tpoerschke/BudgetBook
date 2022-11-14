@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view;
+package timkodiert.budgetBook.controller;
 
 import java.time.LocalDate;
 

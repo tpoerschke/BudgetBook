@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.ExpenseType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 
