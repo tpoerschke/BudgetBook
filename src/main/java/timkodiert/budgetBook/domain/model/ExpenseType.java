@@ -1,6 +1,7 @@
 package timkodiert.budgetBook.domain.model;
 
 import jakarta.persistence.Embeddable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Embeddable
 @RequiredArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public final class ExpenseType {
     
     public static final ExpenseType MONTHLY = new ExpenseType("monatlich");
