@@ -23,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
+import timkodiert.budgetBook.util.CurrencyTableCell;
 import timkodiert.budgetBook.util.EntityManager;
 
 public class MainView implements Initializable {
@@ -59,13 +60,13 @@ public class MainView implements Initializable {
         monthlyPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         monthlyPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("value"));
-        monthlyValueCol.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        monthlyValueCol.setCellFactory(col -> new CurrencyTableCell<>());
         monthlyTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
 
         nextMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         nextMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         nextMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("value"));
-        nextMonthValueCol.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        nextMonthValueCol.setCellFactory(col -> new CurrencyTableCell<>());
         nextMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
 
         // Monatliche Ausgaben anzeigen

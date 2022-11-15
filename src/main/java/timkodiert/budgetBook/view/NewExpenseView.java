@@ -1,9 +1,7 @@
 package timkodiert.budgetBook.view;
 
 import java.net.URL;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -23,10 +21,8 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import javafx.util.converter.CurrencyStringConverter;
 import timkodiert.budgetBook.domain.model.ExpenseType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.EntityManager;
@@ -49,7 +45,7 @@ public class NewExpenseView implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         // ValueTextField initialisieren
-        valueTextField.setTextFormatter(new TextFormatter<>(new CurrencyStringConverter(NumberFormat.getInstance(Locale.GERMAN))));
+        //valueTextField.setTextFormatter(new TextFormatter<>(new CurrencyStringConverter(NumberFormat.getInstance(Locale.GERMAN))));
 
         // Monatsauswahlen initialisieren
         List<String> monthList = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
