@@ -46,4 +46,8 @@ public abstract class Expense {
     }
 
     protected abstract void initAdapter();
+
+    public double getTotalValue() {
+        return getValue();
+    }
 }

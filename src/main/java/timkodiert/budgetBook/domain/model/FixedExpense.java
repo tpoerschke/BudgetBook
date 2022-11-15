@@ -50,4 +50,8 @@ public class FixedExpense extends Expense {
             e.printStackTrace();
         }
     }
+
+    public double getTotalValue() {
+        return this.getPayments().values().stream().mapToDouble(v -> v.doubleValue()).sum();
+    }
 }

@@ -1,7 +1,12 @@
 package timkodiert.budgetBook.controller;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.Currency;
+import java.util.Locale;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ListChangeListener.Change;
@@ -20,6 +25,8 @@ public class FixedExpenseController {
     private final ObservableList<ExpenseAdapter> monthlyExpenses;
     @Getter
     private final ObservableList<ExpenseAdapter> nextMonthExpenses;
+
+    private final StringProperty monthlyExpensesSum;
 
     private EntityManager entityManager;
 
@@ -43,9 +50,21 @@ public class FixedExpenseController {
                     .map(Expense::getAdapter)
                     .toList());
         });
+
+        monthlyExpensesSum = new SimpleStringProperty();
+        monthlyExpenses.addListener((Change<? extends ExpenseAdapter> change) -> {
+            NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
+            format.setCurrency(Currency.getInstance("EUR"));
+            double sum = monthlyExpenses.stream().map(expAdapter -> expAdapter.getBean()).mapToDouble(expense -> expense.getValue()).sum();
+            monthlyExpensesSum.set(format.format(sum));
+        });
     }
 
     public void loadAll() {
         allExpenses.setAll(entityManager.findAll(FixedExpense.class));
+    }
+
+    public StringProperty monthlyExpensesSumProperty() {
+        return this.monthlyExpensesSum;
     }
 }

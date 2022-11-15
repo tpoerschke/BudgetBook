@@ -71,8 +71,8 @@ public class MainView implements Initializable {
         // Monatliche Ausgaben anzeigen
         monthlyTable.setItems(fixedExpenseController.getMonthlyExpenses());
 
-        // double monthlySum = expenses.stream().mapToDouble(Expense::getValue).sum();
-        // monthlySumLabel.setText(monthlySum + "€");
+        // Summen
+        monthlySumLabel.textProperty().bind(fixedExpenseController.monthlyExpensesSumProperty());
 
         nextMonthTable.setItems(fixedExpenseController.getNextMonthExpenses());
     }

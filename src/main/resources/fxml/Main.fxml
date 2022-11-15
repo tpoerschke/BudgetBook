@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -121,6 +122,7 @@
             <Menu mnemonicParsing="false" text="Daten">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#openAnnualOverviewView" text="Jahresübersicht" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#reloadData" text="Aktualisieren" />
                </items>
             </Menu>
