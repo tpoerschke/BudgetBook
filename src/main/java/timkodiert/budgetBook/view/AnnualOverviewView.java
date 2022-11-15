@@ -15,6 +15,8 @@ import javafx.scene.control.TableView;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.ExpenseType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.util.BoldTableColumn;
+import timkodiert.budgetBook.util.BoldTableRow;
 
 public class AnnualOverviewView implements Initializable {
     
@@ -61,14 +63,16 @@ public class AnnualOverviewView implements Initializable {
         }
 
         // Kummulative Spalte
-        cumulativeColumn = new TableColumn<>("Gesamt");
+        cumulativeColumn = new BoldTableColumn<>("Gesamt");
+        cumulativeColumn.setPrefWidth(90);
+        cumulativeColumn.setResizable(false);
         cumulativeColumn.setCellValueFactory(cellData -> {
             FixedExpense expense = cellData.getValue();
             return new ReadOnlyStringWrapper(expense.getPayments().values().stream().reduce((v1, v2) -> v1 + v2).get() + "€");
         });
         mainTable.getColumns().add(cumulativeColumn);
         // Kummulative Zeile
-        FixedExpense cumulativeExpense = new FixedExpense("Gesamt", 0, ExpenseType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList());
+        FixedExpense cumulativeExpense = new FixedExpense("Gesamt", 0, ExpenseType.CUMULATIVE, IntStream.rangeClosed(1, 12).boxed().toList());
         IntStream.range(1, 12).forEach(i -> cumulativeExpense.getPayments().put(i, 0.0));
         IntStream.range(1, 12).forEach(i -> {
             for(FixedExpense expense : fixedExpenseController.getAllExpenses()) {
@@ -77,6 +81,10 @@ public class AnnualOverviewView implements Initializable {
                     cumulativeExpense.getPayments().put(i, added);
                 }
             }
+        });
+
+        mainTable.setRowFactory(tableView -> {
+            return new BoldTableRow(ExpenseType.CUMULATIVE);
         });
 
         mainTable.getItems().addAll(fixedExpenseController.getAllExpenses());

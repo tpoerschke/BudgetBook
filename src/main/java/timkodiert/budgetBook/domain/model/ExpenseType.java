@@ -18,6 +18,9 @@ public final class ExpenseType {
     public static final ExpenseType SEMIANNUAL = new ExpenseType("halbjährlich");
     public static final ExpenseType QUARTERLY = new ExpenseType("vierteljährlich");
 
+    // Für die Jahresübersicht (letzte Zeile)
+    public static final ExpenseType CUMULATIVE = new ExpenseType("kummulativ");
+
     @Getter
     @NonNull
     private String type;

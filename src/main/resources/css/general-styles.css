@@ -2,3 +2,7 @@
     -fx-border-color: #D9DFE4;
     -fx-border-width: 0 2px 0 0;
 }
+
+.text-bold {
+    -fx-font: bold 1em sans-serif;
+}
