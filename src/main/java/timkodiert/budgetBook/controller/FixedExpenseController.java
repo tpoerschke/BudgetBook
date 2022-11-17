@@ -40,7 +40,7 @@ public class FixedExpenseController {
             int nextMonth = LocalDate.now().plusMonths(1).getMonth().getValue();
             nextMonthExpenses.setAll(allExpenses.stream()
                     .filter(expense -> !expense.getType().equals(ExpenseType.MONTHLY))
-                    .filter(expense -> expense.getPayments().keySet().contains(nextMonth))
+                    //.filter(expense -> expense.getPayments().keySet().contains(nextMonth))
                     .map(Expense::getAdapter)
                     .toList());
         });

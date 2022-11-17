@@ -27,9 +27,7 @@ public abstract class Expense {
     @Setter
     @NotBlank(message = "Die Ausgabe muss benannt werden.")
     protected String position;
-    @Setter
-    @PositiveOrZero(message = "Die Höhe der Ausgabe darf nicht negativ sein.")
-    protected double value;
+
     @Setter
     protected String note;
     @Setter
@@ -39,15 +37,13 @@ public abstract class Expense {
     @Transient
     protected ExpenseAdapter adapter;
 
-    public Expense(String position, double value, ExpenseType type) {
+    public Expense(String position, ExpenseType type) {
         this.position = position;
-        this.value = value;
         this.type = type;
     }
 
     protected abstract void initAdapter();
 
-    public double getTotalValue() {
-        return getValue();
-    }
+    public abstract double getValue();
+    public abstract double getTotalValue();
 }

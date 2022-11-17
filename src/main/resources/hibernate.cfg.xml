@@ -27,11 +27,12 @@
         <property name="hibernate.show_sql">true</property>
 
         <!-- Drop and re-create the database schema on startup -->
-        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.hbm2ddl.auto">create</property>
 
         <!-- Names the annotated entity class -->
         <mapping class="timkodiert.budgetBook.domain.model.Expense"/>
         <mapping class="timkodiert.budgetBook.domain.model.FixedExpense"/>
+        <mapping class="timkodiert.budgetBook.domain.model.PaymentInformation" />
 
     </session-factory>
 
