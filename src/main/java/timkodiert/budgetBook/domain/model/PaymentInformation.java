@@ -42,13 +42,19 @@ public class PaymentInformation {
     @Setter
     private LocalDate endDate;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name="expense_id", nullable=false)
     private Expense expense;
 
-    public PaymentInformation(double value, List<Integer> monthsOfPayment, LocalDate startDate) {
+    public PaymentInformation(Expense expense, double value, List<Integer> monthsOfPayment, LocalDate startDate) {
+        this.expense = expense;
         this.value = value;
         this.monthsOfPayment = monthsOfPayment;
         this.startDate = startDate;
+    }
+
+    public int getFactor() {
+        return this.monthsOfPayment.size();
     }
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
@@ -22,7 +23,7 @@ public class FixedExpense extends Expense {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy="expense")
+    @OneToMany(mappedBy="expense", cascade=CascadeType.ALL)
     private List<PaymentInformation> payments = new ArrayList<>();
     
     public FixedExpense() {
@@ -33,7 +34,7 @@ public class FixedExpense extends Expense {
     public FixedExpense(String position, double value, ExpenseType type, List<Integer> datesOfPayment) {
         super(position, type);
 
-        this.payments.add(new PaymentInformation(value, datesOfPayment, LocalDate.now()));
+        this.payments.add(new PaymentInformation(this, value, datesOfPayment, LocalDate.now()));
         initAdapter();
     }
 
