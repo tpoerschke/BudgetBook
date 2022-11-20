@@ -29,14 +29,14 @@ import timkodiert.budgetBook.util.EntityManager;
 public class MainView implements Initializable {
     
     @FXML
-    private TableColumn<ExpenseAdapter, String> monthlyPositionCol, monthlyTypeCol, nextMonthPositionCol, nextMonthTypeCol;
+    private TableColumn<ExpenseAdapter, String> monthlyPositionCol, monthlyTypeCol, currentMonthPositionCol, currentMonthTypeCol, nextMonthPositionCol, nextMonthTypeCol;
     @FXML
-    private TableColumn<ExpenseAdapter, Double> monthlyValueCol, nextMonthValueCol;
+    private TableColumn<ExpenseAdapter, Double> monthlyValueCol, currentMonthValueCol, nextMonthValueCol;
     @FXML
-    private TableView<ExpenseAdapter> monthlyTable, nextMonthTable;
+    private TableView<ExpenseAdapter> monthlyTable, currentMonthTable, nextMonthTable;
 
     @FXML 
-    private Label monthlySumLabel;
+    private Label monthlySumLabel, nextMonthSumLabel;
 
     private Stage primaryStage;
 
@@ -63,6 +63,12 @@ public class MainView implements Initializable {
         monthlyValueCol.setCellFactory(col -> new CurrencyTableCell<>());
         monthlyTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
 
+        currentMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
+        currentMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        currentMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("currentMonthValue"));
+        currentMonthValueCol.setCellFactory(col -> new CurrencyTableCell<>());
+        currentMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
+
         nextMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         nextMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         nextMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("nextMonthValue"));
@@ -73,8 +79,10 @@ public class MainView implements Initializable {
         monthlyTable.setItems(fixedExpenseController.getMonthlyExpenses());
 
         // Summen
-        monthlySumLabel.textProperty().bind(fixedExpenseController.monthlyExpensesSumProperty());
+        monthlySumLabel.textProperty().bind(fixedExpenseController.monthlyExpensesSumTextProperty());
+        nextMonthSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesSumTextProperty());
 
+        currentMonthTable.setItems(fixedExpenseController.getCurrentMonthExpenses());
         nextMonthTable.setItems(fixedExpenseController.getNextMonthExpenses());
     }
 

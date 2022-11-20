@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.Currency;
 import java.util.Locale;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -24,9 +26,15 @@ public class FixedExpenseController {
     @Getter
     private final ObservableList<ExpenseAdapter> monthlyExpenses;
     @Getter
+    private final ObservableList<ExpenseAdapter> currentMonthExpenses;
+    @Getter
     private final ObservableList<ExpenseAdapter> nextMonthExpenses;
 
-    private final StringProperty monthlyExpensesSum;
+    private final DoubleProperty monthlyExpensesSum;
+    private final StringProperty monthlyExpensesSumText;
+
+    private final DoubleProperty nextMonthExpensesSum;
+    private final StringProperty nextMonthExpensesSumText;
 
     private EntityManager entityManager;
 
@@ -34,13 +42,24 @@ public class FixedExpenseController {
         this.entityManager = EntityManager.getInstance();
         this.allExpenses = FXCollections.observableArrayList();
         this.monthlyExpenses = FXCollections.observableArrayList();
+        this.currentMonthExpenses = FXCollections.observableArrayList();
         this.nextMonthExpenses = FXCollections.observableArrayList();
 
         allExpenses.addListener((Change<? extends FixedExpense> change) -> {
             int nextMonth = LocalDate.now().plusMonths(1).getMonth().getValue();
             nextMonthExpenses.setAll(allExpenses.stream()
                     .filter(expense -> !expense.getType().equals(ExpenseType.MONTHLY))
-                    //.filter(expense -> expense.getPayments().keySet().contains(nextMonth))
+                    // TODO: Überarbeiten mit vernünftiger Schnittstelle
+                    .filter(expense -> expense.getPayments().get(0).getMonthsOfPayment().contains(nextMonth))
+                    .map(Expense::getAdapter)
+                    .toList());
+        });
+        allExpenses.addListener((Change<? extends FixedExpense> change) -> {
+            int currentMonth = LocalDate.now().getMonth().getValue();
+            currentMonthExpenses.setAll(allExpenses.stream()
+                    .filter(expense -> !expense.getType().equals(ExpenseType.MONTHLY))
+                    // TODO: Überarbeiten mit vernünftiger Schnittstelle
+                    .filter(expense -> expense.getPayments().get(0).getMonthsOfPayment().contains(currentMonth))
                     .map(Expense::getAdapter)
                     .toList());
         });
@@ -51,12 +70,24 @@ public class FixedExpenseController {
                     .toList());
         });
 
-        monthlyExpensesSum = new SimpleStringProperty();
+        // TODO: Ins View?
+        monthlyExpensesSum = new SimpleDoubleProperty();
+        monthlyExpensesSumText = new SimpleStringProperty();
         monthlyExpenses.addListener((Change<? extends ExpenseAdapter> change) -> {
             NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
             format.setCurrency(Currency.getInstance("EUR"));
             double sum = monthlyExpenses.stream().map(expAdapter -> expAdapter.getBean()).mapToDouble(expense -> expense.getCurrentMonthValue()).sum();
-            monthlyExpensesSum.set(format.format(sum));
+            monthlyExpensesSum.set(sum);
+            monthlyExpensesSumText.set(format.format(sum));
+        });
+        nextMonthExpensesSum = new SimpleDoubleProperty();
+        nextMonthExpensesSumText = new SimpleStringProperty();
+        monthlyExpenses.addListener((Change<? extends ExpenseAdapter> change) -> {
+            NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
+            format.setCurrency(Currency.getInstance("EUR"));
+            double sum = nextMonthExpenses.stream().map(expAdapter -> expAdapter.getBean()).mapToDouble(expense -> expense.getNextMonthValue()).sum();
+            nextMonthExpensesSum.set(sum);
+            nextMonthExpensesSumText.set(format.format(sum));
         });
     }
 
@@ -64,7 +95,19 @@ public class FixedExpenseController {
         allExpenses.setAll(entityManager.findAll(FixedExpense.class));
     }
 
-    public StringProperty monthlyExpensesSumProperty() {
+    public DoubleProperty monthlyExpensesSumProperty() {
         return this.monthlyExpensesSum;
+    }
+
+    public StringProperty monthlyExpensesSumTextProperty() {
+        return this.monthlyExpensesSumText;
+    }
+
+    public DoubleProperty nextMonthExpensesSumProperty() {
+        return this.nextMonthExpensesSum;
+    }
+
+    public StringProperty nextMonthExpensesSumTextProperty() {
+        return this.nextMonthExpensesSumText;
     }
 }
