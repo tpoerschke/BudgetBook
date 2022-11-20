@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @NoArgsConstructor
-public abstract class Expense {
+public abstract class Expense implements Turnover {
 
     @Id
     @GeneratedValue(generator = "increment")
@@ -44,6 +43,7 @@ public abstract class Expense {
 
     protected abstract void initAdapter();
 
-    public abstract double getValue();
-    public abstract double getTotalValue();
+    public abstract double getCurrentMonthValue();
+    public abstract double getNextMonthValue();
+    public abstract double getCurrentYearValue();
 }

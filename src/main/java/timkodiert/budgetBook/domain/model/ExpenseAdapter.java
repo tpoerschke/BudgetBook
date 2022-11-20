@@ -11,7 +11,8 @@ import lombok.Getter;
 // Das ViewModel
 public abstract class ExpenseAdapter {
     private final StringProperty position;
-    private final ReadOnlyDoubleProperty value;
+    private final ReadOnlyDoubleProperty currentMonthValue;
+    private final ReadOnlyDoubleProperty nextMonthValue;
     private final ObjectProperty<ExpenseType> type;
 
     @Getter
@@ -20,7 +21,8 @@ public abstract class ExpenseAdapter {
     public ExpenseAdapter(Expense expense) throws NoSuchMethodException {
         this.position = JavaBeanStringPropertyBuilder.create().bean(expense).name("position").build();
         // ReadOnly reicht hier, da die Expense nicht über Tabellen o.ä. bearbeitet werden sollen
-        this.value = ReadOnlyJavaBeanDoublePropertyBuilder.create().bean(expense).name("value").build();
+        this.currentMonthValue = ReadOnlyJavaBeanDoublePropertyBuilder.create().bean(expense).name("currentMonthValue").build();
+        this.nextMonthValue = ReadOnlyJavaBeanDoublePropertyBuilder.create().bean(expense).name("nextMonthValue").build();
         this.type = JavaBeanObjectPropertyBuilder.create().bean(expense).name("type").build();
 
         this.bean = expense;
@@ -30,8 +32,12 @@ public abstract class ExpenseAdapter {
         return this.position;
     }
 
-    public ReadOnlyDoubleProperty valueProperty() {
-        return this.value;
+    public ReadOnlyDoubleProperty currentMonthValueProperty() {
+        return this.currentMonthValue;
+    }
+
+    public ReadOnlyDoubleProperty nextMonthValueProperty() {
+        return this.nextMonthValue;
     }
 
     public ObjectProperty<ExpenseType> typeProperty() {

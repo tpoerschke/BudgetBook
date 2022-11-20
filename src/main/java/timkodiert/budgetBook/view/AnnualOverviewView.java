@@ -53,9 +53,9 @@ public class AnnualOverviewView implements Initializable {
             tableColumn.getStyleClass().add("annual-overview-tablecolumn");
             tableColumn.setCellValueFactory(cellData -> {
                 FixedExpense expense = cellData.getValue();
-                // if(expense.getPayments().keySet().contains(index+1)) {
-                //     return new ReadOnlyStringWrapper(expense.getPayments().get(index+1) + "€");
-                // }
+                if(expense.getValueFor(2022, index+1) > 0) {
+                    return new ReadOnlyStringWrapper(expense.getValueFor(2022, index+1) + "€");
+                }
                 return new ReadOnlyStringWrapper("-");
             });
             monthColumns.add(tableColumn);
@@ -68,8 +68,7 @@ public class AnnualOverviewView implements Initializable {
         cumulativeColumn.setResizable(false);
         cumulativeColumn.setCellValueFactory(cellData -> {
             FixedExpense expense = cellData.getValue();
-            // return new ReadOnlyStringWrapper(expense.getPayments().values().stream().reduce((v1, v2) -> v1 + v2).get() + "€");
-            return new ReadOnlyStringWrapper("---");
+            return new ReadOnlyStringWrapper(expense.getCurrentYearValue() + "€");
         });
         mainTable.getColumns().add(cumulativeColumn);
         // Kummulative Zeile

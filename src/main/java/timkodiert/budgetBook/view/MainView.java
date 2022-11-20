@@ -59,13 +59,13 @@ public class MainView implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         monthlyPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         monthlyPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("value"));
+        monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("currentMonthValue"));
         monthlyValueCol.setCellFactory(col -> new CurrencyTableCell<>());
         monthlyTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
 
         nextMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         nextMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        nextMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("value"));
+        nextMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("nextMonthValue"));
         nextMonthValueCol.setCellFactory(col -> new CurrencyTableCell<>());
         nextMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
 

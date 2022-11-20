@@ -55,7 +55,7 @@ public class FixedExpenseController {
         monthlyExpenses.addListener((Change<? extends ExpenseAdapter> change) -> {
             NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
             format.setCurrency(Currency.getInstance("EUR"));
-            double sum = monthlyExpenses.stream().map(expAdapter -> expAdapter.getBean()).mapToDouble(expense -> expense.getValue()).sum();
+            double sum = monthlyExpenses.stream().map(expAdapter -> expAdapter.getBean()).mapToDouble(expense -> expense.getCurrentMonthValue()).sum();
             monthlyExpensesSum.set(format.format(sum));
         });
     }
