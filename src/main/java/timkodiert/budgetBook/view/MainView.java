@@ -36,7 +36,7 @@ public class MainView implements Initializable {
     private TableView<ExpenseAdapter> monthlyTable, currentMonthTable, nextMonthTable;
 
     @FXML 
-    private Label monthlySumLabel, nextMonthSumLabel;
+    private Label monthlySumLabel, nextMonthSumLabel, nextMonthTotalSumLabel;
 
     private Stage primaryStage;
 
@@ -75,15 +75,15 @@ public class MainView implements Initializable {
         nextMonthValueCol.setCellFactory(col -> new CurrencyTableCell<>());
         nextMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
 
-        // Monatliche Ausgaben anzeigen
+        // Ausgaben anzeigen
         monthlyTable.setItems(fixedExpenseController.getMonthlyExpenses());
+        currentMonthTable.setItems(fixedExpenseController.getCurrentMonthExpenses());
+        nextMonthTable.setItems(fixedExpenseController.getNextMonthExpenses());
 
         // Summen
         monthlySumLabel.textProperty().bind(fixedExpenseController.monthlyExpensesSumTextProperty());
         nextMonthSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesSumTextProperty());
-
-        currentMonthTable.setItems(fixedExpenseController.getCurrentMonthExpenses());
-        nextMonthTable.setItems(fixedExpenseController.getNextMonthExpenses());
+        nextMonthTotalSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesTotalSumTextProperty());
     }
 
     @FXML

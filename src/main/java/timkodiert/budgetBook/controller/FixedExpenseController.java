@@ -9,6 +9,8 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ListChangeListener.Change;
@@ -35,6 +37,9 @@ public class FixedExpenseController {
 
     private final DoubleProperty nextMonthExpensesSum;
     private final StringProperty nextMonthExpensesSumText;
+
+    private final DoubleProperty nextMonthExpensesTotalSum;
+    private final StringProperty nextMonthExpensesTotalSumText;
 
     private EntityManager entityManager;
 
@@ -70,7 +75,7 @@ public class FixedExpenseController {
                     .toList());
         });
 
-        // TODO: Ins View?
+        // TODO: Ins View? oder eigene Klasse
         monthlyExpensesSum = new SimpleDoubleProperty();
         monthlyExpensesSumText = new SimpleStringProperty();
         monthlyExpenses.addListener((Change<? extends ExpenseAdapter> change) -> {
@@ -89,6 +94,17 @@ public class FixedExpenseController {
             nextMonthExpensesSum.set(sum);
             nextMonthExpensesSumText.set(format.format(sum));
         });
+        nextMonthExpensesTotalSum = new SimpleDoubleProperty();
+        nextMonthExpensesTotalSumText = new SimpleStringProperty();
+        ChangeListener<Number> changeListener = (ObservableValue<? extends Number> change, Number oldValue, Number newValue) -> {
+            NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
+            format.setCurrency(Currency.getInstance("EUR"));
+            double sum = nextMonthExpensesSum.get() + monthlyExpensesSum.get();
+            nextMonthExpensesTotalSum.set(sum);
+            nextMonthExpensesTotalSumText.set(format.format(sum));
+        };
+        nextMonthExpensesSum.addListener(changeListener);
+        monthlyExpensesSum.addListener(changeListener);
     }
 
     public void loadAll() {
@@ -109,5 +125,13 @@ public class FixedExpenseController {
 
     public StringProperty nextMonthExpensesSumTextProperty() {
         return this.nextMonthExpensesSumText;
+    }
+
+    public DoubleProperty nextMonthExpensesTotalSumProperty() {
+        return this.nextMonthExpensesTotalSum;
+    }
+
+    public StringProperty nextMonthExpensesTotalSumTextProperty() {
+        return this.nextMonthExpensesTotalSumText;
     }
 }

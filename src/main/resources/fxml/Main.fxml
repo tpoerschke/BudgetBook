@@ -98,7 +98,7 @@
                     </rowConstraints>
                      <children>
                         <Label fx:id="nextMonthSumLabel" text="30,00 €" GridPane.columnIndex="1" />
-                        <Label text="62,68 €" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="nextMonthTotalSumLabel" text="62,68 €" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="Summe:" />
                         <Label text="Gesamt:" GridPane.rowIndex="1" />
                      </children>
