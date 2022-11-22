@@ -20,6 +20,7 @@ import timkodiert.budgetBook.domain.model.ExpenseAdapter;
 import timkodiert.budgetBook.domain.model.ExpenseType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.EntityManager;
+import timkodiert.budgetBook.util.SumListChangeListener;
 
 public class FixedExpenseController {
 
@@ -87,13 +88,7 @@ public class FixedExpenseController {
         });
         nextMonthExpensesSum = new SimpleDoubleProperty();
         nextMonthExpensesSumText = new SimpleStringProperty();
-        monthlyExpenses.addListener((Change<? extends ExpenseAdapter> change) -> {
-            NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
-            format.setCurrency(Currency.getInstance("EUR"));
-            double sum = nextMonthExpenses.stream().map(expAdapter -> expAdapter.getBean()).mapToDouble(expense -> expense.getNextMonthValue()).sum();
-            nextMonthExpensesSum.set(sum);
-            nextMonthExpensesSumText.set(format.format(sum));
-        });
+        monthlyExpenses.addListener(new SumListChangeListener<>(nextMonthExpenses, nextMonthExpensesSum, nextMonthExpensesSumText));
         nextMonthExpensesTotalSum = new SimpleDoubleProperty();
         nextMonthExpensesTotalSumText = new SimpleStringProperty();
         ChangeListener<Number> changeListener = (ObservableValue<? extends Number> change, Number oldValue, Number newValue) -> {
