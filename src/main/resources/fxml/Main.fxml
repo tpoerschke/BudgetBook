@@ -36,9 +36,9 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </TableView>
-                  <GridPane>
+                  <GridPane hgap="5.0">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
                       <ColumnConstraints hgrow="SOMETIMES" />
                     </columnConstraints>
                     <rowConstraints>
@@ -46,9 +46,12 @@
                       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label fx:id="monthlySumLabel" text="32,68 €" GridPane.columnIndex="1" />
+                        <Label fx:id="monthlySumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" />
                         <Label text="Summe:" />
                      </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
                   </GridPane>
                </children>
             </VBox>
@@ -68,8 +71,30 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </TableView>
-                  <Label text="Summe: 30,00 €" />
-                  <Label text="Gesamt: 62,68 €" />
+                  <GridPane hgap="5.0">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label fx:id="currentMonthSumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" />
+                        <Label fx:id="currentMonthTotalSumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" styleClass="text-bold" text="00,00 €" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Summe:" />
+                        <Label styleClass="text-bold" text="Gesamt:" GridPane.rowIndex="3" />
+                        <Label fx:id="monthlySumLabel1" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="+" GridPane.rowIndex="1" />
+                        <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </GridPane>
                </children>
             </VBox>
             <VBox>

@@ -1,16 +1,12 @@
 package timkodiert.budgetBook.controller;
 
-import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.Currency;
-import java.util.Locale;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ListChangeListener.Change;
@@ -37,6 +33,12 @@ public class FixedExpenseController {
 
     private final DoubleProperty monthlyExpensesSum;
     private final StringProperty monthlyExpensesSumText;
+
+    private final DoubleProperty currentMonthExpensesSum;
+    private final StringProperty currentMonthExpensesSumText;
+
+    private final DoubleProperty currentMonthExpensesTotalSum;
+    private final StringProperty currentMonthExpensesTotalSumText;
 
     private final DoubleProperty nextMonthExpensesSum;
     private final StringProperty nextMonthExpensesSumText;
@@ -78,18 +80,28 @@ public class FixedExpenseController {
                     .toList());
         });
 
-        // TODO: Ins View? oder eigene Klasse
+        // Properties für die Monatssummen initialisieren
         monthlyExpensesSum = new SimpleDoubleProperty();
         monthlyExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
         monthlyExpenses.addListener(new SumListChangeListener<>(monthlyExpenses, monthlyExpensesSum, monthlyExpensesSumText));
+
+        currentMonthExpensesSum = new SimpleDoubleProperty();
+        currentMonthExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
+        currentMonthExpenses.addListener(new SumListChangeListener<>(currentMonthExpenses, currentMonthExpensesSum, currentMonthExpensesSumText));
+        currentMonthExpensesTotalSum = new SimpleDoubleProperty();
+        currentMonthExpensesTotalSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
+        ChangeListener<Number> currentTotalListener = new SumChangeListener<>(currentMonthExpensesTotalSum, currentMonthExpensesTotalSumText, currentMonthExpensesSum, monthlyExpensesSum);
+        currentMonthExpensesSum.addListener(currentTotalListener);
+        monthlyExpensesSum.addListener(currentTotalListener);
+
         nextMonthExpensesSum = new SimpleDoubleProperty();
         nextMonthExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
         nextMonthExpenses.addListener(new SumListChangeListener<>(nextMonthExpenses, nextMonthExpensesSum, nextMonthExpensesSumText));
         nextMonthExpensesTotalSum = new SimpleDoubleProperty();
         nextMonthExpensesTotalSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        ChangeListener<Number> totalListener = new SumChangeListener<>(nextMonthExpensesTotalSum, nextMonthExpensesTotalSumText, nextMonthExpensesSum, monthlyExpensesSum);
-        nextMonthExpensesSum.addListener(totalListener);
-        monthlyExpensesSum.addListener(totalListener);
+        ChangeListener<Number> nextTotalListener = new SumChangeListener<>(nextMonthExpensesTotalSum, nextMonthExpensesTotalSumText, nextMonthExpensesSum, monthlyExpensesSum);
+        nextMonthExpensesSum.addListener(nextTotalListener);
+        monthlyExpensesSum.addListener(nextTotalListener);
     }
 
     public void loadAll() {
@@ -102,6 +114,22 @@ public class FixedExpenseController {
 
     public StringProperty monthlyExpensesSumTextProperty() {
         return this.monthlyExpensesSumText;
+    }
+
+    public DoubleProperty currentMonthExpensesSumProperty() {
+        return this.currentMonthExpensesSum;
+    }
+
+    public StringProperty currentMonthExpensesSumTextProperty() {
+        return this.currentMonthExpensesSumText;
+    }
+
+    public DoubleProperty currentMonthExpensesTotalSumProperty() {
+        return this.currentMonthExpensesTotalSum;
+    }
+
+    public StringProperty currentMonthExpensesTotalSumTextProperty() {
+        return this.currentMonthExpensesTotalSumText;
     }
 
     public DoubleProperty nextMonthExpensesSumProperty() {
