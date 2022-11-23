@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -15,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <HBox spacing="10.0" BorderPane.alignment="CENTER">
          <children>
@@ -87,20 +88,25 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </TableView>
-                  <GridPane>
+                  <GridPane hgap="5.0">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
                       <ColumnConstraints hgrow="SOMETIMES" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label fx:id="nextMonthSumLabel" text="30,00 €" GridPane.columnIndex="1" />
-                        <Label fx:id="nextMonthTotalSumLabel" text="62,68 €" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="nextMonthSumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" />
+                        <Label fx:id="nextMonthTotalSumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" styleClass="text-bold" text="00,00 €" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="Summe:" />
-                        <Label text="Gesamt:" GridPane.rowIndex="1" />
+                        <Label styleClass="text-bold" text="Gesamt:" GridPane.rowIndex="3" />
+                        <Label fx:id="monthlySumLabel2" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="+" GridPane.rowIndex="1" />
+                        <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                </children>

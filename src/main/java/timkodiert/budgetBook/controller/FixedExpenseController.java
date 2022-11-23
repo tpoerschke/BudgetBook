@@ -15,6 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ListChangeListener.Change;
 import lombok.Getter;
+import timkodiert.budgetBook.Constants;
 import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
 import timkodiert.budgetBook.domain.model.ExpenseType;
@@ -78,7 +79,7 @@ public class FixedExpenseController {
 
         // TODO: Ins View? oder eigene Klasse
         monthlyExpensesSum = new SimpleDoubleProperty();
-        monthlyExpensesSumText = new SimpleStringProperty();
+        monthlyExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
         monthlyExpenses.addListener((Change<? extends ExpenseAdapter> change) -> {
             NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
             format.setCurrency(Currency.getInstance("EUR"));
@@ -87,10 +88,10 @@ public class FixedExpenseController {
             monthlyExpensesSumText.set(format.format(sum));
         });
         nextMonthExpensesSum = new SimpleDoubleProperty();
-        nextMonthExpensesSumText = new SimpleStringProperty();
-        monthlyExpenses.addListener(new SumListChangeListener<>(nextMonthExpenses, nextMonthExpensesSum, nextMonthExpensesSumText));
+        nextMonthExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
+        nextMonthExpenses.addListener(new SumListChangeListener<>(nextMonthExpenses, nextMonthExpensesSum, nextMonthExpensesSumText));
         nextMonthExpensesTotalSum = new SimpleDoubleProperty();
-        nextMonthExpensesTotalSumText = new SimpleStringProperty();
+        nextMonthExpensesTotalSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
         ChangeListener<Number> changeListener = (ObservableValue<? extends Number> change, Number oldValue, Number newValue) -> {
             NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
             format.setCurrency(Currency.getInstance("EUR"));

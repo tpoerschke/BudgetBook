@@ -36,7 +36,7 @@ public class MainView implements Initializable {
     private TableView<ExpenseAdapter> monthlyTable, currentMonthTable, nextMonthTable;
 
     @FXML 
-    private Label monthlySumLabel, nextMonthSumLabel, nextMonthTotalSumLabel;
+    private Label monthlySumLabel, monthlySumLabel2, nextMonthSumLabel, nextMonthTotalSumLabel;
 
     private Stage primaryStage;
 
@@ -82,6 +82,7 @@ public class MainView implements Initializable {
 
         // Summen
         monthlySumLabel.textProperty().bind(fixedExpenseController.monthlyExpensesSumTextProperty());
+        monthlySumLabel2.textProperty().bind(fixedExpenseController.monthlyExpensesSumTextProperty());
         nextMonthSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesSumTextProperty());
         nextMonthTotalSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesTotalSumTextProperty());
     }
