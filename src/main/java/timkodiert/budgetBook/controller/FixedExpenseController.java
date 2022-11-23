@@ -21,6 +21,7 @@ import timkodiert.budgetBook.domain.model.ExpenseAdapter;
 import timkodiert.budgetBook.domain.model.ExpenseType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.EntityManager;
+import timkodiert.budgetBook.util.SumChangeListener;
 import timkodiert.budgetBook.util.SumListChangeListener;
 
 public class FixedExpenseController {
@@ -80,27 +81,15 @@ public class FixedExpenseController {
         // TODO: Ins View? oder eigene Klasse
         monthlyExpensesSum = new SimpleDoubleProperty();
         monthlyExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        monthlyExpenses.addListener((Change<? extends ExpenseAdapter> change) -> {
-            NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
-            format.setCurrency(Currency.getInstance("EUR"));
-            double sum = monthlyExpenses.stream().map(expAdapter -> expAdapter.getBean()).mapToDouble(expense -> expense.getCurrentMonthValue()).sum();
-            monthlyExpensesSum.set(sum);
-            monthlyExpensesSumText.set(format.format(sum));
-        });
+        monthlyExpenses.addListener(new SumListChangeListener<>(monthlyExpenses, monthlyExpensesSum, monthlyExpensesSumText));
         nextMonthExpensesSum = new SimpleDoubleProperty();
         nextMonthExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
         nextMonthExpenses.addListener(new SumListChangeListener<>(nextMonthExpenses, nextMonthExpensesSum, nextMonthExpensesSumText));
         nextMonthExpensesTotalSum = new SimpleDoubleProperty();
         nextMonthExpensesTotalSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        ChangeListener<Number> changeListener = (ObservableValue<? extends Number> change, Number oldValue, Number newValue) -> {
-            NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
-            format.setCurrency(Currency.getInstance("EUR"));
-            double sum = nextMonthExpensesSum.get() + monthlyExpensesSum.get();
-            nextMonthExpensesTotalSum.set(sum);
-            nextMonthExpensesTotalSumText.set(format.format(sum));
-        };
-        nextMonthExpensesSum.addListener(changeListener);
-        monthlyExpensesSum.addListener(changeListener);
+        ChangeListener<Number> totalListener = new SumChangeListener<>(nextMonthExpensesTotalSum, nextMonthExpensesTotalSumText, nextMonthExpensesSum, monthlyExpensesSum);
+        nextMonthExpensesSum.addListener(totalListener);
+        monthlyExpensesSum.addListener(totalListener);
     }
 
     public void loadAll() {

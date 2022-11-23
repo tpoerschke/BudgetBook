@@ -1,5 +1,5 @@
 package timkodiert.budgetBook;
 
 public class Constants {
-    public static final String INITIAL_AMOUNT_STRING = "00,00 €";
+    public static final String INITIAL_AMOUNT_STRING = "0,00 €";
 }

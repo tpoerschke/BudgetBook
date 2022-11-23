@@ -108,6 +108,9 @@
                         <Label text="+" GridPane.rowIndex="1" />
                         <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
                      </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
                   </GridPane>
                </children>
             </VBox>
