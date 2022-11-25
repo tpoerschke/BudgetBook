@@ -73,13 +73,13 @@ public class AnnualOverviewView implements Initializable {
         mainTable.getColumns().add(cumulativeColumn);
         // Kummulative Zeile
         FixedExpense cumulativeExpense = new FixedExpense("Gesamt", 0, PaymentType.CUMULATIVE, IntStream.rangeClosed(1, 12).boxed().toList());
-        // IntStream.range(1, 12).forEach(i -> cumulativeExpense.getPayments().put(i, 0.0));
-        IntStream.range(1, 12).forEach(i -> {
+        IntStream.rangeClosed(1, 12).forEach(i -> {
             for(FixedExpense expense : fixedExpenseController.getAllExpenses()) {
-                // if(expense.getPayments().keySet().contains(i)) {
-                //     double added = cumulativeExpense.getPayments().get(i) + expense.getPayments().get(i);
-                //     cumulativeExpense.getPayments().put(i, added);
-                // }
+                // TODO: Überarbeiten mit vernünftiger Schnittstelle
+                if(expense.getPaymentInformations().get(0).getMonthsOfPayment().contains(i)) {
+                    double added = cumulativeExpense.getPaymentInformations().get(0).getValueFor(i) + expense.getPaymentInformations().get(0).getValueFor(i);
+                    cumulativeExpense.getPaymentInformations().get(0).getPayments().put(i, added);
+                }
             }
         });
 
