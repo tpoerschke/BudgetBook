@@ -56,20 +56,20 @@ public class FixedExpenseController {
         this.nextMonthExpenses = FXCollections.observableArrayList();
 
         allExpenses.addListener((Change<? extends FixedExpense> change) -> {
-            int nextMonth = LocalDate.now().plusMonths(1).getMonth().getValue();
+            LocalDate nextMonth = LocalDate.now().plusMonths(1);
             nextMonthExpenses.setAll(allExpenses.stream()
                     .filter(expense -> !expense.getPaymentType().equals(PaymentType.MONTHLY))
                     // TODO: Überarbeiten mit vernünftiger Schnittstelle
-                    .filter(expense -> expense.getPaymentInformations().get(0).getMonthsOfPayment().contains(nextMonth))
+                    .filter(expense -> expense.getValueFor(nextMonth.getYear(), nextMonth.getMonthValue()) > 0)
                     .map(Expense::getAdapter)
                     .toList());
         });
         allExpenses.addListener((Change<? extends FixedExpense> change) -> {
-            int currentMonth = LocalDate.now().getMonth().getValue();
+            LocalDate currentMonth = LocalDate.now();
             currentMonthExpenses.setAll(allExpenses.stream()
                     .filter(expense -> !expense.getPaymentType().equals(PaymentType.MONTHLY))
                     // TODO: Überarbeiten mit vernünftiger Schnittstelle
-                    .filter(expense -> expense.getPaymentInformations().get(0).getMonthsOfPayment().contains(currentMonth))
+                    .filter(expense -> expense.getValueFor(currentMonth.getYear(), currentMonth.getMonthValue()) > 0)
                     .map(Expense::getAdapter)
                     .toList());
         });

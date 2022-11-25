@@ -1,10 +1,8 @@
 package timkodiert.budgetBook.domain.model;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.property.adapter.JavaBeanObjectPropertyBuilder;
 import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
 import javafx.beans.property.adapter.ReadOnlyJavaBeanDoublePropertyBuilder;
 import javafx.beans.property.adapter.ReadOnlyJavaBeanObjectPropertyBuilder;

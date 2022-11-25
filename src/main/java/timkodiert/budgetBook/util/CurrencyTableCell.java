@@ -6,16 +6,21 @@ import java.util.Locale;
 
 import javafx.scene.control.TableCell;
 
-public class CurrencyTableCell<S> extends TableCell<S, Double> {
+public class CurrencyTableCell<S, T extends Number> extends TableCell<S, T> {
 
     @Override
-    protected void updateItem(Double item, boolean empty) {
+    protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
 
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
         format.setCurrency(Currency.getInstance("EUR"));
 
-        setText(empty ? "" : format.format(item));
+        if(empty) {
+            setText("");
+        }
+        else {
+            setText(item.doubleValue() == 0 ? "-" : format.format(item));
+        }
     }
     
 }

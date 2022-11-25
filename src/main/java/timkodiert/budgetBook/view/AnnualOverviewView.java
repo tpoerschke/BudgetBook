@@ -7,7 +7,7 @@ import java.util.ListIterator;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
-import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
@@ -17,16 +17,20 @@ import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.BoldTableColumn;
 import timkodiert.budgetBook.util.BoldTableRow;
+import timkodiert.budgetBook.util.CurrencyTableCell;
 
 public class AnnualOverviewView implements Initializable {
-    
+
+    private static List<String> MONTH_NAMES = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
+    private static int CURRENT_YEAR = 2022;
+
     @FXML
     private TableView<FixedExpense> mainTable;
     @FXML
     private TableColumn<FixedExpense, String> positionColumn;
 
-    private List<TableColumn<FixedExpense, String>> monthColumns = new ArrayList<>();
-    private TableColumn<FixedExpense, String> cumulativeColumn;
+    private List<TableColumn<FixedExpense, Number>> monthColumns = new ArrayList<>();
+    private TableColumn<FixedExpense, Number> cumulativeColumn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -36,27 +40,23 @@ public class AnnualOverviewView implements Initializable {
         FixedExpenseController fixedExpenseController = new FixedExpenseController();
         fixedExpenseController.loadAll();
 
-        List<String> monthNames = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
-
         // Hätte gerne sowas wie in Python:
         // for i, month in enumerate(monthNames):
         //   ...
         // Java machts hier umständlich :/
-        ListIterator<String> iterator = monthNames.listIterator();
+        ListIterator<String> iterator = MONTH_NAMES.listIterator();
         while(iterator.hasNext()) {
             int index = iterator.nextIndex();
             String month = iterator.next();
 
-            TableColumn<FixedExpense, String> tableColumn = new TableColumn<>(month);
+            TableColumn<FixedExpense, Number> tableColumn = new TableColumn<>(month);
             tableColumn.setPrefWidth(90);
             tableColumn.setResizable(false);
             tableColumn.getStyleClass().add("annual-overview-tablecolumn");
+            tableColumn.setCellFactory(col -> new CurrencyTableCell<>());
             tableColumn.setCellValueFactory(cellData -> {
                 FixedExpense expense = cellData.getValue();
-                if(expense.getValueFor(2022, index+1) > 0) {
-                    return new ReadOnlyStringWrapper(expense.getValueFor(2022, index+1) + "€");
-                }
-                return new ReadOnlyStringWrapper("-");
+                return new ReadOnlyDoubleWrapper(expense.getValueFor(CURRENT_YEAR, index+1));
             });
             monthColumns.add(tableColumn);
             mainTable.getColumns().add(tableColumn);
@@ -66,9 +66,10 @@ public class AnnualOverviewView implements Initializable {
         cumulativeColumn = new BoldTableColumn<>("Gesamt");
         cumulativeColumn.setPrefWidth(90);
         cumulativeColumn.setResizable(false);
+        cumulativeColumn.setCellFactory(col -> new CurrencyTableCell<>());
         cumulativeColumn.setCellValueFactory(cellData -> {
             FixedExpense expense = cellData.getValue();
-            return new ReadOnlyStringWrapper(expense.getCurrentYearValue() + "€");
+            return new ReadOnlyDoubleWrapper(expense.getCurrentYearValue());
         });
         mainTable.getColumns().add(cumulativeColumn);
         // Kummulative Zeile
@@ -76,10 +77,8 @@ public class AnnualOverviewView implements Initializable {
         IntStream.rangeClosed(1, 12).forEach(i -> {
             for(FixedExpense expense : fixedExpenseController.getAllExpenses()) {
                 // TODO: Überarbeiten mit vernünftiger Schnittstelle
-                if(expense.getPaymentInformations().get(0).getMonthsOfPayment().contains(i)) {
-                    double added = cumulativeExpense.getPaymentInformations().get(0).getValueFor(i) + expense.getPaymentInformations().get(0).getValueFor(i);
-                    cumulativeExpense.getPaymentInformations().get(0).getPayments().put(i, added);
-                }
+                double added = cumulativeExpense.getValueFor(CURRENT_YEAR, i) + expense.getValueFor(CURRENT_YEAR, i);
+                cumulativeExpense.getPaymentInformations().get(0).getPayments().put(i, added);
             }
         });
 
