@@ -13,7 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import timkodiert.budgetBook.controller.FixedExpenseController;
-import timkodiert.budgetBook.domain.model.ExpenseType;
+import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.BoldTableColumn;
 import timkodiert.budgetBook.util.BoldTableRow;
@@ -72,7 +72,7 @@ public class AnnualOverviewView implements Initializable {
         });
         mainTable.getColumns().add(cumulativeColumn);
         // Kummulative Zeile
-        FixedExpense cumulativeExpense = new FixedExpense("Gesamt", 0, ExpenseType.CUMULATIVE, IntStream.rangeClosed(1, 12).boxed().toList());
+        FixedExpense cumulativeExpense = new FixedExpense("Gesamt", 0, PaymentType.CUMULATIVE, IntStream.rangeClosed(1, 12).boxed().toList());
         // IntStream.range(1, 12).forEach(i -> cumulativeExpense.getPayments().put(i, 0.0));
         IntStream.range(1, 12).forEach(i -> {
             for(FixedExpense expense : fixedExpenseController.getAllExpenses()) {
@@ -84,7 +84,7 @@ public class AnnualOverviewView implements Initializable {
         });
 
         mainTable.setRowFactory(tableView -> {
-            return new BoldTableRow(ExpenseType.CUMULATIVE);
+            return new BoldTableRow(PaymentType.CUMULATIVE);
         });
 
         mainTable.getItems().addAll(fixedExpenseController.getAllExpenses());

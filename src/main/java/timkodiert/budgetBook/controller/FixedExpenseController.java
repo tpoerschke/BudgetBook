@@ -14,7 +14,7 @@ import lombok.Getter;
 import timkodiert.budgetBook.Constants;
 import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
-import timkodiert.budgetBook.domain.model.ExpenseType;
+import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.SumChangeListener;
@@ -58,24 +58,24 @@ public class FixedExpenseController {
         allExpenses.addListener((Change<? extends FixedExpense> change) -> {
             int nextMonth = LocalDate.now().plusMonths(1).getMonth().getValue();
             nextMonthExpenses.setAll(allExpenses.stream()
-                    .filter(expense -> !expense.getType().equals(ExpenseType.MONTHLY))
+                    .filter(expense -> !expense.getPaymentType().equals(PaymentType.MONTHLY))
                     // TODO: Überarbeiten mit vernünftiger Schnittstelle
-                    .filter(expense -> expense.getPayments().get(0).getMonthsOfPayment().contains(nextMonth))
+                    .filter(expense -> expense.getPaymentInformations().get(0).getMonthsOfPayment().contains(nextMonth))
                     .map(Expense::getAdapter)
                     .toList());
         });
         allExpenses.addListener((Change<? extends FixedExpense> change) -> {
             int currentMonth = LocalDate.now().getMonth().getValue();
             currentMonthExpenses.setAll(allExpenses.stream()
-                    .filter(expense -> !expense.getType().equals(ExpenseType.MONTHLY))
+                    .filter(expense -> !expense.getPaymentType().equals(PaymentType.MONTHLY))
                     // TODO: Überarbeiten mit vernünftiger Schnittstelle
-                    .filter(expense -> expense.getPayments().get(0).getMonthsOfPayment().contains(currentMonth))
+                    .filter(expense -> expense.getPaymentInformations().get(0).getMonthsOfPayment().contains(currentMonth))
                     .map(Expense::getAdapter)
                     .toList());
         });
         allExpenses.addListener((Change<? extends FixedExpense> change) -> {
             monthlyExpenses.setAll(allExpenses.stream()
-                    .filter(expense -> expense.getType().equals(ExpenseType.MONTHLY))
+                    .filter(expense -> expense.getPaymentType().equals(PaymentType.MONTHLY))
                     .map(Expense::getAdapter)
                     .toList());
         });

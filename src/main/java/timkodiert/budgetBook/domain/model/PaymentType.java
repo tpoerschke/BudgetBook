@@ -11,21 +11,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public final class ExpenseType {
+public final class PaymentType {
     
-    public static final ExpenseType MONTHLY = new ExpenseType("monatlich");
-    public static final ExpenseType ANNUAL = new ExpenseType("jährlich");
-    public static final ExpenseType SEMIANNUAL = new ExpenseType("halbjährlich");
-    public static final ExpenseType QUARTERLY = new ExpenseType("vierteljährlich");
+    public static final PaymentType MONTHLY = new PaymentType("monatlich");
+    public static final PaymentType ANNUAL = new PaymentType("jährlich");
+    public static final PaymentType SEMIANNUAL = new PaymentType("halbjährlich");
+    public static final PaymentType QUARTERLY = new PaymentType("vierteljährlich");
 
     // Für die Jahresübersicht (letzte Zeile)
-    public static final ExpenseType CUMULATIVE = new ExpenseType("kummulativ");
+    public static final PaymentType CUMULATIVE = new PaymentType("kummulativ");
 
     @Getter
     @NonNull
     private String type;
 
-    public static ExpenseType fromString(String type) {
+    public static PaymentType fromString(String type) {
         switch(type) {
             case "monatlich": return MONTHLY;
             case "jährlich": return ANNUAL;

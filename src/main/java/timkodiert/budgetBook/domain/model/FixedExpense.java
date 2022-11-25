@@ -16,17 +16,17 @@ public class FixedExpense extends Expense {
     @Getter
     @Setter
     @OneToMany(mappedBy="expense", cascade=CascadeType.ALL)
-    private List<PaymentInformation> payments = new ArrayList<>();
+    private List<PaymentInformation> paymentInformations = new ArrayList<>();
     
     public FixedExpense() {
         super();
         initAdapter();
     }
 
-    public FixedExpense(String position, double value, ExpenseType type, List<Integer> datesOfPayment) {
-        super(position, type);
+    public FixedExpense(String position, double value, PaymentType type, List<Integer> datesOfPayment) {
+        super(position);
 
-        this.payments.add(new PaymentInformation(this, value, datesOfPayment, LocalDate.now()));
+        this.paymentInformations.add(new PaymentInformation(this, LocalDate.now().getYear(), value, datesOfPayment, type));
         initAdapter();
     }
 
@@ -39,29 +39,30 @@ public class FixedExpense extends Expense {
             e.printStackTrace();
         }
     }
+    
+    @Override
+    public PaymentType getPaymentType() {
+        return this.paymentInformations.get(0).getType();
+    }
 
     @Override
     public double getCurrentMonthValue() {
-        // TODO Auto-generated method stub
-        return this.payments.isEmpty() ? 0 : this.payments.get(0).getValue();
+        LocalDate currentMonth = LocalDate.now();
+        return this.getValueFor(currentMonth.getYear(), currentMonth.getMonth().getValue());
     }
 
     @Override
     public double getNextMonthValue() {
-        // TODO Auto-generated method stub
-        return this.payments.isEmpty() ? 0 : this.payments.get(0).getValue();
+        LocalDate nextMonth = LocalDate.now().plusMonths(1);
+        return this.getValueFor(nextMonth.getYear(), nextMonth.getMonth().getValue());
     }
 
     @Override
     public double getCurrentYearValue() {
-        // Sollte die Summe aller Payments für das aktuelle Jahr ausgeben
-        // Dazu müssen ggf. mehrere PaymentInformation ausgewertet werden, falls
-        // sich die Zahlungen geändert haben (PaymentInformation.startDate überprüfen)
-        //return this.getPayments().values().stream().mapToDouble(v -> v.doubleValue()).sum();
-        return this.getCurrentMonthValue() * this.payments.get(0).getFactor();
+        return this.paymentInformations.get(0).getPayments().values().stream().mapToDouble(v -> v).sum();
     }
 
     public double getValueFor(int year, int month) {
-        return this.payments.get(0).getValue();
+        return this.paymentInformations.get(0).getValueFor(month);
     }
 }

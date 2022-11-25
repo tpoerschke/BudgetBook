@@ -61,19 +61,19 @@ public class MainView implements Initializable {
         monthlyPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("currentMonthValue"));
         monthlyValueCol.setCellFactory(col -> new CurrencyTableCell<>());
-        monthlyTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
+        monthlyTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
 
         currentMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         currentMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         currentMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("currentMonthValue"));
         currentMonthValueCol.setCellFactory(col -> new CurrencyTableCell<>());
-        currentMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
+        currentMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
 
         nextMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         nextMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         nextMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("nextMonthValue"));
         nextMonthValueCol.setCellFactory(col -> new CurrencyTableCell<>());
-        nextMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().typeProperty().get().getType()));
+        nextMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
 
         // Ausgaben anzeigen
         monthlyTable.setItems(fixedExpenseController.getMonthlyExpenses());

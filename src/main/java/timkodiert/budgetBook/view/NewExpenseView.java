@@ -23,7 +23,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import timkodiert.budgetBook.domain.model.ExpenseType;
+import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.EntityManager;
 
@@ -110,7 +110,7 @@ public class NewExpenseView implements Initializable {
                 .toList();
         }
 
-        ExpenseType type = ExpenseType.fromString(typeChoiceBox.getSelectionModel().getSelectedItem());
+        PaymentType type = PaymentType.fromString(typeChoiceBox.getSelectionModel().getSelectedItem());
 
         FixedExpense newExpense = new FixedExpense(position, value, type, datesOfPayment);
 

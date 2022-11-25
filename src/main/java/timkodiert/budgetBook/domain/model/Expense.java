@@ -29,16 +29,12 @@ public abstract class Expense implements Turnover {
 
     @Setter
     protected String note;
-    @Setter
-    @NotNull
-    protected ExpenseType type;
 
     @Transient
     protected ExpenseAdapter adapter;
 
-    public Expense(String position, ExpenseType type) {
+    public Expense(String position) {
         this.position = position;
-        this.type = type;
     }
 
     protected abstract void initAdapter();
@@ -46,4 +42,6 @@ public abstract class Expense implements Turnover {
     public abstract double getCurrentMonthValue();
     public abstract double getNextMonthValue();
     public abstract double getCurrentYearValue();
+
+    public abstract PaymentType getPaymentType();
 }

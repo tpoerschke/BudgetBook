@@ -1,15 +1,21 @@
 package timkodiert.budgetBook.domain.model;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -26,35 +32,37 @@ public class PaymentInformation {
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
     protected int id;
-    
-    @Setter
-    @NotEmpty
-    private List<Integer> monthsOfPayment;
 
-    @Setter
-    @PositiveOrZero(message = "Die Höhe der Ausgabe darf nicht negativ sein.")
-    protected double value;
+    private int year;
 
-    @Setter
-    @NotNull
-    private LocalDate startDate;
+    private PaymentType type;
 
-    @Setter
-    private LocalDate endDate;
+    @ElementCollection
+    @CollectionTable(name = "paymentinfo_month_mapping", joinColumns = {
+            @JoinColumn(name = "paymentinfo_id", referencedColumnName = "id") })
+    @MapKeyColumn(name = "month")
+    @Column(name = "value")
+    private Map<Integer, Double> payments = new HashMap<>();
 
     @Setter
     @ManyToOne
-    @JoinColumn(name="expense_id", nullable=false)
+    @JoinColumn(name = "expense_id", nullable = false)
     private Expense expense;
 
-    public PaymentInformation(Expense expense, double value, List<Integer> monthsOfPayment, LocalDate startDate) {
+    public PaymentInformation(Expense expense, int year, double value, List<Integer> monthsOfPayment, PaymentType type) {
         this.expense = expense;
-        this.value = value;
-        this.monthsOfPayment = monthsOfPayment;
-        this.startDate = startDate;
+        this.type = type;
+        this.year = year;
+        for(int month : monthsOfPayment) {
+            this.payments.put(month, value);
+        }
     }
 
-    public int getFactor() {
-        return this.monthsOfPayment.size();
+    public double getValueFor(int month) {
+        return this.payments.getOrDefault(month, 0.0);
+    }
+
+    public List<Integer> getMonthsOfPayment() {
+        return this.payments.keySet().stream().toList();
     }
 }

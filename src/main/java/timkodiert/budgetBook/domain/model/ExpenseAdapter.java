@@ -2,10 +2,12 @@ package timkodiert.budgetBook.domain.model;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.JavaBeanObjectPropertyBuilder;
 import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
 import javafx.beans.property.adapter.ReadOnlyJavaBeanDoublePropertyBuilder;
+import javafx.beans.property.adapter.ReadOnlyJavaBeanObjectPropertyBuilder;
 import lombok.Getter;
 
 // Das ViewModel
@@ -13,7 +15,7 @@ public abstract class ExpenseAdapter {
     private final StringProperty position;
     private final ReadOnlyDoubleProperty currentMonthValue;
     private final ReadOnlyDoubleProperty nextMonthValue;
-    private final ObjectProperty<ExpenseType> type;
+    private final ReadOnlyObjectProperty<PaymentType> paymentType;
 
     @Getter
     private final Expense bean;
@@ -23,7 +25,7 @@ public abstract class ExpenseAdapter {
         // ReadOnly reicht hier, da die Expense nicht über Tabellen o.ä. bearbeitet werden sollen
         this.currentMonthValue = ReadOnlyJavaBeanDoublePropertyBuilder.create().bean(expense).name("currentMonthValue").build();
         this.nextMonthValue = ReadOnlyJavaBeanDoublePropertyBuilder.create().bean(expense).name("nextMonthValue").build();
-        this.type = JavaBeanObjectPropertyBuilder.create().bean(expense).name("type").build();
+        this.paymentType = ReadOnlyJavaBeanObjectPropertyBuilder.<PaymentType>create().bean(expense).name("paymentType").build();
 
         this.bean = expense;
     }
@@ -40,7 +42,7 @@ public abstract class ExpenseAdapter {
         return this.nextMonthValue;
     }
 
-    public ObjectProperty<ExpenseType> typeProperty() {
-        return this.type;
+    public ReadOnlyObjectProperty<PaymentType> paymentTypeProperty() {
+        return this.paymentType;
     }
 }
