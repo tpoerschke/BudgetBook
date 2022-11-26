@@ -24,6 +24,7 @@ import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
 import timkodiert.budgetBook.util.CurrencyTableCell;
 import timkodiert.budgetBook.util.EntityManager;
+import timkodiert.budgetBook.util.StageBuilder;
 
 public class MainView implements Initializable {
     
@@ -92,14 +93,11 @@ public class MainView implements Initializable {
     @FXML
     private void openNewExpenseView(ActionEvent event) {
         try {
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(this.primaryStage);
-            // Das Template laden
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/NewExpense.fxml"));
-            Parent parent = (Parent)loader.load();
-            Scene scene = new Scene(parent);
-            stage.setScene(scene);
+            Stage stage = StageBuilder.create()
+                .withModality(Modality.APPLICATION_MODAL)
+                .withOwner(this.primaryStage)
+                .withFXMLResource("/fxml/NewExpense.fxml")
+                .build();
             stage.show();
         } catch(Exception e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
@@ -110,12 +108,7 @@ public class MainView implements Initializable {
     @FXML
     private void openAnnualOverviewView(ActionEvent event) {
         try {
-            Stage stage = new Stage();
-            // Das Template laden
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AnnualOverview.fxml"));
-            Parent parent = (Parent)loader.load();
-            Scene scene = new Scene(parent);
-            stage.setScene(scene);
+            Stage stage = StageBuilder.create().withFXMLResource("/fxml/AnnualOverview.fxml").build();
             stage.show();
         } catch(Exception e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");

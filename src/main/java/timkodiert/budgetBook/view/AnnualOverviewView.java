@@ -9,10 +9,7 @@ import java.util.stream.IntStream;
 
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -25,6 +22,7 @@ import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.BoldTableColumn;
 import timkodiert.budgetBook.util.BoldTableRow;
 import timkodiert.budgetBook.util.CurrencyTableCell;
+import timkodiert.budgetBook.util.StageBuilder;
 
 public class AnnualOverviewView implements Initializable {
 
@@ -94,12 +92,7 @@ public class AnnualOverviewView implements Initializable {
             row.setOnMouseClicked(event -> {
                 if(event.getClickCount() == 2 && !row.isEmpty()) {
                     try {
-                        Stage stage = new Stage();
-                        // Das Template laden
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditExpense.fxml"));
-                        Parent parent = (Parent)loader.load();
-                        Scene scene = new Scene(parent);
-                        stage.setScene(scene);
+                        Stage stage = StageBuilder.create().withFXMLResource("/fxml/EditExpense.fxml").build();
                         stage.show();
                     } catch(Exception e) {
                         Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
