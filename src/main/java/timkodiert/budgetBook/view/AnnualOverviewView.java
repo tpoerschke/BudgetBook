@@ -9,9 +9,16 @@ import java.util.stream.IntStream;
 
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.FixedExpense;
@@ -83,7 +90,24 @@ public class AnnualOverviewView implements Initializable {
         });
 
         mainTable.setRowFactory(tableView -> {
-            return new BoldTableRow(PaymentType.CUMULATIVE);
+            TableRow<FixedExpense> row = new BoldTableRow(PaymentType.CUMULATIVE);
+            row.setOnMouseClicked(event -> {
+                if(event.getClickCount() == 2 && !row.isEmpty()) {
+                    try {
+                        Stage stage = new Stage();
+                        // Das Template laden
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditExpense.fxml"));
+                        Parent parent = (Parent)loader.load();
+                        Scene scene = new Scene(parent);
+                        stage.setScene(scene);
+                        stage.show();
+                    } catch(Exception e) {
+                        Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+                        alert.showAndWait();
+                    }
+                }
+            });
+            return row;
         });
 
         mainTable.getItems().addAll(fixedExpenseController.getAllExpenses());
