@@ -15,6 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.PaymentType;
@@ -92,7 +93,11 @@ public class AnnualOverviewView implements Initializable {
             row.setOnMouseClicked(event -> {
                 if(event.getClickCount() == 2 && !row.isEmpty()) {
                     try {
-                        Stage stage = StageBuilder.create().withFXMLResource("/fxml/EditExpense.fxml").build();
+                        Stage stage = StageBuilder.create()
+                            .withModality(Modality.APPLICATION_MODAL)
+                            .withFXMLResource("/fxml/EditExpense.fxml")
+                            .withView(new EditExpenseView(row.getItem()))
+                            .build();
                         stage.show();
                     } catch(Exception e) {
                         Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");

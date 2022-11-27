@@ -8,13 +8,17 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import timkodiert.budgetBook.view.View;
 
 public class StageBuilder {
 
-    private Stage stage;
+    private Window owner;
+    private Modality modality;
+    private String resourcePath;
+    private View viewController;    
+    private String title;
 
     private StageBuilder() {
-        this.stage = new Stage();
     }
 
     public static StageBuilder create() {
@@ -22,24 +26,43 @@ public class StageBuilder {
     }
 
     public StageBuilder withModality(Modality modality) {
-        this.stage.initModality(modality);
+        this.modality = modality;
         return this;
     }
 
     public StageBuilder withOwner(Window owner) {
-        this.stage.initOwner(owner);
+        this.owner = owner;
         return this;
     }
 
-    public StageBuilder withFXMLResource(String resource) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));
+    public StageBuilder withFXMLResource(String resourcePath)  {
+        this.resourcePath = resourcePath;
+        return this;
+    }
+
+    public StageBuilder withView(View viewController) {
+        this.viewController = viewController;
+        return this;
+    }
+
+    public StageBuilder withTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public Stage build() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcePath));
+        loader.setController(viewController);
+
         Parent parent = (Parent)loader.load();
         Scene scene = new Scene(parent);
-        this.stage.setScene(scene);
-        return this;
-    }
 
-    public Stage build() {
-        return this.stage;
+        Stage stage = new Stage();
+        stage.setTitle(title);
+        stage.setScene(scene);
+        stage.initModality(modality);
+        stage.initOwner(owner);
+
+        return stage;
     }
 }
