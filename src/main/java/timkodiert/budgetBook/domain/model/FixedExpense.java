@@ -58,11 +58,28 @@ public class FixedExpense extends Expense {
     }
 
     @Override
-    public double getCurrentYearValue() {
-        return this.paymentInformations.get(0).getPayments().values().stream().mapToDouble(v -> v).sum();
+    public double getValueForYear(int year) {
+        PaymentInformation payInfo = this.findPaymentInformation(year);
+        if(payInfo != null) {
+            return payInfo.getPayments().values().stream().mapToDouble(v -> v).sum();
+        }
+        return 0;
     }
 
     public double getValueFor(int year, int month) {
-        return this.paymentInformations.get(0).getValueFor(month);
+        PaymentInformation payInfo = this.findPaymentInformation(year);
+        if(payInfo != null) {
+            return payInfo.getValueFor(month);
+        }
+        return 0;
+    }
+
+    private PaymentInformation findPaymentInformation(int year) {
+        for(PaymentInformation payInfo : this.paymentInformations) {
+            if(payInfo.getYear() == year) {
+                return payInfo;
+            }
+        }
+        return null;
     }
 }

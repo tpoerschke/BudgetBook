@@ -40,7 +40,7 @@ public abstract class Expense implements Turnover {
 
     public abstract double getCurrentMonthValue();
     public abstract double getNextMonthValue();
-    public abstract double getCurrentYearValue();
+    public abstract double getValueForYear(int year);
 
     public abstract PaymentType getPaymentType();
 }
