@@ -83,11 +83,11 @@ public class FixedExpenseController {
         // Properties für die Monatssummen initialisieren
         monthlyExpensesSum = new SimpleDoubleProperty();
         monthlyExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        monthlyExpenses.addListener(new SumListChangeListener<>(monthlyExpenses, monthlyExpensesSum, monthlyExpensesSumText));
+        monthlyExpenses.addListener(new SumListChangeListener<ExpenseAdapter>(monthlyExpenses, monthlyExpensesSum, monthlyExpensesSumText, Expense::getCurrentMonthValue));
 
         currentMonthExpensesSum = new SimpleDoubleProperty();
         currentMonthExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        currentMonthExpenses.addListener(new SumListChangeListener<>(currentMonthExpenses, currentMonthExpensesSum, currentMonthExpensesSumText));
+        currentMonthExpenses.addListener(new SumListChangeListener<>(currentMonthExpenses, currentMonthExpensesSum, currentMonthExpensesSumText, Expense::getCurrentMonthValue));
         currentMonthExpensesTotalSum = new SimpleDoubleProperty();
         currentMonthExpensesTotalSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
         ChangeListener<Number> currentTotalListener = new SumChangeListener<>(currentMonthExpensesTotalSum, currentMonthExpensesTotalSumText, currentMonthExpensesSum, monthlyExpensesSum);
@@ -96,7 +96,7 @@ public class FixedExpenseController {
 
         nextMonthExpensesSum = new SimpleDoubleProperty();
         nextMonthExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        nextMonthExpenses.addListener(new SumListChangeListener<>(nextMonthExpenses, nextMonthExpensesSum, nextMonthExpensesSumText));
+        nextMonthExpenses.addListener(new SumListChangeListener<>(nextMonthExpenses, nextMonthExpensesSum, nextMonthExpensesSumText, Expense::getNextMonthValue));
         nextMonthExpensesTotalSum = new SimpleDoubleProperty();
         nextMonthExpensesTotalSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
         ChangeListener<Number> nextTotalListener = new SumChangeListener<>(nextMonthExpensesTotalSum, nextMonthExpensesTotalSumText, nextMonthExpensesSum, monthlyExpensesSum);
