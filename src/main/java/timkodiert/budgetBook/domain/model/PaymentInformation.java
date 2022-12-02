@@ -54,6 +54,18 @@ public class PaymentInformation {
         }
     }
 
+    private PaymentInformation(int year, PaymentInformation payInfo) {
+        this.year = year;
+        this.expense = payInfo.getExpense();
+        this.type = payInfo.getType();
+        this.payments = new HashMap<>(payInfo.getPayments());
+    }
+
+    // Zum "kopieren" bzw. übertragen in ein neues Jahr
+    public static PaymentInformation of(int year, PaymentInformation payInfo) {
+        return new PaymentInformation(year, payInfo);
+    }
+
     public double getValueFor(int month) {
         return this.payments.getOrDefault(month, 0.0);
     }

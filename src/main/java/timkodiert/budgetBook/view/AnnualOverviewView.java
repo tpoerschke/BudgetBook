@@ -51,6 +51,9 @@ public class AnnualOverviewView implements Initializable {
         displayYearComboBox.getItems().addAll(IntStream.rangeClosed(CURRENT_YEAR - 5, CURRENT_YEAR + 1).boxed().toList());
         displayYearComboBox.getSelectionModel().select(Integer.valueOf(CURRENT_YEAR));
         displayYearComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
+            if(LocalDate.now().plusYears(1).getYear() == newValue) {
+                fixedExpenseController.addNextYearToAllExpenses();
+            }
             mainTable.refresh();
         });
 
@@ -90,6 +93,7 @@ public class AnnualOverviewView implements Initializable {
         });
         mainTable.getColumns().add(cumulativeColumn);
         // Kummulative Zeile
+        // FIXME: passt sich nicht, wenn das Jahr gewechselt wird
         FixedExpense cumulativeExpense = new FixedExpense("Gesamt", 0, PaymentType.CUMULATIVE, IntStream.rangeClosed(1, 12).boxed().toList());
         IntStream.rangeClosed(1, 12).forEach(i -> {
             for(FixedExpense expense : fixedExpenseController.getAllExpenses()) {

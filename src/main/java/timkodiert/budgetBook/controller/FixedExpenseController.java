@@ -108,6 +108,11 @@ public class FixedExpenseController {
         allExpenses.setAll(entityManager.findAll(FixedExpense.class));
     }
 
+    public void addNextYearToAllExpenses() {
+        allExpenses.forEach(FixedExpense::addPaymentInformationForNextYear);
+        entityManager.persist(allExpenses.toArray());
+    }
+
     public DoubleProperty monthlyExpensesSumProperty() {
         return this.monthlyExpensesSum;
     }
