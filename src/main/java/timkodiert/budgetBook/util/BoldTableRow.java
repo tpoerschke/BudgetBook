@@ -17,7 +17,7 @@ public class BoldTableRow extends TableRow<Expense> {
     @Override
     protected void updateItem(Expense item, boolean empty) {
         super.updateItem(item, empty);
-        if(!empty && item.getPaymentType().equals(this.expenseType)) {
+        if(!empty && this.expenseType.equals(item.getPaymentType())) {
             getStyleClass().add("text-bold");
         }
     }
