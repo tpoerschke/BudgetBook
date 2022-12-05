@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
 import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,8 +23,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.PaymentType;
+import timkodiert.budgetBook.domain.model.CumulativeExpense;
 import timkodiert.budgetBook.domain.model.Expense;
-import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.BoldTableColumn;
 import timkodiert.budgetBook.util.BoldTableRow;
 import timkodiert.budgetBook.util.CurrencyTableCell;
@@ -33,6 +34,8 @@ public class AnnualOverviewView implements Initializable {
 
     private static List<String> MONTH_NAMES = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
     private static int CURRENT_YEAR = LocalDate.now().getYear();
+    private static int START_YEAR = CURRENT_YEAR - 5;
+    private static int END_YEAR = CURRENT_YEAR + 1;
 
     @FXML
     private TableView<Expense> mainTable;
@@ -49,7 +52,7 @@ public class AnnualOverviewView implements Initializable {
         FixedExpenseController fixedExpenseController = new FixedExpenseController();
         fixedExpenseController.loadAll();
 
-        displayYearComboBox.getItems().addAll(IntStream.rangeClosed(CURRENT_YEAR - 5, CURRENT_YEAR + 1).boxed().toList());
+        displayYearComboBox.getItems().addAll(IntStream.rangeClosed(START_YEAR, END_YEAR).boxed().toList());
         displayYearComboBox.getSelectionModel().select(Integer.valueOf(CURRENT_YEAR));
         displayYearComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
             if(LocalDate.now().plusYears(1).getYear() == newValue) {
@@ -58,7 +61,7 @@ public class AnnualOverviewView implements Initializable {
             mainTable.refresh();
         });
 
-        positionColumn.setCellValueFactory(cellData -> cellData.getValue().getAdapter().positionProperty());
+        positionColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPosition()));
         // Hätte gerne sowas wie in Python:
         // for i, month in enumerate(monthNames):
         //   ...
@@ -95,15 +98,7 @@ public class AnnualOverviewView implements Initializable {
         mainTable.getColumns().add(cumulativeColumn);
         // Kummulative Zeile
         // FIXME: passt sich nicht, wenn das Jahr gewechselt wird
-        FixedExpense cumulativeExpense = new FixedExpense("Gesamt", 0, PaymentType.CUMULATIVE, IntStream.rangeClosed(1, 12).boxed().toList());
-        IntStream.rangeClosed(1, 12).forEach(i -> {
-            for(FixedExpense expense : fixedExpenseController.getAllExpenses()) {
-                // TODO: Überarbeiten mit vernünftiger Schnittstelle
-                int selectedYear = displayYearComboBox.getValue();
-                double added = cumulativeExpense.getValueFor(selectedYear, i) + expense.getValueFor(selectedYear, i);
-                cumulativeExpense.getPaymentInformations().get(0).getPayments().put(i, added);
-            }
-        });
+        Expense cumulativeExpense = new CumulativeExpense(fixedExpenseController.getAllExpenses(), START_YEAR, END_YEAR);
 
         mainTable.setRowFactory(tableView -> {
             TableRow<Expense> row = new BoldTableRow(PaymentType.CUMULATIVE);
