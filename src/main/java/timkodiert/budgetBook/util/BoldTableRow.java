@@ -2,9 +2,9 @@ package timkodiert.budgetBook.util;
 
 import javafx.scene.control.TableRow;
 import timkodiert.budgetBook.domain.model.PaymentType;
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.Expense;
 
-public class BoldTableRow extends TableRow<FixedExpense> {
+public class BoldTableRow extends TableRow<Expense> {
 
     // Alle Ausgaben dieses Typs werden fett dargestellt
     private PaymentType expenseType;
@@ -15,7 +15,7 @@ public class BoldTableRow extends TableRow<FixedExpense> {
     }
 
     @Override
-    protected void updateItem(FixedExpense item, boolean empty) {
+    protected void updateItem(Expense item, boolean empty) {
         super.updateItem(item, empty);
         if(!empty && item.getPaymentType().equals(this.expenseType)) {
             getStyleClass().add("text-bold");

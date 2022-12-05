@@ -36,8 +36,6 @@ public abstract class Expense implements Turnover {
         this.position = position;
     }
 
-    protected abstract void initAdapter();
-
     public abstract double getCurrentMonthValue();
     public abstract double getNextMonthValue();
     public abstract double getValueForYear(int year);

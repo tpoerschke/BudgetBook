@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-public class FixedExpense extends Expense {
+public class FixedExpense extends Expense implements Adaptable {
 
     @Getter
     @Setter
@@ -31,7 +31,7 @@ public class FixedExpense extends Expense {
     }
 
     @Override
-    protected void initAdapter() {
+    public void initAdapter() {
         try {
             this.adapter = new FixedExpenseAdapter(this);
         } catch (NoSuchMethodException e) {

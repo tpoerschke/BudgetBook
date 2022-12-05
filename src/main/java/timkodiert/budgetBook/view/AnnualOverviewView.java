@@ -22,6 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.PaymentType;
+import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.BoldTableColumn;
 import timkodiert.budgetBook.util.BoldTableRow;
@@ -34,14 +35,14 @@ public class AnnualOverviewView implements Initializable {
     private static int CURRENT_YEAR = LocalDate.now().getYear();
 
     @FXML
-    private TableView<FixedExpense> mainTable;
+    private TableView<Expense> mainTable;
     @FXML
-    private TableColumn<FixedExpense, String> positionColumn;
+    private TableColumn<Expense, String> positionColumn;
     @FXML
     private ComboBox<Integer> displayYearComboBox;
 
-    private List<TableColumn<FixedExpense, Number>> monthColumns = new ArrayList<>();
-    private TableColumn<FixedExpense, Number> cumulativeColumn;
+    private List<TableColumn<Expense, Number>> monthColumns = new ArrayList<>();
+    private TableColumn<Expense, Number> cumulativeColumn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -67,13 +68,13 @@ public class AnnualOverviewView implements Initializable {
             int index = iterator.nextIndex();
             String month = iterator.next();
 
-            TableColumn<FixedExpense, Number> tableColumn = new TableColumn<>(month);
+            TableColumn<Expense, Number> tableColumn = new TableColumn<>(month);
             tableColumn.setPrefWidth(90);
             tableColumn.setResizable(false);
             tableColumn.getStyleClass().add("annual-overview-tablecolumn");
             tableColumn.setCellFactory(col -> new CurrencyTableCell<>());
             tableColumn.setCellValueFactory(cellData -> {
-                FixedExpense expense = cellData.getValue();
+                Expense expense = cellData.getValue();
                 int selectedYear = displayYearComboBox.getValue();
                 return new ReadOnlyDoubleWrapper(expense.getValueFor(selectedYear, index+1));
             });
@@ -87,7 +88,7 @@ public class AnnualOverviewView implements Initializable {
         cumulativeColumn.setResizable(false);
         cumulativeColumn.setCellFactory(col -> new CurrencyTableCell<>());
         cumulativeColumn.setCellValueFactory(cellData -> {
-            FixedExpense expense = cellData.getValue();
+            Expense expense = cellData.getValue();
             int selectedYear = displayYearComboBox.getValue();
             return new ReadOnlyDoubleWrapper(expense.getValueForYear(selectedYear));
         });
@@ -105,14 +106,14 @@ public class AnnualOverviewView implements Initializable {
         });
 
         mainTable.setRowFactory(tableView -> {
-            TableRow<FixedExpense> row = new BoldTableRow(PaymentType.CUMULATIVE);
+            TableRow<Expense> row = new BoldTableRow(PaymentType.CUMULATIVE);
             row.setOnMouseClicked(event -> {
                 if(event.getClickCount() == 2 && !row.isEmpty()) {
                     try {
                         Stage stage = StageBuilder.create()
                             .withModality(Modality.APPLICATION_MODAL)
                             .withFXMLResource("/fxml/EditExpense.fxml")
-                            .withView(new EditExpenseView(row.getItem()))
+                            .withView(new EditExpenseView(fixedExpenseController.getExpense(row.getItem().getId())))
                             .build();
                         stage.show();
                     } catch(Exception e) {

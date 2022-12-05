@@ -104,6 +104,10 @@ public class FixedExpenseController {
         monthlyExpensesSum.addListener(nextTotalListener);
     }
 
+    public FixedExpense getExpense(int id) {
+        return this.allExpenses.stream().filter(exp -> exp.getId() == id).findFirst().get();
+    }
+
     public void loadAll() {
         allExpenses.setAll(entityManager.findAll(FixedExpense.class));
     }
