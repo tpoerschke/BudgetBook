@@ -3,16 +3,24 @@ package timkodiert.budgetBook.view;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.util.EntityManager;
 
 @RequiredArgsConstructor
 public class EditExpenseView implements View, Initializable {
@@ -47,5 +55,16 @@ public class EditExpenseView implements View, Initializable {
             });
         });
         displayYearComboBox.getSelectionModel().select(Integer.valueOf(CURRENT_YEAR));
+    }
+
+    @FXML
+    private void deleteExpense(ActionEvent event) {
+        Alert confirmationAlert = new Alert(AlertType.CONFIRMATION, "Die Ausgabe \"" + this.expense.getPosition() + "\" wirklich löschen?", ButtonType.YES, ButtonType.NO);
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if(result.filter(ButtonType.YES::equals).isPresent()) {
+            EntityManager.getInstance().remove(this.expense);
+            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            stage.close();
+        }
     }
 }

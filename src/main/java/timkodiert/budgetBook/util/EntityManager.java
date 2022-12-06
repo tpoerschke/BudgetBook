@@ -47,4 +47,10 @@ public class EntityManager {
         Arrays.stream(objects).forEach(this.session::persist);
         this.session.getTransaction().commit();
     }
+
+    public void remove(Object ...objects) {
+        this.session.beginTransaction();
+        Arrays.stream(objects).forEach(this.session::remove);
+        this.session.getTransaction().commit();
+    }
 }
