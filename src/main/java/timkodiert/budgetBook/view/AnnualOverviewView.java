@@ -97,7 +97,6 @@ public class AnnualOverviewView implements Initializable {
         });
         mainTable.getColumns().add(cumulativeColumn);
         // Kummulative Zeile
-        // FIXME: passt sich nicht, wenn das Jahr gewechselt wird
         Expense cumulativeExpense = new CumulativeExpense(fixedExpenseController.getAllExpenses(), START_YEAR, END_YEAR);
 
         mainTable.setRowFactory(tableView -> {
