@@ -26,7 +26,7 @@
     <img src="images/logo.png" alt="Logo" width="140" height="80">
   </a>
 
-<h2 align="center">JBudgetBook</h2>
+<h3 align="center">JBudgetBook</h3>
 
   <p align="center">
     Überblicke & analysiere deine Ausgaben
@@ -91,6 +91,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 [![Maven][Maven-shield]][Maven-url]
 [![Hibernate][Hibernate-shield]][Hibernate-url]
 [![SQLite][SQLite-shield]][SQLite-url]
+[![Lombok][Lombok-shield]][Lombok-url]
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -122,9 +123,7 @@ To get a local copy up and running follow these simple example steps.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+WIP
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -176,13 +175,14 @@ Distributed under the GNU General Public License v3.0. See `LICENSE` for more in
 
 Tim Poerschke - [@twitter_handle](https://twitter.com/twitter_handle) - post@timkodiert.de
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/tpoerschke/BudgetBook](https://github.com/tpoerschke/BudgetBook)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 <!-- ACKNOWLEDGMENTS -->
+<!--
 ## Acknowledgments
 
 * []()
@@ -190,23 +190,11 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 * []()
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
+-->
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/MainViewScreenshot.png
 
 [OpenJDK-shield]: https://img.shields.io/badge/OpenJDK-222?style=for-the-badge&logo=OpenJDK
@@ -217,3 +205,5 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [Hibernate-url]: https://hibernate.org/
 [SQLite-shield]: https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=SQlite
 [SQLite-url]: https://www.sqlite.org/index.html
+[Lombok-shield]: https://img.shields.io/badge/lombok-d9230f?style=for-the-badge
+[Lombok-url]: https://projectlombok.org/
