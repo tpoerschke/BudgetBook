@@ -59,7 +59,7 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
+        <!--<li><a href="#prerequisites">Prerequisites</a></li>-->
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
@@ -68,7 +68,7 @@
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <!--<li><a href="#acknowledgments">Acknowledgments</a></li>-->
   </ol>
 </details>
 
@@ -77,9 +77,11 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![JBudgetBook-MainView][product-screenshot]](https://github.com/tpoerschke/BudgetBook)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+Dieses Haushaltsbuch soll Ihnen einen Überblick über Ihre laufenden Kosten ermöglichen. Zwei Ansichten sind aktuell implementiert: Ausgabenübersicht und Jahresübersicht.  
+
+Das Projekt befindet sich noch in einem frühen Stadium, weswegen Bugs auftreten können. Sollten Sie Bugs finden, können Sie dazu gerne Issues anlegen.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -101,8 +103,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Das Projekt kann lokal wie folgt aufgesetzt werden. Eine Installation als `.exe` (Windows) oder `.app` (Mac) ist aktuell nicht möglich.
 
 ### Installation
 
@@ -132,10 +133,11 @@ WIP
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [x] Ausgabenübersicht
+- [x] Jahresübersicht
+- [ ] Einnahmen verwalten
+- [ ] Analyseübersicht
+- [ ] Exportfunktionalität
 
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
@@ -173,7 +175,7 @@ Distributed under the GNU General Public License v3.0. See `LICENSE` for more in
 <!-- CONTACT -->
 ## Contact
 
-Tim Poerschke - [@twitter_handle](https://twitter.com/twitter_handle) - post@timkodiert.de
+Tim Poerschke - [@timpo@ruhr.social](https://ruhr.social/@timpo) - post@timkodiert.de
 
 Project Link: [https://github.com/tpoerschke/BudgetBook](https://github.com/tpoerschke/BudgetBook)
 
