@@ -109,7 +109,7 @@ Das Projekt kann lokal wie folgt aufgesetzt werden. Eine Installation als `.exe`
 
 1. Repo klonen
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/tpoerschke/BudgetBook
    ```
 2. Starten
    ```sh
