@@ -134,7 +134,7 @@ WIP
 ## Roadmap
 
 - [x] Ausgabenübersicht
-- [x] Jahresübersicht
+- [x] Jahresübersicht
 - [ ] Einnahmen verwalten
 - [ ] Analyseübersicht
 - [ ] Exportfunktionalität
