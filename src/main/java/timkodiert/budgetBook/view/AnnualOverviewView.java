@@ -12,6 +12,7 @@ import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
@@ -19,6 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.controller.FixedExpenseController;
@@ -29,6 +31,7 @@ import timkodiert.budgetBook.util.BoldTableColumn;
 import timkodiert.budgetBook.util.BoldTableRow;
 import timkodiert.budgetBook.util.CurrencyTableCell;
 import timkodiert.budgetBook.util.StageBuilder;
+import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
 public class AnnualOverviewView implements Initializable {
 
@@ -38,6 +41,8 @@ public class AnnualOverviewView implements Initializable {
     private static int END_YEAR = CURRENT_YEAR + 1;
 
     @FXML
+    private BorderPane rootPane;
+    @FXML
     private TableView<Expense> mainTable;
     @FXML
     private TableColumn<Expense, String> positionColumn;
@@ -46,6 +51,8 @@ public class AnnualOverviewView implements Initializable {
 
     private List<TableColumn<Expense, Number>> monthColumns = new ArrayList<>();
     private TableColumn<Expense, Number> cumulativeColumn;
+
+    private ExpenseDetailWidget expenseDetailWidget = new ExpenseDetailWidget();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -60,6 +67,17 @@ public class AnnualOverviewView implements Initializable {
             }
             mainTable.refresh();
         });
+
+        // Widget rechts einbinden
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ExpenseDetailWidget.fxml"));
+            loader.setController(expenseDetailWidget);
+            rootPane.setRight(loader.load());
+        }
+        catch(Exception e) {
+            Alert alert = new Alert(AlertType.ERROR, "Widget konnte nicht geöffnet werden!");
+            alert.showAndWait();
+        }
 
         positionColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPosition()));
         // Hätte gerne sowas wie in Python:
@@ -102,7 +120,10 @@ public class AnnualOverviewView implements Initializable {
         mainTable.setRowFactory(tableView -> {
             TableRow<Expense> row = new BoldTableRow(PaymentType.CUMULATIVE);
             row.setOnMouseClicked(event -> {
-                if(event.getClickCount() == 2 && !row.isEmpty()) {
+                if(event.getClickCount() == 1 && !row.isEmpty()) {
+                    expenseDetailWidget.setExpense(row.getItem());
+                }
+                else if(event.getClickCount() == 2 && !row.isEmpty()) {
                     try {
                         Stage stage = StageBuilder.create()
                             .withModality(Modality.APPLICATION_MODAL)
