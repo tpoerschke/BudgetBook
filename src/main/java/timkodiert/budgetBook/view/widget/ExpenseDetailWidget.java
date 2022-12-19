@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.view.View;
@@ -13,7 +15,9 @@ import timkodiert.budgetBook.view.View;
 public class ExpenseDetailWidget implements View, Initializable {
 
     @FXML
-    private Label positionLabel, noteLabel;
+    private Label positionLabel;
+    @FXML
+    private TextFlow noteTextFlow;
 
     private Expense expense;
 
@@ -33,6 +37,6 @@ public class ExpenseDetailWidget implements View, Initializable {
 
     private void initProperties() {
         positionLabel.textProperty().bind(expense.getAdapter().positionProperty());
-        noteLabel.textProperty().bind(expense.getAdapter().noteProperty());
+        noteTextFlow.getChildren().setAll(new Text(expense.getNote()));
     }
 }
