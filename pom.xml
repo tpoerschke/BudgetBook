@@ -14,6 +14,7 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<main.class>timkodiert.budgetBook.Main</main.class>
 		<launcher.class>timkodiert.budgetBook.Launch</launcher.class>
+		<outputDirectory>target</outputDirectory>
 	</properties>
 	<build>
 		<plugins>
@@ -91,9 +92,12 @@
 				<artifactId>javapackager</artifactId>
 				<version>1.6.7</version>
 				<configuration>
+					<runnableJar>target/budget-book-1.0-SNAPSHOT-jar-with-dependencies.jar</runnableJar>
 					<mainClass>${main.class}</mainClass>
-					<bundleJre>false</bundleJre>
-					<generateInstaller>false</generateInstaller>
+					<bundleJre>true</bundleJre>
+					<customizedJre>false</customizedJre>
+					<jrePath>/usr/lib/jvm/jre</jrePath>
+					<generateInstaller>true</generateInstaller>
 					<administratorRequired>false</administratorRequired>
 				</configuration>
 				<executions>
