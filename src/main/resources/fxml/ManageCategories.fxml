@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.ManageCategoriesView">
+   <center>
+      <TreeTableView fx:id="categoriesTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TreeTableColumn fx:id="nameColumn" prefWidth="200.0" text="Name" />
+          <TreeTableColumn fx:id="actionColumn" prefWidth="100.0" text="Aktionen" />
+        </columns>
+      </TreeTableView>
+   </center>
+</BorderPane>

@@ -12,7 +12,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
+import javafx.scene.control.TreeItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -46,4 +48,13 @@ public class Category {
     @Setter
     @OneToMany(mappedBy="parent", cascade=CascadeType.ALL)
     private List<Category> children = new ArrayList<>();
+
+    @Transient
+    private TreeItem<Category> treeItem = new TreeItem<>();
+
+    public TreeItem<Category> asTreeItem() {
+        this.treeItem.setValue(this);
+        this.treeItem.getChildren().setAll(this.getChildren().stream().map(Category::asTreeItem).toList());
+        return this.treeItem;
+    }
 }
