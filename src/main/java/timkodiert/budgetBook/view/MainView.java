@@ -106,6 +106,36 @@ public class MainView implements Initializable {
     }
 
     @FXML
+    private void openManageCategoriesView(ActionEvent event) {
+        try {
+            Stage stage = StageBuilder.create()
+                .withModality(Modality.APPLICATION_MODAL)
+                .withOwner(this.primaryStage)
+                .withFXMLResource("/fxml/ManageCategories.fxml")
+                .build();
+            stage.show();
+        } catch(Exception e) {
+            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void openNewCategoryView(ActionEvent event) {
+        try {
+            Stage stage = StageBuilder.create()
+                .withModality(Modality.APPLICATION_MODAL)
+                .withOwner(this.primaryStage)
+                .withFXMLResource("/fxml/NewCategory.fxml")
+                .build();
+            stage.show();
+        } catch(Exception e) {
+            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
     private void openAnnualOverviewView(ActionEvent event) {
         try {
             Stage stage = StageBuilder.create().withFXMLResource("/fxml/AnnualOverview.fxml").build();

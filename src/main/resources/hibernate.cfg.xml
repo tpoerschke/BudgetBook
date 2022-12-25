@@ -33,6 +33,7 @@
         <mapping class="timkodiert.budgetBook.domain.model.Expense"/>
         <mapping class="timkodiert.budgetBook.domain.model.FixedExpense"/>
         <mapping class="timkodiert.budgetBook.domain.model.PaymentInformation" />
+        <mapping class="timkodiert.budgetBook.domain.model.Category" />
 
     </session-factory>
 

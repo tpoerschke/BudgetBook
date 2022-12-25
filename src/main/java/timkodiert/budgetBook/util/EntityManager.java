@@ -53,4 +53,8 @@ public class EntityManager {
         Arrays.stream(objects).forEach(this.session::remove);
         this.session.getTransaction().commit();
     }
+
+    public void refresh(Object object) {
+        this.session.refresh(object);
+    }
 }
