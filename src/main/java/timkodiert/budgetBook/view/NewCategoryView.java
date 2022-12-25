@@ -7,10 +7,14 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.Alert.AlertType;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.util.EntityManager;
 
@@ -42,20 +46,39 @@ public class NewCategoryView implements Initializable {
 
     @FXML
     private void saveCategory(ActionEvent event) {
+        nameTextField.getStyleClass().remove("validation-error");
+
         Category category = new Category();
-        category.setName(nameTextField.getText());
-        category.setDescription(descriptionTextArea.getText());
+        category.setName(nameTextField.getText().trim());
+        category.setDescription(descriptionTextArea.getText().trim());
 
-        TreeItem<Category> selectedItem = categoriesTreeView.getSelectionModel().getSelectedItem();
-        Category parent = selectedItem != null ? selectedItem.getValue() : null;
-        category.setParent(parent);
+        if(category.getName().equals("")) {
+            nameTextField.getStyleClass().add("validation-error");
+        }
+        else {
+            TreeItem<Category> selectedItem = categoriesTreeView.getSelectionModel().getSelectedItem();
+            Category parent = selectedItem != null ? selectedItem.getValue() : null;
+            category.setParent(parent);
 
-        EntityManager.getInstance().persist(category);
-        EntityManager.getInstance().refresh(parent);
+            EntityManager.getInstance().persist(category);
+            if(parent != null) {
+                EntityManager.getInstance().refresh(parent);
+            }
+
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setContentText("Ausgabe \"" + category.getName() + "\" hinzugefügt.");
+            alert.showAndWait();
+            closeStage(event);
+        }
     }
 
     @FXML
     private void resetParentSelection(ActionEvent event) {
         categoriesTreeView.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void closeStage(ActionEvent event) {
+        ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
     }
 }

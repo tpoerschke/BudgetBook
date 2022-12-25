@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.NewCategoryView">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="500.0" stylesheets="@../css/validation.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.NewCategoryView">
    <top>
       <Label text="Kategorie hinzufügen" BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -63,7 +63,7 @@
             <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                <children>
                   <Button mnemonicParsing="false" onAction="#saveCategory" text="Speichern" />
-                  <Button mnemonicParsing="false" text="Abbrechen" />
+                  <Button mnemonicParsing="false" onAction="#closeStage" text="Abbrechen" />
                </children>
             </HBox>
          </children>
