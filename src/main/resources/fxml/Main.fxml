@@ -151,7 +151,9 @@
           <Menu mnemonicParsing="false" text="Bearbeiten">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#openNewExpenseView" text="Ausgabe hinzufügen" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="Kategorien verwalten" />
+                  <MenuItem mnemonicParsing="false" onAction="#openNewCategoryView" text="Kategorie hinzufügen" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Daten">

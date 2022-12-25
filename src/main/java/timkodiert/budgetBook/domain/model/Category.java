@@ -57,4 +57,9 @@ public class Category {
         this.treeItem.getChildren().setAll(this.getChildren().stream().map(Category::asTreeItem).toList());
         return this.treeItem;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }
