@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.ManageCategoriesView">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/validation.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.ManageCategoriesView">
    <center>
       <TreeTableView fx:id="categoriesTable" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" showRoot="false" BorderPane.alignment="CENTER">
         <columns>
@@ -24,31 +24,31 @@
       </TreeTableView>
    </center>
    <right>
-      <VBox disable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="editContainer" disable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Label">
+            <Label text="Name">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Label>
-            <TextField />
-            <Label text="Label">
+            <TextField fx:id="nameTextField" />
+            <Label text="Beschreibung">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
             </Label>
-            <TextArea prefHeight="200.0" prefWidth="200.0" />
+            <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0" />
             <HBox prefHeight="100.0" prefWidth="200.0">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
                <children>
-                  <Button mnemonicParsing="false" text="Speichern">
+                  <Button mnemonicParsing="false" onAction="#saveCategory" text="Speichern">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Verwerfen" />
+                  <Button mnemonicParsing="false" onAction="#resetCategory" text="Verwerfen" />
                </children>
             </HBox>
          </children>
