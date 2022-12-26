@@ -12,9 +12,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
+		<launcher.class>
+			timkodiert.budgetBook.Launch</launcher.class>
 		<main.class>timkodiert.budgetBook.Main</main.class>
-		<launcher.class>timkodiert.budgetBook.Launch</launcher.class>
-		<outputDirectory>target</outputDirectory>
+		<outputDirectory>
+			target</outputDirectory>
+		<imageName>BudgetBook</imageName>
+		<native.maven.plugin.version>0.9.12</native.maven.plugin.version>
 	</properties>
 	<build>
 		<plugins>
@@ -88,42 +92,10 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>io.github.fvarrui</groupId>
-				<artifactId>javapackager</artifactId>
-				<version>1.6.7</version>
-				<configuration>
-					<runnableJar>target/budget-book-1.0-SNAPSHOT-jar-with-dependencies.jar</runnableJar>
-					<mainClass>${main.class}</mainClass>
-					<bundleJre>true</bundleJre>
-					<customizedJre>false</customizedJre>
-					<jrePath>/usr/lib/jvm/jre</jrePath>
-					<generateInstaller>true</generateInstaller>
-					<administratorRequired>false</administratorRequired>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>package</goal>
-						</goals>
-						<configuration>
-							<winConfig>
-								<headerType>gui</headerType>
-								<generateMsi>false</generateMsi>
-							</winConfig>
-							<macConfig>
-								<generateDmg>true</generateDmg>
-								<generatePkg>false</generatePkg>
-								<volumeName>BudgetBook</volumeName>
-								<entitlements>entitlements.plist</entitlements>
-							</macConfig>
-							<linuxConfig>
-								<generateAppImage>true</generateAppImage>
-								<generateRpm>true</generateRpm>
-							</linuxConfig>
-						</configuration>
-					</execution>
-				</executions>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-maven-plugin</artifactId>
+				<version>${native.maven.plugin.version}</version>
+				<extensions>true</extensions>
 			</plugin>
 		</plugins>
 	</build>
@@ -192,4 +164,46 @@
 			<version>4.0.1</version>
 		</dependency>
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>native</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.graalvm.buildtools</groupId>
+						<artifactId>native-maven-plugin</artifactId>
+						<version>${native.maven.plugin.version}</version>
+						<extensions>true</extensions>
+						<executions>
+							<execution>
+								<id>build-native</id>
+								<goals>
+									<goal>build</goal>
+								</goals>
+								<phase>package</phase>
+							</execution>
+							<execution>
+								<id>test-native</id>
+								<goals>
+									<goal>test</goal>
+								</goals>
+								<phase>test</phase>
+							</execution>
+						</executions>
+						<configuration>
+							<fallback>
+								false</fallback>
+							<buildArgs>
+								<!-- <arg>-H:DashboardDump=fortune -H:+DashboardAll</arg> -->
+							</buildArgs>
+							<agent>
+								<enabled>
+									true</enabled>
+							</agent>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
