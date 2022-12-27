@@ -1,6 +1,8 @@
 package timkodiert.budgetBook.view;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -16,14 +18,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.domain.model.PaymentType;
+import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.util.EntityManager;
 
@@ -40,6 +47,10 @@ public class NewExpenseView implements Initializable {
 
     @FXML
     private Label month1Label, month2Label, month3Label, month4Label;
+
+    @FXML
+    private TreeView<Category> categoriesTreeView;
+    private List<CheckBoxTreeItem<Category>> allTreeItems;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -86,6 +97,18 @@ public class NewExpenseView implements Initializable {
             }
         });
         typeChoiceBox.getSelectionModel().select(0);
+
+        // Kategorieauswahl initialisieren
+        categoriesTreeView.setCellFactory(CheckBoxTreeCell.forTreeView());
+        List<Category> categories = EntityManager.getInstance().findAll(Category.class);
+
+        // TODO: Refactoring, diese Code-Zeilen kommen häufiger vor
+        allTreeItems = categories.stream().map(Category::asTreeItem).toList();
+        List<? extends TreeItem<Category>> roots = allTreeItems.stream().filter(ti -> ti.getValue().getParent() == null).toList();
+        TreeItem<Category> root = new TreeItem<>(new Category("ROOT"));
+        root.getChildren().addAll(roots);
+
+        categoriesTreeView.setRoot(root);
     }
 
     @FXML
@@ -111,8 +134,10 @@ public class NewExpenseView implements Initializable {
         }
 
         PaymentType type = PaymentType.fromString(typeChoiceBox.getSelectionModel().getSelectedItem());
+        List<Category> categories = allTreeItems.stream().filter(CheckBoxTreeItem::isSelected).map(TreeItem::getValue).toList();
 
         FixedExpense newExpense = new FixedExpense(position, value, type, datesOfPayment);
+        newExpense.getCategories().addAll(categories);
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<FixedExpense>> violations = validator.validate(newExpense);

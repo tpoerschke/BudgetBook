@@ -10,10 +10,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
+import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,10 +51,13 @@ public class Category {
     @OneToMany(mappedBy="parent", cascade=CascadeType.ALL)
     private List<Category> children = new ArrayList<>();
 
-    @Transient
-    private TreeItem<Category> treeItem = new TreeItem<>();
+    @ManyToMany(mappedBy = "categories")
+    private List<Expense> expenses = new ArrayList<>();
 
-    public TreeItem<Category> asTreeItem() {
+    @Transient
+    private CheckBoxTreeItem<Category> treeItem = new CheckBoxTreeItem<>();
+
+    public CheckBoxTreeItem<Category> asTreeItem() {
         this.treeItem.setValue(this);
         this.treeItem.getChildren().setAll(this.getChildren().stream().map(Category::asTreeItem).toList());
         return this.treeItem;

@@ -34,8 +34,8 @@ public class NewCategoryView implements Initializable {
         EntityManager em = EntityManager.getInstance();
         List<Category> categories = em.findAll(Category.class);
 
-        List<TreeItem<Category>> treeItems = categories.stream().map(Category::asTreeItem).toList();
-        List<TreeItem<Category>> roots = treeItems.stream().filter(ti -> ti.getValue().getParent() == null).toList();
+        List<? extends TreeItem<Category>> treeItems = categories.stream().map(Category::asTreeItem).toList();
+        List<? extends TreeItem<Category>> roots = treeItems.stream().filter(ti -> ti.getValue().getParent() == null).toList();
 
         // Dummy-Wurzel
         TreeItem<Category> root = new TreeItem<>(new Category("ROOT"));
