@@ -6,3 +6,9 @@
 .text-bold {
     -fx-font: bold 1em sans-serif;
 }
+
+.tag {
+    -fx-background-color: #DDD;
+    -fx-background-radius: 4px;
+    -fx-padding: 2px 4px;
+}
