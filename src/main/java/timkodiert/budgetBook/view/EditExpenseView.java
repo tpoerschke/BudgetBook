@@ -16,12 +16,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
+import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
 import timkodiert.budgetBook.util.EntityManager;
@@ -40,6 +45,9 @@ public class EditExpenseView implements View, Initializable {
     private TextField positionTextField;
     @FXML
     private TextArea noteTextArea;
+    @FXML
+    private TreeView<Category> categoriesTreeView;
+    private List<CheckBoxTreeItem<Category>> allTreeItems;
 
     @FXML
     private TextField month1TextField, month2TextField, month3TextField, month4TextField, month5TextField, 
@@ -69,6 +77,22 @@ public class EditExpenseView implements View, Initializable {
             });
         });
         displayYearComboBox.getSelectionModel().select(Integer.valueOf(CURRENT_YEAR));
+
+        List<Category> categories = EntityManager.getInstance().findAll(Category.class);
+        // TODO: Refactoring, diese Code-Zeilen kommen häufiger vor
+        allTreeItems = categories.stream().map(Category::asTreeItem).toList();
+        List<? extends TreeItem<Category>> roots = allTreeItems.stream().filter(ti -> ti.getValue().getParent() == null).toList();
+        TreeItem<Category> root = new TreeItem<>(new Category("ROOT"));
+        root.getChildren().addAll(roots);
+        categoriesTreeView.setCellFactory(CheckBoxTreeCell.forTreeView());
+        categoriesTreeView.setRoot(root);
+
+        // Kategorien der Ausgabe abhacken
+        allTreeItems.forEach(ti -> {
+            if(expense.getCategories().contains(ti.getValue())) {
+                ti.setSelected(true);
+            }
+        });
     }
 
     @FXML 
@@ -91,6 +115,10 @@ public class EditExpenseView implements View, Initializable {
                 });
             }
         }
+        List<Category> categories = allTreeItems.stream().filter(CheckBoxTreeItem::isSelected).map(TreeItem::getValue).toList();
+        this.expense.getCategories().clear();
+        this.expense.getCategories().addAll(categories);
+
         EntityManager.getInstance().persist(this.expense);
         // Fenster schließen
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
