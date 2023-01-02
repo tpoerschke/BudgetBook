@@ -16,7 +16,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import javafx.scene.control.CheckBoxTreeItem;
-import javafx.scene.control.TreeItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
