@@ -11,12 +11,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.Alert.AlertType;
 import timkodiert.budgetBook.domain.model.Category;
+import timkodiert.budgetBook.domain.repository.CategoriesRepository;
 import timkodiert.budgetBook.util.ButtonTreeTableCell;
 import timkodiert.budgetBook.util.EntityManager;
 
@@ -66,12 +70,19 @@ public class ManageCategoriesView implements Initializable {
     }
 
     private void deleteCategory(Category category) {
-        // TODO: Checken, ob es Ausgaben mit dieser Kategorie gibt.
-        // Dann um Bestätigung bitten und die Ausgaben der Elternkategorie hinzufügen.
-        if(category.getParent() != null) {
-            category.getParent().getChildren().remove(category);
+        if(!category.getExpenses().isEmpty()) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setContentText("Dieser Kategorie sind Ausgaben zugeordnet. " + 
+                "Wenn Sie die Kategorie löschen, wird die Kategorie auch bei den betroffenen Ausgaben entfernt. Trotzdem löschen?");
+
+            if(alert.showAndWait().filter(ButtonType.CANCEL::equals).isPresent()) {
+                return;
+            }
         }
-        em.remove(category);
+
+        // TODO: Dependency Injection für Repositories
+        CategoriesRepository repository = new CategoriesRepository();
+        repository.remove(category);
         fillTable(em.findAll(Category.class));
     }
 

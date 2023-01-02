@@ -15,8 +15,6 @@ public class ButtonTreeTableCell<S> extends TreeTableCell<S, S> {
     @Override
     public void updateItem(S item, boolean empty) {
         super.updateItem(item, empty);
-
-        System.out.println(item + " / "+ empty);
         setEditable(false);
         if(!empty) {             
             Button button = new Button(buttonText);   
