@@ -12,6 +12,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -26,6 +28,9 @@ public class MainView implements Initializable {
 
     @FXML
     private BorderPane root;
+
+    @FXML
+    private RadioMenuItem viewMenuItem1, viewMenuItem2;
 
     private FixedExpenseController fixedExpenseController;
     private ViewComponent viewComponent;
@@ -45,7 +50,6 @@ public class MainView implements Initializable {
             templateLoader.setLocation(getClass().getResource("/fxml/Main.fxml"));
             templateLoader.setController(this);
             this.primaryStage.setScene(new Scene(templateLoader.load()));
-            this.primaryStage.setTitle("Ausgabenübersicht");
             this.primaryStage.show();
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR, "Hauptansicht konnte nicht geöffnet werden!");
@@ -55,12 +59,32 @@ public class MainView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Das Kind laden
+        ToggleGroup viewMenuItemToggleGroup = new ToggleGroup();
+        viewMenuItem1.setToggleGroup(viewMenuItemToggleGroup);
+        viewMenuItem2.setToggleGroup(viewMenuItemToggleGroup);
+
+        viewMenuItem1.setOnAction(event -> {
+            viewMenuItem1.setSelected(true);
+            loadViewPartial("/fxml/AnnualOverview.fxml", viewComponent.getAnnualOverviewView(), "Jahresübersicht");
+        });
+
+        viewMenuItem2.setOnAction(event -> {
+            viewMenuItem2.setSelected(true);
+            loadViewPartial("/fxml/CompactOverview.fxml", viewComponent.getCompactOverviewView(), "Ausgabenübersicht");
+        });
+
+        // Das Kind laden (default)
+        loadViewPartial("/fxml/CompactOverview.fxml", viewComponent.getCompactOverviewView(), "Ausgabenübersicht");
+        viewMenuItem2.setSelected(true);
+    }
+
+    private void loadViewPartial(String resource, View view, String stageTitle) {
         try {
             FXMLLoader templateLoader = new FXMLLoader();
-            templateLoader.setLocation(getClass().getResource("/fxml/CompactOverview.fxml"));
-            templateLoader.setController(viewComponent.getCompactOverviewView());
+            templateLoader.setLocation(getClass().getResource(resource));
+            templateLoader.setController(view);
             this.root.setCenter(templateLoader.load());
+            this.primaryStage.setTitle(stageTitle);
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();

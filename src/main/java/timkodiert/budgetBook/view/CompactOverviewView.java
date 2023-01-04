@@ -17,7 +17,7 @@ import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
 import timkodiert.budgetBook.util.CurrencyTableCell;
 
-public class CompactOverviewView implements Initializable {
+public class CompactOverviewView implements Initializable, View {
 
     @FXML
     private TableColumn<ExpenseAdapter, String> monthlyPositionCol, monthlyTypeCol, currentMonthPositionCol, currentMonthTypeCol, nextMonthPositionCol, nextMonthTypeCol;
