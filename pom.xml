@@ -16,6 +16,8 @@
 
 		<main.class>timkodiert.budgetBook.Main</main.class>
 		<launcher.class>timkodiert.budgetBook.Launch</launcher.class>
+
+		<version.dagger>2.44.2</version.dagger>
 	</properties>
 
 	<build>
@@ -64,6 +66,11 @@
 					<target>${maven.compiler.target}</target>
 					<annotationProcessorPaths>
 						<path>
+							<groupId>com.google.dagger</groupId>
+							<artifactId>dagger-compiler</artifactId>
+							<version>${version.dagger}</version>
+						</path>
+						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 							<version>1.18.24</version>
@@ -91,6 +98,11 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.24</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.dagger</groupId>
+			<artifactId>dagger</artifactId>
+			<version>${version.dagger}</version>
 		</dependency>
 		<!-- JavaFX -->
 		<dependency>

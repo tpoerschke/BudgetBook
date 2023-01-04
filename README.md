@@ -94,6 +94,7 @@ Das Projekt befindet sich noch in einem frühen Stadium, weswegen Bugs auftreten
 [![Hibernate][Hibernate-shield]][Hibernate-url]
 [![SQLite][SQLite-shield]][SQLite-url]
 [![Lombok][Lombok-shield]][Lombok-url]
+[![Dagger2][Dagger-shield]][Dagger-url]
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -135,7 +136,7 @@ WIP
 
 - [x] Ausgabenübersicht
 - [x] Jahresübersicht
-- [ ] Kategorien für Ausgaben
+- [x] Kategorien für Ausgaben
 - [ ] Analyseübersicht
 - [ ] Einnahmen verwalten
 - [ ] Exportfunktionalität
@@ -210,3 +211,5 @@ Project Link: [https://github.com/tpoerschke/BudgetBook](https://github.com/tpoe
 [SQLite-url]: https://www.sqlite.org/index.html
 [Lombok-shield]: https://img.shields.io/badge/lombok-d9230f?style=for-the-badge
 [Lombok-url]: https://projectlombok.org/
+[Dagger-shield]: https://img.shields.io/badge/Dagger-2196F3?style=for-the-badge
+[Dagger-url]: https://dagger.dev/

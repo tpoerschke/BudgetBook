@@ -4,89 +4,91 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.SimpleStringProperty;
+import javax.inject.Inject;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.controller.FixedExpenseController;
-import timkodiert.budgetBook.domain.model.ExpenseAdapter;
-import timkodiert.budgetBook.util.CurrencyTableCell;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.StageBuilder;
 
 public class MainView implements Initializable {
-    
-    @FXML
-    private TableColumn<ExpenseAdapter, String> monthlyPositionCol, monthlyTypeCol, currentMonthPositionCol, currentMonthTypeCol, nextMonthPositionCol, nextMonthTypeCol;
-    @FXML
-    private TableColumn<ExpenseAdapter, Double> monthlyValueCol, currentMonthValueCol, nextMonthValueCol;
-    @FXML
-    private TableView<ExpenseAdapter> monthlyTable, currentMonthTable, nextMonthTable;
-
-    @FXML 
-    private Label monthlySumLabel, monthlySumLabel1, monthlySumLabel2, currentMonthSumLabel, currentMonthTotalSumLabel, nextMonthSumLabel, nextMonthTotalSumLabel;
 
     private Stage primaryStage;
 
-    private FixedExpenseController fixedExpenseController;
+    @FXML
+    private BorderPane root;
 
-    public MainView(Stage primaryStage) throws IOException {
-        this.fixedExpenseController = new FixedExpenseController();
+    @FXML
+    private RadioMenuItem viewMenuItem1, viewMenuItem2;
+
+    private FixedExpenseController fixedExpenseController;
+    private ViewComponent viewComponent;
+
+    @Inject
+    public MainView(ViewComponent viewComponennt, FixedExpenseController fixedExpenseController) {
+        this.viewComponent = viewComponennt;
+        this.fixedExpenseController = fixedExpenseController;
+    }
+
+    public void setAndShowPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setOnCloseRequest(windowEvent -> EntityManager.getInstance().closeSession());
 
-        FXMLLoader templateLoader = new FXMLLoader();
-        templateLoader.setLocation(getClass().getResource("/fxml/Main.fxml"));
-        templateLoader.setController(this);
-        primaryStage.setScene(new Scene(templateLoader.load()));
-        primaryStage.setTitle("Ausgabenübersicht");
-        primaryStage.show();
+        try {
+            FXMLLoader templateLoader = new FXMLLoader();
+            templateLoader.setLocation(getClass().getResource("/fxml/Main.fxml"));
+            templateLoader.setController(this);
+            this.primaryStage.setScene(new Scene(templateLoader.load()));
+            this.primaryStage.show();
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR, "Hauptansicht konnte nicht geöffnet werden!");
+            alert.showAndWait();
+        }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        monthlyPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
-        monthlyPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("currentMonthValue"));
-        monthlyValueCol.setCellFactory(col -> new CurrencyTableCell<>());
-        monthlyTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
+        ToggleGroup viewMenuItemToggleGroup = new ToggleGroup();
+        viewMenuItem1.setToggleGroup(viewMenuItemToggleGroup);
+        viewMenuItem2.setToggleGroup(viewMenuItemToggleGroup);
 
-        currentMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
-        currentMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        currentMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("currentMonthValue"));
-        currentMonthValueCol.setCellFactory(col -> new CurrencyTableCell<>());
-        currentMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
+        viewMenuItem1.setOnAction(event -> {
+            viewMenuItem1.setSelected(true);
+            loadViewPartial("/fxml/AnnualOverview.fxml", viewComponent.getAnnualOverviewView(), "Jahresübersicht");
+        });
 
-        nextMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
-        nextMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        nextMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("nextMonthValue"));
-        nextMonthValueCol.setCellFactory(col -> new CurrencyTableCell<>());
-        nextMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
+        viewMenuItem2.setOnAction(event -> {
+            viewMenuItem2.setSelected(true);
+            loadViewPartial("/fxml/CompactOverview.fxml", viewComponent.getCompactOverviewView(), "Ausgabenübersicht");
+        });
 
-        // Ausgaben anzeigen
-        monthlyTable.setItems(fixedExpenseController.getMonthlyExpenses());
-        currentMonthTable.setItems(fixedExpenseController.getCurrentMonthExpenses());
-        nextMonthTable.setItems(fixedExpenseController.getNextMonthExpenses());
+        // Das Kind laden (default)
+        loadViewPartial("/fxml/CompactOverview.fxml", viewComponent.getCompactOverviewView(), "Ausgabenübersicht");
+        viewMenuItem2.setSelected(true);
+    }
 
-        // Summen
-        monthlySumLabel.textProperty().bind(fixedExpenseController.monthlyExpensesSumTextProperty());
-        monthlySumLabel1.textProperty().bind(fixedExpenseController.monthlyExpensesSumTextProperty());
-        monthlySumLabel2.textProperty().bind(fixedExpenseController.monthlyExpensesSumTextProperty());
-        currentMonthSumLabel.textProperty().bind(fixedExpenseController.currentMonthExpensesSumTextProperty());
-        currentMonthTotalSumLabel.textProperty().bind(fixedExpenseController.currentMonthExpensesTotalSumTextProperty());
-        nextMonthSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesSumTextProperty());
-        nextMonthTotalSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesTotalSumTextProperty());
+    private void loadViewPartial(String resource, View view, String stageTitle) {
+        try {
+            FXMLLoader templateLoader = new FXMLLoader();
+            templateLoader.setLocation(getClass().getResource(resource));
+            templateLoader.setController(view);
+            this.root.setCenter(templateLoader.load());
+            this.primaryStage.setTitle(stageTitle);
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            alert.showAndWait();
+        }
     }
 
     @FXML
@@ -127,17 +129,6 @@ public class MainView implements Initializable {
                 .withOwner(this.primaryStage)
                 .withFXMLResource("/fxml/NewCategory.fxml")
                 .build();
-            stage.show();
-        } catch(Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
-            alert.showAndWait();
-        }
-    }
-
-    @FXML
-    private void openAnnualOverviewView(ActionEvent event) {
-        try {
-            Stage stage = StageBuilder.create().withFXMLResource("/fxml/AnnualOverview.fxml").build();
             stage.show();
         } catch(Exception e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");

@@ -8,6 +8,8 @@ import java.util.ListIterator;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
+import javax.inject.Inject;
+
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
@@ -23,6 +25,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.Getter;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.CumulativeExpense;
@@ -33,7 +36,7 @@ import timkodiert.budgetBook.util.CurrencyTableCell;
 import timkodiert.budgetBook.util.StageBuilder;
 import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
-public class AnnualOverviewView implements Initializable {
+public class AnnualOverviewView implements Initializable, View {
 
     private static List<String> MONTH_NAMES = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
     private static int CURRENT_YEAR = LocalDate.now().getYear();
@@ -54,9 +57,17 @@ public class AnnualOverviewView implements Initializable {
 
     private ExpenseDetailWidget expenseDetailWidget = new ExpenseDetailWidget();
 
+    @Getter
+    private FixedExpenseController fixedExpenseController;
+
+    @Inject
+    public AnnualOverviewView(FixedExpenseController fixedExpenseController) {
+        this.fixedExpenseController = fixedExpenseController;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FixedExpenseController fixedExpenseController = new FixedExpenseController();
+        System.out.println(fixedExpenseController);
         fixedExpenseController.loadAll();
 
         displayYearComboBox.getItems().addAll(IntStream.rangeClosed(START_YEAR, END_YEAR).boxed().toList());

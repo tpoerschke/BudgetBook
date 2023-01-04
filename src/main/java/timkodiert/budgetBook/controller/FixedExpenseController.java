@@ -2,6 +2,9 @@ package timkodiert.budgetBook.controller;
 
 import java.time.LocalDate;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,6 +23,7 @@ import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.SumChangeListener;
 import timkodiert.budgetBook.util.SumListChangeListener;
 
+@Singleton
 public class FixedExpenseController {
 
     @Getter
@@ -48,6 +52,7 @@ public class FixedExpenseController {
 
     private EntityManager entityManager;
 
+    @Inject
     public FixedExpenseController() {
         this.entityManager = EntityManager.getInstance();
         this.allExpenses = FXCollections.observableArrayList();

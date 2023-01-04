@@ -1,150 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <HBox spacing="10.0" BorderPane.alignment="CENTER">
-         <children>
-            <VBox>
-               <children>
-                  <Label style="-fx-font-weight: bold;" text="Monatlich" />
-                  <TableView fx:id="monthlyTable" editable="true" prefWidth="320.0">
-                    <columns>
-                      <TableColumn fx:id="monthlyPositionCol" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" sortable="false" text="Position" />
-                      <TableColumn fx:id="monthlyValueCol" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="Ausgabe" />
-                        <TableColumn fx:id="monthlyTypeCol" maxWidth="98.0" minWidth="98.0" prefWidth="98.0" resizable="false" sortable="false" text="Art" />
-                    </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </TableView>
-                  <GridPane hgap="5.0">
-                    <columnConstraints>
-                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label fx:id="monthlySumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" />
-                        <Label text="Summe:" />
-                     </children>
-                     <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
-                  </GridPane>
-               </children>
-            </VBox>
-            <VBox>
-               <children>
-                  <Label style="-fx-font-weight: bold;" text="Diesen Monat" />
-                  <TableView fx:id="currentMonthTable" prefWidth="320.0">
-                    <columns>
-                      <TableColumn fx:id="currentMonthPositionCol" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" sortable="false" text="Position" />
-                      <TableColumn fx:id="currentMonthValueCol" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="Ausgabe" />
-                        <TableColumn fx:id="currentMonthTypeCol" maxWidth="98.0" minWidth="98.0" prefWidth="98.0" resizable="false" sortable="false" text="Art" />
-                    </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </TableView>
-                  <GridPane hgap="5.0">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label fx:id="currentMonthSumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" />
-                        <Label fx:id="currentMonthTotalSumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" styleClass="text-bold" text="00,00 €" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label text="Summe:" />
-                        <Label styleClass="text-bold" text="Gesamt:" GridPane.rowIndex="3" />
-                        <Label fx:id="monthlySumLabel1" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="+" GridPane.rowIndex="1" />
-                        <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-                     </children>
-                     <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
-                  </GridPane>
-               </children>
-            </VBox>
-            <VBox>
-               <children>
-                  <Label style="-fx-font-weight: bold;" text="Nächsten Monat" />
-                  <TableView fx:id="nextMonthTable" editable="true" prefWidth="320.0">
-                    <columns>
-                      <TableColumn fx:id="nextMonthPositionCol" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" sortable="false" text="Position" />
-                      <TableColumn fx:id="nextMonthValueCol" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="Ausgabe" />
-                        <TableColumn fx:id="nextMonthTypeCol" maxWidth="98.0" minWidth="98.0" prefWidth="98.0" resizable="false" sortable="false" text="Art" />
-                    </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </TableView>
-                  <GridPane hgap="5.0">
-                    <columnConstraints>
-                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label fx:id="nextMonthSumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" />
-                        <Label fx:id="nextMonthTotalSumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" styleClass="text-bold" text="00,00 €" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label text="Summe:" />
-                        <Label styleClass="text-bold" text="Gesamt:" GridPane.rowIndex="3" />
-                        <Label fx:id="monthlySumLabel2" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="+" GridPane.rowIndex="1" />
-                        <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-                     </children>
-                     <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
-                  </GridPane>
-               </children>
-            </VBox>
-         </children>
-         <BorderPane.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </BorderPane.margin>
-      </HBox>
-   </center>
+<BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="900.0" prefWidth="1600.0" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -158,7 +21,8 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Daten">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openAnnualOverviewView" text="Jahresübersicht" />
+                  <RadioMenuItem fx:id="viewMenuItem1" mnemonicParsing="false" text="Jahresansicht" />
+                  <RadioMenuItem fx:id="viewMenuItem2" mnemonicParsing="false" text="Kompakte Ansicht" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#reloadData" text="Aktualisieren" />
                </items>
