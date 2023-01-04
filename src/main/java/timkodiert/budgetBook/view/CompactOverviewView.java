@@ -3,6 +3,8 @@ package timkodiert.budgetBook.view;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.inject.Inject;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,10 +31,13 @@ public class CompactOverviewView implements Initializable {
 
     private FixedExpenseController fixedExpenseController;
 
+    @Inject
+    public CompactOverviewView(FixedExpenseController fixedExpenseController) {
+        this.fixedExpenseController = fixedExpenseController;
+    }
+
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.fixedExpenseController = new FixedExpenseController();
-        
+    public void initialize(URL location, ResourceBundle resources) {        
         monthlyPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         monthlyPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("currentMonthValue"));

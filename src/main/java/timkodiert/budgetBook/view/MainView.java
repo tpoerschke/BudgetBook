@@ -4,26 +4,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.SimpleStringProperty;
+import javax.inject.Inject;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.controller.FixedExpenseController;
-import timkodiert.budgetBook.domain.model.ExpenseAdapter;
-import timkodiert.budgetBook.util.CurrencyTableCell;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.StageBuilder;
 
@@ -34,16 +27,30 @@ public class MainView implements Initializable {
     @FXML
     private BorderPane root;
 
-    public MainView(Stage primaryStage) throws IOException {
+    private FixedExpenseController fixedExpenseController;
+    private ViewComponent viewComponent;
+
+    @Inject
+    public MainView(ViewComponent viewComponennt, FixedExpenseController fixedExpenseController) {
+        this.viewComponent = viewComponennt;
+        this.fixedExpenseController = fixedExpenseController;
+    }
+
+    public void setAndShowPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setOnCloseRequest(windowEvent -> EntityManager.getInstance().closeSession());
 
-        FXMLLoader templateLoader = new FXMLLoader();
-        templateLoader.setLocation(getClass().getResource("/fxml/Main.fxml"));
-        templateLoader.setController(this);
-        primaryStage.setScene(new Scene(templateLoader.load()));
-        primaryStage.setTitle("Ausgabenübersicht");
-        primaryStage.show();
+        try {
+            FXMLLoader templateLoader = new FXMLLoader();
+            templateLoader.setLocation(getClass().getResource("/fxml/Main.fxml"));
+            templateLoader.setController(this);
+            this.primaryStage.setScene(new Scene(templateLoader.load()));
+            this.primaryStage.setTitle("Ausgabenübersicht");
+            this.primaryStage.show();
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR, "Hauptansicht konnte nicht geöffnet werden!");
+            alert.showAndWait();
+        }
     }
 
     @Override
@@ -52,6 +59,7 @@ public class MainView implements Initializable {
         try {
             FXMLLoader templateLoader = new FXMLLoader();
             templateLoader.setLocation(getClass().getResource("/fxml/CompactOverview.fxml"));
+            templateLoader.setController(viewComponent.getCompactOverviewView());
             this.root.setCenter(templateLoader.load());
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
@@ -107,7 +115,8 @@ public class MainView implements Initializable {
     @FXML
     private void openAnnualOverviewView(ActionEvent event) {
         try {
-            Stage stage = StageBuilder.create().withFXMLResource("/fxml/AnnualOverview.fxml").build();
+            View view = viewComponent.getAnnualOverviewView();
+            Stage stage = StageBuilder.create().withFXMLResource("/fxml/AnnualOverview.fxml").withView(view).build();
             stage.show();
         } catch(Exception e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
@@ -117,10 +126,7 @@ public class MainView implements Initializable {
 
     @FXML
     private void reloadData(ActionEvent event) {
-        // TODO: Über Dependency Injection müsste das doch funktionieren, oder?
-        // Wenn sich alle Views den Controller teilen, könnte man hier aktualisieren
-        // und es wirkt sich auf alle anderen Views aus.
-        //fixedExpenseController.loadAll();
-        //fixedExpenseController.addNextYearToAllExpenses();
+        fixedExpenseController.loadAll();
+        fixedExpenseController.addNextYearToAllExpenses();
     }
 }
