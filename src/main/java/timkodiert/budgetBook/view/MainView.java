@@ -137,18 +137,6 @@ public class MainView implements Initializable {
     }
 
     @FXML
-    private void openAnnualOverviewView(ActionEvent event) {
-        try {
-            View view = viewComponent.getAnnualOverviewView();
-            Stage stage = StageBuilder.create().withFXMLResource("/fxml/AnnualOverview.fxml").withView(view).build();
-            stage.show();
-        } catch(Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
-            alert.showAndWait();
-        }
-    }
-
-    @FXML
     private void reloadData(ActionEvent event) {
         fixedExpenseController.loadAll();
         fixedExpenseController.addNextYearToAllExpenses();

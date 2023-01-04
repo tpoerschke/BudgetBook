@@ -23,7 +23,6 @@
                <items>
                   <RadioMenuItem fx:id="viewMenuItem1" mnemonicParsing="false" text="Jahresansicht" />
                   <RadioMenuItem fx:id="viewMenuItem2" mnemonicParsing="false" text="Kompakte Ansicht" />
-                  <MenuItem mnemonicParsing="false" onAction="#openAnnualOverviewView" text="Jahresübersicht" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#reloadData" text="Aktualisieren" />
                </items>

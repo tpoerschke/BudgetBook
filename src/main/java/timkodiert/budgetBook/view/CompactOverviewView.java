@@ -70,12 +70,4 @@ public class CompactOverviewView implements Initializable, View {
         nextMonthSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesSumTextProperty());
         nextMonthTotalSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesTotalSumTextProperty());
     }
-
-    private void reloadData() {
-        // TODO: Über Dependency Injection müsste das doch funktionieren, oder?
-        // Wenn sich alle Views den Controller teilen, könnte man hier aktualisieren
-        // und es wirkt sich auf alle anderen Views aus.
-        fixedExpenseController.loadAll();
-        fixedExpenseController.addNextYearToAllExpenses();
-    }
 }
