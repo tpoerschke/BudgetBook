@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.IntStream;
 
+import javax.inject.Inject;
+
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -28,11 +30,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.domain.model.PaymentType;
+import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
-import timkodiert.budgetBook.util.EntityManager;
 
-public class NewExpenseView implements Initializable {
+public class NewExpenseView implements Initializable, View {
 
     @FXML
     private TextField positionTextField, valueTextField;
@@ -49,6 +51,15 @@ public class NewExpenseView implements Initializable {
     @FXML
     private TreeView<Category> categoriesTreeView;
     private List<CheckBoxTreeItem<Category>> allTreeItems;
+
+    private Repository<FixedExpense> expensesRepository;
+    private Repository<Category> categoiesRepository;
+
+    @Inject
+    public NewExpenseView(Repository<FixedExpense> expensesRepository, Repository<Category> categoiesRepository) {
+        this.expensesRepository = expensesRepository;
+        this.categoiesRepository = categoiesRepository;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -98,7 +109,7 @@ public class NewExpenseView implements Initializable {
 
         // Kategorieauswahl initialisieren
         categoriesTreeView.setCellFactory(CheckBoxTreeCell.forTreeView());
-        List<Category> categories = EntityManager.getInstance().findAll(Category.class);
+        List<Category> categories = categoiesRepository.findAll();
 
         // TODO: Refactoring, diese Code-Zeilen kommen häufiger vor
         allTreeItems = categories.stream().map(Category::asTreeItem).toList();
@@ -155,8 +166,7 @@ public class NewExpenseView implements Initializable {
             });
         }
         else {
-            EntityManager em = EntityManager.getInstance();
-            em.persist(newExpense);
+            expensesRepository.persist(newExpense);
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setContentText("Ausgabe \"" + newExpense.getPosition() + "\" hinzugefügt.");
             alert.showAndWait();

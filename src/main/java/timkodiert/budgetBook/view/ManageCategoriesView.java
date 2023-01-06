@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.inject.Inject;
+
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
@@ -21,10 +23,10 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.control.Alert.AlertType;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.repository.CategoriesRepository;
+import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.ButtonTreeTableCell;
-import timkodiert.budgetBook.util.EntityManager;
 
-public class ManageCategoriesView implements Initializable {
+public class ManageCategoriesView implements Initializable, View {
 
     @FXML
     private TreeTableView<Category> categoriesTable;
@@ -41,9 +43,14 @@ public class ManageCategoriesView implements Initializable {
     @FXML
     private TextArea descriptionTextArea;
 
-    private EntityManager em = EntityManager.getInstance();
+    private Repository<Category> repository;
 
     private Category selectedCategory;
+
+    @Inject
+    public ManageCategoriesView(Repository<Category> repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -65,7 +72,7 @@ public class ManageCategoriesView implements Initializable {
             }
         });
         
-        List<Category> categories = em.findAll(Category.class);
+        List<Category> categories = repository.findAll();
         fillTable(categories);
     }
 
@@ -80,10 +87,8 @@ public class ManageCategoriesView implements Initializable {
             }
         }
 
-        // TODO: Dependency Injection für Repositories
-        CategoriesRepository repository = new CategoriesRepository();
         repository.remove(category);
-        fillTable(em.findAll(Category.class));
+        fillTable(repository.findAll());
     }
 
     private void fillTable(List<Category> categories) {
@@ -108,7 +113,7 @@ public class ManageCategoriesView implements Initializable {
             selectedCategory.setName(nameTextField.getText().trim());
             selectedCategory.setDescription(descriptionTextArea.getText().trim());
 
-            em.persist(selectedCategory);
+            repository.persist(selectedCategory);
             categoriesTable.refresh();
         }
     }

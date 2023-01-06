@@ -98,6 +98,7 @@ public class MainView implements Initializable {
                 .withModality(Modality.APPLICATION_MODAL)
                 .withOwner(this.primaryStage)
                 .withFXMLResource("/fxml/NewExpense.fxml")
+                .withView(viewComponent.getNewExpenseView())
                 .build();
             stage.show();
         } catch(Exception e) {
@@ -113,6 +114,7 @@ public class MainView implements Initializable {
                 .withModality(Modality.APPLICATION_MODAL)
                 .withOwner(this.primaryStage)
                 .withFXMLResource("/fxml/ManageCategories.fxml")
+                .withView(viewComponent.getManageCategoriesView())
                 .build();
             stage.show();
         } catch(Exception e) {
@@ -128,6 +130,7 @@ public class MainView implements Initializable {
                 .withModality(Modality.APPLICATION_MODAL)
                 .withOwner(this.primaryStage)
                 .withFXMLResource("/fxml/NewCategory.fxml")
+                .withView(viewComponent.getNewCategoryView())
                 .build();
             stage.show();
         } catch(Exception e) {

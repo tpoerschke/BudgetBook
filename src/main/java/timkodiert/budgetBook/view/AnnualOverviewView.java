@@ -34,6 +34,7 @@ import timkodiert.budgetBook.util.BoldTableColumn;
 import timkodiert.budgetBook.util.BoldTableRow;
 import timkodiert.budgetBook.util.CurrencyTableCell;
 import timkodiert.budgetBook.util.StageBuilder;
+import timkodiert.budgetBook.view.factory.EditExpenseViewFactory;
 import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
 public class AnnualOverviewView implements Initializable, View {
@@ -57,12 +58,14 @@ public class AnnualOverviewView implements Initializable, View {
 
     private ExpenseDetailWidget expenseDetailWidget = new ExpenseDetailWidget();
 
-    @Getter
+    
     private FixedExpenseController fixedExpenseController;
+    private EditExpenseViewFactory editExpenseViewFactory;
 
     @Inject
-    public AnnualOverviewView(FixedExpenseController fixedExpenseController) {
+    public AnnualOverviewView(FixedExpenseController fixedExpenseController, EditExpenseViewFactory editExpenseViewFactory) {
         this.fixedExpenseController = fixedExpenseController;
+        this.editExpenseViewFactory = editExpenseViewFactory;
     }
 
     @Override
@@ -139,7 +142,7 @@ public class AnnualOverviewView implements Initializable, View {
                         Stage stage = StageBuilder.create()
                             .withModality(Modality.APPLICATION_MODAL)
                             .withFXMLResource("/fxml/EditExpense.fxml")
-                            .withView(new EditExpenseView(fixedExpenseController.getExpense(row.getItem().getId())))
+                            .withView(editExpenseViewFactory.create(fixedExpenseController.getExpense(row.getItem().getId())))
                             .build();
                         stage.show();
                     } catch(Exception e) {

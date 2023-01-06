@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.inject.Inject;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,9 +18,10 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.Alert.AlertType;
 import timkodiert.budgetBook.domain.model.Category;
+import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.EntityManager;
 
-public class NewCategoryView implements Initializable {
+public class NewCategoryView implements Initializable, View {
 
     @FXML
     private TextField nameTextField;
@@ -29,10 +32,16 @@ public class NewCategoryView implements Initializable {
     @FXML
     private TreeView<Category> categoriesTreeView;
 
+    private Repository<Category> repository;
+
+    @Inject
+    public NewCategoryView(Repository<Category> repository) {
+        this.repository = repository;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        EntityManager em = EntityManager.getInstance();
-        List<Category> categories = em.findAll(Category.class);
+        List<Category> categories = repository.findAll();
 
         List<? extends TreeItem<Category>> treeItems = categories.stream().map(Category::asTreeItem).toList();
         List<? extends TreeItem<Category>> roots = treeItems.stream().filter(ti -> ti.getValue().getParent() == null).toList();
@@ -60,8 +69,9 @@ public class NewCategoryView implements Initializable {
             Category parent = selectedItem != null ? selectedItem.getValue() : null;
             category.setParent(parent);
 
-            EntityManager.getInstance().persist(category);
+            repository.persist(category);
             if(parent != null) {
+                // TODO: Dafür eine Schnittstelle schaffen bzw. ins Repository schieben
                 EntityManager.getInstance().refresh(parent);
             }
 

@@ -18,8 +18,8 @@ import timkodiert.budgetBook.Constants;
 import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
 import timkodiert.budgetBook.domain.model.PaymentType;
+import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.domain.model.FixedExpense;
-import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.SumChangeListener;
 import timkodiert.budgetBook.util.SumListChangeListener;
 
@@ -50,11 +50,11 @@ public class FixedExpenseController {
     private final DoubleProperty nextMonthExpensesTotalSum;
     private final StringProperty nextMonthExpensesTotalSumText;
 
-    private EntityManager entityManager;
+    private Repository<FixedExpense> repository;
 
     @Inject
-    public FixedExpenseController() {
-        this.entityManager = EntityManager.getInstance();
+    public FixedExpenseController(Repository<FixedExpense> repository) {
+        this.repository = repository;
         this.allExpenses = FXCollections.observableArrayList();
         this.monthlyExpenses = FXCollections.observableArrayList();
         this.currentMonthExpenses = FXCollections.observableArrayList();
@@ -114,12 +114,12 @@ public class FixedExpenseController {
     }
 
     public void loadAll() {
-        allExpenses.setAll(entityManager.findAll(FixedExpense.class));
+        allExpenses.setAll(repository.findAll());
     }
 
     public void addNextYearToAllExpenses() {
         allExpenses.forEach(FixedExpense::addPaymentInformationForNextYear);
-        entityManager.persist(allExpenses.toArray());
+        repository.persist(allExpenses);
     }
 
     public DoubleProperty monthlyExpensesSumProperty() {
