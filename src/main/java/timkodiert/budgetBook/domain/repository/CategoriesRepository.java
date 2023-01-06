@@ -2,10 +2,13 @@ package timkodiert.budgetBook.domain.repository;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 import timkodiert.budgetBook.domain.model.Category;
 
 public class CategoriesRepository extends Repository<Category> {
     
+    @Inject
     public CategoriesRepository() {
         super(Category.class);
     }
@@ -17,7 +20,7 @@ public class CategoriesRepository extends Repository<Category> {
             if(entity.getParent() != null) {
                 entity.getParent().getChildren().remove(entity);
             }
-           entity.getExpenses().forEach(expense -> expense.getCategories().remove(entity));
+            entity.getExpenses().forEach(expense -> expense.getCategories().remove(entity));
         });
         super.remove(entities);
     }

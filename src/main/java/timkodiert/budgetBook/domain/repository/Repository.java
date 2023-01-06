@@ -15,6 +15,10 @@ public abstract class Repository<T> {
         this.entityType = entityType;
     }
 
+    public List<T> findAll() {
+        return this.entityManager.findAll(entityType);
+    }
+
     public void persist(T entity) {
         this.persist(List.of(entity));
     }

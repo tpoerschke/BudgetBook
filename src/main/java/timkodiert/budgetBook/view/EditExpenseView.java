@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedInject;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
+import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.EntityManager;
 
 @RequiredArgsConstructor
@@ -56,6 +59,14 @@ public class EditExpenseView implements View, Initializable {
     private List<TextField> monthTextFields;
 
     private Map<Integer, List<Double>> newPayments = new HashMap<>();
+
+    private Repository<FixedExpense> repository;
+
+    @AssistedInject
+    public EditExpenseView(Repository<FixedExpense> repository, @Assisted FixedExpense expense) {
+        this.repository = repository;
+        this.expense = expense;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
