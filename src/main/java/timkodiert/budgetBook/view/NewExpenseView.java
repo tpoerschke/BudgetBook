@@ -28,9 +28,11 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.CheckBoxTreeCell;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.view.widget.MonthYearPickerWidget;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 
@@ -52,8 +54,13 @@ public class NewExpenseView implements Initializable, View {
     private TreeView<Category> categoriesTreeView;
     private List<CheckBoxTreeItem<Category>> allTreeItems;
 
+    @FXML
+    private HBox widgetContainer;
+
     private Repository<FixedExpense> expensesRepository;
     private Repository<Category> categoiesRepository;
+
+    private MonthYearPickerWidget startMonthWidget, endMonthWidget;
 
     @Inject
     public NewExpenseView(Repository<FixedExpense> expensesRepository, Repository<Category> categoiesRepository) {
@@ -118,6 +125,9 @@ public class NewExpenseView implements Initializable, View {
         root.getChildren().addAll(roots);
 
         categoriesTreeView.setRoot(root);
+
+        startMonthWidget = new MonthYearPickerWidget(widgetContainer, "Erster Monat");
+        endMonthWidget = new MonthYearPickerWidget(widgetContainer, "Letzter Monat", null);
     }
 
     @FXML
@@ -147,6 +157,8 @@ public class NewExpenseView implements Initializable, View {
 
         FixedExpense newExpense = new FixedExpense(position, value, type, datesOfPayment);
         newExpense.getCategories().addAll(categories);
+        newExpense.setStart(startMonthWidget.getValue());
+        newExpense.setEnd(endMonthWidget.getValue());
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<FixedExpense>> violations = validator.validate(newExpense);

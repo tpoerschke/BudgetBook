@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -31,6 +33,9 @@ public class PaymentInformation {
 
     private int year;
 
+    @AttributeOverrides({
+        @AttributeOverride(name = "type", column = @Column(name = "type"))
+    })
     private PaymentType type;
 
     @ElementCollection

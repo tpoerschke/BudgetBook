@@ -29,6 +29,8 @@
         <!-- Drop and re-create the database schema on startup -->
         <property name="hibernate.hbm2ddl.auto">update</property>
 
+        <property name="hibernate.implicit_naming_strategy">org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl</property>
+        
         <!-- Names the annotated entity class -->
         <mapping class="timkodiert.budgetBook.domain.model.Expense"/>
         <mapping class="timkodiert.budgetBook.domain.model.FixedExpense"/>

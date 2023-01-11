@@ -143,5 +143,8 @@ public class MainView implements Initializable {
     private void reloadData(ActionEvent event) {
         fixedExpenseController.loadAll();
         fixedExpenseController.addNextYearToAllExpenses();
+
+        System.out.println(fixedExpenseController.getAllExpenses().get(0).getStart());
+        System.out.println(fixedExpenseController.getAllExpenses().get(0).getEnd());
     }
 }

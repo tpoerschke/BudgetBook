@@ -10,13 +10,16 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 public class FixedExpense extends Expense implements Adaptable {
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy="expense", cascade=CascadeType.ALL)
     private List<PaymentInformation> paymentInformations = new ArrayList<>();
+
+    private MonthYear start;
+    private MonthYear end;
     
     public FixedExpense() {
         super();
@@ -67,6 +70,15 @@ public class FixedExpense extends Expense implements Adaptable {
     }
 
     public double getValueFor(int year, int month) {
+        // Untere Grenze erreicht?
+        if(this.getStart() != null && this.getStart().compareTo(MonthYear.of(month, year)) == 1) {
+            return 0;
+        } 
+        // Obere Grenze erreicht?
+        if(this.getEnd() != null && this.getEnd().compareTo(MonthYear.of(month, year)) == -1) {
+            return 0;
+        } 
+
         PaymentInformation payInfo = this.findPaymentInformation(year);
         if(payInfo != null) {
             return payInfo.getValueFor(month);

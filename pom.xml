@@ -18,6 +18,7 @@
 		<launcher.class>timkodiert.budgetBook.Launch</launcher.class>
 
 		<version.dagger>2.44.2</version.dagger>
+		<version.ikonli>12.3.1</version.ikonli>
 	</properties>
 
 	<build>
@@ -122,6 +123,17 @@
 			<artifactId>javafx-web</artifactId>
 			<version>18</version>
 			<scope>compile</scope>
+		</dependency>
+		<!-- Icons -->
+		<dependency>
+			<groupId>org.kordamp.ikonli</groupId>
+			<artifactId>ikonli-javafx</artifactId>
+			<version>${version.ikonli}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.kordamp.ikonli</groupId>
+			<artifactId>ikonli-bootstrapicons-pack</artifactId>
+			<version>${version.ikonli}</version>
 		</dependency>
 		<!-- Databases -->
 		<dependency>
