@@ -35,6 +35,7 @@ import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.view.widget.MonthYearPickerWidget;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.MonthYear;
 
 public class NewExpenseView implements Initializable, View {
 
@@ -126,8 +127,16 @@ public class NewExpenseView implements Initializable, View {
 
         categoriesTreeView.setRoot(root);
 
-        startMonthWidget = new MonthYearPickerWidget(widgetContainer, "Erster Monat");
-        endMonthWidget = new MonthYearPickerWidget(widgetContainer, "Letzter Monat", null);
+        startMonthWidget = MonthYearPickerWidget.builder()
+            .labelStr("Erster Monat")
+            .parent(widgetContainer)
+            .initialValue(MonthYear.now())
+            .build();
+        endMonthWidget = MonthYearPickerWidget.builder()
+            .labelStr("Letzter Monat (optional)")
+            .parent(widgetContainer)
+            .showResetBtn(true)
+            .build();
     }
 
     @FXML

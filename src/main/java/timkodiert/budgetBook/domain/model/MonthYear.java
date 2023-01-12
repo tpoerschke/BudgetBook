@@ -1,5 +1,7 @@
 package timkodiert.budgetBook.domain.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -42,5 +44,10 @@ public class MonthYear implements Comparable<MonthYear> {
 
         // Um den Compiler glücklich zu machen
         return 0;
+    }
+
+    public static MonthYear now() {
+        LocalDate now = LocalDate.now();
+        return new MonthYear(now.getMonthValue(), now.getYear());
     }
 }

@@ -2,7 +2,6 @@ package timkodiert.budgetBook.view.widget;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
@@ -11,7 +10,6 @@ import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import atlantafx.base.theme.Styles;
-import atlantafx.base.util.IntegerStringConverter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,6 +23,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import lombok.Builder;
 import timkodiert.budgetBook.domain.model.MonthYear;
 
 public class MonthYearPickerWidget implements Initializable {
@@ -42,14 +41,12 @@ public class MonthYearPickerWidget implements Initializable {
 
     private MonthYear value;
     private String labelStr;
+    private boolean showResetBtn = false;
 
-    public MonthYearPickerWidget(Pane parent, String labelStr) {
-        this(parent, labelStr, MonthYear.of(LocalDate.now().getMonthValue(), LocalDate.now().getYear()));
-    }
-
-    public MonthYearPickerWidget(Pane parent, String labelStr, MonthYear initialValue) {
+    public MonthYearPickerWidget(Pane parent, String labelStr, MonthYear initialValue, boolean showResetBtn) {
         this.value = initialValue;
         this.labelStr = labelStr;
+        this.showResetBtn = showResetBtn;
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MonthYearPickerWidget.fxml"));
@@ -59,6 +56,11 @@ public class MonthYearPickerWidget implements Initializable {
             Alert alert = new Alert(AlertType.ERROR, "Widget konnte nicht geöffnet werden!");
             alert.showAndWait();
         }
+    }
+
+    @Builder(builderMethodName = "builder")
+    public static MonthYearPickerWidget newWidget(Pane parent, String labelStr, MonthYear initialValue, boolean showResetBtn) {
+        return new MonthYearPickerWidget(parent, labelStr, initialValue, showResetBtn);
     }
 
     public MonthYear getValue() {
@@ -86,7 +88,6 @@ public class MonthYearPickerWidget implements Initializable {
         yearTextField.setTextFormatter(new TextFormatter<>(integerFilter));
 
         label.setText(labelStr);
-        monthChoiceBox.getStyleClass().add(Styles.LEFT_PILL);
 
         List<String> monthList = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
         monthChoiceBox.getItems().setAll(monthList);
@@ -94,13 +95,20 @@ public class MonthYearPickerWidget implements Initializable {
         if(this.value != null) {
             monthChoiceBox.getSelectionModel().select(this.value.getMonth() - 1);
             yearTextField.setText("" + this.value.getYear());
-            yearTextField.getStyleClass().add(Styles.RIGHT_PILL);
         }
         else {
             yearTextField.setText("");
-            widgetInnerContainer.getChildren().addAll(resetBtn);
+        }
+
+        // Styling setzen
+        monthChoiceBox.getStyleClass().add(Styles.LEFT_PILL);
+        if(showResetBtn) {
             resetBtn.getStyleClass().add(Styles.RIGHT_PILL);
             yearTextField.getStyleClass().add(Styles.CENTER_PILL);
+            widgetInnerContainer.getChildren().addAll(resetBtn);
+        }
+        else {
+            yearTextField.getStyleClass().add(Styles.RIGHT_PILL);
         }
     }
 }
