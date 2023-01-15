@@ -26,13 +26,18 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.CheckBoxTreeCell;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.EntityManager;
+import timkodiert.budgetBook.view.widget.EditPaymentInformationWidget;
+import timkodiert.budgetBook.view.widget.MonthYearPickerWidget;
 
 @RequiredArgsConstructor
 public class EditExpenseView implements View, Initializable {
@@ -40,9 +45,6 @@ public class EditExpenseView implements View, Initializable {
     private static int CURRENT_YEAR = LocalDate.now().getYear();
 
     private final FixedExpense expense;
-
-    @FXML
-    private ComboBox<Integer> displayYearComboBox;
 
     @FXML
     private TextField positionTextField;
@@ -53,14 +55,15 @@ public class EditExpenseView implements View, Initializable {
     private List<CheckBoxTreeItem<Category>> allTreeItems;
 
     @FXML
-    private TextField month1TextField, month2TextField, month3TextField, month4TextField, month5TextField, 
-        month6TextField, month7TextField, month8TextField, month9TextField, month10TextField, month11TextField, month12TextField;
-
-    private List<TextField> monthTextFields;
+    private HBox widgetContainer;
+    @FXML
+    private VBox payInfoContainer;
 
     private Map<Integer, List<Double>> newPayments = new HashMap<>();
 
     private Repository<FixedExpense> repository;
+
+    private MonthYearPickerWidget startMonthWidget, endMonthWidget;
 
     @AssistedInject
     public EditExpenseView(Repository<FixedExpense> repository, @Assisted FixedExpense expense) {
@@ -73,21 +76,21 @@ public class EditExpenseView implements View, Initializable {
         positionTextField.setText(expense.getPosition());
         noteTextArea.setText(expense.getNote());
 
-        monthTextFields = List.of(month1TextField, month2TextField, month3TextField, month4TextField, month5TextField, 
-            month6TextField, month7TextField, month8TextField, month9TextField, month10TextField, month11TextField, month12TextField);
+        // monthTextFields = List.of(month1TextField, month2TextField, month3TextField, month4TextField, month5TextField, 
+        //     month6TextField, month7TextField, month8TextField, month9TextField, month10TextField, month11TextField, month12TextField);
 
-        displayYearComboBox.getItems().addAll(IntStream.rangeClosed(CURRENT_YEAR - 5, CURRENT_YEAR + 1).boxed().toList());
-        displayYearComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldYear, Integer newYear) -> {
-            // Neue Werte zwischenspeichern. Werden übernommen, wenn der Nutzer die Ausgabe speichert
-            if(oldYear != null) {
-                newPayments.put(oldYear, monthTextFields.stream().map(tf -> Double.valueOf(tf.getText())).toList());
-            }
-            // Textfields mit den werden des ausgewählten Jahres befüllen.
-            IntStream.rangeClosed(1, 12).forEach(i -> {
-                monthTextFields.get(i-1).setText("" + expense.getValueFor(newYear, i));
-            });
-        });
-        displayYearComboBox.getSelectionModel().select(Integer.valueOf(CURRENT_YEAR));
+        // displayYearComboBox.getItems().addAll(IntStream.rangeClosed(CURRENT_YEAR - 5, CURRENT_YEAR + 1).boxed().toList());
+        // displayYearComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldYear, Integer newYear) -> {
+        //     // Neue Werte zwischenspeichern. Werden übernommen, wenn der Nutzer die Ausgabe speichert
+        //     if(oldYear != null) {
+        //         newPayments.put(oldYear, monthTextFields.stream().map(tf -> Double.valueOf(tf.getText())).toList());
+        //     }
+        //     // Textfields mit den werden des ausgewählten Jahres befüllen.
+        //     IntStream.rangeClosed(1, 12).forEach(i -> {
+        //         monthTextFields.get(i-1).setText("" + expense.getValueFor(newYear, i));
+        //     });
+        // });
+        // displayYearComboBox.getSelectionModel().select(Integer.valueOf(CURRENT_YEAR));
 
         List<Category> categories = EntityManager.getInstance().findAll(Category.class);
         // TODO: Refactoring, diese Code-Zeilen kommen häufiger vor
@@ -104,6 +107,26 @@ public class EditExpenseView implements View, Initializable {
                 ti.setSelected(true);
             }
         });
+
+        // Start- und Endmonatspicker
+        startMonthWidget = MonthYearPickerWidget.builder()
+            .labelStr("Erster Monat")
+            .parent(widgetContainer)
+            .initialValue(expense.getStart())
+            .build();
+        endMonthWidget = MonthYearPickerWidget.builder()
+            .labelStr("Letzter Monat (optional)")
+            .parent(widgetContainer)
+            .initialValue(expense.getEnd())
+            .showResetBtn(true)
+            .build();
+
+        // Widgets zur Bearbeitung der PaymentInformations initialisieren
+        new EditPaymentInformationWidget(payInfoContainer);
+        new EditPaymentInformationWidget(payInfoContainer);
+        new EditPaymentInformationWidget(payInfoContainer);
+        new EditPaymentInformationWidget(payInfoContainer);
+        new EditPaymentInformationWidget(payInfoContainer);
     }
 
     @FXML 
@@ -112,7 +135,7 @@ public class EditExpenseView implements View, Initializable {
         // Eingetragene Werte übernehmen
         this.expense.setPosition(positionTextField.getText());
         this.expense.setNote(noteTextArea.getText());
-        newPayments.put(displayYearComboBox.getSelectionModel().getSelectedItem(), monthTextFields.stream().map(tf -> Double.valueOf(tf.getText())).toList());
+        // newPayments.put(displayYearComboBox.getSelectionModel().getSelectedItem(), monthTextFields.stream().map(tf -> Double.valueOf(tf.getText())).toList());
 
         // Speichern
         for(PaymentInformation payInfo : this.expense.getPaymentInformations()) {
@@ -129,6 +152,9 @@ public class EditExpenseView implements View, Initializable {
         List<Category> categories = allTreeItems.stream().filter(CheckBoxTreeItem::isSelected).map(TreeItem::getValue).toList();
         this.expense.getCategories().clear();
         this.expense.getCategories().addAll(categories);
+
+        this.expense.setStart(startMonthWidget.getValue());
+        this.expense.setEnd(endMonthWidget.getValue());
 
         EntityManager.getInstance().persist(this.expense);
         // Fenster schließen

@@ -25,7 +25,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import lombok.Getter;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.CumulativeExpense;
@@ -70,7 +69,6 @@ public class AnnualOverviewView implements Initializable, View {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println(fixedExpenseController);
         fixedExpenseController.loadAll();
 
         displayYearComboBox.getItems().addAll(IntStream.rangeClosed(START_YEAR, END_YEAR).boxed().toList());
@@ -146,6 +144,7 @@ public class AnnualOverviewView implements Initializable, View {
                             .build();
                         stage.show();
                     } catch(Exception e) {
+                        e.printStackTrace();
                         Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
                         alert.showAndWait();
                     }
