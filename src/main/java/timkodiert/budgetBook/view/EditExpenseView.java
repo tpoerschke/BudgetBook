@@ -38,6 +38,7 @@ import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.view.widget.EditPaymentInformationWidget;
 import timkodiert.budgetBook.view.widget.MonthYearPickerWidget;
+import timkodiert.budgetBook.view.widget.factory.EditPaymentInformationWidgetFactory;
 
 @RequiredArgsConstructor
 public class EditExpenseView implements View, Initializable {
@@ -62,12 +63,16 @@ public class EditExpenseView implements View, Initializable {
     private Map<Integer, List<Double>> newPayments = new HashMap<>();
 
     private Repository<FixedExpense> repository;
+    private EditPaymentInformationWidgetFactory editPaymentInformationWidgetFactory;
 
     private MonthYearPickerWidget startMonthWidget, endMonthWidget;
 
+    private List<EditPaymentInformationWidget> editPayInfoWidgets;
+
     @AssistedInject
-    public EditExpenseView(Repository<FixedExpense> repository, @Assisted FixedExpense expense) {
+    public EditExpenseView(Repository<FixedExpense> repository, EditPaymentInformationWidgetFactory editPaymentInformationWidgetFactory, @Assisted FixedExpense expense) {
         this.repository = repository;
+        this.editPaymentInformationWidgetFactory = editPaymentInformationWidgetFactory;
         this.expense = expense;
     }
 
@@ -109,24 +114,20 @@ public class EditExpenseView implements View, Initializable {
         });
 
         // Start- und Endmonatspicker
-        startMonthWidget = MonthYearPickerWidget.builder()
-            .labelStr("Erster Monat")
-            .parent(widgetContainer)
-            .initialValue(expense.getStart())
-            .build();
-        endMonthWidget = MonthYearPickerWidget.builder()
-            .labelStr("Letzter Monat (optional)")
-            .parent(widgetContainer)
-            .initialValue(expense.getEnd())
-            .showResetBtn(true)
-            .build();
+        // startMonthWidget = MonthYearPickerWidget.builder()
+        //     .labelStr("Erster Monat")
+        //     .parent(widgetContainer)
+        //     .initialValue(expense.getStart())
+        //     .build();
+        // endMonthWidget = MonthYearPickerWidget.builder()
+        //     .labelStr("Letzter Monat (optional)")
+        //     .parent(widgetContainer)
+        //     .initialValue(expense.getEnd())
+        //     .showResetBtn(true)
+        //     .build();
 
         // Widgets zur Bearbeitung der PaymentInformations initialisieren
-        new EditPaymentInformationWidget(payInfoContainer);
-        new EditPaymentInformationWidget(payInfoContainer);
-        new EditPaymentInformationWidget(payInfoContainer);
-        new EditPaymentInformationWidget(payInfoContainer);
-        new EditPaymentInformationWidget(payInfoContainer);
+        editPayInfoWidgets = expense.getPaymentInformations().stream().map(payInfo -> editPaymentInformationWidgetFactory.create(payInfoContainer, payInfo)).toList();
     }
 
     @FXML 
@@ -138,25 +139,28 @@ public class EditExpenseView implements View, Initializable {
         // newPayments.put(displayYearComboBox.getSelectionModel().getSelectedItem(), monthTextFields.stream().map(tf -> Double.valueOf(tf.getText())).toList());
 
         // Speichern
-        for(PaymentInformation payInfo : this.expense.getPaymentInformations()) {
-            List<Double> newPaymentValues = this.newPayments.get(payInfo.getYear());
-            if(newPaymentValues != null) {
-                payInfo.getPayments().clear();
-                IntStream.rangeClosed(1, 12).forEach(i -> {
-                    if(newPaymentValues.get(i-1) != 0.0) {
-                        payInfo.getPayments().put(i, newPaymentValues.get(i-1));
-                    }
-                });
-            }
-        }
+        // for(PaymentInformation payInfo : this.expense.getPaymentInformations()) {
+        //     List<Double> newPaymentValues = this.newPayments.get(payInfo.getYear());
+        //     if(newPaymentValues != null) {
+        //         payInfo.getPayments().clear();
+        //         IntStream.rangeClosed(1, 12).forEach(i -> {
+        //             if(newPaymentValues.get(i-1) != 0.0) {
+        //                 payInfo.getPayments().put(i, newPaymentValues.get(i-1));
+        //             }
+        //         });
+        //     }
+        // }
+        editPayInfoWidgets.forEach(widget -> {
+            widget.persistUpdate();
+        });
         List<Category> categories = allTreeItems.stream().filter(CheckBoxTreeItem::isSelected).map(TreeItem::getValue).toList();
         this.expense.getCategories().clear();
         this.expense.getCategories().addAll(categories);
 
-        this.expense.setStart(startMonthWidget.getValue());
-        this.expense.setEnd(endMonthWidget.getValue());
+        // this.expense.setStart(startMonthWidget.getValue());
+        // this.expense.setEnd(endMonthWidget.getValue());
 
-        EntityManager.getInstance().persist(this.expense);
+        // EntityManager.getInstance().persist(this.expense);
         // Fenster schließen
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.close();

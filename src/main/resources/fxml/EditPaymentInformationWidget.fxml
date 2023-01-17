@@ -31,7 +31,7 @@
                   <Label text="Betrag" />
                   <HBox>
                      <children>
-                        <TextField />
+                        <TextField fx:id="valueTextField" />
                         <Label text="€" />
                      </children>
                   </HBox>
@@ -45,34 +45,34 @@
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Label text="1. Monat" />
+                  <Label fx:id="month1Label" text="1. Monat" />
                   <ChoiceBox fx:id="month1ChoiceBox" prefWidth="150.0" />
                </children>
             </VBox>
             <VBox GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
-                  <Label text="2. Monat" />
+                  <Label fx:id="month2Label" text="2. Monat" />
                   <ChoiceBox fx:id="month2ChoiceBox" prefWidth="150.0" />
                </children>
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <Label text="3. Monat" />
+                  <Label fx:id="month3Label" text="3. Monat" />
                   <ChoiceBox fx:id="month3ChoiceBox" prefWidth="150.0" />
                </children>
             </VBox>
             <VBox GridPane.columnIndex="2" GridPane.rowIndex="2">
                <children>
-                  <Label text="4. Monat" />
+                  <Label fx:id="month4Label" text="4. Monat" />
                   <ChoiceBox fx:id="month4ChoiceBox" prefWidth="150.0" />
                </children>
             </VBox>
-            <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" />
-            <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="2" />
+            <StackPane fx:id="startWidgetContainer" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" />
+            <StackPane fx:id="endWidgetContainer" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="2" />
          </children>
       </GridPane>
    </content>
    <graphic>
-      <Button mnemonicParsing="false" text="Löschen" />
+      <Button mnemonicParsing="false" onAction="#deletePaymentInformation" text="Löschen" />
    </graphic>
 </TitledPane>

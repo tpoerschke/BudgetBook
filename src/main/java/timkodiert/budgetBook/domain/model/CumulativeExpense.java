@@ -11,19 +11,19 @@ public class CumulativeExpense extends Expense {
     public CumulativeExpense(List<? extends Expense> expenses, int startYear, int endYear) {
         this.position = "Gesamt";
 
-        List<Integer> months = IntStream.rangeClosed(1, 12).boxed().toList();
-        IntStream.rangeClosed(startYear, endYear).forEach(year -> {
-            PaymentInformation payInfo = new PaymentInformation(this, year, 0, months, PaymentType.CUMULATIVE);
+        // List<Integer> months = IntStream.rangeClosed(1, 12).boxed().toList();
+        // IntStream.rangeClosed(startYear, endYear).forEach(year -> {
+        //     PaymentInformation payInfo = new PaymentInformation(this, year, 0, months, PaymentType.CUMULATIVE);
 
-            IntStream.rangeClosed(1, 12).forEach(i -> {
-                for(Expense expense : expenses) {
-                    double added = payInfo.getPayments().get(i) + expense.getValueFor(year, i);
-                    payInfo.getPayments().put(i, added);
-                }
-            });
+        //     IntStream.rangeClosed(1, 12).forEach(i -> {
+        //         for(Expense expense : expenses) {
+        //             double added = payInfo.getPayments().get(i) + expense.getValueFor(year, i);
+        //             payInfo.getPayments().put(i, added);
+        //         }
+        //     });
 
-            this.paymentInformations.add(payInfo);
-        });
+        //     this.paymentInformations.add(payInfo);
+        // });
     }
 
     @Override
@@ -37,10 +37,10 @@ public class CumulativeExpense extends Expense {
 
     @Override
     public double getValueForYear(int year) {
-        PaymentInformation payInfo = this.findPaymentInformation(year);
-        if(payInfo != null) {
-            return payInfo.getPayments().values().stream().mapToDouble(v -> v).sum();
-        }
+        // PaymentInformation payInfo = this.findPaymentInformation(year);
+        // if(payInfo != null) {
+        //     return payInfo.getPayments().values().stream().mapToDouble(v -> v).sum();
+        // }
         return 0;
     }
 
@@ -62,11 +62,11 @@ public class CumulativeExpense extends Expense {
     }
 
     private PaymentInformation findPaymentInformation(int year) {
-        for(PaymentInformation payInfo : this.paymentInformations) {
-            if(payInfo.getYear() == year) {
-                return payInfo;
-            }
-        }
+        // for(PaymentInformation payInfo : this.paymentInformations) {
+        //     if(payInfo.getYear() == year) {
+        //         return payInfo;
+        //     }
+        // }
         return null;
     }
 }

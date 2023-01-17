@@ -164,10 +164,8 @@ public class NewExpenseView implements Initializable, View {
         PaymentType type = PaymentType.fromString(typeChoiceBox.getSelectionModel().getSelectedItem());
         List<Category> categories = allTreeItems.stream().filter(CheckBoxTreeItem::isSelected).map(TreeItem::getValue).toList();
 
-        FixedExpense newExpense = new FixedExpense(position, value, type, datesOfPayment);
+        FixedExpense newExpense = new FixedExpense(position, value, type, datesOfPayment, startMonthWidget.getValue(), endMonthWidget.getValue());
         newExpense.getCategories().addAll(categories);
-        newExpense.setStart(startMonthWidget.getValue());
-        newExpense.setEnd(endMonthWidget.getValue());
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<FixedExpense>> violations = validator.validate(newExpense);
