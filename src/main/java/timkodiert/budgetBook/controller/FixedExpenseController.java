@@ -117,9 +117,10 @@ public class FixedExpenseController {
         allExpenses.setAll(repository.findAll());
     }
 
+    // Todo: wird nicht mehr benötigt
     public void addNextYearToAllExpenses() {
-        allExpenses.forEach(FixedExpense::addPaymentInformationForNextYear);
-        repository.persist(allExpenses);
+        // allExpenses.forEach(FixedExpense::addPaymentInformationForNextYear);
+        // repository.persist(allExpenses);
     }
 
     public DoubleProperty monthlyExpensesSumProperty() {

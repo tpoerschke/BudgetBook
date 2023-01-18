@@ -3,9 +3,7 @@ package timkodiert.budgetBook;
 import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import timkodiert.budgetBook.view.AnnualOverviewView;
 import timkodiert.budgetBook.view.DaggerViewComponent;
-import timkodiert.budgetBook.view.MainView;
 import timkodiert.budgetBook.view.ViewComponent;
 
 /**

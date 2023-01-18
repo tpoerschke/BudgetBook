@@ -1,12 +1,10 @@
 package timkodiert.budgetBook.domain.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,22 +12,15 @@ import lombok.Setter;
 @Setter
 @Entity
 public class FixedExpense extends Expense implements Adaptable {
-
-    @OneToMany(mappedBy="expense", cascade=CascadeType.ALL)
-    private List<PaymentInformation> paymentInformations = new ArrayList<>();
-
-    private MonthYear start;
-    private MonthYear end;
     
     public FixedExpense() {
         super();
         initAdapter();
     }
 
-    public FixedExpense(String position, double value, PaymentType type, List<Integer> datesOfPayment) {
+    public FixedExpense(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start, MonthYear end) {
         super(position);
-
-        this.paymentInformations.add(new PaymentInformation(this, LocalDate.now().getYear(), value, datesOfPayment, type));
+        this.paymentInformations.add(new PaymentInformation(this, value, datesOfPayment, type, start, end));
         initAdapter();
     }
 
@@ -45,6 +36,10 @@ public class FixedExpense extends Expense implements Adaptable {
     
     @Override
     public PaymentType getPaymentType() {
+        // TODO: Sinnvolle Ausgabe
+        if(this.paymentInformations.size() == 0) {
+            return PaymentType.MONTHLY;
+        }
         return this.paymentInformations.get(0).getType();
     }
 
@@ -62,43 +57,20 @@ public class FixedExpense extends Expense implements Adaptable {
 
     @Override
     public double getValueForYear(int year) {
-        PaymentInformation payInfo = this.findPaymentInformation(year);
-        if(payInfo != null) {
-            return payInfo.getPayments().values().stream().mapToDouble(v -> v).sum();
-        }
-        return 0;
+        return IntStream.rangeClosed(1, 12).mapToDouble(month -> this.getValueFor(year, month)).sum();
     }
 
     public double getValueFor(int year, int month) {
-        // Untere Grenze erreicht?
-        if(this.getStart() != null && this.getStart().compareTo(MonthYear.of(month, year)) == 1) {
-            return 0;
-        } 
-        // Obere Grenze erreicht?
-        if(this.getEnd() != null && this.getEnd().compareTo(MonthYear.of(month, year)) == -1) {
-            return 0;
-        } 
-
-        PaymentInformation payInfo = this.findPaymentInformation(year);
+        PaymentInformation payInfo = this.findPaymentInformation(MonthYear.of(month, year));
         if(payInfo != null) {
-            return payInfo.getValueFor(month);
+            return payInfo.getValueFor(MonthYear.of(month, year));
         }
         return 0;
     }
 
-    public void addPaymentInformationForNextYear() {
-        int currentYear = LocalDate.now().getYear();
-        int nextYear = LocalDate.now().plusYears(1).getYear();
-        PaymentInformation payInfo = this.findPaymentInformation(currentYear);
-        if(payInfo != null) {
-            PaymentInformation payInfoNextYear = PaymentInformation.of(nextYear, payInfo);
-            this.paymentInformations.add(payInfoNextYear);
-        }
-    }
-
-    private PaymentInformation findPaymentInformation(int year) {
+    private PaymentInformation findPaymentInformation(MonthYear monthYear) {
         for(PaymentInformation payInfo : this.paymentInformations) {
-            if(payInfo.getYear() == year) {
+            if(payInfo.validFor(monthYear)) {
                 return payInfo;
             }
         }

@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -36,6 +37,9 @@ public abstract class Expense implements Turnover {
 
     @ManyToMany(cascade = { CascadeType.PERSIST })
     protected List<Category> categories = new ArrayList<>();
+
+    @OneToMany(mappedBy="expense", cascade=CascadeType.ALL)
+    protected List<PaymentInformation> paymentInformations = new ArrayList<>();
 
     @Transient
     protected ExpenseAdapter adapter;

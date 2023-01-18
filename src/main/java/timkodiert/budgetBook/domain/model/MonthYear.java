@@ -50,4 +50,9 @@ public class MonthYear implements Comparable<MonthYear> {
         LocalDate now = LocalDate.now();
         return new MonthYear(now.getMonthValue(), now.getYear());
     }
+
+    @Override
+    public String toString() {
+        return this.month + "." + this.year;
+    }
 }

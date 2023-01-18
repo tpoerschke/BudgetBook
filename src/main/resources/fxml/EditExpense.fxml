@@ -3,8 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
@@ -13,11 +13,12 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="700.0" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <Label text="Ausgabe bearbeiten" BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -33,7 +34,7 @@
         <tabs>
           <Tab text="Informationen">
                <content>
-                  <GridPane hgap="20.0" vgap="20.0">
+                  <GridPane hgap="20.0" maxHeight="400.0" vgap="20.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" percentWidth="60.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -41,6 +42,7 @@
                      <rowConstraints>
                         <RowConstraints minHeight="-Infinity" prefHeight="50.0" />
                         <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                      </rowConstraints>
                      <children>
                         <VBox>
@@ -61,6 +63,7 @@
                               <TreeView fx:id="categoriesTreeView" showRoot="false" />
                            </children>
                         </VBox>
+                        <HBox fx:id="widgetContainer" spacing="10.0" GridPane.rowIndex="2" />
                      </children>
                      <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -70,103 +73,20 @@
           </Tab>
           <Tab text="Zahlungen">
                <content>
-                  <GridPane hgap="20.0">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="70.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="70.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="70.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="70.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
-                    </rowConstraints>
+                  <ScrollPane fitToWidth="true">
+                     <content>
+                        <VBox fx:id="payInfoContainer" spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#addNewPaymentInformation" text="Zahlung hinzufügen" />
+                           </children>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding></VBox>
+                     </content>
                      <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" />
                      </padding>
-                     <children>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
-                           <children>
-                              <Label text="Januar" />
-                              <TextField fx:id="month1TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
-                           <children>
-                              <Label text="Februar" />
-                              <TextField fx:id="month2TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
-                           <children>
-                              <Label text="März" />
-                              <TextField fx:id="month3TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
-                           <children>
-                              <Label text="April" />
-                              <TextField fx:id="month4TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <children>
-                              <Label text="Mai" />
-                              <TextField fx:id="month5TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <children>
-                              <Label text="Juni" />
-                              <TextField fx:id="month6TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                           <children>
-                              <Label text="Juli" />
-                              <TextField fx:id="month7TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                           <children>
-                              <Label text="August" />
-                              <TextField fx:id="month8TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                           <children>
-                              <Label text="September" />
-                              <TextField fx:id="month9TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                           <children>
-                              <Label text="Oktober" />
-                              <TextField fx:id="month10TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
-                           <children>
-                              <Label text="November" />
-                              <TextField fx:id="month11TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
-                           <children>
-                              <Label text="Dezember" />
-                              <TextField fx:id="month12TextField" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                           <children>
-                              <Label text="Jahr" />
-                              <ComboBox fx:id="displayYearComboBox" prefWidth="150.0" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </GridPane>
+                  </ScrollPane>
                </content>
           </Tab>
         </tabs>
