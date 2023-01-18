@@ -40,6 +40,7 @@ public class EditPaymentInformationWidget implements Initializable {
     @FXML
     private Pane startWidgetContainer, endWidgetContainer;
 
+    @Getter
     private PaymentInformation payInfo;
 
     @Getter
@@ -59,6 +60,7 @@ public class EditPaymentInformationWidget implements Initializable {
             loader.setController(this);
             parent.getChildren().add(loader.load());
         } catch (IOException e) {
+            e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR, "Widget konnte nicht geöffnet werden!");
             alert.showAndWait();
         }
@@ -84,6 +86,7 @@ public class EditPaymentInformationWidget implements Initializable {
             this.payInfo.setValue(Double.parseDouble(valueTextField.getText()));
             this.payInfo.setStart(startMonthWidget.getValue());
             this.payInfo.setEnd(endMonthWidget.getValue());
+            this.repository.persist(payInfo);
         }
     }
 
@@ -125,7 +128,11 @@ public class EditPaymentInformationWidget implements Initializable {
         });
 
         // Werte setzen
-        if(payInfo.getEnd() == null) {
+        root.setExpanded(false);
+        if(payInfo.getStart() == null && payInfo.getEnd() == null) {
+            root.setText("(leer)");
+        }
+        else if(payInfo.getStart() != null && payInfo.getEnd() == null) {
             root.setText("Ab " + payInfo.getStart().toString());
         }
         else {
@@ -134,13 +141,18 @@ public class EditPaymentInformationWidget implements Initializable {
 
         valueTextField.setText(payInfo.getValue() + "");
 
-        typeChoiceBox.getSelectionModel().select(payInfo.getType().getType());
+        if(payInfo.getType() != null) {
+            typeChoiceBox.getSelectionModel().select(payInfo.getType().getType());
 
-        if(!payInfo.getType().equals(PaymentType.MONTHLY)) {
-            List<ChoiceBox<String>> choiceBoxes = List.of(month1ChoiceBox, month2ChoiceBox, month3ChoiceBox, month4ChoiceBox);
-            for(int i = 0; i < payInfo.getMonthsOfPayment().size(); i++) {
-                choiceBoxes.get(i).getSelectionModel().select(payInfo.getMonthsOfPayment().get(i)-1);
+            if(!PaymentType.MONTHLY.equals(payInfo.getType())) {
+                List<ChoiceBox<String>> choiceBoxes = List.of(month1ChoiceBox, month2ChoiceBox, month3ChoiceBox, month4ChoiceBox);
+                for(int i = 0; i < payInfo.getMonthsOfPayment().size(); i++) {
+                    choiceBoxes.get(i).getSelectionModel().select(payInfo.getMonthsOfPayment().get(i)-1);
+                }
             }
+        }
+        else {
+            typeChoiceBox.getSelectionModel().select(0);
         }
 
         startMonthWidget = MonthYearPickerWidget.builder()

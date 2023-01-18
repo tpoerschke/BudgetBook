@@ -42,6 +42,10 @@ public class FixedExpense extends Expense implements Adaptable {
     
     @Override
     public PaymentType getPaymentType() {
+        // TODO: Sinnvolle Ausgabe
+        if(this.paymentInformations.size() == 0) {
+            return PaymentType.MONTHLY;
+        }
         return this.paymentInformations.get(0).getType();
     }
 
@@ -69,7 +73,7 @@ public class FixedExpense extends Expense implements Adaptable {
     public double getValueFor(int year, int month) {
         PaymentInformation payInfo = this.findPaymentInformation(MonthYear.of(month, year));
         if(payInfo != null) {
-            return payInfo.getValueFor(month);
+            return payInfo.getValueFor(MonthYear.of(month, year));
         }
         return 0;
     }

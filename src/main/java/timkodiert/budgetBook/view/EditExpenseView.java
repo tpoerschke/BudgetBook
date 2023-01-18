@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import dagger.assisted.Assisted;
@@ -127,7 +129,7 @@ public class EditExpenseView implements View, Initializable {
         //     .build();
 
         // Widgets zur Bearbeitung der PaymentInformations initialisieren
-        editPayInfoWidgets = expense.getPaymentInformations().stream().map(payInfo -> editPaymentInformationWidgetFactory.create(payInfoContainer, payInfo)).toList();
+        editPayInfoWidgets = expense.getPaymentInformations().stream().map(payInfo -> editPaymentInformationWidgetFactory.create(payInfoContainer, payInfo)).collect(Collectors.toList());
     }
 
     @FXML 
@@ -152,6 +154,11 @@ public class EditExpenseView implements View, Initializable {
         // }
         editPayInfoWidgets.forEach(widget -> {
             widget.persistUpdate();
+            // eine neue PaymentInformation muss der Expense hinzugefügt werden
+            PaymentInformation payInfo = widget.getPayInfo();
+            if(!expense.getPaymentInformations().contains(payInfo)) {
+                expense.getPaymentInformations().add(payInfo);
+            }
         });
         List<Category> categories = allTreeItems.stream().filter(CheckBoxTreeItem::isSelected).map(TreeItem::getValue).toList();
         this.expense.getCategories().clear();
@@ -175,5 +182,13 @@ public class EditExpenseView implements View, Initializable {
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.close();
         }
+    }
+
+    @FXML
+    private void addNewPaymentInformation() {
+        PaymentInformation newPayInfo = new PaymentInformation();
+        newPayInfo.setExpense(expense);
+        EditPaymentInformationWidget widget = editPaymentInformationWidgetFactory.create(payInfoContainer, newPayInfo);
+        editPayInfoWidgets.add(widget);
     }
 }

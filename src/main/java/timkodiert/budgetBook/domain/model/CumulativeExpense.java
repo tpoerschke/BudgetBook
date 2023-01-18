@@ -30,7 +30,7 @@ public class CumulativeExpense extends Expense {
     public double getValueFor(int year, int month) {
         PaymentInformation payInfo = this.findPaymentInformation(year);
         if(payInfo != null) {
-            return payInfo.getValueFor(month);
+            return payInfo.getValueFor(MonthYear.of(month, year));
         }
         return 0;
     }

@@ -74,13 +74,13 @@ public class PaymentInformation {
 
     public boolean validFor(MonthYear monthYear) {
 
-        if(List.of(0, -1).contains(this.start.compareTo(monthYear))) {
-            return true;
+        if(this.start != null && this.start.compareTo(monthYear) == 1) {
+            return false;
         }
-        if(List.of(0, 1).contains(this.end.compareTo(monthYear))) {
-            return true;
+        if(this.end != null && this.end.compareTo(monthYear) == 1) {
+            return false;
         }
 
-        return false;
+        return true;
     } 
 }
