@@ -2,7 +2,6 @@ package timkodiert.budgetBook.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class CumulativeExpense extends Expense {
 

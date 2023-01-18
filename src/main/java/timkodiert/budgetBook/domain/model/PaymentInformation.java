@@ -56,18 +56,6 @@ public class PaymentInformation {
         this.end = end;
     }
 
-    // TODO: wird nicht mehr benötigt
-    private PaymentInformation(int year, PaymentInformation payInfo) {
-        this.expense = payInfo.getExpense();
-        this.type = payInfo.getType();
-    }
-
-    // Zum "kopieren" bzw. übertragen in ein neues Jahr
-    // TODO: wird nicht mehr benötigt
-    public static PaymentInformation of(int year, PaymentInformation payInfo) {
-        return new PaymentInformation(year, payInfo);
-    }
-
     public double getValueFor(MonthYear monthYear) {
         return this.validFor(monthYear) && this.monthsOfPayment.contains(monthYear.getMonth()) ? this.value : 0.0;
     }

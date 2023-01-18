@@ -78,17 +78,6 @@ public class FixedExpense extends Expense implements Adaptable {
         return 0;
     }
 
-    // TODO: wird nicht mehr benötigt
-    // public void addPaymentInformationForNextYear() {
-    //     int currentYear = LocalDate.now().getYear();
-    //     int nextYear = LocalDate.now().plusYears(1).getYear();
-    //     PaymentInformation payInfo = this.findPaymentInformation(currentYear);
-    //     if(payInfo != null) {
-    //         PaymentInformation payInfoNextYear = PaymentInformation.of(nextYear, payInfo);
-    //         this.paymentInformations.add(payInfoNextYear);
-    //     }
-    // }
-
     private PaymentInformation findPaymentInformation(MonthYear monthYear) {
         for(PaymentInformation payInfo : this.paymentInformations) {
             if(payInfo.validFor(monthYear)) {

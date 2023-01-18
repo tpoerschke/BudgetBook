@@ -22,7 +22,6 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.Alert.AlertType;
 import timkodiert.budgetBook.domain.model.Category;
-import timkodiert.budgetBook.domain.repository.CategoriesRepository;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.ButtonTreeTableCell;
 
