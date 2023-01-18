@@ -2,6 +2,7 @@ package timkodiert.budgetBook.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class CumulativeExpense extends Expense {
 
@@ -10,24 +11,31 @@ public class CumulativeExpense extends Expense {
     public CumulativeExpense(List<? extends Expense> expenses, int startYear, int endYear) {
         this.position = "Gesamt";
 
-        // List<Integer> months = IntStream.rangeClosed(1, 12).boxed().toList();
-        // IntStream.rangeClosed(startYear, endYear).forEach(year -> {
-        //     PaymentInformation payInfo = new PaymentInformation(this, year, 0, months, PaymentType.CUMULATIVE);
+        IntStream.rangeClosed(startYear, endYear).forEach(year -> {
+            IntStream.rangeClosed(1, 12).forEach(month -> {
+                MonthYear monthYear = MonthYear.of(month, year);
+                PaymentInformation payInfo = new PaymentInformation(
+                    this, 
+                    0, 
+                    List.of(month), 
+                    PaymentType.CUMULATIVE, 
+                    monthYear,
+                    monthYear
+                );
 
-        //     IntStream.rangeClosed(1, 12).forEach(i -> {
-        //         for(Expense expense : expenses) {
-        //             double added = payInfo.getPayments().get(i) + expense.getValueFor(year, i);
-        //             payInfo.getPayments().put(i, added);
-        //         }
-        //     });
+                for(Expense expense : expenses) {
+                    double added = payInfo.getValue() + expense.getValueFor(year, month);
+                    payInfo.setValue(added);
+                }
 
-        //     this.paymentInformations.add(payInfo);
-        // });
+                this.paymentInformations.add(payInfo);
+            });
+        });
     }
 
     @Override
     public double getValueFor(int year, int month) {
-        PaymentInformation payInfo = this.findPaymentInformation(year);
+        PaymentInformation payInfo = this.findPaymentInformation(MonthYear.of(month, year));
         if(payInfo != null) {
             return payInfo.getValueFor(MonthYear.of(month, year));
         }
@@ -36,11 +44,7 @@ public class CumulativeExpense extends Expense {
 
     @Override
     public double getValueForYear(int year) {
-        // PaymentInformation payInfo = this.findPaymentInformation(year);
-        // if(payInfo != null) {
-        //     return payInfo.getPayments().values().stream().mapToDouble(v -> v).sum();
-        // }
-        return 0;
+        return IntStream.rangeClosed(1, 12).mapToDouble(month -> this.getValueFor(year, month)).sum();
     }
 
     @Override
@@ -60,12 +64,14 @@ public class CumulativeExpense extends Expense {
         return 0;
     }
 
-    private PaymentInformation findPaymentInformation(int year) {
-        // for(PaymentInformation payInfo : this.paymentInformations) {
-        //     if(payInfo.getYear() == year) {
-        //         return payInfo;
-        //     }
-        // }
+    // TODO: Refactor, diese Methode gibt es auch in der FixedExpense
+    // ggf. teil der Oberklasse machen
+    private PaymentInformation findPaymentInformation(MonthYear monthYear) {
+        for(PaymentInformation payInfo : this.paymentInformations) {
+            if(payInfo.validFor(monthYear)) {
+                return payInfo;
+            }
+        }
         return null;
     }
 }

@@ -45,9 +45,9 @@ public class PaymentInformation {
     @Setter
     @ManyToOne
     @JoinColumn(name = "expense_id", nullable = false)
-    private FixedExpense expense;
+    private Expense expense;
 
-    public PaymentInformation(FixedExpense expense, double value, List<Integer> monthsOfPayment, PaymentType type, MonthYear start, MonthYear end) {
+    public PaymentInformation(Expense expense, double value, List<Integer> monthsOfPayment, PaymentType type, MonthYear start, MonthYear end) {
         this.expense = expense;
         this.type = type;
         this.monthsOfPayment = monthsOfPayment;

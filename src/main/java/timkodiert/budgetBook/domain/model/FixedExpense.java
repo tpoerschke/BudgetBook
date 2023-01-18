@@ -1,12 +1,10 @@
 package timkodiert.budgetBook.domain.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,9 +12,6 @@ import lombok.Setter;
 @Setter
 @Entity
 public class FixedExpense extends Expense implements Adaptable {
-
-    @OneToMany(mappedBy="expense", cascade=CascadeType.ALL)
-    private List<PaymentInformation> paymentInformations = new ArrayList<>();
     
     public FixedExpense() {
         super();
@@ -25,7 +20,6 @@ public class FixedExpense extends Expense implements Adaptable {
 
     public FixedExpense(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start, MonthYear end) {
         super(position);
-
         this.paymentInformations.add(new PaymentInformation(this, value, datesOfPayment, type, start, end));
         initAdapter();
     }
@@ -63,11 +57,7 @@ public class FixedExpense extends Expense implements Adaptable {
 
     @Override
     public double getValueForYear(int year) {
-        // PaymentInformation payInfo = this.findPaymentInformation(year);
-        // if(payInfo != null) {
-        //     return payInfo.getPayments().values().stream().mapToDouble(v -> v).sum();
-        // }
-        return 0;
+        return IntStream.rangeClosed(1, 12).mapToDouble(month -> this.getValueFor(year, month)).sum();
     }
 
     public double getValueFor(int year, int month) {
