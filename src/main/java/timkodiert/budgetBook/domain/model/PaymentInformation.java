@@ -61,11 +61,10 @@ public class PaymentInformation {
     }
 
     public boolean validFor(MonthYear monthYear) {
-
         if(this.start != null && this.start.compareTo(monthYear) == 1) {
             return false;
         }
-        if(this.end != null && this.end.compareTo(monthYear) == 1) {
+        if(this.end != null && this.end.compareTo(monthYear) == -1) {
             return false;
         }
 
