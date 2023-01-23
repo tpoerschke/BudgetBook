@@ -6,7 +6,14 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch Launch",
+            "name": "Attach",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": "8001"
+        },
+        {
+            "type": "java",
+            "name": "Launch",
             "request": "launch",
             "mainClass": "timkodiert.budgetBook.Launch",
             "projectName": "budget-book"

@@ -61,6 +61,7 @@
       <ul>
         <!--<li><a href="#prerequisites">Prerequisites</a></li>-->
         <li><a href="#installation">Installation</a></li>
+         <li><a href="#debug">Debug</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
@@ -117,6 +118,14 @@ Das Projekt kann lokal wie folgt aufgesetzt werden. Eine Installation als `.exe`
    mvn clean javafx:run
    ```
 3. Viel Spaß! :)
+
+### Debug
+
+1. Debug-Server starten
+   ```sh
+   mvn clean javafx:run@debug
+   ```
+2. Per Visual Studio Code attachen (`.vscode/launch.json`)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
