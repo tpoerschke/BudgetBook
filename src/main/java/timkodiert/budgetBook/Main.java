@@ -3,6 +3,7 @@ package timkodiert.budgetBook;
 import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import timkodiert.budgetBook.util.PropertiesService;
 import timkodiert.budgetBook.view.DaggerViewComponent;
 import timkodiert.budgetBook.view.ViewComponent;
 
@@ -14,6 +15,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        PropertiesService.getInstance().load();
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         ViewComponent viewComponent = DaggerViewComponent.create();
         viewComponent.getMainView().setAndShowPrimaryStage(primaryStage);

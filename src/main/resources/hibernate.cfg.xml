@@ -9,7 +9,7 @@
 
         <!-- Database connection settings -->
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-        <property name="hibernate.connection.url">jdbc:sqlite:./sqlite.db</property>
+        <property name="hibernate.connection.url">jdbc:sqlite:./sqlite.db</property> <!-- wird zur Laufzeit überschrieben -->
         <property name="hibernate.connection.username">sa</property>
         <property name="hibernate.connection.password"/>
         <property name="hibernate.globally_quoted_identifiers">true</property>
