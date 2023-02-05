@@ -20,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.util.EntityManager;
+import timkodiert.budgetBook.util.PropertiesService;
 import timkodiert.budgetBook.util.StageBuilder;
 
 public class MainView implements Initializable {
@@ -143,5 +144,10 @@ public class MainView implements Initializable {
     private void reloadData(ActionEvent event) {
         fixedExpenseController.loadAll();
         fixedExpenseController.addNextYearToAllExpenses();
+    }
+
+    @FXML
+    private void openSettingsView() {
+        PropertiesService.getInstance().buildWindow().showAndWait();
     }
 }

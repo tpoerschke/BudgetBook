@@ -17,6 +17,8 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="Kategorien verwalten" />
                   <MenuItem mnemonicParsing="false" onAction="#openNewCategoryView" text="Kategorie hinzufügen" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#openSettingsView" text="Einstellungen" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Daten">
