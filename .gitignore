@@ -1,4 +1,5 @@
 .DS_Store
 target/
 *.db
+*.app
 dependency-reduced-pom.xml
