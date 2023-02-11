@@ -4,7 +4,8 @@ mkdir target/input
 cp target/budget-book-1.0-SNAPSHOT.jar target/input/budget-book-1.0-SNAPSHOT.jar
 
 jpackage --input target/input \
-  --name JPackageDemoApp \
+  --name JBudgetBook \
+  --icon images/mac-icon.icns \
   --main-jar budget-book-1.0-SNAPSHOT.jar \
   --type app-image --verbose
 
