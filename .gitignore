@@ -3,3 +3,4 @@ target/
 *.db
 *.app
 dependency-reduced-pom.xml
+JBudgetBook
