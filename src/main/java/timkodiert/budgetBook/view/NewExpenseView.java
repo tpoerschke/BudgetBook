@@ -1,7 +1,9 @@
 package timkodiert.budgetBook.view;
 
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -24,12 +26,14 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.converter.CurrencyStringConverter;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.view.widget.MonthYearPickerWidget;
@@ -59,21 +63,21 @@ public class NewExpenseView implements Initializable, View {
     private HBox widgetContainer;
 
     private Repository<FixedExpense> expensesRepository;
-    private Repository<Category> categoiesRepository;
+    private Repository<Category> categoriesRepository;
 
     private MonthYearPickerWidget startMonthWidget, endMonthWidget;
 
     @Inject
     public NewExpenseView(Repository<FixedExpense> expensesRepository, Repository<Category> categoiesRepository) {
         this.expensesRepository = expensesRepository;
-        this.categoiesRepository = categoiesRepository;
+        this.categoriesRepository = categoiesRepository;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         // ValueTextField initialisieren
-        //valueTextField.setTextFormatter(new TextFormatter<>(new CurrencyStringConverter(NumberFormat.getInstance(Locale.GERMAN))));
+        valueTextField.setTextFormatter(new TextFormatter<>(new CurrencyStringConverter(NumberFormat.getInstance(Locale.GERMAN))));
 
         // Monatsauswahlen initialisieren
         List<String> monthList = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
@@ -117,7 +121,7 @@ public class NewExpenseView implements Initializable, View {
 
         // Kategorieauswahl initialisieren
         categoriesTreeView.setCellFactory(CheckBoxTreeCell.forTreeView());
-        List<Category> categories = categoiesRepository.findAll();
+        List<Category> categories = categoriesRepository.findAll();
 
         // TODO: Refactoring, diese Code-Zeilen kommen häufiger vor
         allTreeItems = categories.stream().map(Category::asTreeItem).toList();
@@ -150,7 +154,7 @@ public class NewExpenseView implements Initializable, View {
         month4ChoiceBox.getStyleClass().remove("validation-error");
 
         String position = positionTextField.getText().trim();
-        double value = Double.parseDouble(valueTextField.getText());
+        double value = Double.parseDouble(valueTextField.getText().replace(".", "").replace(",", "."));
         List<Integer> datesOfPayment = IntStream.rangeClosed(1, 12).boxed().toList();
         if(!typeChoiceBox.getSelectionModel().getSelectedItem().equals("monatlich")) {
             datesOfPayment = List.of(month1ChoiceBox, month2ChoiceBox, month3ChoiceBox, month4ChoiceBox)
