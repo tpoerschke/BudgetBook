@@ -13,5 +13,6 @@ public interface ViewComponent {
     CompactOverviewView getCompactOverviewView();
     ManageCategoriesView getManageCategoriesView();
     NewCategoryView getNewCategoryView();
+    ManageExpensesView getManageExpensesView();
     NewExpenseView getNewExpenseView();
 }
