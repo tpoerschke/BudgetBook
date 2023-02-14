@@ -4,3 +4,4 @@ target/
 *.app
 dependency-reduced-pom.xml
 JBudgetBook
+JBudgetBook.tar.gz
