@@ -20,12 +20,12 @@ elif [[ "$OSTYPE" == "msys" ]]; then
 fi
 
 mkdir target/input
-cp target/budget-book-1.0-SNAPSHOT.jar target/input/budget-book-1.0-SNAPSHOT.jar
+cp target/$MAIN_JAR target/input/$MAIN_JAR
 
 jpackage --input target/input \
   --name $APP_NAME \
   --icon $icon \
-  --main-jar budget-book-1.0-SNAPSHOT.jar \
+  --main-jar $MAIN_JAR \
   --type app-image --verbose
 
 jpackage_status=$?
