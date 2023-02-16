@@ -94,18 +94,9 @@ public class MainView implements Initializable {
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        try {
-            Stage stage = StageBuilder.create()
-                .withModality(Modality.APPLICATION_MODAL)
-                .withOwner(this.primaryStage)
-                .withFXMLResource("/fxml/ManageExpenses.fxml")
-                .withView(viewComponent.getManageExpensesView())
-                .build();
-            stage.show();
-        } catch(Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
-            alert.showAndWait();
-        }
+        loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getManageExpensesView(), "Ausgaben verwalten");
+        viewMenuItem1.setSelected(false);
+        viewMenuItem2.setSelected(false);
     }
 
     @FXML

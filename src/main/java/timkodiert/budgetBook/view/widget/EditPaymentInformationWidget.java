@@ -49,11 +49,13 @@ public class EditPaymentInformationWidget implements Initializable {
     private MonthYearPickerWidget startMonthWidget, endMonthWidget;
 
     private Repository<PaymentInformation> repository;
+    private Pane parent;
 
     @AssistedInject
     public EditPaymentInformationWidget(@Assisted Pane parent, @Assisted PaymentInformation payInfo, Repository<PaymentInformation> repository) {
         this.payInfo = payInfo;
         this.repository = repository;
+        this.parent = parent;
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditPaymentInformationWidget.fxml"));
@@ -96,7 +98,7 @@ public class EditPaymentInformationWidget implements Initializable {
         // Wird tatsächlich gelöscht, wenn persistUpdate() 
         // aufgerufen wird (damit "Abbrechen" möglich ist).
         isDeleted = true;
-        root.setVisible(false);
+        parent.getChildren().remove(root);
     }
 
     @Override
