@@ -6,30 +6,6 @@ SHORTCUT_PATH="$HOME/.local/share/applications"
 SHORTCUT_LOCATION="$HOME/.local/share/applications/$APP_NAME.desktop"
 ICON_PATH="$INSTALL_LOCATION/lib/$APP_NAME.png"
 
-while test $# -gt 0; do
-    case "$1" in
-    -h | --help)
-        echo "Script for installing/removing $APP_NAME"
-        echo " "
-        echo "Usage: ./install.sh [options] [command]"
-        echo " "
-        echo "options:"
-        echo "-h, --help        show this brief help"
-        echo " "
-        echo "commands:"
-        echo "install           install $APP_NAME"
-        echo "remove            remove $APP_NAME from this system"
-        exit 0
-        ;;
-    install)
-        install
-        ;;
-    remove)
-        remove
-        ;;
-    esac
-done
-
 install() {
     rm -rf "$SHORTCUT_LOCATION"
     mkdir -p "$SHORTCUT_PATH"
@@ -55,4 +31,43 @@ install() {
 
 remove() {
     echo "Will remove $APP_NAME from this system"
+    rm -rf "$SHORTCUT_LOCATION"
+    rm -rf "$INSTALL_LOCATION"
+    xdg-desktop-menu forceupdate
 }
+
+while test $# -gt 0; do
+    case "$1" in
+    -h | --help)
+        echo "Script for installing/removing $APP_NAME"
+        echo " "
+        echo "Usage: ./install.sh [options] [command]"
+        echo " "
+        echo "options:"
+        echo "-h, --help        show this brief help"
+        echo " "
+        echo "commands:"
+        echo "install           install $APP_NAME"
+        echo "remove            remove $APP_NAME from this system"
+        exit 0
+        ;;
+    install)
+        if install; then
+            echo "Install complete!"
+            exit 0
+        else
+            echo "Install failed!"
+            exit 1
+        fi
+        ;;
+    remove)
+        if remove; then
+            echo "Removal complete!"
+            exit 0
+        else
+            echo "Removal failed!"
+            exit 1
+        fi
+        ;;
+    esac
+done
