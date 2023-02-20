@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-import dagger.assisted.Assisted;
-import dagger.assisted.AssistedInject;
+
+import javax.inject.Inject;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +21,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.CheckBoxTreeCell;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,10 @@ import timkodiert.budgetBook.view.widget.factory.EditPaymentInformationWidgetFac
 @RequiredArgsConstructor
 public class EditExpenseView implements View, Initializable {
 
-    private final FixedExpense expense;
+    private FixedExpense expense;
 
+    @FXML
+    private Pane root;
     @FXML
     private TextField positionTextField;
     @FXML
@@ -46,8 +49,6 @@ public class EditExpenseView implements View, Initializable {
     private List<CheckBoxTreeItem<Category>> allTreeItems;
 
     @FXML
-    private HBox widgetContainer;
-    @FXML
     private VBox payInfoContainer;
 
     private Repository<FixedExpense> repository;
@@ -55,15 +56,21 @@ public class EditExpenseView implements View, Initializable {
 
     private List<EditPaymentInformationWidget> editPayInfoWidgets;
 
-    @AssistedInject
-    public EditExpenseView(Repository<FixedExpense> repository, EditPaymentInformationWidgetFactory editPaymentInformationWidgetFactory, @Assisted FixedExpense expense) {
+    @Inject
+    public EditExpenseView(Repository<FixedExpense> repository, EditPaymentInformationWidgetFactory editPaymentInformationWidgetFactory) {
         this.repository = repository;
         this.editPaymentInformationWidgetFactory = editPaymentInformationWidgetFactory;
-        this.expense = expense;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void setExpense(FixedExpense fixedExpense) {
+        this.expense = fixedExpense;
+        // und anzeigen
+        if(expense == null) {
+            root.setDisable(true);
+            return;
+        }
+        root.setDisable(false);
+
         positionTextField.setText(expense.getPosition());
         noteTextArea.setText(expense.getNote());
 
@@ -84,7 +91,13 @@ public class EditExpenseView implements View, Initializable {
         });
 
         // Widgets zur Bearbeitung der PaymentInformations initialisieren
+        payInfoContainer.getChildren().clear();
         editPayInfoWidgets = expense.getPaymentInformations().stream().map(payInfo -> editPaymentInformationWidgetFactory.create(payInfoContainer, payInfo)).collect(Collectors.toList());
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+       root.setDisable(true);
     }
 
     @FXML 
@@ -108,9 +121,11 @@ public class EditExpenseView implements View, Initializable {
         this.expense.getCategories().addAll(categories);
 
         this.repository.persist(expense);
-        // Fenster schließen
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.close();
+    }
+
+    @FXML
+    private void discardChanges(ActionEvent event) {
+
     }
 
     @FXML

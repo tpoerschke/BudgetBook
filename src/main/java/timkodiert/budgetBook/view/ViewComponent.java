@@ -15,4 +15,5 @@ public interface ViewComponent {
     NewCategoryView getNewCategoryView();
     ManageExpensesView getManageExpensesView();
     NewExpenseView getNewExpenseView();
+    EditExpenseView getEditExpenseView();
 }
