@@ -115,17 +115,23 @@ public class EditExpenseView implements View, Initializable {
             if(!expense.getPaymentInformations().contains(payInfo)) {
                 expense.getPaymentInformations().add(payInfo);
             }
+            if(widget.isDeleted()) {
+                expense.getPaymentInformations().remove(payInfo);
+            }
         });
         List<Category> categories = allTreeItems.stream().filter(CheckBoxTreeItem::isSelected).map(TreeItem::getValue).toList();
         this.expense.getCategories().clear();
         this.expense.getCategories().addAll(categories);
 
         this.repository.persist(expense);
+        EntityManager.getInstance().refresh(expense);
     }
 
     @FXML
     private void discardChanges(ActionEvent event) {
-
+        // Durch erneutes Setzen der Expense werden
+        // die Änderungen verworfen.
+        setExpense(expense);
     }
 
     @FXML
@@ -134,8 +140,6 @@ public class EditExpenseView implements View, Initializable {
         Optional<ButtonType> result = confirmationAlert.showAndWait();
         if(result.filter(ButtonType.YES::equals).isPresent()) {
             EntityManager.getInstance().remove(this.expense);
-            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            stage.close();
         }
     }
 
