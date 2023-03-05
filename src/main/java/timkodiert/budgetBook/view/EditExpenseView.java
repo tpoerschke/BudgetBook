@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBoxTreeItem;
@@ -23,7 +22,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
@@ -57,7 +55,8 @@ public class EditExpenseView implements View, Initializable {
     private List<EditPaymentInformationWidget> editPayInfoWidgets;
 
     @Inject
-    public EditExpenseView(Repository<FixedExpense> repository, EditPaymentInformationWidgetFactory editPaymentInformationWidgetFactory) {
+    public EditExpenseView(Repository<FixedExpense> repository,
+            EditPaymentInformationWidgetFactory editPaymentInformationWidgetFactory) {
         this.repository = repository;
         this.editPaymentInformationWidgetFactory = editPaymentInformationWidgetFactory;
     }
@@ -65,7 +64,7 @@ public class EditExpenseView implements View, Initializable {
     public void setExpense(FixedExpense fixedExpense) {
         this.expense = fixedExpense;
         // und anzeigen
-        if(expense == null) {
+        if (expense == null) {
             root.setDisable(true);
             return;
         }
@@ -77,7 +76,8 @@ public class EditExpenseView implements View, Initializable {
         List<Category> categories = EntityManager.getInstance().findAll(Category.class);
         // TODO: Refactoring, diese Code-Zeilen kommen häufiger vor
         allTreeItems = categories.stream().map(Category::asTreeItem).toList();
-        List<? extends TreeItem<Category>> roots = allTreeItems.stream().filter(ti -> ti.getValue().getParent() == null).toList();
+        List<? extends TreeItem<Category>> roots = allTreeItems.stream().filter(ti -> ti.getValue().getParent() == null)
+                .toList();
         TreeItem<Category> root = new TreeItem<>(new Category("ROOT"));
         root.getChildren().addAll(roots);
         categoriesTreeView.setCellFactory(CheckBoxTreeCell.forTreeView());
@@ -85,22 +85,24 @@ public class EditExpenseView implements View, Initializable {
 
         // Kategorien der Ausgabe abhacken
         allTreeItems.forEach(ti -> {
-            if(expense.getCategories().contains(ti.getValue())) {
+            if (expense.getCategories().contains(ti.getValue())) {
                 ti.setSelected(true);
             }
         });
 
         // Widgets zur Bearbeitung der PaymentInformations initialisieren
         payInfoContainer.getChildren().clear();
-        editPayInfoWidgets = expense.getPaymentInformations().stream().map(payInfo -> editPaymentInformationWidgetFactory.create(payInfoContainer, payInfo)).collect(Collectors.toList());
+        editPayInfoWidgets = expense.getPaymentInformations().stream()
+                .map(payInfo -> editPaymentInformationWidgetFactory.create(payInfoContainer, payInfo))
+                .collect(Collectors.toList());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       root.setDisable(true);
+        root.setDisable(true);
     }
 
-    @FXML 
+    @FXML
     private void saveExpense(ActionEvent event) {
 
         // Eingetragene Werte übernehmen
@@ -112,14 +114,15 @@ public class EditExpenseView implements View, Initializable {
             widget.persistUpdate();
             // eine neue PaymentInformation muss der Expense hinzugefügt werden
             PaymentInformation payInfo = widget.getPayInfo();
-            if(!expense.getPaymentInformations().contains(payInfo)) {
+            if (!expense.getPaymentInformations().contains(payInfo)) {
                 expense.getPaymentInformations().add(payInfo);
             }
-            if(widget.isDeleted()) {
+            if (widget.isDeleted()) {
                 expense.getPaymentInformations().remove(payInfo);
             }
         });
-        List<Category> categories = allTreeItems.stream().filter(CheckBoxTreeItem::isSelected).map(TreeItem::getValue).toList();
+        List<Category> categories = allTreeItems.stream().filter(CheckBoxTreeItem::isSelected).map(TreeItem::getValue)
+                .toList();
         this.expense.getCategories().clear();
         this.expense.getCategories().addAll(categories);
 
@@ -136,9 +139,10 @@ public class EditExpenseView implements View, Initializable {
 
     @FXML
     private void deleteExpense(ActionEvent event) {
-        Alert confirmationAlert = new Alert(AlertType.CONFIRMATION, "Die Ausgabe \"" + this.expense.getPosition() + "\" wirklich löschen?", ButtonType.YES, ButtonType.NO);
+        Alert confirmationAlert = new Alert(AlertType.CONFIRMATION,
+                "Die Ausgabe \"" + this.expense.getPosition() + "\" wirklich löschen?", ButtonType.YES, ButtonType.NO);
         Optional<ButtonType> result = confirmationAlert.showAndWait();
-        if(result.filter(ButtonType.YES::equals).isPresent()) {
+        if (result.filter(ButtonType.YES::equals).isPresent()) {
             EntityManager.getInstance().remove(this.expense);
         }
     }

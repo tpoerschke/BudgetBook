@@ -6,20 +6,26 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.FixedExpenseAdapter;
 import timkodiert.budgetBook.domain.repository.FixedExpensesRepository;
+import timkodiert.budgetBook.util.StageBuilder;
 
 public class ManageExpensesView implements View, Initializable {
 
@@ -45,17 +51,14 @@ public class ManageExpensesView implements View, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         positionCol.setCellValueFactory(new PropertyValueFactory<FixedExpenseAdapter, String>("position"));
-        expensesTable.getItems().addAll(fixedExpensesRepository.findAll().stream().map(FixedExpense::getAdapter).map(expenseAdapter -> {
-            return (FixedExpenseAdapter)expenseAdapter; // uff
-        }).toList());
+        reloadTable();
 
         editExpenseView = viewComponent.getEditExpenseView();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditExpense.fxml"));
         loader.setController(editExpenseView);
         try {
             detailViewContainer.getChildren().add(loader.load());
-        }
-        catch(IOException ioe) {
+        } catch (IOException ioe) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();
         }
@@ -63,11 +66,36 @@ public class ManageExpensesView implements View, Initializable {
         expensesTable.setRowFactory(tableView -> {
             TableRow<FixedExpenseAdapter> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if(event.getClickCount() == 1 && !row.isEmpty()) {
-                    editExpenseView.setExpense((FixedExpense)row.getItem().getBean()); // -> Uff, hässliches Casting :o
+                if (event.getClickCount() == 1 && !row.isEmpty()) {
+                    editExpenseView.setExpense((FixedExpense) row.getItem().getBean()); // -> Uff, hässliches Casting :o
                 }
             });
             return row;
         });
+    }
+
+    @FXML
+    private void openNewExpense(ActionEvent event) {
+        Window primaryStage = ((Button) event.getSource()).getScene().getWindow();
+        try {
+            Stage stage = StageBuilder.create()
+                    .withModality(Modality.APPLICATION_MODAL)
+                    .withOwner(primaryStage)
+                    .withFXMLResource("/fxml/NewExpense.fxml")
+                    .withView(viewComponent.getNewExpenseView())
+                    .build();
+            stage.setOnCloseRequest(closeEvent -> reloadTable());
+            stage.show();
+        } catch (Exception e) {
+            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            alert.showAndWait();
+        }
+    }
+
+    private void reloadTable() {
+        expensesTable.getItems()
+                .setAll(fixedExpensesRepository.findAll().stream().map(FixedExpense::getAdapter).map(expenseAdapter -> {
+                    return (FixedExpenseAdapter) expenseAdapter; // uff
+                }).toList());
     }
 }
