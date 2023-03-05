@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +22,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import timkodiert.budgetBook.domain.model.ExpenseAdapter;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.FixedExpenseAdapter;
 import timkodiert.budgetBook.domain.repository.FixedExpensesRepository;
@@ -36,7 +36,7 @@ public class ManageExpensesView implements View, Initializable {
     private TableView<FixedExpenseAdapter> expensesTable;
 
     @FXML
-    private TableColumn<FixedExpenseAdapter, String> positionCol;
+    private TableColumn<FixedExpenseAdapter, String> positionCol, typeCol;
 
     private FixedExpensesRepository fixedExpensesRepository;
     private EditExpenseView editExpenseView;
@@ -51,6 +51,8 @@ public class ManageExpensesView implements View, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         positionCol.setCellValueFactory(new PropertyValueFactory<FixedExpenseAdapter, String>("position"));
+        typeCol.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
         reloadTable();
 
         editExpenseView = viewComponent.getEditExpenseView();

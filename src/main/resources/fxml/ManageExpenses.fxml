@@ -17,8 +17,8 @@
          <center>
             <TableView fx:id="expensesTable" BorderPane.alignment="CENTER">
               <columns>
-                <TableColumn fx:id="positionCol" prefWidth="75.0" text="Position" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="positionCol" minWidth="80.0" text="Position" />
+                <TableColumn fx:id="typeCol" prefWidth="75.0" text="Art" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
