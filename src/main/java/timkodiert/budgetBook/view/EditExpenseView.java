@@ -23,6 +23,7 @@ import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
@@ -35,6 +36,8 @@ import timkodiert.budgetBook.view.widget.factory.EditPaymentInformationWidgetFac
 public class EditExpenseView implements View, Initializable {
 
     private FixedExpense expense;
+    @Setter
+    private Runnable onDelete;
 
     @FXML
     private Pane root;
@@ -144,6 +147,8 @@ public class EditExpenseView implements View, Initializable {
         Optional<ButtonType> result = confirmationAlert.showAndWait();
         if (result.filter(ButtonType.YES::equals).isPresent()) {
             EntityManager.getInstance().remove(this.expense);
+            setExpense(null);
+            onDelete.run();
         }
     }
 

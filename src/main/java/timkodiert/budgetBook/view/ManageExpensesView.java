@@ -56,6 +56,8 @@ public class ManageExpensesView implements View, Initializable {
         reloadTable();
 
         editExpenseView = viewComponent.getEditExpenseView();
+        editExpenseView.setOnDelete(this::reloadTable);
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditExpense.fxml"));
         loader.setController(editExpenseView);
         try {
