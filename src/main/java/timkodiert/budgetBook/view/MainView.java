@@ -93,6 +93,13 @@ public class MainView implements Initializable {
     }
 
     @FXML
+    private void openManageExpensesView(ActionEvent event) {
+        loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getManageExpensesView(), "Ausgaben verwalten");
+        viewMenuItem1.setSelected(false);
+        viewMenuItem2.setSelected(false);
+    }
+
+    @FXML
     private void openNewExpenseView(ActionEvent event) {
         try {
             Stage stage = StageBuilder.create()

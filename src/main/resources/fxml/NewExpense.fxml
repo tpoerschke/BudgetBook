@@ -41,12 +41,8 @@
                   <Label text="Höhe" />
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <TextField fx:id="valueTextField" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="180.0" />
-                        <Label text="€">
-                           <padding>
-                              <Insets left="5.0" top="8.0" />
-                           </padding>
-                        </Label>
+                        <TextField fx:id="valueTextField" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="180.0" styleClass="left-pill" />
+                        <Label styleClass="right-pill" text="€" />
                      </children>
                   </HBox>
                </children>

@@ -23,8 +23,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.CumulativeExpense;
@@ -32,8 +30,6 @@ import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.util.BoldTableColumn;
 import timkodiert.budgetBook.util.BoldTableRow;
 import timkodiert.budgetBook.util.CurrencyTableCell;
-import timkodiert.budgetBook.util.StageBuilder;
-import timkodiert.budgetBook.view.factory.EditExpenseViewFactory;
 import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
 public class AnnualOverviewView implements Initializable, View {
@@ -59,12 +55,10 @@ public class AnnualOverviewView implements Initializable, View {
 
     
     private FixedExpenseController fixedExpenseController;
-    private EditExpenseViewFactory editExpenseViewFactory;
 
     @Inject
-    public AnnualOverviewView(FixedExpenseController fixedExpenseController, EditExpenseViewFactory editExpenseViewFactory) {
+    public AnnualOverviewView(FixedExpenseController fixedExpenseController) {
         this.fixedExpenseController = fixedExpenseController;
-        this.editExpenseViewFactory = editExpenseViewFactory;
     }
 
     @Override
@@ -134,20 +128,6 @@ public class AnnualOverviewView implements Initializable, View {
             row.setOnMouseClicked(event -> {
                 if(event.getClickCount() == 1 && !row.isEmpty()) {
                     expenseDetailWidget.setExpense(row.getItem());
-                }
-                else if(event.getClickCount() == 2 && !row.isEmpty()) {
-                    try {
-                        Stage stage = StageBuilder.create()
-                            .withModality(Modality.APPLICATION_MODAL)
-                            .withFXMLResource("/fxml/EditExpense.fxml")
-                            .withView(editExpenseViewFactory.create(fixedExpenseController.getExpense(row.getItem().getId())))
-                            .build();
-                        stage.show();
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                        Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
-                        alert.showAndWait();
-                    }
                 }
             });
             return row;
