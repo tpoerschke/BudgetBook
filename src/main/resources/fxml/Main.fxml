@@ -9,12 +9,11 @@
 
 <BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="900.0" prefWidth="1600.0" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
+      <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="Bearbeiten">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#openManageExpensesView" text="Ausgaben verwalten" />
-                  <MenuItem mnemonicParsing="false" onAction="#openNewExpenseView" text="Ausgabe hinzufügen" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="Kategorien verwalten" />
                   <MenuItem mnemonicParsing="false" onAction="#openNewCategoryView" text="Kategorie hinzufügen" />

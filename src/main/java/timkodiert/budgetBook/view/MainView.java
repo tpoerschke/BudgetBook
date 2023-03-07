@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
@@ -29,6 +30,8 @@ public class MainView implements Initializable {
 
     @FXML
     private BorderPane root;
+    @FXML
+    private MenuBar menuBar;
 
     @FXML
     private RadioMenuItem viewMenuItem1, viewMenuItem2;
@@ -60,6 +63,8 @@ public class MainView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        menuBar.useSystemMenuBarProperty().set(true);
+
         ToggleGroup viewMenuItemToggleGroup = new ToggleGroup();
         viewMenuItem1.setToggleGroup(viewMenuItemToggleGroup);
         viewMenuItem2.setToggleGroup(viewMenuItemToggleGroup);
@@ -100,32 +105,16 @@ public class MainView implements Initializable {
     }
 
     @FXML
-    private void openNewExpenseView(ActionEvent event) {
-        try {
-            Stage stage = StageBuilder.create()
-                .withModality(Modality.APPLICATION_MODAL)
-                .withOwner(this.primaryStage)
-                .withFXMLResource("/fxml/NewExpense.fxml")
-                .withView(viewComponent.getNewExpenseView())
-                .build();
-            stage.show();
-        } catch(Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
-            alert.showAndWait();
-        }
-    }
-
-    @FXML
     private void openManageCategoriesView(ActionEvent event) {
         try {
             Stage stage = StageBuilder.create()
-                .withModality(Modality.APPLICATION_MODAL)
-                .withOwner(this.primaryStage)
-                .withFXMLResource("/fxml/ManageCategories.fxml")
-                .withView(viewComponent.getManageCategoriesView())
-                .build();
+                    .withModality(Modality.APPLICATION_MODAL)
+                    .withOwner(this.primaryStage)
+                    .withFXMLResource("/fxml/ManageCategories.fxml")
+                    .withView(viewComponent.getManageCategoriesView())
+                    .build();
             stage.show();
-        } catch(Exception e) {
+        } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();
         }
@@ -135,13 +124,13 @@ public class MainView implements Initializable {
     private void openNewCategoryView(ActionEvent event) {
         try {
             Stage stage = StageBuilder.create()
-                .withModality(Modality.APPLICATION_MODAL)
-                .withOwner(this.primaryStage)
-                .withFXMLResource("/fxml/NewCategory.fxml")
-                .withView(viewComponent.getNewCategoryView())
-                .build();
+                    .withModality(Modality.APPLICATION_MODAL)
+                    .withOwner(this.primaryStage)
+                    .withFXMLResource("/fxml/NewCategory.fxml")
+                    .withView(viewComponent.getNewCategoryView())
+                    .build();
             stage.show();
-        } catch(Exception e) {
+        } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();
         }
