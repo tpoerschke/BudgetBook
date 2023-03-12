@@ -22,7 +22,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://github.com/tpoerschke/BudgetBook">
     <img src="images/logo.png" alt="Logo" width="140" height="80">
   </a>
 
@@ -61,7 +61,8 @@
       <ul>
         <!--<li><a href="#prerequisites">Prerequisites</a></li>-->
         <li><a href="#installation">Installation</a></li>
-         <li><a href="#debug">Debug</a></li>
+        <li><a href="#debug">Debug</a></li>
+        <li><a href="#debug">Bauen</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
@@ -127,6 +128,11 @@ Das Projekt kann lokal wie folgt aufgesetzt werden. Eine Installation als `.exe`
    ```
 2. Per Visual Studio Code attachen (`.vscode/launch.json`)
 
+
+### Bauen 
+
+Mithilfe des Shell-Skripts `build_app.sh` kann die Applikation für das vorliegende Betriebssystem gebaut werden. Untestützt werden MacOS und Linux.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -146,6 +152,7 @@ WIP
 - [x] Ausgabenübersicht
 - [x] Jahresübersicht
 - [x] Kategorien für Ausgaben
+- [ ] Einzigartige Ausgaben
 - [ ] Analyseübersicht
 - [ ] Einnahmen verwalten
 - [ ] Exportfunktionalität
