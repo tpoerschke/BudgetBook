@@ -90,7 +90,7 @@ public class MainView implements Initializable {
             templateLoader.setLocation(getClass().getResource(resource));
             templateLoader.setController(view);
             this.root.setCenter(templateLoader.load());
-            this.primaryStage.setTitle(stageTitle);
+            this.primaryStage.setTitle(String.format("%s – JBudgetBook", stageTitle));
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();
@@ -99,7 +99,16 @@ public class MainView implements Initializable {
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getManageExpensesView(), "Ausgaben verwalten");
+        loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getManageExpensesView(),
+                "Regelmäßige Ausgaben verwalten");
+        viewMenuItem1.setSelected(false);
+        viewMenuItem2.setSelected(false);
+    }
+
+    @FXML
+    private void openUniqueExpensesManageView(ActionEvent event) {
+        loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", viewComponent.getUniqueExpensesManageView(),
+                "Einzigartige Ausgaben verwalten");
         viewMenuItem1.setSelected(false);
         viewMenuItem2.setSelected(false);
     }
