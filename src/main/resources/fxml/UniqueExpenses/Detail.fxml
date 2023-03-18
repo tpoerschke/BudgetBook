@@ -65,7 +65,7 @@
                               <TableColumn prefWidth="87.0" text="Kategorien" />
                           </columns>
                         </TableView>
-                        <Button mnemonicParsing="false" text="Hinzufügen">
+                        <Button fx:id="addUniqueExpenseInformationButton" mnemonicParsing="false" onAction="#newUniqueExpenseInformation" text="Hinzufügen">
                            <HBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </HBox.margin>

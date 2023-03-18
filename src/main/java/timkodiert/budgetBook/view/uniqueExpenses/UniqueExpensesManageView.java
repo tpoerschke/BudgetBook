@@ -2,11 +2,11 @@ package timkodiert.budgetBook.view.uniqueExpenses;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,9 +18,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.FixedExpenseAdapter;
-import timkodiert.budgetBook.domain.repository.FixedExpensesRepository;
+import timkodiert.budgetBook.domain.model.UniqueExpense;
+import timkodiert.budgetBook.domain.model.UniqueExpenseAdapter;
+import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.view.View;
 import timkodiert.budgetBook.view.ViewComponent;
 
@@ -30,31 +31,34 @@ public class UniqueExpensesManageView implements View, Initializable {
     private Pane detailViewContainer;
 
     @FXML
-    private TableView<FixedExpenseAdapter> expensesTable;
+    private TableView<UniqueExpenseAdapter> expensesTable;
 
     @FXML
-    private TableColumn<String, String> billerCol, dateCol;
+    private TableColumn<UniqueExpenseAdapter, String> billerCol, dateCol;
 
-    private UniqueExpenseDetailView expenseDetailView;
+    private UniqueExpenseDetailView detailView;
     private ViewComponent viewComponent;
 
+    private Repository<UniqueExpense> repository;
+
     @Inject
-    public UniqueExpensesManageView(ViewComponent viewComponent) {
+    public UniqueExpensesManageView(Repository<UniqueExpense> repository, ViewComponent viewComponent) {
+        this.repository = repository;
         this.viewComponent = viewComponent;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // positionCol.setCellValueFactory(new PropertyValueFactory<FixedExpenseAdapter, String>("position"));
+        billerCol.setCellValueFactory(new PropertyValueFactory<UniqueExpenseAdapter, String>("biller"));
         // typeCol.setCellValueFactory(
         //         cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
-        // reloadTable();
+        reloadTable();
 
-        expenseDetailView = viewComponent.getUniqueExpenseDetailView();
-        expenseDetailView.setOnDelete(this::reloadTable);
+        detailView = viewComponent.getUniqueExpenseDetailView();
+        detailView.setOnUpdate(this::reloadTable);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UniqueExpenses/Detail.fxml"));
-        loader.setController(expenseDetailView);
+        loader.setController(detailView);
         try {
             detailViewContainer.getChildren().add(loader.load());
         } catch (IOException ioe) {
@@ -63,11 +67,10 @@ public class UniqueExpensesManageView implements View, Initializable {
         }
 
         expensesTable.setRowFactory(tableView -> {
-            TableRow<FixedExpenseAdapter> row = new TableRow<>();
+            TableRow<UniqueExpenseAdapter> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 1 && !row.isEmpty()) {
-                    // editExpenseView.setExpense((FixedExpense) row.getItem().getBean()); // ->
-                    // Uff, hässliches Casting :o
+                    detailView.setBean(row.getItem().getBean());
                 }
             });
             return row;
@@ -76,26 +79,10 @@ public class UniqueExpensesManageView implements View, Initializable {
 
     @FXML
     private void newUniqueExpense(ActionEvent event) {
-        // Window primaryStage = ((Button) event.getSource()).getScene().getWindow();
-        // try {
-        //     Stage stage = StageBuilder.create()
-        //             .withModality(Modality.APPLICATION_MODAL)
-        //             .withOwner(primaryStage)
-        //             .withFXMLResource("/fxml/NewExpense.fxml")
-        //             .withView(viewComponent.getNewExpenseView())
-        //             .build();
-        //     stage.setOnCloseRequest(closeEvent -> reloadTable());
-        //     stage.show();
-        // } catch (Exception e) {
-        //     Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
-        //     alert.showAndWait();
-        // }
+        detailView.setBean(new UniqueExpense());
     }
 
     private void reloadTable() {
-        // expensesTable.getItems()
-        //         .setAll(fixedExpensesRepository.findAll().stream().map(FixedExpense::getAdapter).map(expenseAdapter -> {
-        //             return (FixedExpenseAdapter) expenseAdapter; // uff
-        //         }).toList());
+        expensesTable.getItems().setAll(repository.findAll().stream().map(UniqueExpense::getAdapter).toList());
     }
 }

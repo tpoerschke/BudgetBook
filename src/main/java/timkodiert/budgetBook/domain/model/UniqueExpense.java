@@ -18,11 +18,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// Das Model
 @Getter
 @Entity
-@NoArgsConstructor
-public abstract class UniqueExpense {
+public class UniqueExpense {
 
     @Id
     @GeneratedValue(generator = "increment")
@@ -41,11 +39,20 @@ public abstract class UniqueExpense {
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     private List<UniqueExpenseInformation> paymentInformations = new ArrayList<>();
 
-    // @Transient
-    // private ExpenseAdapter adapter;
+    @Transient
+    private UniqueExpenseAdapter adapter;
 
-    public UniqueExpense(String biller) {
-        this.biller = biller;
+    public UniqueExpense() {
+        initAdapter();
+    }
+
+    public void initAdapter() {
+        try {
+            this.adapter = new UniqueExpenseAdapter(this);
+        } catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public double getTotalValue() {
