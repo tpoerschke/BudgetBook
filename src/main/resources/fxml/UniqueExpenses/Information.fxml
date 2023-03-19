@@ -58,7 +58,7 @@
    <bottom>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
         <items>
-          <Button mnemonicParsing="false" text="Speichern" />
+          <Button mnemonicParsing="false" onAction="#onSave" text="Speichern" />
             <Button mnemonicParsing="false" text="Verwerfen" />
         </items>
       </ToolBar>

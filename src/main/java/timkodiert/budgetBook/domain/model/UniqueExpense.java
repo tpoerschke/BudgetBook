@@ -36,6 +36,7 @@ public class UniqueExpense {
     @Setter
     private String note;
 
+    @Setter
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     private List<UniqueExpenseInformation> paymentInformations = new ArrayList<>();
 
