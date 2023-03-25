@@ -36,7 +36,7 @@
             <VBox>
                <children>
                   <Label text="Kategorien" />
-                  <TreeView prefHeight="300.0" />
+                  <TreeView fx:id="categoriesTreeView" prefHeight="300.0" />
                </children>
             </VBox>
          </children>
@@ -59,7 +59,7 @@
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
         <items>
           <Button mnemonicParsing="false" onAction="#onSave" text="Speichern" />
-            <Button mnemonicParsing="false" text="Verwerfen" />
+            <Button mnemonicParsing="false" onAction="#onRevert" text="Verwerfen" />
         </items>
       </ToolBar>
    </bottom>

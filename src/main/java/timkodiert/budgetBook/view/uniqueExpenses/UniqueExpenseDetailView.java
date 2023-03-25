@@ -47,12 +47,18 @@ public class UniqueExpenseDetailView implements View, Initializable {
     private TextField billerTextField;
     @FXML
     private TextArea noteTextArea;
+
     @FXML
-    private Button addUniqueExpenseInformationButton, editUniqueExpenseInformationButton;
+    private Button addUniqueExpenseInformationButton;
+    @FXML
+    private Button editUniqueExpenseInformationButton;
+    @FXML
+    private Button deleteUniqueExpenseInformationButton;
+
     @FXML
     private TableView<UniqueExpenseInformation> expenseInfoTable;
     @FXML
-    private TableColumn<UniqueExpenseInformation, String> expenseInfoPositionCol;
+    private TableColumn<UniqueExpenseInformation, String> expenseInfoPositionCol, expenseInfoValueCol;
 
     private Repository<UniqueExpense> repository;
     private ObjectProperty<UniqueExpense> expense = new SimpleObjectProperty<>();
@@ -65,16 +71,20 @@ public class UniqueExpenseDetailView implements View, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        addUniqueExpenseInformationButton.setText("");
         addUniqueExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.PLUS));
         editUniqueExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.PENCIL));
+        deleteUniqueExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.TRASH));
         editUniqueExpenseInformationButton.disableProperty()
+                .bind(expenseInfoTable.getSelectionModel().selectedItemProperty().isNull());
+        deleteUniqueExpenseInformationButton.disableProperty()
                 .bind(expenseInfoTable.getSelectionModel().selectedItemProperty().isNull());
 
         root.disableProperty().bind(Bindings.createBooleanBinding(() -> expense.get() == null, expense));
 
         expenseInfoPositionCol
                 .setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getLabel()));
+        expenseInfoValueCol
+                .setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue() + " €"));
         expenseInfoTable.setItems(paymentInfoList);
     }
 
@@ -128,6 +138,11 @@ public class UniqueExpenseDetailView implements View, Initializable {
         Optional<UniqueExpenseInformation> optionalEntity = Optional
                 .of(expenseInfoTable.getSelectionModel().getSelectedItem());
         openUniqueExpenseInformationDetailView(optionalEntity);
+    }
+
+    @FXML
+    private void deleteUniqueExpenseInformation(ActionEvent event) {
+
     }
 
     private void openUniqueExpenseInformationDetailView(Optional<UniqueExpenseInformation> optionalEntity) {
