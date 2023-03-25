@@ -1,7 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE hibernate-configuration PUBLIC
-        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
 
@@ -9,9 +7,10 @@
 
         <!-- Database connection settings -->
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-        <property name="hibernate.connection.url">jdbc:sqlite:./sqlite.db</property> <!-- wird zur Laufzeit überschrieben -->
+        <property name="hibernate.connection.url">jdbc:sqlite:./sqlite.db</property> <!-- wird zur
+        Laufzeit überschrieben -->
         <property name="hibernate.connection.username">sa</property>
-        <property name="hibernate.connection.password"/>
+        <property name="hibernate.connection.password" />
         <property name="hibernate.globally_quoted_identifiers">true</property>
 
         <!-- JDBC connection pool (use the built-in) -->
@@ -29,13 +28,16 @@
         <!-- Drop and re-create the database schema on startup -->
         <property name="hibernate.hbm2ddl.auto">update</property>
 
-        <property name="hibernate.implicit_naming_strategy">org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl</property>
-        
+        <property name="hibernate.implicit_naming_strategy">
+            org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl</property>
+
         <!-- Names the annotated entity class -->
-        <mapping class="timkodiert.budgetBook.domain.model.Expense"/>
-        <mapping class="timkodiert.budgetBook.domain.model.FixedExpense"/>
+        <mapping class="timkodiert.budgetBook.domain.model.Expense" />
+        <mapping class="timkodiert.budgetBook.domain.model.FixedExpense" />
         <mapping class="timkodiert.budgetBook.domain.model.PaymentInformation" />
         <mapping class="timkodiert.budgetBook.domain.model.Category" />
+        <mapping class="timkodiert.budgetBook.domain.model.UniqueExpense" />
+        <mapping class="timkodiert.budgetBook.domain.model.UniqueExpenseInformation" />
 
     </session-factory>
 

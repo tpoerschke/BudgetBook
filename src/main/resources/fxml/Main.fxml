@@ -13,7 +13,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="Bearbeiten">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openManageExpensesView" text="Ausgaben verwalten" />
+                  <MenuItem mnemonicParsing="false" onAction="#openManageExpensesView" text="Regelmäßige Ausgaben verwalten" />
+                  <MenuItem mnemonicParsing="false" onAction="#openUniqueExpensesManageView" text="Einzigartige Ausgaben verwalten" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="Kategorien verwalten" />
                   <MenuItem mnemonicParsing="false" onAction="#openNewCategoryView" text="Kategorie hinzufügen" />

@@ -1,5 +1,7 @@
 package timkodiert.budgetBook.view;
 
+import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
+
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -13,13 +15,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +27,7 @@ import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.view.widget.EditPaymentInformationWidget;
 import timkodiert.budgetBook.view.widget.factory.EditPaymentInformationWidgetFactory;
@@ -47,7 +47,7 @@ public class EditExpenseView implements View, Initializable {
     private TextArea noteTextArea;
     @FXML
     private TreeView<Category> categoriesTreeView;
-    private List<CheckBoxTreeItem<Category>> allTreeItems;
+    private CategoryTreeHelper categoryTreeHelper;
 
     @FXML
     private VBox payInfoContainer;
@@ -76,22 +76,8 @@ public class EditExpenseView implements View, Initializable {
         positionTextField.setText(expense.getPosition());
         noteTextArea.setText(expense.getNote());
 
-        List<Category> categories = EntityManager.getInstance().findAll(Category.class);
-        // TODO: Refactoring, diese Code-Zeilen kommen häufiger vor
-        allTreeItems = categories.stream().map(Category::asTreeItem).toList();
-        List<? extends TreeItem<Category>> roots = allTreeItems.stream().filter(ti -> ti.getValue().getParent() == null)
-                .toList();
-        TreeItem<Category> root = new TreeItem<>(new Category("ROOT"));
-        root.getChildren().addAll(roots);
-        categoriesTreeView.setCellFactory(CheckBoxTreeCell.forTreeView());
-        categoriesTreeView.setRoot(root);
-
         // Kategorien der Ausgabe abhacken
-        allTreeItems.forEach(ti -> {
-            if (expense.getCategories().contains(ti.getValue())) {
-                ti.setSelected(true);
-            }
-        });
+        categoryTreeHelper.selectCategories(fixedExpense);
 
         // Widgets zur Bearbeitung der PaymentInformations initialisieren
         payInfoContainer.getChildren().clear();
@@ -102,6 +88,8 @@ public class EditExpenseView implements View, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        List<Category> categories = EntityManager.getInstance().findAll(Category.class);
+        categoryTreeHelper = from(categoriesTreeView, categories);
         root.setDisable(true);
     }
 
@@ -124,10 +112,9 @@ public class EditExpenseView implements View, Initializable {
                 expense.getPaymentInformations().remove(payInfo);
             }
         });
-        List<Category> categories = allTreeItems.stream().filter(CheckBoxTreeItem::isSelected).map(TreeItem::getValue)
-                .toList();
+
         this.expense.getCategories().clear();
-        this.expense.getCategories().addAll(categories);
+        this.expense.getCategories().addAll(categoryTreeHelper.getSelectedCategories());
 
         this.repository.persist(expense);
         EntityManager.getInstance().refresh(expense);

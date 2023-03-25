@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @NoArgsConstructor
-public abstract class Expense implements Turnover {
+public abstract class Expense implements Turnover, Categorizable {
 
     @Id
     @GeneratedValue(generator = "increment")
@@ -38,7 +38,7 @@ public abstract class Expense implements Turnover {
     @ManyToMany(cascade = { CascadeType.PERSIST })
     protected List<Category> categories = new ArrayList<>();
 
-    @OneToMany(mappedBy="expense", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     protected List<PaymentInformation> paymentInformations = new ArrayList<>();
 
     @Transient
@@ -49,7 +49,9 @@ public abstract class Expense implements Turnover {
     }
 
     public abstract double getCurrentMonthValue();
+
     public abstract double getNextMonthValue();
+
     public abstract double getValueForYear(int year);
 
     public abstract PaymentType getPaymentType();

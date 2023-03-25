@@ -5,10 +5,20 @@ import dagger.Module;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
+import timkodiert.budgetBook.domain.model.UniqueExpense;
 
 @Module
 public interface RepositoryModule {
-    @Binds Repository<Category> provideCategoriesRepository(CategoriesRepository impl);
-    @Binds Repository<FixedExpense> provideFixedExpensesRepository(FixedExpensesRepository impl);
-    @Binds Repository<PaymentInformation> providePaymentInformationsRepository(PaymentInformationsRepository impl);
+
+    @Binds
+    Repository<Category> provideCategoriesRepository(CategoriesRepository impl);
+
+    @Binds
+    Repository<FixedExpense> provideFixedExpensesRepository(FixedExpensesRepository impl);
+
+    @Binds
+    Repository<PaymentInformation> providePaymentInformationsRepository(PaymentInformationsRepository impl);
+
+    @Binds
+    Repository<UniqueExpense> provideUniqueExpensesRepository(UniqueExpensesRepository impl);
 }
