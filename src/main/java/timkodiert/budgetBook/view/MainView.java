@@ -98,6 +98,14 @@ public class MainView implements Initializable {
     }
 
     @FXML
+    public void showMonthlyOverview(ActionEvent event) {
+        loadViewPartial("/fxml/MonthlyOverview.fxml", viewComponent.getMonthlyOverview(),
+                "Monatsübersicht");
+        viewMenuItem1.setSelected(false);
+        viewMenuItem2.setSelected(false);
+    }
+
+    @FXML
     private void openManageExpensesView(ActionEvent event) {
         loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getManageExpensesView(),
                 "Regelmäßige Ausgaben verwalten");

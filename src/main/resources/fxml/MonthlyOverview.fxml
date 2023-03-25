@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <TableView fx:id="dataTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+            <TableColumn fx:id="buttonCol" prefWidth="75.0" text="Column X" />
+          <TableColumn fx:id="positionCol" prefWidth="75.0" text="Position" />
+          <TableColumn fx:id="valueCol" prefWidth="75.0" text="Value" />
+        </columns>
+      </TableView>
+   </center>
+</BorderPane>
