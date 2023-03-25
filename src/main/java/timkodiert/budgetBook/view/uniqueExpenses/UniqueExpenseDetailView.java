@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -19,6 +18,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -29,9 +30,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import lombok.Setter;
+import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.StageBuilder;
 import timkodiert.budgetBook.view.View;
@@ -47,6 +50,8 @@ public class UniqueExpenseDetailView implements View, Initializable {
     private TextField billerTextField;
     @FXML
     private TextArea noteTextArea;
+    @FXML
+    private DatePicker datePicker;
 
     @FXML
     private Button addUniqueExpenseInformationButton;
@@ -58,7 +63,8 @@ public class UniqueExpenseDetailView implements View, Initializable {
     @FXML
     private TableView<UniqueExpenseInformation> expenseInfoTable;
     @FXML
-    private TableColumn<UniqueExpenseInformation, String> expenseInfoPositionCol, expenseInfoValueCol;
+    private TableColumn<UniqueExpenseInformation, String> expenseInfoPositionCol, expenseInfoValueCol,
+            expenseInfoCategoriesCol;
 
     private Repository<UniqueExpense> repository;
     private ObjectProperty<UniqueExpense> expense = new SimpleObjectProperty<>();
@@ -79,18 +85,29 @@ public class UniqueExpenseDetailView implements View, Initializable {
         deleteUniqueExpenseInformationButton.disableProperty()
                 .bind(expenseInfoTable.getSelectionModel().selectedItemProperty().isNull());
 
-        root.disableProperty().bind(Bindings.createBooleanBinding(() -> expense.get() == null, expense));
+        root.disableProperty().bind(expense.isNull());
 
         expenseInfoPositionCol
                 .setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getLabel()));
-        expenseInfoValueCol
-                .setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue() + " €"));
+        expenseInfoValueCol.setCellValueFactory(cellData -> {
+            DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
+            return new ReadOnlyStringWrapper(converter.format(cellData.getValue().getValue()));
+        });
+        expenseInfoCategoriesCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(
+                String.join(", ", cellData.getValue().getCategories().stream().map(Category::getName).toList())));
         expenseInfoTable.setItems(paymentInfoList);
     }
 
     public void setBean(UniqueExpense uniqueExpense) {
         this.expense.set(uniqueExpense);
+
+        if (uniqueExpense == null) {
+            return;
+        }
+
         billerTextField.setText(uniqueExpense.getBiller());
+        noteTextArea.setText(uniqueExpense.getNote());
+        datePicker.setValue(uniqueExpense.getDate());
         paymentInfoList.setAll(uniqueExpense.getPaymentInformations());
     }
 
@@ -103,7 +120,9 @@ public class UniqueExpenseDetailView implements View, Initializable {
     private void save(ActionEvent event) {
         UniqueExpense exp = this.expense.get();
         exp.setBiller(billerTextField.getText());
+        exp.setNote(noteTextArea.getText());
         exp.setPaymentInformations(paymentInfoList);
+        exp.setDate(datePicker.getValue());
         repository.persist(exp);
         EntityManager.getInstance().refresh(exp);
         onUpdate.run();
@@ -118,14 +137,16 @@ public class UniqueExpenseDetailView implements View, Initializable {
 
     @FXML
     private void delete(ActionEvent event) {
-        // Alert confirmationAlert = new Alert(AlertType.CONFIRMATION,
-        //         "Die Ausgabe \"" + this.expense.getPosition() + "\" wirklich löschen?", ButtonType.YES, ButtonType.NO);
-        // Optional<ButtonType> result = confirmationAlert.showAndWait();
-        // if (result.filter(ButtonType.YES::equals).isPresent()) {
-        //     EntityManager.getInstance().remove(this.expense);
-        //     setExpense(null);
-        //     onDelete.run();
-        // }
+        Alert confirmationAlert = new Alert(AlertType.CONFIRMATION,
+                String.format("Die Ausgabe \"%s\" vom %s wirklich löschen?", this.expense.get().getBiller(),
+                        this.expense.get().getDate()),
+                ButtonType.YES, ButtonType.NO);
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if (result.filter(ButtonType.YES::equals).isPresent()) {
+            repository.remove(this.expense.get());
+            setBean(null);
+            onUpdate.run();
+        }
     }
 
     @FXML
@@ -142,7 +163,7 @@ public class UniqueExpenseDetailView implements View, Initializable {
 
     @FXML
     private void deleteUniqueExpenseInformation(ActionEvent event) {
-
+        paymentInfoList.remove(expenseInfoTable.getSelectionModel().getSelectedItem());
     }
 
     private void openUniqueExpenseInformationDetailView(Optional<UniqueExpenseInformation> optionalEntity) {

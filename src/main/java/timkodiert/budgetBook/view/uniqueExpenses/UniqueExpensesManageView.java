@@ -2,15 +2,18 @@ package timkodiert.budgetBook.view.uniqueExpenses;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -20,6 +23,8 @@ import javafx.scene.layout.Pane;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.model.UniqueExpenseAdapter;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.util.CurrencyTableCell;
+import timkodiert.budgetBook.util.DateTableCell;
 import timkodiert.budgetBook.view.View;
 import timkodiert.budgetBook.view.ViewComponent;
 
@@ -32,7 +37,11 @@ public class UniqueExpensesManageView implements View, Initializable {
     private TableView<UniqueExpenseAdapter> expensesTable;
 
     @FXML
-    private TableColumn<UniqueExpenseAdapter, String> billerCol, dateCol;
+    private TableColumn<UniqueExpenseAdapter, String> billerCol;
+    @FXML
+    private TableColumn<UniqueExpenseAdapter, LocalDate> dateCol;
+    @FXML
+    private TableColumn<UniqueExpenseAdapter, Number> valueCol;
 
     private UniqueExpenseDetailView detailView;
     private ViewComponent viewComponent;
@@ -48,8 +57,11 @@ public class UniqueExpensesManageView implements View, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         billerCol.setCellValueFactory(new PropertyValueFactory<UniqueExpenseAdapter, String>("biller"));
-        // typeCol.setCellValueFactory(
-        //         cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
+        dateCol.setCellValueFactory(new PropertyValueFactory<UniqueExpenseAdapter, LocalDate>("date"));
+        dateCol.setCellFactory(col -> new DateTableCell<>());
+        valueCol.setCellValueFactory(
+                cellData -> new SimpleDoubleProperty(cellData.getValue().getBean().getTotalValue()));
+        valueCol.setCellFactory(col -> new CurrencyTableCell<>());
         reloadTable();
 
         detailView = viewComponent.getUniqueExpenseDetailView();

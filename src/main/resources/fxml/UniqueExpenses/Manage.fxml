@@ -18,8 +18,8 @@
             <TableView fx:id="expensesTable" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="billerCol" minWidth="80.0" text="Rechnungssteller" />
-                <TableColumn fx:id="typeCol" prefWidth="75.0" text="Datum" />
-                  <TableColumn prefWidth="75.0" text="Betrag" />
+                <TableColumn fx:id="dateCol" prefWidth="70.0" text="Datum" />
+                  <TableColumn fx:id="valueCol" text="Betrag" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

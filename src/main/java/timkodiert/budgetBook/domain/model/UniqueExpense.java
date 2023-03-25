@@ -54,6 +54,6 @@ public class UniqueExpense {
     }
 
     public double getTotalValue() {
-        return 0;
+        return paymentInformations.stream().mapToDouble(UniqueExpenseInformation::getValue).sum();
     }
 }
