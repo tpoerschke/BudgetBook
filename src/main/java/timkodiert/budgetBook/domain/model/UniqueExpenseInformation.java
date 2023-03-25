@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @NoArgsConstructor
-public class UniqueExpenseInformation {
+public class UniqueExpenseInformation implements Categorizable {
 
     @Id
     @GeneratedValue(generator = "increment")
