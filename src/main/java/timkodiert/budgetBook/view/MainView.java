@@ -92,6 +92,7 @@ public class MainView implements Initializable {
             this.root.setCenter(templateLoader.load());
             this.primaryStage.setTitle(String.format("%s – JBudgetBook", stageTitle));
         } catch (IOException e) {
+            e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();
         }
