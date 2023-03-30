@@ -12,3 +12,9 @@
     -fx-background-radius: 4px;
     -fx-padding: 2px 4px;
 }
+
+.noheader .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}

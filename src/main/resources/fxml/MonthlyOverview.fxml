@@ -4,7 +4,6 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 
-
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <TableView fx:id="dataTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -15,4 +14,13 @@
         </columns>
       </TableView>
    </center>
+   <bottom>
+      <TableView fx:id="sumTable" prefHeight="200.0" styleClass="noheader" BorderPane.alignment="CENTER">
+        <columns>
+            <TableColumn fx:id="sumTableCol0" prefWidth="75.0" text="Column X" />
+          <TableColumn fx:id="sumTableCol1" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="-1.0" text="C1" />
+          <TableColumn fx:id="sumTableCol2" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="-1.0" text="C2" />
+        </columns>
+      </TableView>
+   </bottom>
 </BorderPane>
