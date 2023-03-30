@@ -5,26 +5,28 @@ import java.util.function.Consumer;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import timkodiert.budgetBook.view.MonthlyOverview.TableData;
 
 public class GroupTableCell extends TableCell<TableData, TableData> {
 
-    private final Consumer<Boolean> onHideClick;
-    private boolean isCollapsed = false;
-    private Button btn = new Button();
+    private final SimpleBooleanProperty isCollapsedProperty;
+    private final Button btn = new Button();
 
-    public GroupTableCell(Consumer<Boolean> onHideClick) {
-        this.onHideClick = onHideClick;
+    public GroupTableCell(SimpleBooleanProperty isCollapsedProperty) {
+        this.isCollapsedProperty = isCollapsedProperty;
         btn.setGraphic(new FontIcon(BootstrapIcons.ARROWS_COLLAPSE));
-        btn.setOnAction(event -> {
-            isCollapsed = !isCollapsed;
-            btn.setGraphic(isCollapsed ? new FontIcon(BootstrapIcons.ARROWS_EXPAND)
-                    : new FontIcon(BootstrapIcons.ARROWS_COLLAPSE));
-            onHideClick.accept(isCollapsed);
-            this.setGraphic(btn);
-        });
+        btn.setOnAction(this::handleClick);
+    }
+
+    private void handleClick(ActionEvent event) {
+        isCollapsedProperty.set(!isCollapsedProperty.get());
+        btn.setGraphic(isCollapsedProperty.get()
+                ? new FontIcon(BootstrapIcons.ARROWS_COLLAPSE)
+                : new FontIcon(BootstrapIcons.ARROWS_EXPAND));
     }
 
     @Override
