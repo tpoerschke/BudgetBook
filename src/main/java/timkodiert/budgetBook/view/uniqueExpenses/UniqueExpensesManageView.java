@@ -23,8 +23,8 @@ import javafx.scene.layout.Pane;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.model.UniqueExpenseAdapter;
 import timkodiert.budgetBook.domain.repository.Repository;
-import timkodiert.budgetBook.util.CurrencyTableCell;
-import timkodiert.budgetBook.util.DateTableCell;
+import timkodiert.budgetBook.table.cell.CurrencyTableCell;
+import timkodiert.budgetBook.table.cell.DateTableCell;
 import timkodiert.budgetBook.view.View;
 import timkodiert.budgetBook.view.ViewComponent;
 

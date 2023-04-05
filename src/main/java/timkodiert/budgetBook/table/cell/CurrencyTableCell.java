@@ -1,6 +1,7 @@
-package timkodiert.budgetBook.util;
+package timkodiert.budgetBook.table.cell;
 
 import javafx.scene.control.TableCell;
+import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 
 public class CurrencyTableCell<S, T extends Number> extends TableCell<S, T> {
 

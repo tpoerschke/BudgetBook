@@ -19,7 +19,7 @@
     -fx-min-height: 0;
 }
 
-.monthly-table .value-col {
+.monthly-table .border-right {
     -fx-border-color: #D9DFE4;
     -fx-border-width: 0 1px 0 0;
 }

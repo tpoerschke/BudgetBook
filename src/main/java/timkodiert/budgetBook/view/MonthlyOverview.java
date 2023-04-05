@@ -3,11 +3,16 @@ package timkodiert.budgetBook.view;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
 
 import javax.inject.Inject;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -23,9 +28,11 @@ import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.repository.Repository;
-import timkodiert.budgetBook.util.CurrencyTableCell;
-import timkodiert.budgetBook.util.DateTableCell;
-import timkodiert.budgetBook.util.GroupTableCell;
+import timkodiert.budgetBook.table.cell.CurrencyTableCell;
+import timkodiert.budgetBook.table.cell.DateTableCell;
+import timkodiert.budgetBook.table.cell.GroupTableCell;
+import timkodiert.budgetBook.table.monthlyOverview.MonthlyOverviewCurrencyTableCell;
+import timkodiert.budgetBook.table.monthlyOverview.ToTableDataMapper;
 
 public class MonthlyOverview implements Initializable, View {
 
@@ -55,32 +62,20 @@ public class MonthlyOverview implements Initializable, View {
         ObservableList<TableData> data = FXCollections.observableArrayList();
 
         List<FixedExpense> fixedExpenses = fixedExpenseRepository.findAll();
-        data.add(new TableData("Regelmäßige Ausgaben",
-                fixedExpenses.stream().mapToDouble(FixedExpense::getCurrentMonthValue).sum(),
-                null, null,
-                RowType.FIXED_EXPENSE_GROUP));
-        data.addAll(fixedExpenses.stream()
-                .map(exp -> new TableData(exp.getPosition(), exp.getCurrentMonthValue(), null,
-                        String.join(", ", exp.getCategories().stream().map(Category::getName).toList()),
-                        RowType.FIXED_EXPENSE))
-                .toList());
+        initDataGroup(data, fixedExpenses, ToTableDataMapper::mapFixedExpense, FixedExpense::getCurrentMonthValue,
+                "Regelmäßige Ausgaben", RowType.FIXED_EXPENSE_GROUP);
 
         List<UniqueExpense> uniqueExpenses = uniqueExpenseRepository.findAll();
-        data.add(new TableData("Einzigartige Ausgaben",
-                uniqueExpenses.stream().mapToDouble(UniqueExpense::getTotalValue).sum(),
-                null, null,
-                RowType.UNIQUE_EXPENSE_GROUP));
-        data.addAll(uniqueExpenses.stream().map(exp -> {
-            String categories = String.join(", ", exp.getPaymentInformations().stream()
-                    .flatMap(info -> info.getCategories().stream()).map(Category::getName).toList());
-            return new TableData(exp.getBiller(), exp.getTotalValue(), exp.getDate(), categories,
-                    RowType.UNIQUE_EXPENSE);
-        }).toList());
+        initDataGroup(data, uniqueExpenses, ToTableDataMapper::mapUniqueExpense, UniqueExpense::getTotalValue,
+                "Einzigartige Ausgaben", RowType.UNIQUE_EXPENSE_GROUP);
 
         FilteredList<TableData> filteredData = new FilteredList<>(data);
 
         SimpleBooleanProperty isUniqueCollapsedProperty = new SimpleBooleanProperty(false);
         SimpleBooleanProperty isFixedCollapsedProperty = new SimpleBooleanProperty(true);
+        Map<RowType, BooleanProperty> dataGroupProperties = new HashMap<>();
+        dataGroupProperties.put(RowType.FIXED_EXPENSE_GROUP, isFixedCollapsedProperty);
+        dataGroupProperties.put(RowType.UNIQUE_EXPENSE_GROUP, isUniqueCollapsedProperty);
         Runnable predicator = () -> {
             List<RowType> toShow = new ArrayList<>(RowType.getGroupTypes());
             if (!isUniqueCollapsedProperty.get()) {
@@ -93,7 +88,7 @@ public class MonthlyOverview implements Initializable, View {
         };
 
         buttonCol.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue()));
-        buttonCol.setCellFactory(col -> new GroupTableCell(isUniqueCollapsedProperty, isFixedCollapsedProperty));
+        buttonCol.setCellFactory(col -> new GroupTableCell(dataGroupProperties));
         isUniqueCollapsedProperty.addListener((observable, oldValue, newValue) -> {
             predicator.run();
         });
@@ -104,7 +99,7 @@ public class MonthlyOverview implements Initializable, View {
 
         positionCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().position()));
         valueCol.setCellValueFactory(cell -> new SimpleDoubleProperty(cell.getValue().value()));
-        valueCol.setCellFactory(col -> new CurrencyTableCell<>());
+        valueCol.setCellFactory(col -> new MonthlyOverviewCurrencyTableCell(dataGroupProperties));
         dateCol.setCellValueFactory(cell -> new SimpleObjectProperty<LocalDate>(cell.getValue().date()));
         dateCol.setCellFactory(col -> new DateTableCell<>());
         categoriesCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().categories()));
@@ -122,6 +117,13 @@ public class MonthlyOverview implements Initializable, View {
         sumTableCol1.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().position()));
         sumTableCol2.setCellValueFactory(cell -> new SimpleDoubleProperty(cell.getValue().value()));
         sumTableCol2.setCellFactory(col -> new CurrencyTableCell<>());
+    }
+
+    private static <T> void initDataGroup(List<TableData> dataList, List<T> expenses, Function<T, TableData> expToData,
+            ToDoubleFunction<T> expToTotalValue, String groupName, RowType groupRowType) {
+        dataList.add(new TableData(groupName, expenses.stream().mapToDouble(expToTotalValue).sum(),
+                null, null, groupRowType));
+        dataList.addAll(expenses.stream().map(expToData).toList());
     }
 
     public enum RowType {

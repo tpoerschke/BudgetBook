@@ -14,8 +14,8 @@
         <columns>
             <TableColumn fx:id="buttonCol" editable="false" maxWidth="-Infinity" minWidth="55.0" prefWidth="55.0" resizable="false" sortable="false" />
           <TableColumn fx:id="positionCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="300.0" text="Position" />
-          <TableColumn fx:id="valueCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" styleClass="value-col" text="Betrag" />
-            <TableColumn fx:id="dateCol" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Datum" />
+          <TableColumn fx:id="valueCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" styleClass="value-col, border-right" text="Betrag" />
+            <TableColumn fx:id="dateCol" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" styleClass="border-right" text="Datum" />
             <TableColumn fx:id="categoriesCol" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="-1.0" text="Kategorien" />
         </columns>
       </TableView>

@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.util;
+package timkodiert.budgetBook.table.row;
 
 import javafx.scene.control.TableRow;
 import timkodiert.budgetBook.domain.model.PaymentType;
