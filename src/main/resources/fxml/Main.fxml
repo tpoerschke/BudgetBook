@@ -3,8 +3,8 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
 
 <BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="900.0" prefWidth="1600.0" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
@@ -22,11 +22,13 @@
                   <MenuItem mnemonicParsing="false" onAction="#openSettingsView" text="Einstellungen" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Daten">
+            <Menu mnemonicParsing="false" text="Ansichten">
                <items>
-                  <RadioMenuItem fx:id="viewMenuItem1" mnemonicParsing="false" text="Jahresansicht" />
-                  <RadioMenuItem fx:id="viewMenuItem2" mnemonicParsing="false" text="Kompakte Ansicht" />
-                  <MenuItem mnemonicParsing="false" onAction="#showMonthlyOverview" text="Monatsansicht" />
+                  <MenuItem mnemonicParsing="false" onAction="#showAnnualOverview" text="Jahresansicht" />
+                  <MenuItem mnemonicParsing="false" onAction="#showMonthlyOverview" text="Monatsansicht">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#reloadData" text="Aktualisieren" />
                </items>

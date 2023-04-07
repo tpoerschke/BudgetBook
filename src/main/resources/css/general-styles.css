@@ -13,6 +13,11 @@
     -fx-padding: 2px 4px;
 }
 
+.btn-compact {
+    -fx-padding-left: 2px;
+    -fx-padding-right: 2px;
+}
+
 .noheader .column-header-background {
     -fx-max-height: 0;
     -fx-pref-height: 0;

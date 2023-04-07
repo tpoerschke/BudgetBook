@@ -65,23 +65,12 @@ public class MainView implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         menuBar.useSystemMenuBarProperty().set(true);
 
-        ToggleGroup viewMenuItemToggleGroup = new ToggleGroup();
-        viewMenuItem1.setToggleGroup(viewMenuItemToggleGroup);
-        viewMenuItem2.setToggleGroup(viewMenuItemToggleGroup);
-
-        viewMenuItem1.setOnAction(event -> {
-            viewMenuItem1.setSelected(true);
-            loadViewPartial("/fxml/AnnualOverview.fxml", viewComponent.getAnnualOverviewView(), "Jahresübersicht");
-        });
-
-        viewMenuItem2.setOnAction(event -> {
-            viewMenuItem2.setSelected(true);
-            loadViewPartial("/fxml/CompactOverview.fxml", viewComponent.getCompactOverviewView(), "Ausgabenübersicht");
-        });
-
         // Das Kind laden (default)
-        loadViewPartial("/fxml/CompactOverview.fxml", viewComponent.getCompactOverviewView(), "Ausgabenübersicht");
-        viewMenuItem2.setSelected(true);
+        loadViewPartial("/fxml/MonthlyOverview.fxml", viewComponent.getMonthlyOverview(), "Monatsübersicht");
+    }
+
+    private String getVersion() {
+        return "Version " + getClass().getPackage().getImplementationVersion();
     }
 
     private void loadViewPartial(String resource, View view, String stageTitle) {
@@ -90,7 +79,8 @@ public class MainView implements Initializable {
             templateLoader.setLocation(getClass().getResource(resource));
             templateLoader.setController(view);
             this.root.setCenter(templateLoader.load());
-            this.primaryStage.setTitle(String.format("%s – JBudgetBook", stageTitle));
+            this.primaryStage.setTitle(String
+                    .format("%s – JBudgetBook – %s", stageTitle, getVersion()));
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
@@ -102,24 +92,24 @@ public class MainView implements Initializable {
     public void showMonthlyOverview(ActionEvent event) {
         loadViewPartial("/fxml/MonthlyOverview.fxml", viewComponent.getMonthlyOverview(),
                 "Monatsübersicht");
-        viewMenuItem1.setSelected(false);
-        viewMenuItem2.setSelected(false);
+    }
+
+    @FXML
+    public void showAnnualOverview(ActionEvent event) {
+        loadViewPartial("/fxml/AnnualOverview.fxml", viewComponent.getAnnualOverviewView(),
+                "Jahresübersicht");
     }
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
         loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getManageExpensesView(),
                 "Regelmäßige Ausgaben verwalten");
-        viewMenuItem1.setSelected(false);
-        viewMenuItem2.setSelected(false);
     }
 
     @FXML
     private void openUniqueExpensesManageView(ActionEvent event) {
         loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", viewComponent.getUniqueExpensesManageView(),
                 "Einzigartige Ausgaben verwalten");
-        viewMenuItem1.setSelected(false);
-        viewMenuItem2.setSelected(false);
     }
 
     @FXML
