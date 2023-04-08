@@ -3,11 +3,15 @@ package timkodiert.budgetBook.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import timkodiert.budgetBook.Constants;
 import timkodiert.budgetBook.domain.model.MonthYear;
 
 public class MonthFilter implements ObservableValue<MonthYear> {
@@ -26,6 +30,14 @@ public class MonthFilter implements ObservableValue<MonthYear> {
 
         this.nextBtn = nextBtn;
         this.prevBtn = prevBtn;
+
+        nextBtn.setGraphic(new FontIcon(BootstrapIcons.CHEVRON_RIGHT));
+        nextBtn.setText("");
+        prevBtn.setGraphic(new FontIcon(BootstrapIcons.CHEVRON_LEFT));
+        prevBtn.setText("");
+
+        selectedMonthBox.getItems().setAll(Constants.MONTH_NAMES);
+        selectedYearBox.getItems().setAll(List.of(2020, 2021, 2022, 2023, 2024));
 
         this.value = MonthYear.now();
         setSelection(value);

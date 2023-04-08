@@ -12,15 +12,13 @@ import java.util.function.ToDoubleFunction;
 
 import javax.inject.Inject;
 
-import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
-import org.kordamp.ikonli.javafx.FontIcon;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -29,7 +27,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import timkodiert.budgetBook.Constants;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
@@ -78,9 +75,26 @@ public class MonthlyOverview implements Initializable, View {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        monthFilter = new MonthFilter(selectedMonthBox, selectedYearBox, nextMonthBtn, prevMonthBtn);
         //
         // INIT TABELLEN
         //
+        sumTableCol0.prefWidthProperty().bind(buttonCol.widthProperty());
+        sumTableCol1.prefWidthProperty().bind(positionCol.widthProperty());
+        sumTableCol2.prefWidthProperty().bind(valueCol.widthProperty());
+
+        sumTableCol1.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().position()));
+        sumTableCol2.setCellValueFactory(cell -> new SimpleDoubleProperty(cell.getValue().value()));
+        sumTableCol2.setCellFactory(col -> new CurrencyTableCell<>());
+
+        data.addListener((ListChangeListener.Change<? extends TableData> c) -> {
+            double totalSum = data.stream()
+                    .filter(d -> !RowType.getGroupTypes().contains(d.type()))
+                    .mapToDouble(TableData::value).sum();
+            sumTable.getItems().clear();
+            sumTable.getItems().add(new TableData("Summe", totalSum, null, null, RowType.SUM));
+        });
+
         List<FixedExpense> fixedExpenses = fixedExpenseRepository.findAll();
         initFixedExpenseGroup(fixedExpenses);
 
@@ -126,38 +140,21 @@ public class MonthlyOverview implements Initializable, View {
         dataTable.getColumns().forEach(col -> col.setReorderable(false));
         dataTable.setItems(filteredData);
 
-        sumTableCol0.prefWidthProperty().bind(buttonCol.widthProperty());
-        sumTableCol1.prefWidthProperty().bind(positionCol.widthProperty());
-        sumTableCol2.prefWidthProperty().bind(valueCol.widthProperty());
-
-        double totalSum = uniqueExpenses.stream().mapToDouble(UniqueExpense::getTotalValue).sum()
-                + fixedExpenses.stream().mapToDouble(FixedExpense::getCurrentMonthValue).sum();
-        sumTable.getItems().add(new TableData("Summe", totalSum, null, null, RowType.SUM));
-        sumTableCol1.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().position()));
-        sumTableCol2.setCellValueFactory(cell -> new SimpleDoubleProperty(cell.getValue().value()));
-        sumTableCol2.setCellFactory(col -> new CurrencyTableCell<>());
-
         //
         // INIT FILTER
         //
-        nextMonthBtn.setGraphic(new FontIcon(BootstrapIcons.CHEVRON_RIGHT));
-        nextMonthBtn.setText("");
-        prevMonthBtn.setGraphic(new FontIcon(BootstrapIcons.CHEVRON_LEFT));
-        prevMonthBtn.setText("");
-
-        selectedMonthBox.getItems().setAll(Constants.MONTH_NAMES);
-        selectedYearBox.getItems().setAll(List.of(2020, 2021, 2022, 2023, 2024));
-
-        monthFilter = new MonthFilter(selectedMonthBox, selectedYearBox, nextMonthBtn, prevMonthBtn);
         monthFilter.addListener((observable, oldValue, newValue) -> {
             System.out.println(newValue);
             data.clear();
-            initFixedExpenseGroup(fixedExpenses);
+            List<FixedExpense> fixedExpensesForMonth = fixedExpenseRepository.findAll().stream()
+                    .filter(exp -> exp.getValueFor(newValue) != 0).toList();
+            initFixedExpenseGroup(fixedExpensesForMonth);
 
             List<UniqueExpense> uniqueExpensesForMonth = uniqueExpenseRepository.findAll().stream()
                     .filter(exp -> newValue.containsDate(exp.getDate())).toList();
             initUniqueExpenseGroup(uniqueExpensesForMonth);
         });
+
     }
 
     private void initUniqueExpenseGroup(List<UniqueExpense> expenses) {
@@ -166,7 +163,10 @@ public class MonthlyOverview implements Initializable, View {
     }
 
     private void initFixedExpenseGroup(List<FixedExpense> expenses) {
-        initDataGroup(expenses, ToTableDataMapper::mapFixedExpense, FixedExpense::getCurrentMonthValue,
+        MonthYear monthYear = monthFilter.getValue();
+        initDataGroup(expenses,
+                exp -> ToTableDataMapper.mapFixedExpense(exp, monthYear),
+                exp -> exp.getValueFor(monthYear),
                 "Regelmäßige Ausgaben", RowType.FIXED_EXPENSE_GROUP);
     }
 
