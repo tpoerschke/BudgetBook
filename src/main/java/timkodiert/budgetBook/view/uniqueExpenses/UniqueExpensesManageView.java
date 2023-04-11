@@ -62,6 +62,8 @@ public class UniqueExpensesManageView implements View, Initializable {
         valueCol.setCellValueFactory(
                 cellData -> new SimpleDoubleProperty(cellData.getValue().getBean().getTotalValue()));
         valueCol.setCellFactory(col -> new CurrencyTableCell<>());
+
+        expensesTable.getSortOrder().add(dateCol);
         reloadTable();
 
         detailView = viewComponent.getUniqueExpenseDetailView();
@@ -94,5 +96,6 @@ public class UniqueExpensesManageView implements View, Initializable {
 
     private void reloadTable() {
         expensesTable.getItems().setAll(repository.findAll().stream().map(UniqueExpense::getAdapter).toList());
+        expensesTable.sort();
     }
 }

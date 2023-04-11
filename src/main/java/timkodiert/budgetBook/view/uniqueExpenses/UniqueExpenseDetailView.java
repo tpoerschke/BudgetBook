@@ -1,8 +1,11 @@
 package timkodiert.budgetBook.view.uniqueExpenses;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import javax.inject.Inject;
 
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
@@ -16,9 +19,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -37,6 +42,7 @@ import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.StageBuilder;
+import timkodiert.budgetBook.validation.ValidationWrapper;
 import timkodiert.budgetBook.view.View;
 
 public class UniqueExpenseDetailView implements View, Initializable {
@@ -116,13 +122,39 @@ public class UniqueExpenseDetailView implements View, Initializable {
         paymentInfoList.add(newInfo);
     }
 
+    private boolean validate() {
+
+        UniqueExpense exp = patchEntity(new UniqueExpense());
+
+        Map<String, Control> validationMap = new HashMap<>();
+        validationMap.put("biller", billerTextField);
+        validationMap.put("date", datePicker);
+        validationMap.put("paymentInformations", expenseInfoTable);
+
+        ValidationWrapper<UniqueExpense> validation = new ValidationWrapper<>(validationMap);
+
+        if (!validation.validate(exp)) {
+            return false;
+        }
+        return true;
+    }
+
+    private UniqueExpense patchEntity(UniqueExpense entity) {
+        entity.setBiller(billerTextField.getText());
+        entity.setNote(noteTextArea.getText());
+        entity.setPaymentInformations(paymentInfoList);
+        entity.setDate(datePicker.getValue());
+        return entity;
+    }
+
     @FXML
     private void save(ActionEvent event) {
-        UniqueExpense exp = this.expense.get();
-        exp.setBiller(billerTextField.getText());
-        exp.setNote(noteTextArea.getText());
-        exp.setPaymentInformations(paymentInfoList);
-        exp.setDate(datePicker.getValue());
+
+        if (!validate()) {
+            return;
+        }
+
+        UniqueExpense exp = patchEntity(this.expense.get());
         repository.persist(exp);
         EntityManager.getInstance().refresh(exp);
         onUpdate.run();

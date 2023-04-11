@@ -3,7 +3,9 @@ package timkodiert.budgetBook.view.uniqueExpenses;
 import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -11,7 +13,9 @@ import java.util.function.Consumer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
@@ -19,6 +23,7 @@ import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
 import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.util.EntityManager;
+import timkodiert.budgetBook.validation.ValidationWrapper;
 import timkodiert.budgetBook.view.View;
 
 public class UniqueExpenseInformationDetailView implements View, Initializable {
@@ -55,12 +60,36 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
         categoryTreeHelper.selectCategories(entity);
     }
 
+    public boolean validate() {
+        UniqueExpenseInformation info = patchEntity(new UniqueExpenseInformation());
+
+        Map<String, Control> validationMap = new HashMap<>();
+        validationMap.put("label", positionTextField);
+
+        ValidationWrapper<UniqueExpenseInformation> validation = new ValidationWrapper<>(validationMap);
+
+        if (!validation.validate(info)) {
+            return false;
+        }
+        return true;
+    }
+
+    public UniqueExpenseInformation patchEntity(UniqueExpenseInformation entity) {
+        entity.setLabel(positionTextField.getText());
+        entity.setValue(Double.valueOf(valueTextField.getText()));
+        entity.getCategories().clear();
+        entity.getCategories().addAll(categoryTreeHelper.getSelectedCategories());
+        return entity;
+    }
+
     @FXML
     private void onSave(ActionEvent e) {
-        expenseInfo.setLabel(positionTextField.getText());
-        expenseInfo.setValue(Double.valueOf(valueTextField.getText()));
-        expenseInfo.getCategories().clear();
-        expenseInfo.getCategories().addAll(categoryTreeHelper.getSelectedCategories());
+
+        if (!validate()) {
+            return;
+        }
+
+        expenseInfo = patchEntity(expenseInfo);
 
         if (isNew) {
             newEntityCallback.accept(expenseInfo);

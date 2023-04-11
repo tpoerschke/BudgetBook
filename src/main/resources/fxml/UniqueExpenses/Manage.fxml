@@ -18,7 +18,7 @@
             <TableView fx:id="expensesTable" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="billerCol" minWidth="80.0" text="Rechnungssteller" />
-                <TableColumn fx:id="dateCol" prefWidth="70.0" text="Datum" />
+                <TableColumn fx:id="dateCol" prefWidth="70.0" sortType="DESCENDING" text="Datum" />
                   <TableColumn fx:id="valueCol" text="Betrag" />
               </columns>
                <columnResizePolicy>

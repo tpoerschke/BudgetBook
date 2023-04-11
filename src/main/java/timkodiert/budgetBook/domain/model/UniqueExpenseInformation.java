@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class UniqueExpenseInformation implements Categorizable {
     private int id;
 
     @Setter
+    @NotBlank(message = "Die Position muss benannt werden.")
     private String label;
 
     @Setter

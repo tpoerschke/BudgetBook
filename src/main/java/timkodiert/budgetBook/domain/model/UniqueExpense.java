@@ -12,6 +12,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,15 +28,18 @@ public class UniqueExpense {
     private int id;
 
     @Setter
+    @NotBlank(message = "Es muss ein Rechnungsteller angegeben werden.")
     private String biller;
 
     @Setter
+    @NotNull(message = "Es muss ein Datum angegeben werden.")
     private LocalDate date;
 
     @Setter
     private String note;
 
     @Setter
+    @Size(min = 1)
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     private List<UniqueExpenseInformation> paymentInformations = new ArrayList<>();
 
