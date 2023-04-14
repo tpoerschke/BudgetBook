@@ -1,0 +1,61 @@
+package timkodiert.budgetBook.ui.control;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javafx.geometry.Side;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import lombok.Getter;
+import lombok.Setter;
+
+public class AutoCompleteTextField extends TextField {
+
+    private final ContextMenu contextMenu = new ContextMenu();
+
+    @Getter
+    @Setter
+    private int maxEntries = 10;
+
+    @Getter
+    private final Set<String> availableEntries = new HashSet<>();
+
+    public AutoCompleteTextField() {
+        super();
+
+        textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && newValue.length() > 0 && focusedProperty().get()) {
+                generateContextMenuItems(findSuitableEntries(newValue));
+                showContextMenu();
+            }
+        });
+        focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue && textProperty().get() != null) {
+                generateContextMenuItems(findSuitableEntries(textProperty().get()));
+                showContextMenu();
+            }
+        });
+    }
+
+    private void showContextMenu() {
+        contextMenu.show(this, Side.BOTTOM, 0, 0);
+    }
+
+    private void generateContextMenuItems(List<String> suitableEntries) {
+        contextMenu.getItems().clear();
+        suitableEntries.forEach(str -> {
+            MenuItem item = new MenuItem(str);
+            item.setOnAction(event -> {
+                setText(str);
+            });
+            contextMenu.getItems().add(item);
+        });
+    }
+
+    private List<String> findSuitableEntries(String input) {
+        System.out.println(availableEntries);
+        return availableEntries.stream().filter(str -> str.toLowerCase().contains(input.toLowerCase())).toList();
+    }
+}

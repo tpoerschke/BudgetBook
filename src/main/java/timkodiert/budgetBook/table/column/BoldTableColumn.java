@@ -1,9 +1,9 @@
-package timkodiert.budgetBook.util;
+package timkodiert.budgetBook.table.column;
 
 import javafx.scene.control.TableColumn;
 
 public class BoldTableColumn<S, T> extends TableColumn<S, T> {
-    
+
     public BoldTableColumn() {
         super();
         initStyle();

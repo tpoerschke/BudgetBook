@@ -12,3 +12,29 @@
     -fx-background-radius: 4px;
     -fx-padding: 2px 4px;
 }
+
+.btn-compact {
+    -fx-padding-left: 2px;
+    -fx-padding-right: 2px;
+}
+
+.validation-error {
+    -fx-border-color: #f00;
+    -fx-border-radius: 4px;
+}
+
+.noheader .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
+.monthly-table .border-right {
+    -fx-border-color: #D9DFE4;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.monthly-table .value-col.table-cell {
+    -fx-font-family: 'Menlo', 'monospace';
+    -fx-alignment: center-right;
+}

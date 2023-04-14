@@ -1,8 +1,12 @@
 package timkodiert.budgetBook.view.uniqueExpenses;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import javax.inject.Inject;
 
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
@@ -16,9 +20,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -34,9 +40,11 @@ import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.StageBuilder;
+import timkodiert.budgetBook.validation.ValidationWrapper;
 import timkodiert.budgetBook.view.View;
 
 public class UniqueExpenseDetailView implements View, Initializable {
@@ -47,7 +55,7 @@ public class UniqueExpenseDetailView implements View, Initializable {
     @FXML
     private Pane root;
     @FXML
-    private TextField billerTextField;
+    private AutoCompleteTextField billerTextField;
     @FXML
     private TextArea noteTextArea;
     @FXML
@@ -96,6 +104,9 @@ public class UniqueExpenseDetailView implements View, Initializable {
         expenseInfoCategoriesCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(
                 String.join(", ", cellData.getValue().getCategories().stream().map(Category::getName).toList())));
         expenseInfoTable.setItems(paymentInfoList);
+
+        billerTextField.getAvailableEntries()
+                .addAll(repository.findAll().stream().map(UniqueExpense::getBiller).toList());
     }
 
     public void setBean(UniqueExpense uniqueExpense) {
@@ -116,13 +127,39 @@ public class UniqueExpenseDetailView implements View, Initializable {
         paymentInfoList.add(newInfo);
     }
 
+    private boolean validate() {
+
+        UniqueExpense exp = patchEntity(new UniqueExpense());
+
+        Map<String, Control> validationMap = new HashMap<>();
+        validationMap.put("biller", billerTextField);
+        validationMap.put("date", datePicker);
+        validationMap.put("paymentInformations", expenseInfoTable);
+
+        ValidationWrapper<UniqueExpense> validation = new ValidationWrapper<>(validationMap);
+
+        if (!validation.validate(exp)) {
+            return false;
+        }
+        return true;
+    }
+
+    private UniqueExpense patchEntity(UniqueExpense entity) {
+        entity.setBiller(billerTextField.getText());
+        entity.setNote(noteTextArea.getText());
+        entity.setPaymentInformations(paymentInfoList);
+        entity.setDate(datePicker.getValue());
+        return entity;
+    }
+
     @FXML
     private void save(ActionEvent event) {
-        UniqueExpense exp = this.expense.get();
-        exp.setBiller(billerTextField.getText());
-        exp.setNote(noteTextArea.getText());
-        exp.setPaymentInformations(paymentInfoList);
-        exp.setDate(datePicker.getValue());
+
+        if (!validate()) {
+            return;
+        }
+
+        UniqueExpense exp = patchEntity(this.expense.get());
         repository.persist(exp);
         EntityManager.getInstance().refresh(exp);
         onUpdate.run();
@@ -166,13 +203,19 @@ public class UniqueExpenseDetailView implements View, Initializable {
         paymentInfoList.remove(expenseInfoTable.getSelectionModel().getSelectedItem());
     }
 
+    private List<String> getUniqueExpenseInformationSuggestions() {
+        return repository.findAll().stream().flatMap(exp -> exp.getPaymentInformations().stream())
+                .map(UniqueExpenseInformation::getLabel).distinct().toList();
+    }
+
     private void openUniqueExpenseInformationDetailView(Optional<UniqueExpenseInformation> optionalEntity) {
         try {
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(Window.getWindows().get(0))
                     .withFXMLResource("/fxml/UniqueExpenses/Information.fxml")
-                    .withView(new UniqueExpenseInformationDetailView(optionalEntity, this::addNewExpenseInformation))
+                    .withView(new UniqueExpenseInformationDetailView(optionalEntity, this::addNewExpenseInformation,
+                            this.getUniqueExpenseInformationSuggestions()))
                     .build();
             stage.show();
         } catch (Exception e) {

@@ -15,19 +15,21 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.ExpenseAdapter;
-import timkodiert.budgetBook.util.CurrencyTableCell;
+import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 
 public class CompactOverviewView implements Initializable, View {
 
     @FXML
-    private TableColumn<ExpenseAdapter, String> monthlyPositionCol, monthlyTypeCol, currentMonthPositionCol, currentMonthTypeCol, nextMonthPositionCol, nextMonthTypeCol;
+    private TableColumn<ExpenseAdapter, String> monthlyPositionCol, monthlyTypeCol, currentMonthPositionCol,
+            currentMonthTypeCol, nextMonthPositionCol, nextMonthTypeCol;
     @FXML
     private TableColumn<ExpenseAdapter, Double> monthlyValueCol, currentMonthValueCol, nextMonthValueCol;
     @FXML
     private TableView<ExpenseAdapter> monthlyTable, currentMonthTable, nextMonthTable;
 
-    @FXML 
-    private Label monthlySumLabel, monthlySumLabel1, monthlySumLabel2, currentMonthSumLabel, currentMonthTotalSumLabel, nextMonthSumLabel, nextMonthTotalSumLabel;
+    @FXML
+    private Label monthlySumLabel, monthlySumLabel1, monthlySumLabel2, currentMonthSumLabel, currentMonthTotalSumLabel,
+            nextMonthSumLabel, nextMonthTotalSumLabel;
 
     private FixedExpenseController fixedExpenseController;
 
@@ -37,24 +39,27 @@ public class CompactOverviewView implements Initializable, View {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {        
+    public void initialize(URL location, ResourceBundle resources) {
         monthlyPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         monthlyPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         monthlyValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("currentMonthValue"));
         monthlyValueCol.setCellFactory(col -> new CurrencyTableCell<>());
-        monthlyTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
+        monthlyTypeCol.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
 
         currentMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         currentMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         currentMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("currentMonthValue"));
         currentMonthValueCol.setCellFactory(col -> new CurrencyTableCell<>());
-        currentMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
+        currentMonthTypeCol.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
 
         nextMonthPositionCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, String>("position"));
         nextMonthPositionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         nextMonthValueCol.setCellValueFactory(new PropertyValueFactory<ExpenseAdapter, Double>("nextMonthValue"));
         nextMonthValueCol.setCellFactory(col -> new CurrencyTableCell<>());
-        nextMonthTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
+        nextMonthTypeCol.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
 
         // Ausgaben anzeigen
         monthlyTable.setItems(fixedExpenseController.getMonthlyExpenses());
@@ -66,7 +71,8 @@ public class CompactOverviewView implements Initializable, View {
         monthlySumLabel1.textProperty().bind(fixedExpenseController.monthlyExpensesSumTextProperty());
         monthlySumLabel2.textProperty().bind(fixedExpenseController.monthlyExpensesSumTextProperty());
         currentMonthSumLabel.textProperty().bind(fixedExpenseController.currentMonthExpensesSumTextProperty());
-        currentMonthTotalSumLabel.textProperty().bind(fixedExpenseController.currentMonthExpensesTotalSumTextProperty());
+        currentMonthTotalSumLabel.textProperty()
+                .bind(fixedExpenseController.currentMonthExpensesTotalSumTextProperty());
         nextMonthSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesSumTextProperty());
         nextMonthTotalSumLabel.textProperty().bind(fixedExpenseController.nextMonthExpensesTotalSumTextProperty());
     }

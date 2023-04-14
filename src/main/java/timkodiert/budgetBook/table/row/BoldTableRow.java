@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.util;
+package timkodiert.budgetBook.table.row;
 
 import javafx.scene.control.TableRow;
 import timkodiert.budgetBook.domain.model.PaymentType;
@@ -17,8 +17,10 @@ public class BoldTableRow extends TableRow<Expense> {
     @Override
     protected void updateItem(Expense item, boolean empty) {
         super.updateItem(item, empty);
-        if(!empty && this.expenseType.equals(item.getPaymentType())) {
+        if (!empty && this.expenseType.equals(item.getPaymentType())) {
             getStyleClass().add("text-bold");
+        } else {
+            getStyleClass().remove("text-bold");
         }
     }
 }

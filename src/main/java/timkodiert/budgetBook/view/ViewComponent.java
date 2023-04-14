@@ -15,9 +15,12 @@ public interface ViewComponent {
     // -----------------------------------
     // Übersichten Ausgaben
     // -----------------------------------
+
     AnnualOverviewView getAnnualOverviewView();
 
     CompactOverviewView getCompactOverviewView();
+
+    MonthlyOverview getMonthlyOverview();
 
     // -----------------------------------
     // Kategorien Ausgaben
@@ -30,6 +33,7 @@ public interface ViewComponent {
     // -----------------------------------
     // Regelmäßige Ausgaben
     // -----------------------------------
+
     ManageExpensesView getManageExpensesView();
 
     NewExpenseView getNewExpenseView();
@@ -39,6 +43,7 @@ public interface ViewComponent {
     // -----------------------------------
     // Einzigartige Ausgaben
     // -----------------------------------
+
     UniqueExpensesManageView getUniqueExpensesManageView();
 
     UniqueExpenseDetailView getUniqueExpenseDetailView();

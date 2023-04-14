@@ -12,13 +12,14 @@ import lombok.Setter;
 @Setter
 @Entity
 public class FixedExpense extends Expense implements Adaptable {
-    
+
     public FixedExpense() {
         super();
         initAdapter();
     }
 
-    public FixedExpense(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start, MonthYear end) {
+    public FixedExpense(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start,
+            MonthYear end) {
         super(position);
         this.paymentInformations.add(new PaymentInformation(this, value, datesOfPayment, type, start, end));
         initAdapter();
@@ -33,11 +34,11 @@ public class FixedExpense extends Expense implements Adaptable {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public PaymentType getPaymentType() {
         // TODO: Sinnvolle Ausgabe
-        if(this.paymentInformations.size() == 0) {
+        if (this.paymentInformations.size() == 0) {
             return PaymentType.MONTHLY;
         }
         return this.paymentInformations.get(0).getType();
@@ -62,15 +63,19 @@ public class FixedExpense extends Expense implements Adaptable {
 
     public double getValueFor(int year, int month) {
         PaymentInformation payInfo = this.findPaymentInformation(MonthYear.of(month, year));
-        if(payInfo != null) {
+        if (payInfo != null) {
             return payInfo.getValueFor(MonthYear.of(month, year));
         }
         return 0;
     }
 
+    public double getValueFor(MonthYear monthYear) {
+        return getValueFor(monthYear.getYear(), monthYear.getMonth());
+    }
+
     private PaymentInformation findPaymentInformation(MonthYear monthYear) {
-        for(PaymentInformation payInfo : this.paymentInformations) {
-            if(payInfo.validFor(monthYear)) {
+        for (PaymentInformation payInfo : this.paymentInformations) {
+            if (payInfo.validFor(monthYear)) {
                 return payInfo;
             }
         }

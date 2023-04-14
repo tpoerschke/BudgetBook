@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.util;
+package timkodiert.budgetBook.table.cell;
 
 import javafx.scene.control.TableCell;
 

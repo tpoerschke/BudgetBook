@@ -22,28 +22,37 @@ public class MonthYear implements Comparable<MonthYear> {
 
     @Override
     public int compareTo(MonthYear other) {
-        if(this.equals(other)) {
+        if (this.equals(other)) {
             return 0;
         }
 
         // Kleiner
-        if(this.getYear() < other.getYear()) {
+        if (this.getYear() < other.getYear()) {
             return -1;
         }
-        if(this.getYear() == other.getYear() && this.getMonth() < other.getMonth()) {
+        if (this.getYear() == other.getYear() && this.getMonth() < other.getMonth()) {
             return -1;
         }
 
         // Größer
-        if(this.getYear() > other.getYear()) {
+        if (this.getYear() > other.getYear()) {
             return 1;
         }
-        if(this.getYear() == other.getYear() && this.getMonth() > other.getMonth()) {
+        if (this.getYear() == other.getYear() && this.getMonth() > other.getMonth()) {
             return 1;
         }
 
         // Um den Compiler glücklich zu machen
         return 0;
+    }
+
+    public MonthYear plusMonths(int count) {
+        LocalDate monthYearDate = LocalDate.of(this.year, this.month, 1).plusMonths(count);
+        return MonthYear.of(monthYearDate.getMonthValue(), monthYearDate.getYear());
+    }
+
+    public boolean containsDate(LocalDate date) {
+        return month == date.getMonthValue() && year == date.getYear();
     }
 
     public static MonthYear now() {
