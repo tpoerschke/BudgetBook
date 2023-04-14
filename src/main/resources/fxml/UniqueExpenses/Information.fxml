@@ -10,15 +10,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import timkodiert.budgetBook.ui.control.AutoCompleteTextField?>
 
-<BorderPane stylesheets="@../../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane stylesheets="@../../css/general-styles.css" xmlns="http://javafx.com/javafx/18"
+   xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <VBox prefWidth="300.0" spacing="20.0">
          <children>
             <VBox>
                <children>
                   <Label text="Position" />
-                  <TextField fx:id="positionTextField" />
+                  <AutoCompleteTextField fx:id="positionTextField" />
                </children>
             </VBox>
             <VBox>
@@ -45,7 +47,8 @@
       </VBox>
    </center>
    <top>
-      <Label styleClass="text-bold" stylesheets="@../../css/general-styles.css" text="Position bearbeiten" BorderPane.alignment="CENTER">
+      <Label styleClass="text-bold" stylesheets="@../../css/general-styles.css"
+         text="Position bearbeiten" BorderPane.alignment="CENTER">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
@@ -56,10 +59,10 @@
    </padding>
    <bottom>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
-        <items>
-          <Button mnemonicParsing="false" onAction="#onSave" text="Speichern" />
+         <items>
+            <Button mnemonicParsing="false" onAction="#onSave" text="Speichern" />
             <Button mnemonicParsing="false" onAction="#onRevert" text="Verwerfen" />
-        </items>
+         </items>
       </ToolBar>
    </bottom>
 </BorderPane>

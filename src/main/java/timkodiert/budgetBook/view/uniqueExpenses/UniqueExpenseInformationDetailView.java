@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
@@ -21,6 +20,7 @@ import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
+import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
 import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.validation.ValidationWrapper;
@@ -32,23 +32,30 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
     private boolean isNew;
     private Consumer<UniqueExpenseInformation> newEntityCallback;
 
+    private List<String> labelSuggestions;
+
     @FXML
-    private TextField positionTextField, valueTextField;
+    private AutoCompleteTextField positionTextField;
+    @FXML
+    private TextField valueTextField;
     @FXML
     private TreeView<Category> categoriesTreeView;
     private CategoryTreeHelper categoryTreeHelper;
 
     public UniqueExpenseInformationDetailView(Optional<UniqueExpenseInformation> optionalEntity,
-            Consumer<UniqueExpenseInformation> newEntityCallback) {
+            Consumer<UniqueExpenseInformation> newEntityCallback, List<String> labelSuggestions) {
         this.expenseInfo = optionalEntity.orElse(new UniqueExpenseInformation());
         this.isNew = optionalEntity.isEmpty();
         this.newEntityCallback = newEntityCallback;
+        this.labelSuggestions = labelSuggestions;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         List<Category> categories = EntityManager.getInstance().findAll(Category.class);
         categoryTreeHelper = from(categoriesTreeView, categories);
+
+        positionTextField.getAvailableEntries().addAll(labelSuggestions);
 
         showEntity(expenseInfo);
     }
