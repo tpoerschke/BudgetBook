@@ -63,7 +63,9 @@ public class MainView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        menuBar.useSystemMenuBarProperty().set(true);
+        boolean useSystemMenuBar = "true".equals(PropertiesService.getInstance()
+                .getProperties().getProperty("useSystemMenuBar", "false")); // <- das mach ich noch besser ... bestimmt :D
+        menuBar.useSystemMenuBarProperty().set(useSystemMenuBar);
 
         // Das Kind laden (default)
         loadViewPartial("/fxml/MonthlyOverview.fxml", viewComponent.getMonthlyOverview(), "Monatsübersicht");

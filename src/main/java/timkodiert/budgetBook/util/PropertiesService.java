@@ -37,13 +37,14 @@ public class PropertiesService {
 
     public void load() throws IOException {
         File propsFile = Path.of(Constants.PROPERTIES_PATH).toFile();
-        if(!propsFile.exists()) {
+        if (!propsFile.exists()) {
             Path.of(propsFile.getParent()).toFile().mkdirs();
             propsFile.createNewFile();
-            this.properties.setProperty("db", "jdbc:sqlite:" + Path.of(System.getProperty("user.home"), Constants.DATA_DIR , "sqlite.db").toString());
+            this.properties.setProperty("db", "jdbc:sqlite:"
+                    + Path.of(System.getProperty("user.home"), Constants.DATA_DIR, "sqlite.db").toString());
+            this.properties.setProperty("useSystemMenuBar", "true");
             this.properties.store(new FileWriter(propsFile), "Store initial props");
-        }
-        else {
+        } else {
             this.properties.load(new FileInputStream(Constants.PROPERTIES_PATH));
         }
     }
@@ -52,7 +53,7 @@ public class PropertiesService {
         List<HBox> propBoxes = properties.entrySet().stream().map(entry -> {
             Label label = new Label(entry.getKey().toString());
             label.getStyleClass().add(Styles.LEFT_PILL);
-            label.setPrefWidth(100);
+            label.setPrefWidth(150);
             TextField textField = new TextField(entry.getValue().toString());
             textField.getStyleClass().add(Styles.RIGHT_PILL);
             textField.setPrefWidth(300);
@@ -68,8 +69,8 @@ public class PropertiesService {
             Properties newProps = new Properties();
             propBoxes.forEach(box -> {
                 // Jede Box hat genau 2 Kinder (Label & TextField) -> s.o.
-                String key = ((Label)box.getChildren().get(0)).getText();
-                String value = ((TextField)box.getChildren().get(1)).getText();
+                String key = ((Label) box.getChildren().get(0)).getText();
+                String value = ((TextField) box.getChildren().get(1)).getText();
                 newProps.setProperty(key, value);
             });
 
@@ -78,10 +79,10 @@ public class PropertiesService {
             this.properties = newProps;
             try {
                 this.properties.store(new FileWriter(propsFile), "JBudgetBook properties");
-                Alert alert = new Alert(AlertType.INFORMATION, "Einstellungen wurden gespeichert. Die Anwendung muss neugestartet werden!");
+                Alert alert = new Alert(AlertType.INFORMATION,
+                        "Einstellungen wurden gespeichert. Die Anwendung muss neugestartet werden!");
                 alert.showAndWait();
-            }
-            catch(IOException ioe) {
+            } catch (IOException ioe) {
                 Alert alert = new Alert(AlertType.ERROR, "Einstellungen konnten nicht gespeichert werden!");
                 alert.showAndWait();
             }
@@ -96,13 +97,13 @@ public class PropertiesService {
         root.setPadding(new Insets(20));
 
         Stage stage = new Stage();
-        stage.setScene(new Scene(root, 450, 300));
+        stage.setScene(new Scene(root, 500, 300));
         stage.setTitle("Einstellungen");
         return stage;
     }
 
     public static PropertiesService getInstance() {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             INSTANCE = new PropertiesService();
         }
         return INSTANCE;
