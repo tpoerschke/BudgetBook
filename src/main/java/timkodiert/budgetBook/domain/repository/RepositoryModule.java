@@ -6,6 +6,7 @@ import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
+import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
 
 @Module
 public interface RepositoryModule {
@@ -21,4 +22,8 @@ public interface RepositoryModule {
 
     @Binds
     Repository<UniqueExpense> provideUniqueExpensesRepository(UniqueExpensesRepository impl);
+
+    @Binds
+    Repository<UniqueExpenseInformation> provideUniqueExpenseInformationRepository(
+            UniqueExpenseInformationRepository impl);
 }

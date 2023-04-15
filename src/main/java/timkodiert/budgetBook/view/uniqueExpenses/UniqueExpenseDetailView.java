@@ -78,9 +78,13 @@ public class UniqueExpenseDetailView implements View, Initializable {
     private ObjectProperty<UniqueExpense> expense = new SimpleObjectProperty<>();
     private ObservableList<UniqueExpenseInformation> paymentInfoList = FXCollections.observableArrayList();
 
+    private Repository<UniqueExpenseInformation> expInfoRepository;
+
     @Inject
-    public UniqueExpenseDetailView(Repository<UniqueExpense> repository) {
+    public UniqueExpenseDetailView(Repository<UniqueExpense> repository,
+            Repository<UniqueExpenseInformation> expInfoRepository) {
         this.repository = repository;
+        this.expInfoRepository = expInfoRepository;
     }
 
     @Override
@@ -200,7 +204,9 @@ public class UniqueExpenseDetailView implements View, Initializable {
 
     @FXML
     private void deleteUniqueExpenseInformation(ActionEvent event) {
-        paymentInfoList.remove(expenseInfoTable.getSelectionModel().getSelectedItem());
+        UniqueExpenseInformation expInfo = expenseInfoTable.getSelectionModel().getSelectedItem();
+        expInfoRepository.remove(expInfo);
+        paymentInfoList.remove(expInfo);
     }
 
     private List<String> getUniqueExpenseInformationSuggestions() {

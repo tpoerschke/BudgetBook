@@ -81,7 +81,7 @@
 
 [![JBudgetBook-MainView][product-screenshot]](https://github.com/tpoerschke/BudgetBook)
 
-Dieses Haushaltsbuch soll Ihnen einen Überblick über Ihre laufenden Kosten ermöglichen. Zwei Ansichten sind aktuell implementiert: Ausgabenübersicht und Jahresübersicht.  
+Dieses Haushaltsbuch soll Ihnen einen Überblick über Ihre Ausgaben ermöglichen. Zwei Ansichten sind aktuell implementiert: Monatsansicht und Jahresansicht. Zusätzlich sind Ansichten zur Verwaltung der Ausgaben umgesetzt.
 
 Das Projekt befindet sich noch in einem frühen Stadium, weswegen Bugs auftreten können. Sollten Sie Bugs finden, können Sie dazu gerne Issues anlegen.
 
@@ -152,7 +152,7 @@ WIP
 - [x] Ausgabenübersicht
 - [x] Jahresübersicht
 - [x] Kategorien für Ausgaben
-- [ ] Einzigartige Ausgaben
+- [x] Einzigartige Ausgaben
 - [ ] Analyseübersicht
 - [ ] Einnahmen verwalten
 - [ ] Exportfunktionalität
@@ -215,7 +215,7 @@ Project Link: [https://github.com/tpoerschke/BudgetBook](https://github.com/tpoe
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[product-screenshot]: images/MainViewScreenshot.png
+[product-screenshot]: images/MonatsansichtScreenshot.png
 
 [OpenJDK-shield]: https://img.shields.io/badge/OpenJDK-222?style=for-the-badge&logo=OpenJDK
 [OpenJDK-url]: https://aws.amazon.com/corretto/
