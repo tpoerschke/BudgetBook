@@ -27,14 +27,24 @@ public class AutoCompleteTextField extends TextField {
 
         textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && newValue.length() > 0 && focusedProperty().get()) {
-                generateContextMenuItems(findSuitableEntries(newValue));
-                showContextMenu();
+                List<String> suitableList = findSuitableEntries(newValue);
+                if (!suitableList.isEmpty()) {
+                    generateContextMenuItems(suitableList);
+                    showContextMenu();
+                } else {
+                    contextMenu.hide();
+                }
             }
         });
         focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue && textProperty().get() != null) {
-                generateContextMenuItems(findSuitableEntries(textProperty().get()));
-                showContextMenu();
+                List<String> suitableList = findSuitableEntries(textProperty().get());
+                if (!suitableList.isEmpty()) {
+                    generateContextMenuItems(suitableList);
+                    showContextMenu();
+                } else {
+                    contextMenu.hide();
+                }
             }
         });
     }

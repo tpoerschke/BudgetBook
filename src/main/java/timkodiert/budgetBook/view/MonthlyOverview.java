@@ -144,7 +144,6 @@ public class MonthlyOverview implements Initializable, View {
         // INIT FILTER
         //
         monthFilter.addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue);
             data.clear();
             List<FixedExpense> fixedExpensesForMonth = fixedExpenseRepository.findAll().stream()
                     .filter(exp -> exp.getValueFor(newValue) != 0).toList();

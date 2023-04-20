@@ -39,6 +39,9 @@ public class UniqueExpense {
     private String note;
 
     @Setter
+    private String receiptImagePath;
+
+    @Setter
     @Size(min = 1)
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     private List<UniqueExpenseInformation> paymentInformations = new ArrayList<>();
