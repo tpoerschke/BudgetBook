@@ -9,7 +9,7 @@
 	<url>https://timkodiert.de</url>
 
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>BETA-1</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>18</maven.compiler.source>
