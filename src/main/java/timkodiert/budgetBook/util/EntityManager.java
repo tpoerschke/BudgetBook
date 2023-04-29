@@ -20,7 +20,8 @@ public class EntityManager {
     private EntityManager() {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure() // configures settings from hibernate.cfg.xml
-                .applySetting("hibernate.connection.url", PropertiesService.getInstance().getProperties().getProperty("db"))
+                .applySetting("hibernate.connection.url",
+                        PropertiesService.getInstance().getProperties().getProperty("db"))
                 .build();
 
         SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
@@ -28,7 +29,7 @@ public class EntityManager {
     }
 
     public static EntityManager getInstance() {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             INSTANCE = new EntityManager();
         }
         return INSTANCE;
@@ -44,13 +45,13 @@ public class EntityManager {
         return this.session.createQuery(criteriaQuery).list();
     }
 
-    public void persist(Object ...objects) {
+    public void persist(Object... objects) {
         this.session.beginTransaction();
         Arrays.stream(objects).forEach(this.session::persist);
         this.session.getTransaction().commit();
     }
 
-    public void remove(Object ...objects) {
+    public void remove(Object... objects) {
         this.session.beginTransaction();
         Arrays.stream(objects).forEach(this.session::remove);
         this.session.getTransaction().commit();

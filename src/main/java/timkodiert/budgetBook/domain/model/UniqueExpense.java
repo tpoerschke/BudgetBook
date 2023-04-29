@@ -15,13 +15,16 @@ import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Entity
+@EqualsAndHashCode
 public class UniqueExpense {
 
+    @EqualsAndHashCode.Exclude
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
@@ -47,7 +50,7 @@ public class UniqueExpense {
     private List<UniqueExpenseInformation> paymentInformations = new ArrayList<>();
 
     @Transient
-    private UniqueExpenseAdapter adapter;
+    private transient UniqueExpenseAdapter adapter;
 
     public UniqueExpense() {
         initAdapter();

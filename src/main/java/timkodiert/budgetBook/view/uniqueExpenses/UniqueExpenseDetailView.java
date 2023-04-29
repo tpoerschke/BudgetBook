@@ -41,6 +41,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import lombok.Getter;
 import lombok.Setter;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
@@ -88,6 +89,7 @@ public class UniqueExpenseDetailView implements View, Initializable {
     private ColumnConstraints rightColumn;
 
     private Repository<UniqueExpense> repository;
+    @Getter
     private ObjectProperty<UniqueExpense> expense = new SimpleObjectProperty<>();
     private ObservableList<UniqueExpenseInformation> paymentInfoList = FXCollections.observableArrayList();
 
@@ -115,6 +117,8 @@ public class UniqueExpenseDetailView implements View, Initializable {
         receiptTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.isBlank()) {
                 receiptImageView.setImage(new Image(new File(newValue).toURI().toString()));
+            } else {
+                receiptImageView.setImage(null);
             }
         });
         receiptImageView.setOnMouseClicked(event -> {
@@ -134,7 +138,6 @@ public class UniqueExpenseDetailView implements View, Initializable {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            ;
         });
 
         expenseInfoPositionCol
@@ -196,17 +199,31 @@ public class UniqueExpenseDetailView implements View, Initializable {
         return entity;
     }
 
-    @FXML
-    private void save(ActionEvent event) {
+    public boolean isDirty() {
+        if (this.expense.get() == null) {
+            return false;
+        }
+        // Über Kopie und equals auf dirty prüfen? dann kann die Id auch verwendet werden
+        UniqueExpense fromUi = patchEntity(new UniqueExpense());
+        return !fromUi.equals(this.expense.get());
+    }
+
+    public boolean save() {
 
         if (!validate()) {
-            return;
+            return false;
         }
 
         UniqueExpense exp = patchEntity(this.expense.get());
         repository.persist(exp);
         EntityManager.getInstance().refresh(exp);
         onUpdate.run();
+        return true;
+    }
+
+    @FXML
+    private void save(ActionEvent event) {
+        save();
     }
 
     @FXML
