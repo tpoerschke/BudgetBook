@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class FixedExpense extends Expense implements Adaptable {
+public class FixedExpense extends Expense implements Adaptable<ExpenseAdapter> {
 
     public FixedExpense() {
         super();

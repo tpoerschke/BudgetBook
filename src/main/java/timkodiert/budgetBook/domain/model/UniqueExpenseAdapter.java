@@ -8,7 +8,7 @@ import javafx.beans.property.adapter.ReadOnlyJavaBeanObjectPropertyBuilder;
 import javafx.beans.property.adapter.ReadOnlyJavaBeanStringPropertyBuilder;
 import lombok.Getter;
 
-public class UniqueExpenseAdapter {
+public class UniqueExpenseAdapter implements Adapter<UniqueExpense> {
     private final ReadOnlyStringProperty biller, note;
     private final ReadOnlyObjectProperty<LocalDate> date;
 

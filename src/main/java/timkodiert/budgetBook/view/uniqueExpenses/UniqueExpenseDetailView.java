@@ -3,9 +3,7 @@ package timkodiert.budgetBook.view.uniqueExpenses;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -14,19 +12,15 @@ import javax.inject.Inject;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -37,27 +31,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import lombok.Getter;
-import lombok.Setter;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
-import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.StageBuilder;
-import timkodiert.budgetBook.validation.ValidationWrapper;
-import timkodiert.budgetBook.view.View;
+import timkodiert.budgetBook.view.BaseDetailView;
 
-public class UniqueExpenseDetailView implements View, Initializable {
-
-    @Setter
-    private Runnable onUpdate;
+public class UniqueExpenseDetailView extends BaseDetailView<UniqueExpense> implements Initializable {
 
     @FXML
     private Pane root;
@@ -88,9 +74,6 @@ public class UniqueExpenseDetailView implements View, Initializable {
     @FXML
     private ColumnConstraints rightColumn;
 
-    private Repository<UniqueExpense> repository;
-    @Getter
-    private ObjectProperty<UniqueExpense> expense = new SimpleObjectProperty<>();
     private ObservableList<UniqueExpenseInformation> paymentInfoList = FXCollections.observableArrayList();
 
     private Repository<UniqueExpenseInformation> expInfoRepository;
@@ -98,7 +81,7 @@ public class UniqueExpenseDetailView implements View, Initializable {
     @Inject
     public UniqueExpenseDetailView(Repository<UniqueExpense> repository,
             Repository<UniqueExpenseInformation> expInfoRepository) {
-        this.repository = repository;
+        super(() -> new UniqueExpense(), repository);
         this.expInfoRepository = expInfoRepository;
     }
 
@@ -112,7 +95,7 @@ public class UniqueExpenseDetailView implements View, Initializable {
         deleteUniqueExpenseInformationButton.disableProperty()
                 .bind(expenseInfoTable.getSelectionModel().selectedItemProperty().isNull());
 
-        root.disableProperty().bind(expense.isNull());
+        root.disableProperty().bind(entity.isNull());
 
         receiptTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.isBlank()) {
@@ -152,45 +135,19 @@ public class UniqueExpenseDetailView implements View, Initializable {
 
         billerTextField.getAvailableEntries()
                 .addAll(repository.findAll().stream().map(UniqueExpense::getBiller).toList());
-    }
 
-    public void setBean(UniqueExpense uniqueExpense) {
-        this.expense.set(uniqueExpense);
-
-        if (uniqueExpense == null) {
-            return;
-        }
-
-        billerTextField.setText(uniqueExpense.getBiller());
-        noteTextArea.setText(uniqueExpense.getNote());
-        datePicker.setValue(uniqueExpense.getDate());
-        paymentInfoList.setAll(uniqueExpense.getPaymentInformations());
-        receiptTextField.setText(uniqueExpense.getReceiptImagePath());
-    }
-
-    private void addNewExpenseInformation(UniqueExpenseInformation newInfo) {
-        newInfo.setExpense(expense.get());
-        paymentInfoList.add(newInfo);
-    }
-
-    private boolean validate() {
-
-        UniqueExpense exp = patchEntity(new UniqueExpense());
-
-        Map<String, Control> validationMap = new HashMap<>();
         validationMap.put("biller", billerTextField);
         validationMap.put("date", datePicker);
         validationMap.put("paymentInformations", expenseInfoTable);
-
-        ValidationWrapper<UniqueExpense> validation = new ValidationWrapper<>(validationMap);
-
-        if (!validation.validate(exp)) {
-            return false;
-        }
-        return true;
     }
 
-    private UniqueExpense patchEntity(UniqueExpense entity) {
+    private void addNewExpenseInformation(UniqueExpenseInformation newInfo) {
+        newInfo.setExpense(entity.get());
+        paymentInfoList.add(newInfo);
+    }
+
+    @Override
+    protected UniqueExpense patchEntity(UniqueExpense entity) {
         entity.setBiller(billerTextField.getText());
         entity.setNote(noteTextArea.getText());
         entity.setPaymentInformations(paymentInfoList);
@@ -199,50 +156,25 @@ public class UniqueExpenseDetailView implements View, Initializable {
         return entity;
     }
 
-    public boolean isDirty() {
-        if (this.expense.get() == null) {
-            return false;
-        }
-        // Über Kopie und equals auf dirty prüfen? dann kann die Id auch verwendet werden
-        UniqueExpense fromUi = patchEntity(new UniqueExpense());
-        return !fromUi.equals(this.expense.get());
-    }
-
-    public boolean save() {
-
-        if (!validate()) {
-            return false;
-        }
-
-        UniqueExpense exp = patchEntity(this.expense.get());
-        repository.persist(exp);
-        EntityManager.getInstance().refresh(exp);
-        onUpdate.run();
-        return true;
-    }
-
-    @FXML
-    private void save(ActionEvent event) {
-        save();
-    }
-
-    @FXML
-    private void discardChanges(ActionEvent event) {
-        // Durch erneutes Setzen der Expense werden
-        // die Änderungen verworfen.
-        setBean(expense.get());
+    @Override
+    protected void patchUi(UniqueExpense entity) {
+        billerTextField.setText(entity.getBiller());
+        noteTextArea.setText(entity.getNote());
+        datePicker.setValue(entity.getDate());
+        paymentInfoList.setAll(entity.getPaymentInformations());
+        receiptTextField.setText(entity.getReceiptImagePath());
     }
 
     @FXML
     private void delete(ActionEvent event) {
         Alert confirmationAlert = new Alert(AlertType.CONFIRMATION,
-                String.format("Die Ausgabe \"%s\" vom %s wirklich löschen?", this.expense.get().getBiller(),
-                        this.expense.get().getDate()),
+                String.format("Die Ausgabe \"%s\" vom %s wirklich löschen?", this.entity.get().getBiller(),
+                        this.entity.get().getDate()),
                 ButtonType.YES, ButtonType.NO);
         Optional<ButtonType> result = confirmationAlert.showAndWait();
         if (result.filter(ButtonType.YES::equals).isPresent()) {
-            repository.remove(this.expense.get());
-            setBean(null);
+            repository.remove(this.entity.get());
+            setEntity(null);
             onUpdate.run();
         }
     }

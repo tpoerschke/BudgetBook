@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @EqualsAndHashCode
-public class UniqueExpense {
+public class UniqueExpense implements Adaptable<UniqueExpenseAdapter> {
 
     @EqualsAndHashCode.Exclude
     @Id
@@ -56,6 +56,7 @@ public class UniqueExpense {
         initAdapter();
     }
 
+    @Override
     public void initAdapter() {
         try {
             this.adapter = new UniqueExpenseAdapter(this);
