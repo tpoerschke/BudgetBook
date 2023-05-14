@@ -4,6 +4,8 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import timkodiert.budgetBook.domain.repository.RepositoryModule;
+import timkodiert.budgetBook.view.fixedExpenses.FixedExpenseDetailView;
+import timkodiert.budgetBook.view.fixedExpenses.FixedExpensesManageView;
 import timkodiert.budgetBook.view.uniqueExpenses.UniqueExpenseDetailView;
 import timkodiert.budgetBook.view.uniqueExpenses.UniqueExpensesManageView;
 
@@ -34,11 +36,11 @@ public interface ViewComponent {
     // Regelmäßige Ausgaben
     // -----------------------------------
 
-    ManageExpensesView getManageExpensesView();
+    FixedExpensesManageView getFixedExpenseDetailView();
 
     NewExpenseView getNewExpenseView();
 
-    EditExpenseView getEditExpenseView();
+    FixedExpenseDetailView getEditExpenseView();
 
     // -----------------------------------
     // Einzigartige Ausgaben

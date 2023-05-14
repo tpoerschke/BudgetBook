@@ -38,11 +38,8 @@ public abstract class Expense implements Turnover, Categorizable {
     @ManyToMany(cascade = { CascadeType.PERSIST })
     protected List<Category> categories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
-    protected List<PaymentInformation> paymentInformations = new ArrayList<>();
-
-    @Transient
-    protected ExpenseAdapter adapter;
+    // @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
+    // protected List<PaymentInformation> paymentInformations = new ArrayList<>();
 
     public Expense(String position) {
         this.position = position;

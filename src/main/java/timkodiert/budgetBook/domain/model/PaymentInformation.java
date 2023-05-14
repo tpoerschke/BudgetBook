@@ -33,7 +33,7 @@ public class PaymentInformation {
 
     @Setter
     @AttributeOverrides({
-        @AttributeOverride(name = "type", column = @Column(name = "type"))
+            @AttributeOverride(name = "type", column = @Column(name = "type"))
     })
     private PaymentType type;
 
@@ -45,9 +45,9 @@ public class PaymentInformation {
     @Setter
     @ManyToOne
     @JoinColumn(name = "expense_id", nullable = false)
-    private Expense expense;
+    private FixedExpense expense;
 
-    public PaymentInformation(Expense expense, double value, List<Integer> monthsOfPayment, PaymentType type, MonthYear start, MonthYear end) {
+    public PaymentInformation(FixedExpense expense, double value, List<Integer> monthsOfPayment, PaymentType type, MonthYear start, MonthYear end) {
         this.expense = expense;
         this.type = type;
         this.monthsOfPayment = monthsOfPayment;
@@ -61,13 +61,13 @@ public class PaymentInformation {
     }
 
     public boolean validFor(MonthYear monthYear) {
-        if(this.start != null && this.start.compareTo(monthYear) == 1) {
+        if (this.start != null && this.start.compareTo(monthYear) == 1) {
             return false;
         }
-        if(this.end != null && this.end.compareTo(monthYear) == -1) {
+        if (this.end != null && this.end.compareTo(monthYear) == -1) {
             return false;
         }
 
         return true;
-    } 
+    }
 }

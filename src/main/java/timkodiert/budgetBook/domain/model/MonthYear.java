@@ -52,6 +52,9 @@ public class MonthYear implements Comparable<MonthYear> {
     }
 
     public boolean containsDate(LocalDate date) {
+        if (date == null) {
+            return false;
+        }
         return month == date.getMonthValue() && year == date.getYear();
     }
 

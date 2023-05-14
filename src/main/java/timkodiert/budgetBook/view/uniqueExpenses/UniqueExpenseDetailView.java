@@ -141,6 +141,11 @@ public class UniqueExpenseDetailView extends BaseDetailView<UniqueExpense> imple
         validationMap.put("paymentInformations", expenseInfoTable);
     }
 
+    @Override
+    public String getFxmlLocation() {
+        return "/fxml/UniqueExpenses/Detail.fxml";
+    }
+
     private void addNewExpenseInformation(UniqueExpenseInformation newInfo) {
         newInfo.setExpense(entity.get());
         paymentInfoList.add(newInfo);

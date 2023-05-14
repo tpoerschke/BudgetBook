@@ -22,13 +22,13 @@ public class ExpenseDetailWidget implements View, Initializable {
     @FXML
     private FlowPane categoriesFlow;
 
-    private Expense expense;
+    private FixedExpense expense;
 
     public ExpenseDetailWidget() {
         expense = new FixedExpense();
     }
 
-    public void setExpense(Expense expense) {
+    public void setExpense(FixedExpense expense) {
         this.expense = expense;
         initProperties();
     }

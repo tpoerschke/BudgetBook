@@ -7,12 +7,14 @@ import lombok.NonNull;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+// TODO: ENUM DRAUS MACHEN
+
 @Embeddable
 @RequiredArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 public final class PaymentType {
-    
+
     public static final PaymentType MONTHLY = new PaymentType("monatlich");
     public static final PaymentType ANNUAL = new PaymentType("jährlich");
     public static final PaymentType SEMIANNUAL = new PaymentType("halbjährlich");
@@ -26,12 +28,17 @@ public final class PaymentType {
     private String type;
 
     public static PaymentType fromString(String type) {
-        switch(type) {
-            case "monatlich": return MONTHLY;
-            case "jährlich": return ANNUAL;
-            case "halbjährlich": return SEMIANNUAL;
-            case "vierteljährlich": return QUARTERLY;
-            default: return null;
+        switch (type) {
+        case "monatlich":
+            return MONTHLY;
+        case "jährlich":
+            return ANNUAL;
+        case "halbjährlich":
+            return SEMIANNUAL;
+        case "vierteljährlich":
+            return QUARTERLY;
+        default:
+            return null;
         }
     }
 }

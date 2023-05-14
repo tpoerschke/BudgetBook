@@ -104,7 +104,7 @@ public class MainView implements Initializable {
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getManageExpensesView(),
+        loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getFixedExpenseDetailView(),
                 "Regelmäßige Ausgaben verwalten");
     }
 

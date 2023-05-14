@@ -16,7 +16,7 @@ import javafx.collections.ListChangeListener.Change;
 import lombok.Getter;
 import timkodiert.budgetBook.Constants;
 import timkodiert.budgetBook.domain.model.Expense;
-import timkodiert.budgetBook.domain.model.ExpenseAdapter;
+import timkodiert.budgetBook.domain.model.FixedExpenseAdapter;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.domain.model.FixedExpense;
@@ -29,11 +29,11 @@ public class FixedExpenseController {
     @Getter
     private final ObservableList<FixedExpense> allExpenses;
     @Getter
-    private final ObservableList<ExpenseAdapter> monthlyExpenses;
+    private final ObservableList<FixedExpenseAdapter> monthlyExpenses;
     @Getter
-    private final ObservableList<ExpenseAdapter> currentMonthExpenses;
+    private final ObservableList<FixedExpenseAdapter> currentMonthExpenses;
     @Getter
-    private final ObservableList<ExpenseAdapter> nextMonthExpenses;
+    private final ObservableList<FixedExpenseAdapter> nextMonthExpenses;
 
     private final DoubleProperty monthlyExpensesSum;
     private final StringProperty monthlyExpensesSumText;
@@ -66,7 +66,7 @@ public class FixedExpenseController {
                     .filter(expense -> !expense.getPaymentType().equals(PaymentType.MONTHLY))
                     // TODO: Überarbeiten mit vernünftiger Schnittstelle
                     .filter(expense -> expense.getValueFor(nextMonth.getYear(), nextMonth.getMonthValue()) > 0)
-                    .map(Expense::getAdapter)
+                    .map(FixedExpense::getAdapter)
                     .toList());
         });
         allExpenses.addListener((Change<? extends FixedExpense> change) -> {
@@ -75,36 +75,41 @@ public class FixedExpenseController {
                     .filter(expense -> !expense.getPaymentType().equals(PaymentType.MONTHLY))
                     // TODO: Überarbeiten mit vernünftiger Schnittstelle
                     .filter(expense -> expense.getValueFor(currentMonth.getYear(), currentMonth.getMonthValue()) > 0)
-                    .map(Expense::getAdapter)
+                    .map(FixedExpense::getAdapter)
                     .toList());
         });
         allExpenses.addListener((Change<? extends FixedExpense> change) -> {
             monthlyExpenses.setAll(allExpenses.stream()
                     .filter(expense -> expense.getPaymentType().equals(PaymentType.MONTHLY))
-                    .map(Expense::getAdapter)
+                    .map(FixedExpense::getAdapter)
                     .toList());
         });
 
         // Properties für die Monatssummen initialisieren
         monthlyExpensesSum = new SimpleDoubleProperty();
         monthlyExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        monthlyExpenses.addListener(new SumListChangeListener<ExpenseAdapter>(monthlyExpenses, monthlyExpensesSum, monthlyExpensesSumText, Expense::getCurrentMonthValue));
+        monthlyExpenses.addListener(new SumListChangeListener<FixedExpenseAdapter>(monthlyExpenses, monthlyExpensesSum,
+                monthlyExpensesSumText, FixedExpense::getCurrentMonthValue));
 
         currentMonthExpensesSum = new SimpleDoubleProperty();
         currentMonthExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        currentMonthExpenses.addListener(new SumListChangeListener<>(currentMonthExpenses, currentMonthExpensesSum, currentMonthExpensesSumText, Expense::getCurrentMonthValue));
+        currentMonthExpenses.addListener(new SumListChangeListener<>(currentMonthExpenses, currentMonthExpensesSum,
+                currentMonthExpensesSumText, FixedExpense::getCurrentMonthValue));
         currentMonthExpensesTotalSum = new SimpleDoubleProperty();
         currentMonthExpensesTotalSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        ChangeListener<Number> currentTotalListener = new SumChangeListener<>(currentMonthExpensesTotalSum, currentMonthExpensesTotalSumText, currentMonthExpensesSum, monthlyExpensesSum);
+        ChangeListener<Number> currentTotalListener = new SumChangeListener<>(currentMonthExpensesTotalSum,
+                currentMonthExpensesTotalSumText, currentMonthExpensesSum, monthlyExpensesSum);
         currentMonthExpensesSum.addListener(currentTotalListener);
         monthlyExpensesSum.addListener(currentTotalListener);
 
         nextMonthExpensesSum = new SimpleDoubleProperty();
         nextMonthExpensesSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        nextMonthExpenses.addListener(new SumListChangeListener<>(nextMonthExpenses, nextMonthExpensesSum, nextMonthExpensesSumText, Expense::getNextMonthValue));
+        nextMonthExpenses.addListener(new SumListChangeListener<>(nextMonthExpenses, nextMonthExpensesSum,
+                nextMonthExpensesSumText, FixedExpense::getNextMonthValue));
         nextMonthExpensesTotalSum = new SimpleDoubleProperty();
         nextMonthExpensesTotalSumText = new SimpleStringProperty(Constants.INITIAL_AMOUNT_STRING);
-        ChangeListener<Number> nextTotalListener = new SumChangeListener<>(nextMonthExpensesTotalSum, nextMonthExpensesTotalSumText, nextMonthExpensesSum, monthlyExpensesSum);
+        ChangeListener<Number> nextTotalListener = new SumChangeListener<>(nextMonthExpensesTotalSum,
+                nextMonthExpensesTotalSumText, nextMonthExpensesSum, monthlyExpensesSum);
         nextMonthExpensesSum.addListener(nextTotalListener);
         monthlyExpensesSum.addListener(nextTotalListener);
     }

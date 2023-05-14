@@ -46,13 +46,14 @@ public abstract class BaseManageView<T extends Adaptable<A>, A extends Adapter<T
         reloadTable();
         detailView.setOnUpdate(this::reloadTable);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UniqueExpenses/Detail.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(detailView.getFxmlLocation()));
         loader.setController(detailView);
         try {
             detailViewContainer.getChildren().add(loader.load());
         } catch (IOException ioe) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();
+            ioe.printStackTrace();
         }
 
         entityTable.setRowFactory(tableView -> {

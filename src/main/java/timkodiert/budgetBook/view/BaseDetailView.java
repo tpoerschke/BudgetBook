@@ -49,6 +49,9 @@ public abstract class BaseDetailView<T> implements View {
         }
         // Über Kopie und equals auf dirty prüfen? dann kann die Id auch verwendet werden
         T fromUi = patchEntity(emptyEntityProducer.get());
+        System.out.println(entity.get() + " " + entity.get().hashCode());
+        System.out.println(fromUi + " " + fromUi.hashCode());
+        System.out.println("---");
         return !fromUi.equals(this.entity.get());
     }
 
@@ -86,6 +89,8 @@ public abstract class BaseDetailView<T> implements View {
     private void save(ActionEvent event) {
         save();
     }
+
+    public abstract String getFxmlLocation();
 
     protected abstract T patchEntity(T entity);
 
