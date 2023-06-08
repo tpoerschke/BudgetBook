@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -27,6 +30,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.MonthYear;
@@ -36,9 +42,11 @@ import timkodiert.budgetBook.table.cell.MonthYearTableCell;
 import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.EntityManager;
-import timkodiert.budgetBook.view.BaseDetailView;
+import timkodiert.budgetBook.util.StageBuilder;
+import timkodiert.budgetBook.view.baseViews.BaseDetailView;
+import timkodiert.budgetBook.view.baseViews.EntityBaseDetailView;
 
-public class FixedExpenseDetailView extends BaseDetailView<FixedExpense> implements Initializable {
+public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> implements Initializable {
 
     @FXML
     private Pane root;
@@ -53,12 +61,12 @@ public class FixedExpenseDetailView extends BaseDetailView<FixedExpense> impleme
     private TreeView<Category> categoriesTreeView;
     private CategoryTreeHelper categoryTreeHelper;
 
-    // @FXML
-    // private Button addUniqueExpenseInformationButton;
-    // @FXML
-    // private Button editUniqueExpenseInformationButton;
-    // @FXML
-    // private Button deleteUniqueExpenseInformationButton;
+    @FXML
+    private Button addFixedExpenseInformationButton;
+    @FXML
+    private Button editFixedExpenseInformationButton;
+    @FXML
+    private Button deleteFixedExpenseInformationButton;
     @FXML
     private TableView<PaymentInformation> expenseInfoTable;
     @FXML
@@ -77,6 +85,13 @@ public class FixedExpenseDetailView extends BaseDetailView<FixedExpense> impleme
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        addFixedExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.PLUS));
+        editFixedExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.PENCIL));
+        deleteFixedExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.TRASH));
+        editFixedExpenseInformationButton.disableProperty()
+                .bind(expenseInfoTable.getSelectionModel().selectedItemProperty().isNull());
+        deleteFixedExpenseInformationButton.disableProperty()
+                .bind(expenseInfoTable.getSelectionModel().selectedItemProperty().isNull());
         root.disableProperty().bind(entity.isNull());
         List<Category> categories = EntityManager.getInstance().findAll(Category.class);
         categoryTreeHelper = from(categoriesTreeView, categories);
@@ -93,25 +108,9 @@ public class FixedExpenseDetailView extends BaseDetailView<FixedExpense> impleme
         expenseInfoEndCol.setCellFactory(col -> new MonthYearTableCell<>());
 
         expenseInfoTable.setItems(paymentInfoList);
-    }
 
-    @Override
-    public boolean save() {
-        // Speichern
-        // editPayInfoWidgets.forEach(widget -> {
-        //     widget.persistUpdate();
-        //     // eine neue PaymentInformation muss der Expense hinzugefügt werden
-        //     PaymentInformation payInfo = widget.getPayInfo();
-        //     if (!entity.get().getPaymentInformations().contains(payInfo)) {
-        //         entity.get().getPaymentInformations().add(payInfo);
-        //     }
-        //     if (widget.isDeleted()) {
-        //         entity.get().getPaymentInformations().remove(payInfo);
-        //     }
-        // });
-        this.repository.persist(entity.get());
-        EntityManager.getInstance().refresh(entity.get());
-        return true;
+        // Validierung initialisieren
+        validationMap.put("position", positionTextField);
     }
 
     @FXML
@@ -162,5 +161,42 @@ public class FixedExpenseDetailView extends BaseDetailView<FixedExpense> impleme
         // payInfoContainer.getChildren().clear();
         // editPayInfoWidgets = entity.getPaymentInformations().stream().map(payInfo -> editPaymentInformationWidgetFactory.create(payInfoContainer, payInfo))
         //         .collect(Collectors.toList());
+    }
+
+    @FXML
+    private void newExpenseInformation(ActionEvent event) {
+        openUniqueExpenseInformationDetailView(Optional.empty());
+    }
+
+    @FXML
+    private void editExpenseInformation(ActionEvent event) {
+        Optional<PaymentInformation> optionalEntity = Optional
+                .of(expenseInfoTable.getSelectionModel().getSelectedItem());
+        openUniqueExpenseInformationDetailView(optionalEntity);
+    }
+
+    @FXML
+    private void deleteExpenseInformation(ActionEvent event) {
+        PaymentInformation expInfo = expenseInfoTable.getSelectionModel().getSelectedItem();
+        expInfoRepository.remove(expInfo);
+        paymentInfoList.remove(expInfo);
+    }
+
+    private void openUniqueExpenseInformationDetailView(Optional<PaymentInformation> optionalEntity) {
+        try {
+            var subDetailView = new FixedExpenseInformationDetailView(() -> new PaymentInformation());
+            Stage stage = StageBuilder.create()
+                    .withModality(Modality.APPLICATION_MODAL)
+                    .withOwner(Window.getWindows().get(0))
+                    .withFXMLResource("/fxml/FixedExpenses/FixedExpenseInformationDetailView.fxml")
+                    .withView(subDetailView)
+                    .build();
+            stage.show();
+            optionalEntity.ifPresent(subDetailView::setEntity);
+        } catch (Exception e) {
+            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
     }
 }

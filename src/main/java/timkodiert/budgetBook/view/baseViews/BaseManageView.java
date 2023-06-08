@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view;
+package timkodiert.budgetBook.view.baseViews;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,6 +19,7 @@ import timkodiert.budgetBook.domain.model.Adaptable;
 import timkodiert.budgetBook.domain.model.Adapter;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.DialogFactory;
+import timkodiert.budgetBook.view.View;
 
 public abstract class BaseManageView<T extends Adaptable<A>, A extends Adapter<T>> implements View, Initializable {
 
@@ -30,11 +31,11 @@ public abstract class BaseManageView<T extends Adaptable<A>, A extends Adapter<T
 
     protected final Repository<T> repository;
     private final Supplier<T> emptyEntityProducer;
-    private final BaseDetailView<T> detailView;
+    private final EntityBaseDetailView<T> detailView;
     private final DialogFactory dialogFactory;
 
     public BaseManageView(Supplier<T> emptyEntityProducer, Repository<T> repository,
-            BaseDetailView<T> detailView, DialogFactory dialogFactory) {
+            EntityBaseDetailView<T> detailView, DialogFactory dialogFactory) {
         this.emptyEntityProducer = emptyEntityProducer;
         this.repository = repository;
         this.dialogFactory = dialogFactory;

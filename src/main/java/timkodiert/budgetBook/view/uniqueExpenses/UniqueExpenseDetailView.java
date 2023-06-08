@@ -41,9 +41,9 @@ import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.StageBuilder;
-import timkodiert.budgetBook.view.BaseDetailView;
+import timkodiert.budgetBook.view.baseViews.EntityBaseDetailView;
 
-public class UniqueExpenseDetailView extends BaseDetailView<UniqueExpense> implements Initializable {
+public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueExpense> implements Initializable {
 
     @FXML
     private Pane root;

@@ -1,46 +1,22 @@
-package timkodiert.budgetBook.view;
+package timkodiert.budgetBook.view.baseViews;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
-
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Control;
-import lombok.Getter;
 import lombok.Setter;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.EntityManager;
-import timkodiert.budgetBook.validation.ValidationWrapper;
 
-public abstract class BaseDetailView<T> implements View {
+public abstract class EntityBaseDetailView<T> extends BaseDetailView<T> {
 
     @Setter
     protected Runnable onUpdate;
 
-    protected Map<String, Control> validationMap = new HashMap<>();
-
-    protected Supplier<T> emptyEntityProducer;
     protected Repository<T> repository;
 
-    @Getter
-    protected ObjectProperty<T> entity = new SimpleObjectProperty<>();
-
-    protected BaseDetailView(Supplier<T> emptyEntityProducer, Repository<T> repository) {
-        this.emptyEntityProducer = emptyEntityProducer;
+    protected EntityBaseDetailView(Supplier<T> emptyEntityProducer, Repository<T> repository) {
+        super(emptyEntityProducer);
         this.repository = repository;
-    }
-
-    public void setEntity(T entity) {
-        this.entity.set(entity);
-
-        if (entity == null) {
-            return;
-        }
-
-        patchUi(entity);
     }
 
     public boolean isDirty() {
@@ -53,16 +29,6 @@ public abstract class BaseDetailView<T> implements View {
         System.out.println(fromUi + " " + fromUi.hashCode());
         System.out.println("---");
         return !fromUi.equals(this.entity.get());
-    }
-
-    protected boolean validate() {
-        T entityToValidate = patchEntity(emptyEntityProducer.get());
-
-        ValidationWrapper<T> validation = new ValidationWrapper<>(validationMap);
-        if (!validation.validate(entityToValidate)) {
-            return false;
-        }
-        return true;
     }
 
     public boolean save() {
@@ -91,8 +57,4 @@ public abstract class BaseDetailView<T> implements View {
     }
 
     public abstract String getFxmlLocation();
-
-    protected abstract T patchEntity(T entity);
-
-    protected abstract void patchUi(T entity);
 }

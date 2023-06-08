@@ -11,8 +11,8 @@ import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.FixedExpenseAdapter;
 import timkodiert.budgetBook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetBook.util.DialogFactory;
-import timkodiert.budgetBook.view.BaseManageView;
 import timkodiert.budgetBook.view.ViewComponent;
+import timkodiert.budgetBook.view.baseViews.BaseManageView;
 
 public class FixedExpensesManageView extends BaseManageView<FixedExpense, FixedExpenseAdapter> {
 
@@ -34,6 +34,7 @@ public class FixedExpensesManageView extends BaseManageView<FixedExpense, FixedE
 
     @FXML
     private void openNewExpense(ActionEvent event) {
+        displayNewEntity();
         // Window primaryStage = ((Button) event.getSource()).getScene().getWindow();
         // try {
         //     Stage stage = StageBuilder.create()

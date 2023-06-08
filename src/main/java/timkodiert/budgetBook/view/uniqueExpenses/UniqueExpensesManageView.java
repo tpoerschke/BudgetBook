@@ -27,8 +27,8 @@ import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
 import timkodiert.budgetBook.util.DialogFactory;
-import timkodiert.budgetBook.view.BaseManageView;
 import timkodiert.budgetBook.view.ViewComponent;
+import timkodiert.budgetBook.view.baseViews.BaseManageView;
 
 public class UniqueExpensesManageView extends BaseManageView<UniqueExpense, UniqueExpenseAdapter> {
 
