@@ -3,32 +3,23 @@ package timkodiert.budgetBook.domain.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.hibernate.annotations.GenericGenerator;
+import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import static timkodiert.budgetBook.domain.model.ContentEquals.listsContentEquals;
+
 @Getter
 @Entity
-@EqualsAndHashCode
-public class UniqueExpense implements Adaptable<UniqueExpenseAdapter> {
-
-    @EqualsAndHashCode.Exclude
-    @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
-    private int id;
+public class UniqueExpense extends BaseEntity implements Adaptable<UniqueExpenseAdapter> {
 
     @Setter
     @NotBlank(message = "Es muss ein Rechnungsteller angegeben werden.")
@@ -68,5 +59,20 @@ public class UniqueExpense implements Adaptable<UniqueExpenseAdapter> {
 
     public double getTotalValue() {
         return paymentInformations.stream().mapToDouble(UniqueExpenseInformation::getValue).sum();
+    }
+
+    @Override
+    public boolean contentEquals(Object other) {
+
+        if (other instanceof UniqueExpense uniqueExpense) {
+            boolean equals = Objects.equals(this.getBiller(), uniqueExpense.getBiller())
+                    && Objects.equals(this.getNote(), uniqueExpense.getNote())
+                    && Objects.equals(this.getDate(), uniqueExpense.getDate())
+                    && Objects.equals(this.getReceiptImagePath(), uniqueExpense.getReceiptImagePath());
+
+            return equals && listsContentEquals(this.getPaymentInformations(), uniqueExpense.getPaymentInformations());
+        }
+
+        return false;
     }
 }

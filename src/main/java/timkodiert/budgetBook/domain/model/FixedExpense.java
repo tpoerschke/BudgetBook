@@ -3,6 +3,7 @@ package timkodiert.budgetBook.domain.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -22,15 +23,8 @@ import lombok.ToString;
 
 @Getter
 @Entity
-@EqualsAndHashCode
 @ToString
-public class FixedExpense implements Turnover, Categorizable, Adaptable<FixedExpenseAdapter> {
-
-    @EqualsAndHashCode.Exclude
-    @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
-    private int id;
+public class FixedExpense extends BaseEntity implements Turnover, Categorizable, Adaptable<FixedExpenseAdapter> {
 
     @Setter
     @NotBlank(message = "Die Ausgabe muss benannt werden.")
@@ -109,5 +103,20 @@ public class FixedExpense implements Turnover, Categorizable, Adaptable<FixedExp
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean contentEquals(Object other) {
+
+        if (other instanceof FixedExpense expense) {
+            boolean equals = Objects.equals(this.getPosition(), expense.getPosition())
+                    && Objects.equals(this.getNote(), expense.getNote());
+
+            return equals
+                    && ContentEquals.listsContentEquals(this.getPaymentInformations(), expense.getPaymentInformations())
+                    && ContentEquals.listsContentEquals(this.getCategories(), expense.getCategories());
+        }
+
+        return false;
     }
 }

@@ -43,7 +43,6 @@ import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.StageBuilder;
-import timkodiert.budgetBook.view.baseViews.BaseDetailView;
 import timkodiert.budgetBook.view.baseViews.EntityBaseDetailView;
 
 public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> implements Initializable {
@@ -126,14 +125,6 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
         }
     }
 
-    // @FXML
-    // private void addNewPaymentInformation() {
-    //     PaymentInformation newPayInfo = new PaymentInformation();
-    //     newPayInfo.setExpense(entity.get());
-    //     EditPaymentInformationWidget widget = editPaymentInformationWidgetFactory.create(payInfoContainer, newPayInfo);
-    //     editPayInfoWidgets.add(widget);
-    // }
-
     @Override
     public String getFxmlLocation() {
         return "/fxml/EditExpense.fxml";
@@ -182,9 +173,16 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
         paymentInfoList.remove(expInfo);
     }
 
+    private void updateExpenseInformation(PaymentInformation expInfo) {
+        if (!paymentInfoList.contains(expInfo)) {
+            paymentInfoList.add(expInfo);
+        }
+        expenseInfoTable.refresh();
+    }
+
     private void openUniqueExpenseInformationDetailView(Optional<PaymentInformation> optionalEntity) {
         try {
-            var subDetailView = new FixedExpenseInformationDetailView(() -> new PaymentInformation());
+            var subDetailView = new FixedExpenseInformationDetailView(() -> new PaymentInformation(), this::updateExpenseInformation);
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(Window.getWindows().get(0))
@@ -192,7 +190,7 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
                     .withView(subDetailView)
                     .build();
             stage.show();
-            optionalEntity.ifPresent(subDetailView::setEntity);
+            subDetailView.setEntity(optionalEntity.orElse(new PaymentInformation()));
         } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();

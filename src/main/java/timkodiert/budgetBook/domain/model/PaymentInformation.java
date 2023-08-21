@@ -1,15 +1,14 @@
 package timkodiert.budgetBook.domain.model;
 
 import java.util.List;
-
-import org.hibernate.annotations.GenericGenerator;
+import java.util.Objects;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
@@ -19,12 +18,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Entity
-public class PaymentInformation {
-
-    @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
-    protected int id;
+public class PaymentInformation extends BaseEntity {
 
     @Setter
     private MonthYear start;
@@ -32,9 +26,7 @@ public class PaymentInformation {
     private MonthYear end;
 
     @Setter
-    @AttributeOverrides({
-            @AttributeOverride(name = "type", column = @Column(name = "type"))
-    })
+    @Enumerated(EnumType.STRING)
     private PaymentType type;
 
     @Setter
@@ -69,5 +61,23 @@ public class PaymentInformation {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean contentEquals(Object other) {
+
+        if (other instanceof PaymentInformation info) {
+            boolean equals = Objects.equals(this.getStart(), info.getStart())
+                    && Objects.equals(this.getEnd(), info.getEnd())
+                    && this.getType() == info.getType()
+                    && this.getValue() == info.getValue()
+                    && this.getExpense().getId() == info.getExpense().getId();
+
+            return equals
+                    && this.getMonthsOfPayment().containsAll(info.getMonthsOfPayment())
+                    && info.getMonthsOfPayment().containsAll(this.getMonthsOfPayment());
+        }
+
+        return false;
     }
 }

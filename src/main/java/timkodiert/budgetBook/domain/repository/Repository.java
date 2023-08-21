@@ -6,7 +6,7 @@ import java.util.List;
 import timkodiert.budgetBook.util.EntityManager;
 
 public abstract class Repository<T> {
-    
+
     protected EntityManager entityManager;
     protected Class<T> entityType;
 

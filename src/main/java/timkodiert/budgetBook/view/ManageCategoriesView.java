@@ -57,31 +57,31 @@ public class ManageCategoriesView implements Initializable, View {
         actionColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<Category>(cellData.getValue().getValue()));
         actionColumn.setCellFactory(col -> new ButtonTreeTableCell<>("Löschen", this::deleteCategory));
 
-        categoriesTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends TreeItem<Category>> observable, TreeItem<Category> oldValue, TreeItem<Category> newValue) -> {
-            if(newValue != null) {
-                selectedCategory = newValue.getValue();
-                nameTextField.setText(selectedCategory.getName());
-                descriptionTextArea.setText(selectedCategory.getDescription());
-                editContainer.setDisable(false);
-            }
-            else {
-                editContainer.setDisable(true);
-                nameTextField.setText("");
-                descriptionTextArea.setText("");
-            }
-        });
-        
+        categoriesTable.getSelectionModel().selectedItemProperty()
+                .addListener((ObservableValue<? extends TreeItem<Category>> observable, TreeItem<Category> oldValue, TreeItem<Category> newValue) -> {
+                    if (newValue != null) {
+                        selectedCategory = newValue.getValue();
+                        nameTextField.setText(selectedCategory.getName());
+                        descriptionTextArea.setText(selectedCategory.getDescription());
+                        editContainer.setDisable(false);
+                    } else {
+                        editContainer.setDisable(true);
+                        nameTextField.setText("");
+                        descriptionTextArea.setText("");
+                    }
+                });
+
         List<Category> categories = repository.findAll();
         fillTable(categories);
     }
 
     private void deleteCategory(Category category) {
-        if(!category.getExpenses().isEmpty()) {
+        if (!category.getFixedExpenses().isEmpty() || !category.getUniqueExpenseInformation().isEmpty()) {
             Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setContentText("Dieser Kategorie sind Ausgaben zugeordnet. " + 
-                "Wenn Sie die Kategorie löschen, wird die Kategorie auch bei den betroffenen Ausgaben entfernt. Trotzdem löschen?");
+            alert.setContentText("Dieser Kategorie sind Ausgaben zugeordnet. " +
+                    "Wenn Sie die Kategorie löschen, wird die Kategorie auch bei den betroffenen Ausgaben entfernt. Trotzdem löschen?");
 
-            if(alert.showAndWait().filter(ButtonType.CANCEL::equals).isPresent()) {
+            if (alert.showAndWait().filter(ButtonType.CANCEL::equals).isPresent()) {
                 return;
             }
         }
@@ -105,10 +105,9 @@ public class ManageCategoriesView implements Initializable, View {
     private void saveCategory(ActionEvent event) {
         nameTextField.getStyleClass().remove("validation-error");
 
-        if(nameTextField.getText().trim().equals("")) {
+        if (nameTextField.getText().trim().equals("")) {
             nameTextField.getStyleClass().add("validation-error");
-        }
-        else {
+        } else {
             selectedCategory.setName(nameTextField.getText().trim());
             selectedCategory.setDescription(descriptionTextArea.getText().trim());
 

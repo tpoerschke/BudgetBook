@@ -4,10 +4,11 @@ import java.util.function.Supplier;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import lombok.Setter;
+import timkodiert.budgetBook.domain.model.ContentEquals;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.EntityManager;
 
-public abstract class EntityBaseDetailView<T> extends BaseDetailView<T> {
+public abstract class EntityBaseDetailView<T extends ContentEquals> extends BaseDetailView<T> {
 
     @Setter
     protected Runnable onUpdate;
@@ -23,12 +24,9 @@ public abstract class EntityBaseDetailView<T> extends BaseDetailView<T> {
         if (this.entity.get() == null) {
             return false;
         }
-        // Über Kopie und equals auf dirty prüfen? dann kann die Id auch verwendet werden
+
         T fromUi = patchEntity(emptyEntityProducer.get());
-        System.out.println(entity.get() + " " + entity.get().hashCode());
-        System.out.println(fromUi + " " + fromUi.hashCode());
-        System.out.println("---");
-        return !fromUi.equals(this.entity.get());
+        return !fromUi.contentEquals(this.entity.get());
     }
 
     public boolean save() {

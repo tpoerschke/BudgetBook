@@ -28,8 +28,6 @@ import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.column.BoldTableColumn;
 import timkodiert.budgetBook.table.row.BoldTableRow;
-import timkodiert.budgetBook.domain.model.CumulativeExpense;
-import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
@@ -125,15 +123,15 @@ public class AnnualOverviewView implements Initializable, View {
         // Expense cumulativeExpense = new CumulativeExpense(fixedExpenseController.getAllExpenses(), START_YEAR,
         //         END_YEAR);
 
-        mainTable.setRowFactory(tableView -> {
-            TableRow<FixedExpense> row = new BoldTableRow(PaymentType.CUMULATIVE);
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 1 && !row.isEmpty()) {
-                    //expenseDetailWidget.setExpense(row.getItem());
-                }
-            });
-            return row;
-        });
+        // mainTable.setRowFactory(tableView -> {
+        //     TableRow<FixedExpense> row = new BoldTableRow(PaymentType.CUMULATIVE);
+        //     row.setOnMouseClicked(event -> {
+        //         if (event.getClickCount() == 1 && !row.isEmpty()) {
+        //             //expenseDetailWidget.setExpense(row.getItem());
+        //         }
+        //     });
+        //     return row;
+        // });
 
         mainTable.getItems().addAll(fixedExpenseController.getAllExpenses());
         //mainTable.getItems().add(cumulativeExpense);

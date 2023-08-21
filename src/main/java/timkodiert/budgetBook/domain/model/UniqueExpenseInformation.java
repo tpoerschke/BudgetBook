@@ -2,6 +2,7 @@ package timkodiert.budgetBook.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,10 +18,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static timkodiert.budgetBook.domain.model.ContentEquals.listsContentEquals;
+
 @Getter
 @Entity
 @NoArgsConstructor
-public class UniqueExpenseInformation implements Categorizable {
+public class UniqueExpenseInformation implements Categorizable, ContentEquals {
 
     @Id
     @GeneratedValue(generator = "increment")
@@ -42,4 +45,18 @@ public class UniqueExpenseInformation implements Categorizable {
     @Setter
     @ManyToMany(cascade = { CascadeType.PERSIST })
     private List<Category> categories = new ArrayList<>();
+
+    @Override
+    public boolean contentEquals(Object other) {
+
+        if (other instanceof UniqueExpenseInformation info) {
+            boolean equals = Objects.equals(this.getLabel(), info.getLabel())
+                    && this.getValue() == info.getValue()
+                    && this.getExpense().getId() == info.getExpense().getId();
+
+            return equals && listsContentEquals(this.getCategories(), info.getCategories());
+        }
+
+        return false;
+    }
 }

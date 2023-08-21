@@ -15,7 +15,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.ListChangeListener.Change;
 import lombok.Getter;
 import timkodiert.budgetBook.Constants;
-import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.FixedExpenseAdapter;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.repository.Repository;

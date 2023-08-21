@@ -20,7 +20,7 @@
 
 		<version.dagger>2.44.2</version.dagger>
 		<version.ikonli>12.3.1</version.ikonli>
-		<version.atlantafx>1.2.0</version.atlantafx>
+		<version.atlantafx>2.0.1</version.atlantafx>
 	</properties>
 
 	<build>
