@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import timkodiert.budgetBook.domain.model.Expense;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.view.View;
 
@@ -22,13 +21,13 @@ public class ExpenseDetailWidget implements View, Initializable {
     @FXML
     private FlowPane categoriesFlow;
 
-    private Expense expense;
+    private FixedExpense expense;
 
     public ExpenseDetailWidget() {
         expense = new FixedExpense();
     }
 
-    public void setExpense(Expense expense) {
+    public void setExpense(FixedExpense expense) {
         this.expense = expense;
         initProperties();
     }

@@ -1,77 +1,47 @@
 package timkodiert.budgetBook.domain.model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
-public class CumulativeExpense extends Expense {
+public class CumulativeExpense implements FixedTurnover {
 
-    private List<PaymentInformation> paymentInformations = new ArrayList<>();
-    
-    public CumulativeExpense(List<? extends Expense> expenses, int startYear, int endYear) {
-        this.position = "Gesamt";
+    private final Map<MonthYear, Double> valueMap = new HashMap<>();
 
-        IntStream.rangeClosed(startYear, endYear).forEach(year -> {
+    public CumulativeExpense(List<? extends FixedTurnover> turnovers, int startYear, int endYear) {
+        IntStream.rangeClosed(startYear, endYear).boxed().forEach(year -> {
             IntStream.rangeClosed(1, 12).forEach(month -> {
-                MonthYear monthYear = MonthYear.of(month, year);
-                PaymentInformation payInfo = new PaymentInformation(
-                    this, 
-                    0, 
-                    List.of(month), 
-                    PaymentType.CUMULATIVE, 
-                    monthYear,
-                    monthYear
-                );
-
-                for(Expense expense : expenses) {
-                    double added = payInfo.getValue() + expense.getValueFor(year, month);
-                    payInfo.setValue(added);
-                }
-
-                this.paymentInformations.add(payInfo);
+                valueMap.put(MonthYear.of(month, year), 0.0);
             });
         });
+
+        turnovers.forEach(t -> {
+            valueMap.keySet().forEach(monthYear -> {
+                valueMap.put(monthYear, valueMap.get(monthYear) + t.getValueFor(monthYear));
+            });
+        });
+
     }
 
     @Override
-    public double getValueFor(int year, int month) {
-        PaymentInformation payInfo = this.findPaymentInformation(MonthYear.of(month, year));
-        if(payInfo != null) {
-            return payInfo.getValueFor(MonthYear.of(month, year));
-        }
-        return 0;
+    public String getPosition() {
+        return "Gesamt";
+    }
+
+    @Override
+    public PaymentType getType() {
+        return PaymentType.CUMULATIVE;
+    }
+
+    @Override
+    public double getValueFor(MonthYear monthYear) {
+        return valueMap.get(monthYear);
     }
 
     @Override
     public double getValueForYear(int year) {
-        return IntStream.rangeClosed(1, 12).mapToDouble(month -> this.getValueFor(year, month)).sum();
+        return IntStream.rangeClosed(1, 12).mapToDouble(month -> valueMap.get(MonthYear.of(month, year))).sum();
     }
 
-    @Override
-    public PaymentType getPaymentType() {
-       return PaymentType.CUMULATIVE;
-    }
-
-    @Override
-    public double getCurrentMonthValue() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public double getNextMonthValue() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    // TODO: Refactor, diese Methode gibt es auch in der FixedExpense
-    // ggf. teil der Oberklasse machen
-    private PaymentInformation findPaymentInformation(MonthYear monthYear) {
-        for(PaymentInformation payInfo : this.paymentInformations) {
-            if(payInfo.validFor(monthYear)) {
-                return payInfo;
-            }
-        }
-        return null;
-    }
 }

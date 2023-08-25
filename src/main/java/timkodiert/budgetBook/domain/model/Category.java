@@ -1,7 +1,10 @@
 package timkodiert.budgetBook.domain.model;
 
+import static timkodiert.budgetBook.util.ObjectUtils.nvl;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -26,18 +29,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Entity
-public class Category {
-
-    @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
-    private int id;
+public class Category extends BaseEntity {
 
     @Setter
     @NonNull
     @NotBlank(message = "Die Kategorie muss benannt werden.")
     private String name;
-    
+
     @Setter
     private String description;
 
@@ -47,11 +45,14 @@ public class Category {
     private Category parent;
 
     @Setter
-    @OneToMany(mappedBy="parent", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Category> children = new ArrayList<>();
 
     @ManyToMany(mappedBy = "categories")
-    private List<Expense> expenses = new ArrayList<>();
+    private List<FixedExpense> fixedExpenses = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "categories")
+    private List<UniqueExpenseInformation> uniqueExpenseInformation = new ArrayList<>();
 
     @Transient
     private CheckBoxTreeItem<Category> treeItem = new CheckBoxTreeItem<>();
@@ -65,5 +66,30 @@ public class Category {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    @Override
+    public boolean contentEquals(Object other) {
+
+        if (other instanceof Category cat) {
+            boolean equals = Objects.equals(this.getName(), cat.getName())
+                    && Objects.equals(this.getDescription(), cat.getDescription())
+                    && nvl(this.getParent(), Category::getId) == nvl(cat.getParent(), Category::getId);
+
+            List<Integer> thisChildrenIds = this.getChildren().stream().map(Category::getId).toList();
+            List<Integer> otherChildrenIds = cat.getChildren().stream().map(Category::getId).toList();
+            equals = equals && thisChildrenIds.containsAll(otherChildrenIds) && otherChildrenIds.containsAll(thisChildrenIds);
+
+            List<Integer> thisExpIds = this.getFixedExpenses().stream().map(BaseEntity::getId).toList();
+            List<Integer> otherExpIds = cat.getFixedExpenses().stream().map(BaseEntity::getId).toList();
+            equals = equals && thisExpIds.containsAll(otherExpIds) && otherExpIds.containsAll(thisExpIds);
+
+            List<Integer> thisInfoIds = this.getUniqueExpenseInformation().stream().map(UniqueExpenseInformation::getId).toList();
+            List<Integer> otherInfoIds = cat.getUniqueExpenseInformation().stream().map(UniqueExpenseInformation::getId).toList();
+            equals = equals && thisInfoIds.containsAll(otherInfoIds) && otherInfoIds.containsAll(thisInfoIds);
+            return equals;
+        }
+
+        return false;
     }
 }

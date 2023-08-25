@@ -39,6 +39,12 @@ public class EntityManager {
         this.session.close();
     }
 
+    public <T> CriteriaQuery<T> criteriaQuery(Class<T> entityClass) {
+        CriteriaQuery<T> criteriaQuery = this.session.getCriteriaBuilder().createQuery(entityClass);
+        criteriaQuery.from(entityClass);
+        return criteriaQuery;
+    }
+
     public <T> List<T> findAll(Class<T> entityClass) {
         CriteriaQuery<T> criteriaQuery = this.session.getCriteriaBuilder().createQuery(entityClass);
         criteriaQuery.from(entityClass);

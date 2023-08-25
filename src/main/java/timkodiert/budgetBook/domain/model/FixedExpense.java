@@ -1,26 +1,47 @@
 package timkodiert.budgetBook.domain.model;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
-@Setter
 @Entity
-public class FixedExpense extends Expense implements Adaptable {
+@ToString
+public class FixedExpense extends BaseEntity implements FixedTurnover, Categorizable, Adaptable<FixedExpenseAdapter> {
+
+    @Setter
+    @NotBlank(message = "Die Ausgabe muss benannt werden.")
+    private String position;
+
+    @Setter
+    private String note;
+
+    @ManyToMany(cascade = { CascadeType.PERSIST })
+    private List<Category> categories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
+    private List<PaymentInformation> paymentInformations = new ArrayList<>();
+
+    @Transient
+    private transient FixedExpenseAdapter adapter;
 
     public FixedExpense() {
         super();
         initAdapter();
     }
 
-    public FixedExpense(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start,
-            MonthYear end) {
-        super(position);
+    public FixedExpense(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start, MonthYear end) {
         this.paymentInformations.add(new PaymentInformation(this, value, datesOfPayment, type, start, end));
         initAdapter();
     }
@@ -36,7 +57,7 @@ public class FixedExpense extends Expense implements Adaptable {
     }
 
     @Override
-    public PaymentType getPaymentType() {
+    public PaymentType getType() {
         // TODO: Sinnvolle Ausgabe
         if (this.paymentInformations.size() == 0) {
             return PaymentType.MONTHLY;
@@ -45,23 +66,11 @@ public class FixedExpense extends Expense implements Adaptable {
     }
 
     @Override
-    public double getCurrentMonthValue() {
-        LocalDate currentMonth = LocalDate.now();
-        return this.getValueFor(currentMonth.getYear(), currentMonth.getMonth().getValue());
-    }
-
-    @Override
-    public double getNextMonthValue() {
-        LocalDate nextMonth = LocalDate.now().plusMonths(1);
-        return this.getValueFor(nextMonth.getYear(), nextMonth.getMonth().getValue());
-    }
-
-    @Override
     public double getValueForYear(int year) {
         return IntStream.rangeClosed(1, 12).mapToDouble(month -> this.getValueFor(year, month)).sum();
     }
 
-    public double getValueFor(int year, int month) {
+    private double getValueFor(int year, int month) {
         PaymentInformation payInfo = this.findPaymentInformation(MonthYear.of(month, year));
         if (payInfo != null) {
             return payInfo.getValueFor(MonthYear.of(month, year));
@@ -69,6 +78,7 @@ public class FixedExpense extends Expense implements Adaptable {
         return 0;
     }
 
+    @Override
     public double getValueFor(MonthYear monthYear) {
         return getValueFor(monthYear.getYear(), monthYear.getMonth());
     }
@@ -80,5 +90,20 @@ public class FixedExpense extends Expense implements Adaptable {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean contentEquals(Object other) {
+
+        if (other instanceof FixedExpense expense) {
+            boolean equals = Objects.equals(this.getPosition(), expense.getPosition())
+                    && Objects.equals(this.getNote(), expense.getNote());
+
+            return equals
+                    && ContentEquals.listsContentEquals(this.getPaymentInformations(), expense.getPaymentInformations())
+                    && ContentEquals.listsContentEquals(this.getCategories(), expense.getCategories());
+        }
+
+        return false;
     }
 }

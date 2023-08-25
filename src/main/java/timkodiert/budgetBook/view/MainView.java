@@ -104,7 +104,7 @@ public class MainView implements Initializable {
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getManageExpensesView(),
+        loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getFixedExpenseDetailView(),
                 "Regelmäßige Ausgaben verwalten");
     }
 
@@ -149,7 +149,6 @@ public class MainView implements Initializable {
     @FXML
     private void reloadData(ActionEvent event) {
         fixedExpenseController.loadAll();
-        fixedExpenseController.addNextYearToAllExpenses();
     }
 
     @FXML

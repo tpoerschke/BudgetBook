@@ -25,11 +25,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.PaymentType;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
+import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.column.BoldTableColumn;
 import timkodiert.budgetBook.table.row.BoldTableRow;
 import timkodiert.budgetBook.domain.model.CumulativeExpense;
-import timkodiert.budgetBook.domain.model.Expense;
+import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
 public class AnnualOverviewView implements Initializable, View {
@@ -43,14 +45,14 @@ public class AnnualOverviewView implements Initializable, View {
     @FXML
     private BorderPane rootPane;
     @FXML
-    private TableView<Expense> mainTable;
+    private TableView<FixedTurnover> mainTable;
     @FXML
-    private TableColumn<Expense, String> positionColumn;
+    private TableColumn<FixedTurnover, String> positionColumn;
     @FXML
     private ComboBox<Integer> displayYearComboBox;
 
-    private List<TableColumn<Expense, Number>> monthColumns = new ArrayList<>();
-    private TableColumn<Expense, Number> cumulativeColumn;
+    private List<TableColumn<FixedTurnover, Number>> monthColumns = new ArrayList<>();
+    private TableColumn<FixedTurnover, Number> cumulativeColumn;
 
     private ExpenseDetailWidget expenseDetailWidget = new ExpenseDetailWidget();
 
@@ -69,9 +71,6 @@ public class AnnualOverviewView implements Initializable, View {
         displayYearComboBox.getSelectionModel().select(Integer.valueOf(CURRENT_YEAR));
         displayYearComboBox.getSelectionModel().selectedItemProperty()
                 .addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
-                    if (LocalDate.now().plusYears(1).getYear() == newValue) {
-                        fixedExpenseController.addNextYearToAllExpenses();
-                    }
                     mainTable.refresh();
                 });
 
@@ -95,40 +94,39 @@ public class AnnualOverviewView implements Initializable, View {
             int index = iterator.nextIndex();
             String month = iterator.next();
 
-            TableColumn<Expense, Number> tableColumn = new TableColumn<>(month);
+            TableColumn<FixedTurnover, Number> tableColumn = new TableColumn<>(month);
             tableColumn.setPrefWidth(90);
             tableColumn.setResizable(false);
             tableColumn.getStyleClass().add("annual-overview-tablecolumn");
             tableColumn.setCellFactory(col -> new CurrencyTableCell<>());
             tableColumn.setCellValueFactory(cellData -> {
-                Expense expense = cellData.getValue();
+                FixedTurnover expense = cellData.getValue();
                 int selectedYear = displayYearComboBox.getValue();
-                return new ReadOnlyDoubleWrapper(expense.getValueFor(selectedYear, index + 1));
+                return new ReadOnlyDoubleWrapper(expense.getValueFor(MonthYear.of(index + 1, selectedYear)));
             });
             monthColumns.add(tableColumn);
             mainTable.getColumns().add(tableColumn);
         }
 
         // Kummulative Spalte
-        cumulativeColumn = new BoldTableColumn<>("Gesamt");
+        cumulativeColumn = new BoldTableColumn<>(PaymentType.CUMULATIVE.getType());
         cumulativeColumn.setPrefWidth(90);
         cumulativeColumn.setResizable(false);
         cumulativeColumn.setCellFactory(col -> new CurrencyTableCell<>());
         cumulativeColumn.setCellValueFactory(cellData -> {
-            Expense expense = cellData.getValue();
+            FixedTurnover turnover = cellData.getValue();
             int selectedYear = displayYearComboBox.getValue();
-            return new ReadOnlyDoubleWrapper(expense.getValueForYear(selectedYear));
+            return new ReadOnlyDoubleWrapper(turnover.getValueForYear(selectedYear));
         });
         mainTable.getColumns().add(cumulativeColumn);
-        // Kummulative Zeile
-        Expense cumulativeExpense = new CumulativeExpense(fixedExpenseController.getAllExpenses(), START_YEAR,
-                END_YEAR);
+        //Kummulative Zeile
+        CumulativeExpense cumulativeExpense = new CumulativeExpense(fixedExpenseController.getAllExpenses(), START_YEAR, END_YEAR);
 
         mainTable.setRowFactory(tableView -> {
-            TableRow<Expense> row = new BoldTableRow(PaymentType.CUMULATIVE);
+            TableRow<FixedTurnover> row = new BoldTableRow(PaymentType.CUMULATIVE);
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 1 && !row.isEmpty()) {
-                    expenseDetailWidget.setExpense(row.getItem());
+                    //expenseDetailWidget.setExpense(row.getItem());
                 }
             });
             return row;

@@ -27,8 +27,8 @@ import lombok.Builder;
 import timkodiert.budgetBook.domain.model.MonthYear;
 
 public class MonthYearPickerWidget implements Initializable {
-    
-    @FXML 
+
+    @FXML
     private ChoiceBox<String> monthChoiceBox;
     @FXML
     private TextField yearTextField;
@@ -64,10 +64,20 @@ public class MonthYearPickerWidget implements Initializable {
     }
 
     public MonthYear getValue() {
-        if(monthChoiceBox.getSelectionModel().isEmpty() || yearTextField.getText().isEmpty()) {
+        if (monthChoiceBox.getSelectionModel().isEmpty() || yearTextField.getText().isEmpty()) {
             return null;
         }
         return MonthYear.of(monthChoiceBox.getSelectionModel().getSelectedIndex() + 1, Integer.valueOf(yearTextField.getText()));
+    }
+
+    public void setValue(MonthYear value) {
+        this.value = value;
+        if (this.value != null) {
+            monthChoiceBox.getSelectionModel().select(this.value.getMonth() - 1);
+            yearTextField.setText("" + this.value.getYear());
+        } else {
+            yearTextField.setText("");
+        }
     }
 
     @Override
@@ -79,7 +89,7 @@ public class MonthYearPickerWidget implements Initializable {
 
         UnaryOperator<Change> integerFilter = change -> {
             String newText = change.getControlNewText();
-            if (newText.matches("([1-9][0-9]*)?")) { 
+            if (newText.matches("([1-9][0-9]*)?")) {
                 return change;
             }
             return null;
@@ -92,22 +102,20 @@ public class MonthYearPickerWidget implements Initializable {
         List<String> monthList = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
         monthChoiceBox.getItems().setAll(monthList);
 
-        if(this.value != null) {
+        if (this.value != null) {
             monthChoiceBox.getSelectionModel().select(this.value.getMonth() - 1);
             yearTextField.setText("" + this.value.getYear());
-        }
-        else {
+        } else {
             yearTextField.setText("");
         }
 
         // Styling setzen
         monthChoiceBox.getStyleClass().add(Styles.LEFT_PILL);
-        if(showResetBtn) {
+        if (showResetBtn) {
             resetBtn.getStyleClass().add(Styles.RIGHT_PILL);
             yearTextField.getStyleClass().add(Styles.CENTER_PILL);
             widgetInnerContainer.getChildren().addAll(resetBtn);
-        }
-        else {
+        } else {
             yearTextField.getStyleClass().add(Styles.RIGHT_PILL);
         }
     }

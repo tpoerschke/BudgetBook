@@ -15,7 +15,7 @@
    <items>
       <BorderPane prefHeight="200.0" prefWidth="200.0">
          <center>
-            <TableView fx:id="expensesTable" BorderPane.alignment="CENTER">
+            <TableView fx:id="entityTable" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="billerCol" minWidth="80.0" text="Rechnungssteller" />
                 <TableColumn fx:id="dateCol" prefWidth="70.0" sortType="DESCENDING" text="Datum" />

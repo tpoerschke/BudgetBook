@@ -7,8 +7,8 @@
 
         <!-- Database connection settings -->
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-        <property name="hibernate.connection.url">jdbc:sqlite:./sqlite.db</property> <!-- wird zur
-        Laufzeit überschrieben -->
+        <!-- wird zurLaufzeit überschrieben -->
+        <property name="hibernate.connection.url">jdbc:sqlite:./sqlite.db</property>
         <property name="hibernate.connection.username">sa</property>
         <property name="hibernate.connection.password" />
         <property name="hibernate.globally_quoted_identifiers">true</property>
@@ -32,7 +32,6 @@
             org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl</property>
 
         <!-- Names the annotated entity class -->
-        <mapping class="timkodiert.budgetBook.domain.model.Expense" />
         <mapping class="timkodiert.budgetBook.domain.model.FixedExpense" />
         <mapping class="timkodiert.budgetBook.domain.model.PaymentInformation" />
         <mapping class="timkodiert.budgetBook.domain.model.Category" />
