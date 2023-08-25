@@ -149,7 +149,6 @@ public class MainView implements Initializable {
     @FXML
     private void reloadData(ActionEvent event) {
         fixedExpenseController.loadAll();
-        fixedExpenseController.addNextYearToAllExpenses();
     }
 
     @FXML

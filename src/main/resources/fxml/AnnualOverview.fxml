@@ -11,15 +11,19 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <VBox BorderPane.alignment="CENTER">
-         <children>
-            <TableView fx:id="mainTable" prefHeight="400.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
-              <columns>
-                <TableColumn fx:id="positionColumn" maxWidth="-Infinity" minWidth="90.0" prefWidth="90.0" resizable="false" styleClass="annual-overview-tablecolumn" text="Position" />
-              </columns>
-            </TableView>
+<BorderPane fx:id="rootPane" stylesheets="@../css/general-styles.css"
+  xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+  <center>
+    <VBox BorderPane.alignment="CENTER">
+      <children>
+        <TableView fx:id="mainTable" prefHeight="400.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
+          <columns>
+            <TableColumn fx:id="positionColumn" maxWidth="-Infinity" minWidth="90.0"
+              prefWidth="90.0" resizable="false" styleClass="annual-overview-tablecolumn"
+              text="Position" />
+          </columns>
+        </TableView>
+        <!--
             <GridPane VBox.vgrow="NEVER">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -35,15 +39,16 @@
                 <TableColumn prefWidth="75.0" text="C2" />
               </columns>
             </TableView>
-         </children>
-      </VBox>
-   </center>
-   <top>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <items>
-            <Label text="Jahr:" />
-            <ComboBox fx:id="displayYearComboBox" prefWidth="100.0" />
-         </items>
-      </ToolBar>
-   </top>
+          -->
+      </children>
+    </VBox>
+  </center>
+  <top>
+    <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <items>
+        <Label text="Jahr:" />
+        <ComboBox fx:id="displayYearComboBox" prefWidth="100.0" />
+      </items>
+    </ToolBar>
+  </top>
 </BorderPane>

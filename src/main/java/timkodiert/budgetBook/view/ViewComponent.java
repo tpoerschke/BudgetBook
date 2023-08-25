@@ -20,8 +20,6 @@ public interface ViewComponent {
 
     AnnualOverviewView getAnnualOverviewView();
 
-    CompactOverviewView getCompactOverviewView();
-
     MonthlyOverview getMonthlyOverview();
 
     // -----------------------------------

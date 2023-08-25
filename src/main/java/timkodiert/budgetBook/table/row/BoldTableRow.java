@@ -1,10 +1,10 @@
 package timkodiert.budgetBook.table.row;
 
 import javafx.scene.control.TableRow;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.PaymentType;
-import timkodiert.budgetBook.domain.model.FixedExpense;
 
-public class BoldTableRow extends TableRow<FixedExpense> {
+public class BoldTableRow extends TableRow<FixedTurnover> {
 
     // Alle Ausgaben dieses Typs werden fett dargestellt
     private PaymentType expenseType;
@@ -15,9 +15,9 @@ public class BoldTableRow extends TableRow<FixedExpense> {
     }
 
     @Override
-    protected void updateItem(FixedExpense item, boolean empty) {
+    protected void updateItem(FixedTurnover item, boolean empty) {
         super.updateItem(item, empty);
-        if (!empty && this.expenseType.equals(item.getPaymentType())) {
+        if (!empty && this.expenseType.equals(item.getType())) {
             getStyleClass().add("text-bold");
         } else {
             getStyleClass().remove("text-bold");

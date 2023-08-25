@@ -1,22 +1,16 @@
 package timkodiert.budgetBook.domain.model;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,7 +18,7 @@ import lombok.ToString;
 @Getter
 @Entity
 @ToString
-public class FixedExpense extends BaseEntity implements Turnover, Categorizable, Adaptable<FixedExpenseAdapter> {
+public class FixedExpense extends BaseEntity implements FixedTurnover, Categorizable, Adaptable<FixedExpenseAdapter> {
 
     @Setter
     @NotBlank(message = "Die Ausgabe muss benannt werden.")
@@ -62,7 +56,8 @@ public class FixedExpense extends BaseEntity implements Turnover, Categorizable,
         }
     }
 
-    public PaymentType getPaymentType() {
+    @Override
+    public PaymentType getType() {
         // TODO: Sinnvolle Ausgabe
         if (this.paymentInformations.size() == 0) {
             return PaymentType.MONTHLY;
@@ -70,21 +65,12 @@ public class FixedExpense extends BaseEntity implements Turnover, Categorizable,
         return this.paymentInformations.get(0).getType();
     }
 
-    public double getCurrentMonthValue() {
-        LocalDate currentMonth = LocalDate.now();
-        return this.getValueFor(currentMonth.getYear(), currentMonth.getMonth().getValue());
-    }
-
-    public double getNextMonthValue() {
-        LocalDate nextMonth = LocalDate.now().plusMonths(1);
-        return this.getValueFor(nextMonth.getYear(), nextMonth.getMonth().getValue());
-    }
-
+    @Override
     public double getValueForYear(int year) {
         return IntStream.rangeClosed(1, 12).mapToDouble(month -> this.getValueFor(year, month)).sum();
     }
 
-    public double getValueFor(int year, int month) {
+    private double getValueFor(int year, int month) {
         PaymentInformation payInfo = this.findPaymentInformation(MonthYear.of(month, year));
         if (payInfo != null) {
             return payInfo.getValueFor(MonthYear.of(month, year));
@@ -92,6 +78,7 @@ public class FixedExpense extends BaseEntity implements Turnover, Categorizable,
         return 0;
     }
 
+    @Override
     public double getValueFor(MonthYear monthYear) {
         return getValueFor(monthYear.getYear(), monthYear.getMonth());
     }

@@ -10,7 +10,8 @@ public enum PaymentType {
     MONTHLY("monatlich"),
     ANNUAL("jährlich"),
     SEMIANNUAL("halbjährlich"),
-    QUARTERLY("vierteljährlich");
+    QUARTERLY("vierteljährlich"),
+    CUMULATIVE("Gesamt");
 
     @Getter
     @NonNull
