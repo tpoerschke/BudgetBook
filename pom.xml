@@ -12,12 +12,13 @@
 	<version>BETA-1</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>18</maven.compiler.source>
-		<maven.compiler.target>18</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 
 		<main.class>timkodiert.budgetBook.Main</main.class>
 		<launcher.class>timkodiert.budgetBook.Launch</launcher.class>
 
+		<version.jfx>17</version.jfx>
 		<version.dagger>2.44.2</version.dagger>
 		<version.ikonli>12.3.1</version.ikonli>
 		<version.atlantafx>2.0.1</version.atlantafx>
@@ -108,6 +109,30 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.1.2</version>
+			</plugin>
+			<plugin>
+				<!-- mvn clean verify jacoco:report -->
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.10</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -127,19 +152,19 @@
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>18</version>
+			<version>${version.jfx}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>18</version>
+			<version>${version.jfx}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-web</artifactId>
-			<version>18</version>
+			<version>${version.jfx}</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Icons -->
@@ -190,6 +215,13 @@
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.el</artifactId>
 			<version>4.0.1</version>
+		</dependency>
+		<!-- Testing -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.10.0</version> <!-- can be omitted when using the BOM -->
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
