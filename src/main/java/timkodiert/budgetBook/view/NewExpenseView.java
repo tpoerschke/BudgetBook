@@ -21,28 +21,25 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.converter.CurrencyStringConverter;
+import timkodiert.budgetBook.domain.model.Category;
+import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.view.widget.MonthYearPickerWidget;
-import timkodiert.budgetBook.domain.model.Category;
-import timkodiert.budgetBook.domain.model.FixedExpense;
-import timkodiert.budgetBook.domain.model.MonthYear;
 
 public class NewExpenseView implements Initializable, View {
 

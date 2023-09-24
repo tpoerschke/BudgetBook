@@ -17,21 +17,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import timkodiert.budgetBook.controller.FixedExpenseController;
-import timkodiert.budgetBook.domain.model.PaymentType;
+import timkodiert.budgetBook.domain.model.CumulativeExpense;
 import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.MonthYear;
+import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.column.BoldTableColumn;
 import timkodiert.budgetBook.table.row.BoldTableRow;
-import timkodiert.budgetBook.domain.model.CumulativeExpense;
-import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
 public class AnnualOverviewView implements Initializable, View {
