@@ -3,9 +3,6 @@ package timkodiert.budgetBook.domain.model;
 import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
