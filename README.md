@@ -115,17 +115,20 @@ Das Projekt kann lokal wie folgt aufgesetzt werden. Eine Installation als `.exe`
    git clone https://github.com/tpoerschke/BudgetBook
    ```
 2. Starten
-   ```sh
-   mvn clean javafx:run
-   ```
+
+   VS Code: `mvn clean javafx:run`
+
+   IntelliJ: Run Configuration `Launch`
+
 3. Viel Spaß! :)
 
 ### Debug
 
 1. Debug-Server starten
-   ```sh
-   mvn clean javafx:run@debug
-   ```
+
+   VS Code:`mvn clean javafx:run@debug`
+
+   IntelliJ:Run Configuration `Launch`
 2. Per Visual Studio Code attachen (`.vscode/launch.json`)
 
 
@@ -193,7 +196,7 @@ Distributed under the GNU General Public License v3.0. See `LICENSE` for more in
 <!-- CONTACT -->
 ## Contact
 
-Tim Poerschke - [@timpo@ruhr.social](https://ruhr.social/@timpo) - post@timkodiert.de
+Tim Poerschke - post@timkodiert.de
 
 Project Link: [https://github.com/tpoerschke/BudgetBook](https://github.com/tpoerschke/BudgetBook)
 

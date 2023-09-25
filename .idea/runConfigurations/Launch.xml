@@ -3,7 +3,7 @@
     <option name="MAIN_CLASS_NAME" value="timkodiert.budgetBook.Launch" />
     <module name="budget-book" />
     <method v="2">
-      <option name="Make" enabled="true" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean compile" />
     </method>
   </configuration>
 </component>
