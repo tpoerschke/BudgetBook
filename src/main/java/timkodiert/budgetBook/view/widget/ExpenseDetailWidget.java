@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.view.View;
 

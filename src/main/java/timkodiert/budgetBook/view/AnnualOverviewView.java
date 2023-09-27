@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
-
 import javax.inject.Inject;
 
 import javafx.beans.property.ReadOnlyDoubleWrapper;
@@ -23,8 +22,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
+
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.CumulativeExpense;
+import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.PaymentType;
@@ -35,11 +36,11 @@ import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
 public class AnnualOverviewView implements Initializable, View {
 
-    private static List<String> MONTH_NAMES = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli",
-            "August", "September", "Oktober", "November", "Dezember");
-    private static int CURRENT_YEAR = LocalDate.now().getYear();
-    private static int START_YEAR = CURRENT_YEAR - 5;
-    private static int END_YEAR = CURRENT_YEAR + 1;
+    private static final List<String> MONTH_NAMES = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli",
+                                                            "August", "September", "Oktober", "November", "Dezember");
+    private static final int CURRENT_YEAR = LocalDate.now().getYear();
+    private static final int START_YEAR = CURRENT_YEAR - 5;
+    private static final int END_YEAR = CURRENT_YEAR + 1;
 
     @FXML
     private BorderPane rootPane;
@@ -55,7 +56,7 @@ public class AnnualOverviewView implements Initializable, View {
 
     private ExpenseDetailWidget expenseDetailWidget = new ExpenseDetailWidget();
 
-    private FixedExpenseController fixedExpenseController;
+    private final FixedExpenseController fixedExpenseController;
 
     @Inject
     public AnnualOverviewView(FixedExpenseController fixedExpenseController) {
@@ -124,8 +125,8 @@ public class AnnualOverviewView implements Initializable, View {
         mainTable.setRowFactory(tableView -> {
             TableRow<FixedTurnover> row = new BoldTableRow(PaymentType.CUMULATIVE);
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 1 && !row.isEmpty()) {
-                    //expenseDetailWidget.setExpense(row.getItem());
+                if (event.getClickCount() == 1 && !row.isEmpty() && row.getItem() instanceof FixedExpense expense) {
+                    expenseDetailWidget.setExpense(expense);
                 }
             });
             return row;

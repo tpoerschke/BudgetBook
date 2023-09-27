@@ -6,41 +6,32 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-
-<BorderPane fx:id="rootPane" stylesheets="@../css/general-styles.css"
-  xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="rootPane" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
   <center>
     <VBox BorderPane.alignment="CENTER">
-      <children>
-        <TableView fx:id="mainTable" prefHeight="400.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
-          <columns>
-            <TableColumn fx:id="positionColumn" maxWidth="-Infinity" minWidth="90.0"
-              prefWidth="90.0" resizable="false" styleClass="annual-overview-tablecolumn"
-              text="Position" />
-          </columns>
-        </TableView>
-        <!--
-            <GridPane VBox.vgrow="NEVER">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <TableView prefHeight="200.0" prefWidth="200.0" styleClass="noheader" VBox.vgrow="NEVER">
-              <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
-              </columns>
-            </TableView>
-          -->
-      </children>
+      <TableView fx:id="mainTable" prefHeight="400.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
+        <columns>
+          <TableColumn fx:id="positionColumn" minWidth="100.0" prefWidth="150.0" styleClass="annual-overview-tablecolumn" text="Position"/>
+        </columns>
+      </TableView>
+      <!--
+          <GridPane VBox.vgrow="NEVER">
+            <columnConstraints>
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+          </GridPane>
+          <TableView prefHeight="200.0" prefWidth="200.0" styleClass="noheader" VBox.vgrow="NEVER">
+            <columns>
+              <TableColumn prefWidth="75.0" text="C1" />
+              <TableColumn prefWidth="75.0" text="C2" />
+            </columns>
+          </TableView>
+        -->
     </VBox>
   </center>
   <top>

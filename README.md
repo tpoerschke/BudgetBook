@@ -156,6 +156,7 @@ WIP
 - [x] Jahresübersicht
 - [x] Kategorien für Ausgaben
 - [x] Einzigartige Ausgaben
+- [ ] Import von Umsätzen
 - [ ] Analyseübersicht
 - [ ] Einnahmen verwalten
 - [ ] Exportfunktionalität
