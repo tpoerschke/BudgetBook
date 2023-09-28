@@ -1,9 +1,9 @@
 package timkodiert.budgetBook.view;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import javax.inject.Inject;
 
 import javafx.event.ActionEvent;
@@ -18,7 +18,9 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import timkodiert.budgetBook.controller.FixedExpenseController;
+import timkodiert.budgetBook.importer.TurnoverImporter;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.PropertiesService;
 import timkodiert.budgetBook.util.StageBuilder;
@@ -68,6 +70,13 @@ public class MainView implements Initializable {
 
         // Das Kind laden (default)
         loadViewPartial("/fxml/MonthlyOverview.fxml", viewComponent.getMonthlyOverview(), "Monatsübersicht");
+
+        TurnoverImporter importer = new TurnoverImporter();
+        try {
+            importer.read();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String getVersion() {
