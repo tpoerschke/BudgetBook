@@ -1,6 +1,6 @@
 package timkodiert.budgetBook.view;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -73,9 +73,10 @@ public class MainView implements Initializable {
 
         TurnoverImporter importer = new TurnoverImporter();
         try {
-            importer.read();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            importer.parse(new File("Umsatzanzeige_TEST_20230926.csv"));
+        } catch (Exception e) {
+            Alert alert = new Alert(AlertType.ERROR, e.getMessage());
+            alert.showAndWait();
         }
     }
 
