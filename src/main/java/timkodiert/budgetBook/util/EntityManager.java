@@ -3,13 +3,12 @@ package timkodiert.budgetBook.util;
 import java.util.Arrays;
 import java.util.List;
 
+import jakarta.persistence.criteria.CriteriaQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-
-import jakarta.persistence.criteria.CriteriaQuery;
 
 public class EntityManager {
 

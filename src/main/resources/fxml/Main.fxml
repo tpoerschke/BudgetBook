@@ -33,6 +33,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#reloadData" text="Aktualisieren" />
                </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Daten">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#openImportView" text="Importieren" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>

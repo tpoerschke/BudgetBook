@@ -11,8 +11,9 @@ import timkodiert.budgetBook.domain.model.AccountTurnover;
 
 public class TurnoverImporter {
 
-    public List<AccountTurnover> parse(File file) throws FileNotFoundException, IllegalStateException {
+    public List<ImportInformation> parse(File file) throws FileNotFoundException, IllegalStateException {
         var builder = new CsvToBeanBuilder<AccountTurnover>(new FileReader(file));
-        return builder.withSkipLines(13).withSeparator(';').withType(AccountTurnover.class).build().parse();
+        List<AccountTurnover> imports = builder.withSkipLines(13).withSeparator(';').withType(AccountTurnover.class).build().parse();
+        return imports.stream().map(ImportInformation::from).toList();
     }
 }

@@ -37,6 +37,7 @@
         <mapping class="timkodiert.budgetBook.domain.model.Category" />
         <mapping class="timkodiert.budgetBook.domain.model.UniqueExpense" />
         <mapping class="timkodiert.budgetBook.domain.model.UniqueExpenseInformation" />
+        <mapping class="timkodiert.budgetBook.domain.model.AccountTurnover"/>
 
     </session-factory>
 

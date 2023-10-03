@@ -1,6 +1,5 @@
 package timkodiert.budgetBook.view;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,7 +19,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import timkodiert.budgetBook.controller.FixedExpenseController;
-import timkodiert.budgetBook.importer.TurnoverImporter;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.PropertiesService;
 import timkodiert.budgetBook.util.StageBuilder;
@@ -70,14 +68,6 @@ public class MainView implements Initializable {
 
         // Das Kind laden (default)
         loadViewPartial("/fxml/MonthlyOverview.fxml", viewComponent.getMonthlyOverview(), "Monatsübersicht");
-
-        TurnoverImporter importer = new TurnoverImporter();
-        try {
-            importer.parse(new File("Umsatzanzeige_TEST_20230926.csv"));
-        } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, e.getMessage());
-            alert.showAndWait();
-        }
     }
 
     private String getVersion() {
@@ -121,6 +111,11 @@ public class MainView implements Initializable {
     private void openUniqueExpensesManageView(ActionEvent event) {
         loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", viewComponent.getUniqueExpensesManageView(),
                 "Einzigartige Ausgaben verwalten");
+    }
+
+    @FXML
+    public void openImportView(ActionEvent event) {
+        loadViewPartial("/fxml/Importer/ImportView.fxml", viewComponent.getImportView(), "Umsätze importieren");
     }
 
     @FXML

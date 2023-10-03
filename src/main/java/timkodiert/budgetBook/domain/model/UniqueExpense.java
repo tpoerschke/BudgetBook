@@ -8,6 +8,7 @@ import java.util.Objects;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,6 +40,9 @@ public class UniqueExpense extends BaseEntity implements Adaptable<UniqueExpense
     @Size(min = 1)
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     private List<UniqueExpenseInformation> paymentInformations = new ArrayList<>();
+
+    @OneToOne(mappedBy = "uniqueExpense", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private AccountTurnover accountTurnover;
 
     @Transient
     private transient UniqueExpenseAdapter adapter;

@@ -3,6 +3,7 @@ package timkodiert.budgetBook.view;
 import javax.inject.Singleton;
 
 import dagger.Component;
+
 import timkodiert.budgetBook.domain.repository.RepositoryModule;
 import timkodiert.budgetBook.view.fixedExpenses.FixedExpenseDetailView;
 import timkodiert.budgetBook.view.fixedExpenses.FixedExpensesManageView;
@@ -17,34 +18,30 @@ public interface ViewComponent {
     // -----------------------------------
     // Übersichten Ausgaben
     // -----------------------------------
-
     AnnualOverviewView getAnnualOverviewView();
-
     MonthlyOverview getMonthlyOverview();
 
     // -----------------------------------
     // Kategorien Ausgaben
     // -----------------------------------
-
     ManageCategoriesView getManageCategoriesView();
-
     NewCategoryView getNewCategoryView();
 
     // -----------------------------------
     // Regelmäßige Ausgaben
     // -----------------------------------
-
     FixedExpensesManageView getFixedExpenseDetailView();
-
     NewExpenseView getNewExpenseView();
-
     FixedExpenseDetailView getEditExpenseView();
 
     // -----------------------------------
     // Einzigartige Ausgaben
     // -----------------------------------
-
     UniqueExpensesManageView getUniqueExpensesManageView();
-
     UniqueExpenseDetailView getUniqueExpenseDetailView();
+
+    // -----------------------------------
+    // Umsätze importieren
+    // -----------------------------------
+    ImportView getImportView();
 }

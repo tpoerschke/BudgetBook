@@ -2,6 +2,8 @@ package timkodiert.budgetBook.domain.repository;
 
 import dagger.Binds;
 import dagger.Module;
+
+import timkodiert.budgetBook.domain.model.AccountTurnover;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
@@ -24,6 +26,8 @@ public interface RepositoryModule {
     Repository<UniqueExpense> provideUniqueExpensesRepository(UniqueExpensesRepository impl);
 
     @Binds
-    Repository<UniqueExpenseInformation> provideUniqueExpenseInformationRepository(
-            UniqueExpenseInformationRepository impl);
+    Repository<UniqueExpenseInformation> provideUniqueExpenseInformationRepository(UniqueExpenseInformationRepository impl);
+
+    @Binds
+    Repository<AccountTurnover> provideAccountTurnoverRepository(AccountTurnoverRepository impl);
 }
