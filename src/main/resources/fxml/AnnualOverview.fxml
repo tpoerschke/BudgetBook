@@ -7,7 +7,8 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane fx:id="rootPane" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="rootPane" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="timkodiert.budgetBook.view.AnnualOverviewView">
   <center>
     <VBox BorderPane.alignment="CENTER">
       <TableView fx:id="mainTable" prefHeight="400.0" prefWidth="500.0" VBox.vgrow="ALWAYS">

@@ -37,11 +37,13 @@ public class MainView implements Initializable {
 
     private FixedExpenseController fixedExpenseController;
     private ViewComponent viewComponent;
+    private final ControllerFactory controllerFactory;
 
     @Inject
-    public MainView(ViewComponent viewComponennt, FixedExpenseController fixedExpenseController) {
+    public MainView(ViewComponent viewComponennt, FixedExpenseController fixedExpenseController, ControllerFactory controllerFactory) {
         this.viewComponent = viewComponennt;
         this.fixedExpenseController = fixedExpenseController;
+        this.controllerFactory = controllerFactory;
     }
 
     public void setAndShowPrimaryStage(Stage primaryStage) {
@@ -67,21 +69,20 @@ public class MainView implements Initializable {
         menuBar.useSystemMenuBarProperty().set(useSystemMenuBar);
 
         // Das Kind laden (default)
-        loadViewPartial("/fxml/MonthlyOverview.fxml", viewComponent.getMonthlyOverview(), "Monatsübersicht");
+        loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
     }
 
     private String getVersion() {
         return "Version " + getClass().getPackage().getImplementationVersion();
     }
 
-    private void loadViewPartial(String resource, View view, String stageTitle) {
+    private void loadViewPartial(String resource, String stageTitle) {
         try {
             FXMLLoader templateLoader = new FXMLLoader();
             templateLoader.setLocation(getClass().getResource(resource));
-            templateLoader.setController(view);
+            templateLoader.setControllerFactory(controllerFactory::create);
             this.root.setCenter(templateLoader.load());
-            this.primaryStage.setTitle(String
-                    .format("%s – JBudgetBook – %s", stageTitle, getVersion()));
+            this.primaryStage.setTitle(String.format("%s – JBudgetBook – %s", stageTitle, getVersion()));
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
@@ -91,31 +92,27 @@ public class MainView implements Initializable {
 
     @FXML
     public void showMonthlyOverview(ActionEvent event) {
-        loadViewPartial("/fxml/MonthlyOverview.fxml", viewComponent.getMonthlyOverview(),
-                "Monatsübersicht");
+        loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
     }
 
     @FXML
     public void showAnnualOverview(ActionEvent event) {
-        loadViewPartial("/fxml/AnnualOverview.fxml", viewComponent.getAnnualOverviewView(),
-                "Jahresübersicht");
+        loadViewPartial("/fxml/AnnualOverview.fxml", "Jahresübersicht");
     }
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getFixedExpenseDetailView(),
-                "Regelmäßige Ausgaben verwalten");
+        loadViewPartial("/fxml/ManageExpenses.fxml", "Regelmäßige Ausgaben verwalten");
     }
 
     @FXML
     private void openUniqueExpensesManageView(ActionEvent event) {
-        loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", viewComponent.getUniqueExpensesManageView(),
-                "Einzigartige Ausgaben verwalten");
+        loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", "Einzigartige Ausgaben verwalten");
     }
 
     @FXML
     public void openImportView(ActionEvent event) {
-        loadViewPartial("/fxml/Importer/ImportView.fxml", viewComponent.getImportView(), "Umsätze importieren");
+        loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
     }
 
     @FXML

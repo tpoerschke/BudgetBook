@@ -30,7 +30,7 @@ public interface ViewComponent {
     // -----------------------------------
     // Regelmäßige Ausgaben
     // -----------------------------------
-    FixedExpensesManageView getFixedExpenseDetailView();
+    FixedExpensesManageView getFixedExpenseManageView();
     NewExpenseView getNewExpenseView();
     FixedExpenseDetailView getEditExpenseView();
 

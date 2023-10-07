@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.hibernate.annotations.GenericGenerator;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import static timkodiert.budgetBook.domain.model.ContentEquals.listsContentEquals;
 
@@ -45,6 +44,14 @@ public class UniqueExpenseInformation implements Categorizable, ContentEquals {
     @Setter
     @ManyToMany(cascade = { CascadeType.PERSIST })
     private List<Category> categories = new ArrayList<>();
+
+    public static UniqueExpenseInformation total(UniqueExpense exp, double value) {
+        UniqueExpenseInformation info = new UniqueExpenseInformation();
+        info.setLabel("Gesamt");
+        info.setValue(value);
+        info.setExpense(exp);
+        return info;
+    }
 
     @Override
     public boolean contentEquals(Object other) {

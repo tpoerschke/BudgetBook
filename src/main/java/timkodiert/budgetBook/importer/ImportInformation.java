@@ -56,11 +56,7 @@ public class ImportInformation {
         UniqueExpense exp = new UniqueExpense();
         exp.setBiller(receiver.get());
         exp.setDate(accountTurnover.getDate());
-        UniqueExpenseInformation info = new UniqueExpenseInformation();
-        info.setLabel("Gesamt");
-        info.setValue(Math.abs(accountTurnover.getAmount()));
-        info.setExpense(exp);
-        exp.setPaymentInformations(List.of(info));
+        exp.setPaymentInformations(List.of(UniqueExpenseInformation.total(exp, Math.abs(accountTurnover.getAmount()))));
         accountTurnover.setUniqueExpense(exp);
         return accountTurnover;
     }
