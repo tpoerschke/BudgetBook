@@ -22,21 +22,18 @@
                <Button mnemonicParsing="false" text="Datei auswählen"/>
                <Label text="/Users/timpo/Umsatzanzeige_20231001.csv"/>
            </HBox>
-           <VBox>
-               <Label text="Imports"/>
-               <TableView fx:id="importTable" editable="true">
-                   <columns>
-                       <TableColumn fx:id="selectedCol" prefWidth="80.0" text="Importieren"/>
-                       <TableColumn fx:id="dateCol" prefWidth="100.0" text="Valuta"/>
-                       <TableColumn fx:id="receiverCol" prefWidth="250.0" text="Empfänger"/>
-                       <TableColumn fx:id="postingTextCol" prefWidth="240.0" text="Buchungstext"/>
-                       <TableColumn fx:id="referenceCol" prefWidth="350.0" text="Verwendungszweck"/>
-                       <TableColumn fx:id="amountCol" prefWidth="100.0" text="Betrag"/>
-                       <TableColumn fx:id="associatedCol" prefWidth="100.0" text="Zuordnung (Dropdown)"/>
-                       <TableColumn prefWidth="111.0" text="Einzigartige Ausgabe (Ja/Nein) oder Readonly-Checkbox"/>
-                   </columns>
-               </TableView>
-           </VBox>
+           <TableView fx:id="importTable" editable="true" VBox.vgrow="ALWAYS">
+               <columns>
+                   <TableColumn fx:id="selectedCol" prefWidth="80.0"/>
+                   <TableColumn fx:id="dateCol" prefWidth="100.0" text="Valuta"/>
+                   <TableColumn fx:id="receiverCol" prefWidth="250.0" text="Empfänger"/>
+                   <TableColumn fx:id="postingTextCol" prefWidth="180.0" text="Buchungstext"/>
+                   <TableColumn fx:id="referenceCol" prefWidth="350.0" text="Verwendungszweck"/>
+                   <TableColumn fx:id="amountCol" prefWidth="100.0" text="Betrag"/>
+                   <TableColumn fx:id="associatedCol" prefWidth="160.0" text="Regelmäßige Ausgabe"/>
+                   <TableColumn fx:id="annotationCol" prefWidth="200.0" text="Anmerkung"/>
+               </columns>
+           </TableView>
            <HBox>
                <Button text="Ausgewählte Importieren" onAction="#importSelected" />
            </HBox>

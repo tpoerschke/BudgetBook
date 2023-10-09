@@ -8,12 +8,19 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import javax.inject.Inject;
 
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -48,6 +55,11 @@ public class ImportView implements View, Initializable {
     private TableColumn<ImportInformation, Number> amountCol;
     @FXML
     private TableColumn<ImportInformation, FixedExpense> associatedCol;
+    @FXML
+    public TableColumn<ImportInformation, String> annotationCol;
+
+    private final CheckBox selectAll = new CheckBox();
+    private final BooleanProperty allSelected = new SimpleBooleanProperty();
 
     @Inject
     public ImportView(Repository<FixedExpense> fixedExpenseRepository, Repository<AccountTurnover> accountTurnoverRepository) {
@@ -63,6 +75,7 @@ public class ImportView implements View, Initializable {
 
         selectedCol.setCellValueFactory(new PropertyValueFactory<>("selectedForImport"));
         selectedCol.setCellFactory(CheckBoxTableCell.forTableColumn(selectedCol));
+        selectedCol.setGraphic(selectAll);
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         dateCol.setCellFactory(cellData -> new DateTableCell<>());
         amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
@@ -73,6 +86,34 @@ public class ImportView implements View, Initializable {
         referenceCol.setCellValueFactory(new PropertyValueFactory<>("reference"));
         associatedCol.setCellValueFactory(new PropertyValueFactory<>("fixedExpense"));
         associatedCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(new FixedExpenseStringConverter(), fixedExpenses));
+        annotationCol.setCellValueFactory(new PropertyValueFactory<>("annotation"));
+
+        importTable.getItems().addListener((ListChangeListener<? super ImportInformation>) change -> {
+            if (allSelected.isBound()) {
+                allSelected.unbind();
+            }
+
+            List<BooleanProperty> importObservables = importTable.getItems()
+                                                                 .stream()
+                                                                 .map(ImportInformation::selectedForImportProperty)
+                                                                 .toList();
+            allSelected.bind(Bindings.createBooleanBinding(() -> importObservables.stream().allMatch(BooleanProperty::get),
+                                                           importObservables.toArray(Observable[]::new)));
+        });
+
+        ChangeListener<Boolean> selectAllListener = (observableValue, oldVal, newVal) -> {
+            importTable.getItems()
+                       .stream()
+                       .map(ImportInformation::selectedForImportProperty)
+                       .forEach(prop -> prop.setValue(newVal));
+        };
+        selectAll.selectedProperty().addListener(selectAllListener);
+
+        allSelected.addListener((observableValue, oldVal, newVal) -> {
+            selectAll.selectedProperty().removeListener(selectAllListener);
+            selectAll.setSelected(newVal);
+            selectAll.selectedProperty().addListener(selectAllListener);
+        });
 
         TurnoverImporter importer = new TurnoverImporter();
         try {

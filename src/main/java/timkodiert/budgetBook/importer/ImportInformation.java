@@ -21,6 +21,9 @@ import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
 // Aus den Werten der Properties wird u.a. eine einzigartige Ausgabe
 public class ImportInformation {
 
+    private static final String ANNOTATION_EMPTY = "";
+    private static final String ANNOTATION_UNIQUE_EXPENSE = "Wird zu einzigartiger Ausgabe";
+
     private final BooleanProperty selectedForImport = new SimpleBooleanProperty(true);
 
     private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
@@ -29,6 +32,7 @@ public class ImportInformation {
     private final StringProperty reference = new SimpleStringProperty();
     private final DoubleProperty amount = new SimpleDoubleProperty();
     private final ObjectProperty<FixedExpense> fixedExpense = new SimpleObjectProperty<>();
+    private final StringProperty annotation = new SimpleStringProperty();
 
     private final AccountTurnover accountTurnover;
 
@@ -40,6 +44,15 @@ public class ImportInformation {
         postingText.set(accountTurnover.getPostingText());
         reference.set(accountTurnover.getReference());
         amount.set(accountTurnover.getAmount());
+        annotation.set(ANNOTATION_UNIQUE_EXPENSE);
+
+        fixedExpense.addListener((observableValue, oldVal, newVal) -> {
+            if (newVal == null) {
+                annotation.set(ANNOTATION_UNIQUE_EXPENSE);
+            } else {
+                annotation.set(ANNOTATION_EMPTY);
+            }
+        });
     }
 
     static ImportInformation from(AccountTurnover accountTurnover) {
@@ -95,5 +108,9 @@ public class ImportInformation {
 
     public ObjectProperty<FixedExpense> fixedExpenseProperty() {
         return fixedExpense;
+    }
+
+    public StringProperty annotationProperty() {
+        return annotation;
     }
 }
