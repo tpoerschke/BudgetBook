@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import atlantafx.base.layout.InputGroup?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
@@ -17,7 +19,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-
 <BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="700.0" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
@@ -85,6 +86,48 @@
                      </children>
                   </HBox>
                </content>
+            </Tab>
+            <Tab text="Import">
+               <VBox>
+                  <GridPane hgap="10.0" vgap="10.0">
+                     <CheckBox fx:id="importActiveCheckbox" text="Umsätze zu dieser Ausgabe importieren"/>
+                     <InputGroup GridPane.rowIndex="1">
+                        <Label text="Empfänger enthält" minWidth="200.0"/>
+                        <TextField fx:id="importReceiverTextField" minWidth="300.0"/>
+                     </InputGroup>
+                     <InputGroup GridPane.rowIndex="2">
+                        <Label text="Verwendungszweck enthält" minWidth="200.0"/>
+                        <TextField fx:id="importReferenceTextField" minWidth="300.0"/>
+                     </InputGroup>
+
+                     <columnConstraints>
+                        <ColumnConstraints/>
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                     </rowConstraints>
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                     </padding>
+                  </GridPane>
+                  <VBox VBox.vgrow="ALWAYS">
+                     <Label text="Zugeordnete Importe">
+                        <padding>
+                           <Insets left="5.0"/>
+                        </padding>
+                     </Label>
+                     <TableView VBox.vgrow="ALWAYS">
+                        <columns>
+                           <TableColumn text="Datum"/>
+                           <TableColumn text="Empfänger"/>
+                           <TableColumn text="Verwendungszweck"/>
+                           <TableColumn text="Betrag"/>
+                        </columns>
+                     </TableView>
+                  </VBox>
+               </VBox>
             </Tab>
          </tabs>
       </TabPane>
