@@ -5,10 +5,10 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 import timkodiert.budgetBook.domain.repository.RepositoryModule;
-import timkodiert.budgetBook.view.fixedExpenses.FixedExpenseDetailView;
-import timkodiert.budgetBook.view.fixedExpenses.FixedExpensesManageView;
-import timkodiert.budgetBook.view.uniqueExpenses.UniqueExpenseDetailView;
-import timkodiert.budgetBook.view.uniqueExpenses.UniqueExpensesManageView;
+import timkodiert.budgetBook.view.fixed_expense.FixedExpenseDetailView;
+import timkodiert.budgetBook.view.fixed_expense.FixedExpensesManageView;
+import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
+import timkodiert.budgetBook.view.unique_expense.UniqueExpensesManageView;
 
 @Singleton
 @Component(modules = RepositoryModule.class)

@@ -1,7 +1,6 @@
-package timkodiert.budgetBook.view.uniqueExpenses;
+package timkodiert.budgetBook.view.unique_expense;
 
 import java.time.LocalDate;
-
 import javax.inject.Inject;
 
 import javafx.beans.property.SimpleDoubleProperty;
@@ -9,14 +8,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.model.UniqueExpenseAdapter;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
 import timkodiert.budgetBook.util.DialogFactory;
-import timkodiert.budgetBook.view.ViewComponent;
-import timkodiert.budgetBook.view.baseViews.BaseManageView;
+import timkodiert.budgetBook.view.ControllerFactory;
+import timkodiert.budgetBook.view.mdv_base.BaseManageView;
 
 public class UniqueExpensesManageView extends BaseManageView<UniqueExpense, UniqueExpenseAdapter> {
 
@@ -28,9 +28,8 @@ public class UniqueExpensesManageView extends BaseManageView<UniqueExpense, Uniq
     private TableColumn<UniqueExpenseAdapter, Number> valueCol;
 
     @Inject
-    public UniqueExpensesManageView(Repository<UniqueExpense> repository, DialogFactory dialogFactory,
-            ViewComponent viewComponent) {
-        super(() -> new UniqueExpense(), repository, viewComponent.getUniqueExpenseDetailView(), dialogFactory);
+    public UniqueExpensesManageView(Repository<UniqueExpense> repository, DialogFactory dialogFactory, ControllerFactory controllerFactory) {
+        super(UniqueExpense::new, repository, controllerFactory, dialogFactory);
     }
 
     @Override
@@ -43,6 +42,11 @@ public class UniqueExpensesManageView extends BaseManageView<UniqueExpense, Uniq
         valueCol.setCellFactory(col -> new CurrencyTableCell<>());
 
         entityTable.getSortOrder().add(dateCol);
+    }
+
+    @Override
+    public String getDetailViewFxmlLocation() {
+        return "/fxml/UniqueExpenses/Detail.fxml";
     }
 
     @FXML

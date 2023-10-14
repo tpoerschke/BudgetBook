@@ -1,6 +1,4 @@
-package timkodiert.budgetBook.view.uniqueExpenses;
-
-import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
+package timkodiert.budgetBook.view.unique_expense;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -18,6 +16,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
+
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
 import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
@@ -25,6 +24,8 @@ import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.validation.ValidationWrapper;
 import timkodiert.budgetBook.view.View;
+
+import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
 
 public class UniqueExpenseInformationDetailView implements View, Initializable {
 

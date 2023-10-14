@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.baseViews;
+package timkodiert.budgetBook.view.mdv_base;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import timkodiert.budgetBook.validation.ValidationWrapper;
 import timkodiert.budgetBook.view.View;
 

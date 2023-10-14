@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.uniqueExpenses;
+package timkodiert.budgetBook.view.unique_expense;
 
 import java.io.File;
 import java.net.URL;
@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+
 import timkodiert.budgetBook.view.View;
 
 public class ImageModalView implements View, Initializable {
