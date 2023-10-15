@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.uniqueExpenses;
+package timkodiert.budgetBook.view.unique_expense;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,11 +6,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import javax.inject.Inject;
-
-import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -19,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
@@ -26,7 +23,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -34,6 +30,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
@@ -41,7 +40,7 @@ import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.StageBuilder;
-import timkodiert.budgetBook.view.baseViews.EntityBaseDetailView;
+import timkodiert.budgetBook.view.mdv_base.EntityBaseDetailView;
 
 public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueExpense> implements Initializable {
 
@@ -139,11 +138,6 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueExpense>
         validationMap.put("biller", billerTextField);
         validationMap.put("date", datePicker);
         validationMap.put("paymentInformations", expenseInfoTable);
-    }
-
-    @Override
-    public String getFxmlLocation() {
-        return "/fxml/UniqueExpenses/Detail.fxml";
     }
 
     private void addNewExpenseInformation(UniqueExpenseInformation newInfo) {

@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.baseViews;
+package timkodiert.budgetBook.view.mdv_base;
 
 import java.io.IOException;
 import java.net.URL;
@@ -10,16 +10,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
+
 import timkodiert.budgetBook.domain.model.Adaptable;
 import timkodiert.budgetBook.domain.model.Adapter;
 import timkodiert.budgetBook.domain.model.ContentEquals;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.DialogFactory;
+import timkodiert.budgetBook.view.ControllerFactory;
 import timkodiert.budgetBook.view.View;
 
 public abstract class BaseManageView<T extends Adaptable<A> & ContentEquals, A extends Adapter<T>> implements View, Initializable {
@@ -32,31 +34,38 @@ public abstract class BaseManageView<T extends Adaptable<A> & ContentEquals, A e
 
     protected final Repository<T> repository;
     private final Supplier<T> emptyEntityProducer;
-    private final EntityBaseDetailView<T> detailView;
+    private final ControllerFactory controllerFactory;
     private final DialogFactory dialogFactory;
 
-    public BaseManageView(Supplier<T> emptyEntityProducer, Repository<T> repository,
-            EntityBaseDetailView<T> detailView, DialogFactory dialogFactory) {
+    private EntityBaseDetailView<T> detailView;
+
+    public BaseManageView(Supplier<T> emptyEntityProducer,
+                          Repository<T> repository,
+                          ControllerFactory controllerFactory,
+                          DialogFactory dialogFactory) {
         this.emptyEntityProducer = emptyEntityProducer;
         this.repository = repository;
         this.dialogFactory = dialogFactory;
-        this.detailView = detailView;
+        this.controllerFactory = controllerFactory;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         reloadTable();
-        detailView.setOnUpdate(this::reloadTable);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(detailView.getFxmlLocation()));
-        loader.setController(detailView);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(getDetailViewFxmlLocation()));
+        loader.setControllerFactory(controllerFactory::create);
         try {
             detailViewContainer.getChildren().add(loader.load());
         } catch (IOException ioe) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();
             ioe.printStackTrace();
+            return;
         }
+
+        detailView = loader.getController();
+        detailView.setOnUpdate(this::reloadTable);
 
         entityTable.setRowFactory(tableView -> {
             TableRow<A> row = new TableRow<>();
@@ -85,6 +94,8 @@ public abstract class BaseManageView<T extends Adaptable<A> & ContentEquals, A e
     }
 
     protected abstract void initControls();
+
+    protected abstract String getDetailViewFxmlLocation();
 
     protected void displayNewEntity() {
         detailView.setEntity(emptyEntityProducer.get());

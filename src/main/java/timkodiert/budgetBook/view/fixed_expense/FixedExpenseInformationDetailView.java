@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.fixedExpenses;
+package timkodiert.budgetBook.view.fixed_expense;
 
 import java.net.URL;
 import java.util.List;
@@ -15,8 +15,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+
 import timkodiert.budgetBook.domain.model.PaymentInformation;
-import timkodiert.budgetBook.view.baseViews.BaseDetailView;
+import timkodiert.budgetBook.view.mdv_base.BaseDetailView;
 import timkodiert.budgetBook.view.widget.MonthYearPickerWidget;
 
 public class FixedExpenseInformationDetailView extends BaseDetailView<PaymentInformation> implements Initializable {

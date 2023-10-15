@@ -15,12 +15,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetBook.controller.FixedExpenseController;
-import timkodiert.budgetBook.importer.TurnoverImporter;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.PropertiesService;
 import timkodiert.budgetBook.util.StageBuilder;
@@ -39,11 +42,13 @@ public class MainView implements Initializable {
 
     private FixedExpenseController fixedExpenseController;
     private ViewComponent viewComponent;
+    private final ControllerFactory controllerFactory;
 
     @Inject
-    public MainView(ViewComponent viewComponennt, FixedExpenseController fixedExpenseController) {
+    public MainView(ViewComponent viewComponennt, FixedExpenseController fixedExpenseController, ControllerFactory controllerFactory) {
         this.viewComponent = viewComponennt;
         this.fixedExpenseController = fixedExpenseController;
+        this.controllerFactory = controllerFactory;
     }
 
     public void setAndShowPrimaryStage(Stage primaryStage) {
@@ -69,58 +74,52 @@ public class MainView implements Initializable {
         menuBar.useSystemMenuBarProperty().set(useSystemMenuBar);
 
         // Das Kind laden (default)
-        loadViewPartial("/fxml/MonthlyOverview.fxml", viewComponent.getMonthlyOverview(), "Monatsübersicht");
-
-        TurnoverImporter importer = new TurnoverImporter();
-        try {
-            importer.parse(new File("Umsatzanzeige_TEST_20230926.csv"));
-        } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, e.getMessage());
-            alert.showAndWait();
-        }
+        loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
     }
 
     private String getVersion() {
         return "Version " + getClass().getPackage().getImplementationVersion();
     }
 
-    private void loadViewPartial(String resource, View view, String stageTitle) {
+    private @Nullable View loadViewPartial(String resource, String stageTitle) {
         try {
             FXMLLoader templateLoader = new FXMLLoader();
             templateLoader.setLocation(getClass().getResource(resource));
-            templateLoader.setController(view);
+            templateLoader.setControllerFactory(controllerFactory::create);
             this.root.setCenter(templateLoader.load());
-            this.primaryStage.setTitle(String
-                    .format("%s – JBudgetBook – %s", stageTitle, getVersion()));
+            this.primaryStage.setTitle(String.format("%s – JBudgetBook – %s", stageTitle, getVersion()));
+            return templateLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();
         }
+        return null;
     }
 
     @FXML
     public void showMonthlyOverview(ActionEvent event) {
-        loadViewPartial("/fxml/MonthlyOverview.fxml", viewComponent.getMonthlyOverview(),
-                "Monatsübersicht");
+        loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
     }
 
     @FXML
     public void showAnnualOverview(ActionEvent event) {
-        loadViewPartial("/fxml/AnnualOverview.fxml", viewComponent.getAnnualOverviewView(),
-                "Jahresübersicht");
+        loadViewPartial("/fxml/AnnualOverview.fxml", "Jahresübersicht");
     }
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        loadViewPartial("/fxml/ManageExpenses.fxml", viewComponent.getFixedExpenseDetailView(),
-                "Regelmäßige Ausgaben verwalten");
+        loadViewPartial("/fxml/ManageExpenses.fxml", "Regelmäßige Ausgaben verwalten");
     }
 
     @FXML
     private void openUniqueExpensesManageView(ActionEvent event) {
-        loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", viewComponent.getUniqueExpensesManageView(),
-                "Einzigartige Ausgaben verwalten");
+        loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", "Einzigartige Ausgaben verwalten");
+    }
+
+    @FXML
+    public void openImportView(ActionEvent event) {
+        loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
     }
 
     @FXML
@@ -163,5 +162,28 @@ public class MainView implements Initializable {
     @FXML
     private void openSettingsView() {
         PropertiesService.getInstance().buildWindow().showAndWait();
+    }
+
+
+    @FXML
+    private void onDragOver(DragEvent e) {
+        Dragboard dragboard = e.getDragboard();
+        if (dragboard.hasFiles() && dragboard.getFiles().stream().anyMatch(this::isCsvFile)) {
+            e.acceptTransferModes(TransferMode.COPY);
+        }
+        e.consume();
+    }
+
+    private boolean isCsvFile(File file) {
+        String name = file.getName();
+        return "csv".equals(name.substring(name.lastIndexOf('.') + 1));
+    }
+
+    @FXML
+    private void onDragDropped(DragEvent e) {
+        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
+        if (view instanceof ImportView importView) {
+            e.getDragboard().getFiles().stream().filter(this::isCsvFile).findFirst().ifPresent(importView.selectedFileProperty()::set);
+        }
     }
 }

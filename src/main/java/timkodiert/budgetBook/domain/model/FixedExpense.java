@@ -33,6 +33,9 @@ public class FixedExpense extends BaseEntity implements FixedTurnover, Categoriz
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     private List<PaymentInformation> paymentInformations = new ArrayList<>();
 
+    @OneToMany(mappedBy = "fixedExpense", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private final List<AccountTurnover> accountTurnover = new ArrayList<>();
+
     @Transient
     private transient FixedExpenseAdapter adapter;
 

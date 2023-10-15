@@ -1,16 +1,10 @@
-package timkodiert.budgetBook.view.fixedExpenses;
-
-import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
+package timkodiert.budgetBook.view.fixed_expense;
 
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import javax.inject.Inject;
-
-import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -23,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -32,6 +27,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.MonthYear;
@@ -42,7 +40,9 @@ import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.StageBuilder;
-import timkodiert.budgetBook.view.baseViews.EntityBaseDetailView;
+import timkodiert.budgetBook.view.mdv_base.EntityBaseDetailView;
+
+import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
 
 public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> implements Initializable {
 
@@ -72,12 +72,20 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
     @FXML
     private TableColumn<PaymentInformation, MonthYear> expenseInfoStartCol, expenseInfoEndCol;
 
+    // Importe
+    @FXML
+    private CheckBox importActiveCheckbox;
+    @FXML
+    private TextField importReceiverTextField;
+    @FXML
+    private TextField importReferenceTextField;
+
     private ObservableList<PaymentInformation> paymentInfoList = FXCollections.observableArrayList();
     private Repository<PaymentInformation> expInfoRepository;
 
     @Inject
     public FixedExpenseDetailView(Repository<FixedExpense> repository, Repository<PaymentInformation> expInfoRepository) {
-        super(() -> new FixedExpense(), repository);
+        super(FixedExpense::new, repository);
         this.expInfoRepository = expInfoRepository;
     }
 
@@ -107,6 +115,10 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
 
         expenseInfoTable.setItems(paymentInfoList);
 
+        // Importe
+        importReceiverTextField.disableProperty().bind(importActiveCheckbox.selectedProperty().not());
+        importReferenceTextField.disableProperty().bind(importActiveCheckbox.selectedProperty().not());
+
         // Validierung initialisieren
         validationMap.put("position", positionTextField);
     }
@@ -122,11 +134,6 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
             setEntity(null);
             onUpdate.run();
         }
-    }
-
-    @Override
-    public String getFxmlLocation() {
-        return "/fxml/EditExpense.fxml";
     }
 
     @Override

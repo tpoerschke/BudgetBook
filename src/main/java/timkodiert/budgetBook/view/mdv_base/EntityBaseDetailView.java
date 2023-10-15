@@ -1,9 +1,11 @@
-package timkodiert.budgetBook.view.baseViews;
+package timkodiert.budgetBook.view.mdv_base;
 
 import java.util.function.Supplier;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import lombok.Setter;
+
 import timkodiert.budgetBook.domain.model.ContentEquals;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.util.EntityManager;
@@ -53,6 +55,4 @@ public abstract class EntityBaseDetailView<T extends ContentEquals> extends Base
     private void save(ActionEvent event) {
         save();
     }
-
-    public abstract String getFxmlLocation();
 }

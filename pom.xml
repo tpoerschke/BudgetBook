@@ -153,6 +153,12 @@
 			<artifactId>opencsv</artifactId>
 			<version>5.5</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>13.0</version>
+			<scope>compile</scope>
+		</dependency>
 		<!-- JavaFX -->
 		<dependency>
 			<groupId>org.openjfx</groupId>

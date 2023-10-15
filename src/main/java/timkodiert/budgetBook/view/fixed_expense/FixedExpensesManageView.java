@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.fixedExpenses;
+package timkodiert.budgetBook.view.fixed_expense;
 
 import javax.inject.Inject;
 
@@ -7,12 +7,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.FixedExpenseAdapter;
 import timkodiert.budgetBook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetBook.util.DialogFactory;
-import timkodiert.budgetBook.view.ViewComponent;
-import timkodiert.budgetBook.view.baseViews.BaseManageView;
+import timkodiert.budgetBook.view.ControllerFactory;
+import timkodiert.budgetBook.view.mdv_base.BaseManageView;
 
 public class FixedExpensesManageView extends BaseManageView<FixedExpense, FixedExpenseAdapter> {
 
@@ -20,9 +21,8 @@ public class FixedExpensesManageView extends BaseManageView<FixedExpense, FixedE
     private TableColumn<FixedExpenseAdapter, String> positionCol, typeCol;
 
     @Inject
-    public FixedExpensesManageView(FixedExpensesRepository repository, DialogFactory dialogFactory,
-            ViewComponent viewComponent) {
-        super(() -> new FixedExpense(), repository, viewComponent.getEditExpenseView(), dialogFactory);
+    public FixedExpensesManageView(FixedExpensesRepository repository, DialogFactory dialogFactory, ControllerFactory controllerFactory) {
+        super(FixedExpense::new, repository, controllerFactory, dialogFactory);
     }
 
     @Override
@@ -30,6 +30,11 @@ public class FixedExpensesManageView extends BaseManageView<FixedExpense, FixedE
         positionCol.setCellValueFactory(new PropertyValueFactory<FixedExpenseAdapter, String>("position"));
         typeCol.setCellValueFactory(
                 cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
+    }
+
+    @Override
+    public String getDetailViewFxmlLocation() {
+        return "/fxml/EditExpense.fxml";
     }
 
     @FXML
