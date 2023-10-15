@@ -8,10 +8,14 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import javax.inject.Inject;
 
+import atlantafx.base.controls.Notification;
+import atlantafx.base.theme.Styles;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -19,14 +23,20 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.util.converter.DefaultStringConverter;
 
 import timkodiert.budgetBook.domain.model.AccountTurnover;
@@ -57,6 +67,13 @@ public class ImportView implements View, Initializable {
     private TableColumn<ImportInformation, FixedExpense> associatedCol;
     @FXML
     public TableColumn<ImportInformation, String> annotationCol;
+
+    @FXML
+    private StackPane root;
+    @FXML
+    private Label filePathLabel;
+
+    private final ObjectProperty<File> selectedFile = new SimpleObjectProperty<>();
 
     private final CheckBox selectAll = new CheckBox();
     private final BooleanProperty allSelected = new SimpleBooleanProperty();
@@ -115,14 +132,54 @@ public class ImportView implements View, Initializable {
             selectAll.selectedProperty().addListener(selectAllListener);
         });
 
+        selectedFile.addListener((observableValue, oldVal, newVal) -> {
+            if (newVal == null) {
+                filePathLabel.setText("");
+                return;
+            }
+            filePathLabel.setText(newVal.getAbsolutePath());
+            readFile();
+        });
+    }
+
+    private void readFile() {
         TurnoverImporter importer = new TurnoverImporter();
         try {
-            List<ImportInformation> importInformation = importer.parse(new File("Umsatzanzeige_TEST_20230926.csv"));
-            importTable.getItems().addAll(importInformation);
+            List<ImportInformation> importInformation = importer.parse(selectedFile.get());
+            importTable.getItems().setAll(importInformation);
+
+            if (importInformation.isEmpty()) {
+                displayNotification(Styles.WARNING,
+                                    "Keine Umsätze in der Datei gefunden. Möglicherweise ist die Struktur der Datei nicht kompatibel.");
+            }
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-            alert.showAndWait();
+            //            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            //            alert.showAndWait();
+            displayNotification(Styles.DANGER, e.getMessage());
         }
+    }
+
+    private void displayNotification(String style, String text) {
+        Notification notification = new Notification(text);
+        notification.setPrefHeight(150.0);
+        notification.setPrefWidth(300.0);
+        notification.setMaxHeight(Region.USE_PREF_SIZE);
+        notification.setMaxWidth(Region.USE_PREF_SIZE);
+        notification.getStyleClass().add(style);
+        notification.setOnClose(event -> {
+            root.getChildren().remove(notification);
+        });
+        StackPane.setAlignment(notification, Pos.TOP_RIGHT);
+        StackPane.setMargin(notification, new Insets(20, 20, 20, 20));
+        root.getChildren().add(notification);
+    }
+
+    @FXML
+    private void onSelectFile(ActionEvent e) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV-Dateien", "*.csv"));
+        File file = fileChooser.showOpenDialog(((Node) e.getSource()).getScene().getWindow());
+        selectedFile.set(file);
     }
 
     @FXML
