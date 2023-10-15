@@ -1,5 +1,6 @@
 package timkodiert.budgetBook.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,9 +15,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.util.EntityManager;
@@ -76,18 +81,20 @@ public class MainView implements Initializable {
         return "Version " + getClass().getPackage().getImplementationVersion();
     }
 
-    private void loadViewPartial(String resource, String stageTitle) {
+    private @Nullable View loadViewPartial(String resource, String stageTitle) {
         try {
             FXMLLoader templateLoader = new FXMLLoader();
             templateLoader.setLocation(getClass().getResource(resource));
             templateLoader.setControllerFactory(controllerFactory::create);
             this.root.setCenter(templateLoader.load());
             this.primaryStage.setTitle(String.format("%s – JBudgetBook – %s", stageTitle, getVersion()));
+            return templateLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();
         }
+        return null;
     }
 
     @FXML
@@ -155,5 +162,28 @@ public class MainView implements Initializable {
     @FXML
     private void openSettingsView() {
         PropertiesService.getInstance().buildWindow().showAndWait();
+    }
+
+
+    @FXML
+    private void onDragOver(DragEvent e) {
+        Dragboard dragboard = e.getDragboard();
+        if (dragboard.hasFiles() && dragboard.getFiles().stream().anyMatch(this::isCsvFile)) {
+            e.acceptTransferModes(TransferMode.COPY);
+        }
+        e.consume();
+    }
+
+    private boolean isCsvFile(File file) {
+        String name = file.getName();
+        return "csv".equals(name.substring(name.lastIndexOf('.') + 1));
+    }
+
+    @FXML
+    private void onDragDropped(DragEvent e) {
+        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
+        if (view instanceof ImportView importView) {
+            e.getDragboard().getFiles().stream().filter(this::isCsvFile).findFirst().ifPresent(importView.selectedFileProperty()::set);
+        }
     }
 }

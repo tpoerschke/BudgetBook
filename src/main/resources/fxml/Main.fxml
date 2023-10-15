@@ -6,8 +6,9 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
-
-<BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="900.0" prefWidth="1600.0" stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="900.0" prefWidth="1600.0"
+            stylesheets="@../css/general-styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            onDragDropped="#onDragDropped" onDragOver="#onDragOver">
    <top>
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
         <menus>

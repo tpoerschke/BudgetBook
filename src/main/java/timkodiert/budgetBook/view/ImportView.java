@@ -142,6 +142,10 @@ public class ImportView implements View, Initializable {
         });
     }
 
+    public ObjectProperty<File> selectedFileProperty() {
+        return selectedFile;
+    }
+
     private void readFile() {
         TurnoverImporter importer = new TurnoverImporter();
         try {
