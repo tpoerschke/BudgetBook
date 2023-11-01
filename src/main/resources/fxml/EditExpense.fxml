@@ -120,12 +120,12 @@
                            <Insets left="5.0"/>
                         </padding>
                      </Label>
-                     <TableView VBox.vgrow="ALWAYS">
+                     <TableView fx:id="importsTable" VBox.vgrow="ALWAYS">
                         <columns>
-                           <TableColumn text="Datum"/>
-                           <TableColumn text="Empfänger"/>
-                           <TableColumn text="Verwendungszweck"/>
-                           <TableColumn text="Betrag"/>
+                           <TableColumn fx:id="importsDateCol" prefWidth="100.0" text="Datum"/>
+                           <TableColumn fx:id="importsReceiverCol" prefWidth="250.0" text="Empfänger"/>
+                           <TableColumn fx:id="importsReferenceCol" prefWidth="300.0" text="Verwendungszweck"/>
+                           <TableColumn fx:id="importsAmountCol" prefWidth="100.0" text="Betrag"/>
                         </columns>
                      </TableView>
                   </VBox>

@@ -1,6 +1,7 @@
 package timkodiert.budgetBook.view.fixed_expense;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -8,6 +9,7 @@ import javax.inject.Inject;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,12 +32,14 @@ import javafx.stage.Window;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import timkodiert.budgetBook.domain.model.AccountTurnover;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.ImportRule;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.table.cell.DateTableCell;
 import timkodiert.budgetBook.table.cell.MonthYearTableCell;
 import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
@@ -80,9 +84,15 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
     private TextField importReceiverTextField;
     @FXML
     private TextField importReferenceTextField;
+    @FXML
+    private TableView<AccountTurnover> importsTable;
+    @FXML
+    private TableColumn<AccountTurnover, LocalDate> importsDateCol;
+    @FXML
+    private TableColumn<AccountTurnover, String> importsReceiverCol, importsReferenceCol, importsAmountCol;
 
-    private ObservableList<PaymentInformation> paymentInfoList = FXCollections.observableArrayList();
-    private Repository<PaymentInformation> expInfoRepository;
+    private final ObservableList<PaymentInformation> paymentInfoList = FXCollections.observableArrayList();
+    private final Repository<PaymentInformation> expInfoRepository;
 
     @Inject
     public FixedExpenseDetailView(Repository<FixedExpense> repository, Repository<PaymentInformation> expInfoRepository) {
@@ -119,6 +129,15 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
         // Importe
         importReceiverTextField.disableProperty().bind(importActiveCheckbox.selectedProperty().not());
         importReferenceTextField.disableProperty().bind(importActiveCheckbox.selectedProperty().not());
+
+        importsDateCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getDate()));
+        importsDateCol.setCellFactory(col -> new DateTableCell<>());
+        importsReceiverCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReceiver()));
+        importsReferenceCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReference()));
+        importsAmountCol.setCellValueFactory(cellData -> {
+            DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
+            return new ReadOnlyStringWrapper(converter.format(cellData.getValue().getAmount()));
+        });
 
         // Validierung initialisieren
         validationMap.put("position", positionTextField);
@@ -164,6 +183,7 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
         importActiveCheckbox.setSelected(entity.getImportRule().isActive());
         importReceiverTextField.setText(entity.getImportRule().getReceiverContains());
         importReferenceTextField.setText(entity.getImportRule().getReferenceContains());
+        importsTable.getItems().setAll(entity.getAccountTurnover());
         // Widgets zur Bearbeitung der PaymentInformations initialisieren
         // payInfoContainer.getChildren().clear();
         // editPayInfoWidgets = entity.getPaymentInformations().stream().map(payInfo -> editPaymentInformationWidgetFactory.create(payInfoContainer, payInfo))
