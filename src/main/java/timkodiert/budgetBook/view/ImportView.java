@@ -190,6 +190,8 @@ public class ImportView implements View, Initializable {
     private void importSelected(ActionEvent e) {
         List<ImportInformation> importInformation = importTable.getItems().stream().filter(ImportInformation::isSelectedForImport).toList();
 
+        // TODO 01.11.23: Automatische Zuordnung via ImportRules
+
         List<AccountTurnover> importsWithFixedExpense = importInformation.stream()
                                                                          .filter(ImportInformation::hasFixedExpense)
                                                                          .map(ImportInformation::accountTurnoverWithFixedExpense)

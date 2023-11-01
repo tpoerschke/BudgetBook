@@ -32,6 +32,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.ImportRule;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
 import timkodiert.budgetBook.domain.repository.Repository;
@@ -144,6 +145,10 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
         entity.getCategories().addAll(categoryTreeHelper.getSelectedCategories());
         entity.getPaymentInformations().clear();
         entity.getPaymentInformations().addAll(paymentInfoList);
+        createImportRuleIfNotExists(entity);
+        entity.getImportRule().setActive(importActiveCheckbox.isSelected());
+        entity.getImportRule().setReceiverContains(importReceiverTextField.getText());
+        entity.getImportRule().setReferenceContains(importReferenceTextField.getText());
         return entity;
     }
 
@@ -154,10 +159,22 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
         // Kategorien der Ausgabe abhacken
         categoryTreeHelper.selectCategories(entity);
         paymentInfoList.setAll(entity.getPaymentInformations());
+        // Importe
+        createImportRuleIfNotExists(entity);
+        importActiveCheckbox.setSelected(entity.getImportRule().isActive());
+        importReceiverTextField.setText(entity.getImportRule().getReceiverContains());
+        importReferenceTextField.setText(entity.getImportRule().getReferenceContains());
         // Widgets zur Bearbeitung der PaymentInformations initialisieren
         // payInfoContainer.getChildren().clear();
         // editPayInfoWidgets = entity.getPaymentInformations().stream().map(payInfo -> editPaymentInformationWidgetFactory.create(payInfoContainer, payInfo))
         //         .collect(Collectors.toList());
+    }
+
+    // TODO 01.11.23: Ausbauen, wenn sichergestellt ist, dass ImportRules
+    private void createImportRuleIfNotExists(FixedExpense expense) {
+        if (expense.getImportRule() == null) {
+            expense.setImportRule(new ImportRule(expense));
+        }
     }
 
     @FXML

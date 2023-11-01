@@ -9,6 +9,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -36,16 +37,21 @@ public class FixedExpense extends BaseEntity implements FixedTurnover, Categoriz
     @OneToMany(mappedBy = "fixedExpense", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private final List<AccountTurnover> accountTurnover = new ArrayList<>();
 
+    @Setter
+    @OneToOne(mappedBy = "linkedFixedExpense", cascade = {CascadeType.ALL})
+    private ImportRule importRule;
+
     @Transient
     private transient FixedExpenseAdapter adapter;
 
     public FixedExpense() {
-        super();
+        importRule = new ImportRule(this);
         initAdapter();
     }
 
     public FixedExpense(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start, MonthYear end) {
         this.paymentInformations.add(new PaymentInformation(this, value, datesOfPayment, type, start, end));
+        importRule = new ImportRule(this);
         initAdapter();
     }
 
@@ -102,9 +108,14 @@ public class FixedExpense extends BaseEntity implements FixedTurnover, Categoriz
             boolean equals = Objects.equals(this.getPosition(), expense.getPosition())
                     && Objects.equals(this.getNote(), expense.getNote());
 
+            boolean importRuleEquals = this.getImportRule() == null
+                    ? expense.getImportRule() == null
+                    : this.getImportRule().contentEquals(expense.getImportRule());
+
             return equals
                     && ContentEquals.listsContentEquals(this.getPaymentInformations(), expense.getPaymentInformations())
-                    && ContentEquals.listsContentEquals(this.getCategories(), expense.getCategories());
+                    && ContentEquals.listsContentEquals(this.getCategories(), expense.getCategories())
+                    && importRuleEquals;
         }
 
         return false;
