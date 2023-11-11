@@ -184,13 +184,9 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
         importReceiverTextField.setText(entity.getImportRule().getReceiverContains());
         importReferenceTextField.setText(entity.getImportRule().getReferenceContains());
         importsTable.getItems().setAll(entity.getAccountTurnover());
-        // Widgets zur Bearbeitung der PaymentInformations initialisieren
-        // payInfoContainer.getChildren().clear();
-        // editPayInfoWidgets = entity.getPaymentInformations().stream().map(payInfo -> editPaymentInformationWidgetFactory.create(payInfoContainer, payInfo))
-        //         .collect(Collectors.toList());
     }
 
-    // TODO 01.11.23: Ausbauen, wenn sichergestellt ist, dass ImportRules
+    // TODO 01.11.23: Ausbauen, wenn sichergestellt ist, dass ImportRules nicht null sein können
     private void createImportRuleIfNotExists(FixedExpense expense) {
         if (expense.getImportRule() == null) {
             expense.setImportRule(new ImportRule(expense));
@@ -204,8 +200,7 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
 
     @FXML
     private void editExpenseInformation(ActionEvent event) {
-        Optional<PaymentInformation> optionalEntity = Optional
-                .of(expenseInfoTable.getSelectionModel().getSelectedItem());
+        Optional<PaymentInformation> optionalEntity = Optional.of(expenseInfoTable.getSelectionModel().getSelectedItem());
         openUniqueExpenseInformationDetailView(optionalEntity);
     }
 
@@ -219,13 +214,14 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
     private void updateExpenseInformation(PaymentInformation expInfo) {
         if (!paymentInfoList.contains(expInfo)) {
             paymentInfoList.add(expInfo);
+            expInfo.setExpense(entity.get());
         }
         expenseInfoTable.refresh();
     }
 
     private void openUniqueExpenseInformationDetailView(Optional<PaymentInformation> optionalEntity) {
         try {
-            var subDetailView = new FixedExpenseInformationDetailView(() -> new PaymentInformation(), this::updateExpenseInformation);
+            var subDetailView = new FixedExpenseInformationDetailView(PaymentInformation::new, this::updateExpenseInformation);
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(Window.getWindows().get(0))
