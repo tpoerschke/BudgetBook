@@ -2,10 +2,9 @@ package timkodiert.budgetBook.i18n;
 
 import java.util.Locale;
 import java.util.stream.Stream;
+import static java.util.Locale.ENGLISH;
+import static java.util.Locale.GERMAN;
 
-import javax.inject.Inject;
-
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,8 +18,8 @@ class LanguageManagerTest {
 
     static Stream<Arguments> testArgs(){
         return Stream.of(
-                Arguments.of(Locale.GERMAN, "Willkommen"),
-                Arguments.of(Locale.ENGLISH, "Welcome")
+                Arguments.of(GERMAN, "Willkommen", "Deutsch"),
+                Arguments.of(ENGLISH, "Welcome", "English")
         );
     }
 
@@ -28,14 +27,13 @@ class LanguageManagerTest {
     @MethodSource("testArgs")
     void should_return_the_string_for_specified_language_and_key(Locale locale, String expectedString){
         String greetingKey = "main.greeting";
-        LanguageManager languageManager = new LanguageManager(locale);
-        languageManager.setLocale(locale);
-        assertEquals(expectedString, languageManager.getLocString(greetingKey));
+        LanguageManager.getInstance().setLocale(locale); // Setting the locale explicitly because in test context, the loaded property will be null.
+        assertEquals(expectedString, LanguageManager.getInstance().getLocString(greetingKey));
     }
 
     @Test
     void should_use_the_fallback_ResourceBundle_if_current_one_does_not_contain_key(){
-        LanguageManager languageManager = new LanguageManager(Locale.GERMAN);
-        assertEquals("Fallback", languageManager.getLocString("testing.fallback"));
+        LanguageManager.getInstance().setLocale(GERMAN);
+        assertEquals("Fallback", LanguageManager.getInstance().getLocString("testing.fallback"));
     }
 }
