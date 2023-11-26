@@ -5,7 +5,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 import javax.inject.Inject;
 
 import atlantafx.base.controls.Notification;
@@ -52,6 +51,7 @@ public class ImportView implements View, Initializable {
 
     private final Repository<FixedExpense> fixedExpenseRepository;
     private final Repository<AccountTurnover> accountTurnoverRepository;
+    private final TurnoverImporter importer;
 
     @FXML
     private TableView<ImportInformation> importTable;
@@ -79,9 +79,12 @@ public class ImportView implements View, Initializable {
     private final BooleanProperty allSelected = new SimpleBooleanProperty();
 
     @Inject
-    public ImportView(Repository<FixedExpense> fixedExpenseRepository, Repository<AccountTurnover> accountTurnoverRepository) {
+    public ImportView(Repository<FixedExpense> fixedExpenseRepository,
+                      Repository<AccountTurnover> accountTurnoverRepository,
+                      TurnoverImporter importer) {
         this.fixedExpenseRepository = fixedExpenseRepository;
         this.accountTurnoverRepository = accountTurnoverRepository;
+        this.importer = importer;
     }
 
     @Override
@@ -147,10 +150,13 @@ public class ImportView implements View, Initializable {
     }
 
     private void readFile() {
-        TurnoverImporter importer = new TurnoverImporter();
+
         try {
-            List<ImportInformation> importInformation = importer.parse(selectedFile.get());
-            importTable.getItems().setAll(importInformation);
+            ObservableList<ImportInformation> importInformation = importer.parse(selectedFile.get())
+                                                                          .linkWithExpenses()
+                                                                          .filterDuplicates()
+                                                                          .getImportInformationList();
+            importTable.setItems(importInformation);
 
             if (importInformation.isEmpty()) {
                 displayNotification(Styles.WARNING,
@@ -188,21 +194,6 @@ public class ImportView implements View, Initializable {
 
     @FXML
     private void importSelected(ActionEvent e) {
-        List<ImportInformation> importInformation = importTable.getItems().stream().filter(ImportInformation::isSelectedForImport).toList();
-
-        // TODO 01.11.23: Automatische Zuordnung via ImportRules
-
-        List<AccountTurnover> importsWithFixedExpense = importInformation.stream()
-                                                                         .filter(ImportInformation::hasFixedExpense)
-                                                                         .map(ImportInformation::accountTurnoverWithFixedExpense)
-                                                                         .toList();
-
-        List<AccountTurnover> importsWithUniqueExpense = importInformation.stream()
-                                                                          .filter(Predicate.not(ImportInformation::hasFixedExpense))
-                                                                          .map(ImportInformation::accountTurnoverWithUniqueExpense)
-                                                                          .toList();
-
-        accountTurnoverRepository.persist(importsWithFixedExpense);
-        accountTurnoverRepository.persist(importsWithUniqueExpense);
+        importer.doImport();
     }
 }

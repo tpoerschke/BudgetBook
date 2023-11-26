@@ -33,7 +33,7 @@
                         <TableColumn fx:id="referenceCol" prefWidth="350.0" text="Verwendungszweck"/>
                         <TableColumn fx:id="amountCol" prefWidth="100.0" text="Betrag"/>
                         <TableColumn fx:id="associatedCol" prefWidth="160.0" text="Regelmäßige Ausgabe"/>
-                        <TableColumn fx:id="annotationCol" prefWidth="200.0" text="Anmerkung"/>
+                        <TableColumn fx:id="annotationCol" prefWidth="220.0" text="Anmerkung"/>
                     </columns>
                 </TableView>
                 <HBox>

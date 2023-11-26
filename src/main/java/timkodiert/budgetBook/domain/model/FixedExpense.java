@@ -80,6 +80,7 @@ public class FixedExpense extends BaseEntity implements FixedTurnover, Categoriz
     }
 
     private double getValueFor(int year, int month) {
+        // Idee: Wenn es einen Import zu diesem Monat gibt, dann soll der importierte Betrag verwendet werden?
         PaymentInformation payInfo = this.findPaymentInformation(MonthYear.of(month, year));
         if (payInfo != null) {
             return payInfo.getValueFor(MonthYear.of(month, year));
