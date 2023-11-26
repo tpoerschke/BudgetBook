@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetBook.controller.FixedExpenseController;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.PropertiesService;
 import timkodiert.budgetBook.util.StageBuilder;
@@ -57,6 +58,7 @@ public class MainView implements Initializable {
 
         try {
             FXMLLoader templateLoader = new FXMLLoader();
+            templateLoader.setResources(LanguageManager.getInstance().getResourceBundle());
             templateLoader.setLocation(getClass().getResource("/fxml/Main.fxml"));
             templateLoader.setController(this);
             this.primaryStage.setScene(new Scene(templateLoader.load()));

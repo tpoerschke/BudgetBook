@@ -12,9 +12,9 @@
    <top>
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="Bearbeiten">
+          <Menu mnemonicParsing="false" text="%menuBar.buttonEdit">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openManageExpensesView" text="Regelmäßige Ausgaben verwalten" />
+                  <MenuItem mnemonicParsing="false" onAction="#openManageExpensesView" text="%menuItem.openManageExpensesView" />
                   <MenuItem mnemonicParsing="false" onAction="#openUniqueExpensesManageView" text="Einzigartige Ausgaben verwalten" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="Kategorien verwalten" />
