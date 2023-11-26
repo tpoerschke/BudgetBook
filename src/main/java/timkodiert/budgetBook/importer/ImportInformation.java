@@ -48,14 +48,15 @@ public class ImportInformation {
         postingText.set(accountTurnover.getPostingText());
         reference.set(accountTurnover.getReference());
         amount.set(accountTurnover.getAmount());
-        annotation.set(ANNOTATION_UNIQUE_EXPENSE);
+
+        fixedExpense.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
+        alreadyImported.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
+        selectedForImport.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
+        updateAnnotation();
 
         if (amount.get() > 0) {
             selectedForImport.set(false);
         }
-
-        fixedExpense.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
-        alreadyImported.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
     }
 
     private void updateAnnotation() {
