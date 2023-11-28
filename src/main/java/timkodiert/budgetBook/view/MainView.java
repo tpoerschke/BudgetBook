@@ -88,6 +88,7 @@ public class MainView implements Initializable {
             FXMLLoader templateLoader = new FXMLLoader();
             templateLoader.setLocation(getClass().getResource(resource));
             templateLoader.setControllerFactory(controllerFactory::create);
+            templateLoader.setResources(LanguageManager.getInstance().getResourceBundle());
             this.root.setCenter(templateLoader.load());
             this.primaryStage.setTitle(String.format("%s – JBudgetBook – %s", stageTitle, getVersion()));
             return templateLoader.getController();
