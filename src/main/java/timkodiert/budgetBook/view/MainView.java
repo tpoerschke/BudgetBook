@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import javafx.event.ActionEvent;
@@ -64,7 +66,7 @@ public class MainView implements Initializable {
             this.primaryStage.setScene(new Scene(templateLoader.load()));
             this.primaryStage.show();
         } catch (IOException e) {
-            Alert alert = new Alert(AlertType.ERROR, "Hauptansicht konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.mainViewCouldNotBeOpened"));
             alert.showAndWait();
         }
     }
@@ -76,7 +78,7 @@ public class MainView implements Initializable {
         menuBar.useSystemMenuBarProperty().set(useSystemMenuBar);
 
         // Das Kind laden (default)
-        loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
+        loadViewPartial("/fxml/MonthlyOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.monthlyOverView"));
     }
 
     private String getVersion() {
@@ -94,7 +96,7 @@ public class MainView implements Initializable {
             return templateLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.viewCouldNotBeOpened"));
             alert.showAndWait();
         }
         return null;
@@ -102,27 +104,27 @@ public class MainView implements Initializable {
 
     @FXML
     public void showMonthlyOverview(ActionEvent event) {
-        loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
+        loadViewPartial("/fxml/MonthlyOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.monthlyOverView"));
     }
 
     @FXML
     public void showAnnualOverview(ActionEvent event) {
-        loadViewPartial("/fxml/AnnualOverview.fxml", "Jahresübersicht");
+        loadViewPartial("/fxml/AnnualOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.annualOverView"));
     }
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        loadViewPartial("/fxml/ManageExpenses.fxml", "Regelmäßige Ausgaben verwalten");
+        loadViewPartial("/fxml/ManageExpenses.fxml", LanguageManager.getInstance().getLocString("stageTitle.regularExpensesOverview"));
     }
 
     @FXML
     private void openUniqueExpensesManageView(ActionEvent event) {
-        loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", "Einzigartige Ausgaben verwalten");
+        loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", LanguageManager.getInstance().getLocString("stageTitle.uniqueExpensesOverview"));
     }
 
     @FXML
     public void openImportView(ActionEvent event) {
-        loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
+        loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
     }
 
     @FXML
