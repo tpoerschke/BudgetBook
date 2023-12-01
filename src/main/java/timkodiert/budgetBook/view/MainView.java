@@ -138,7 +138,7 @@ public class MainView implements Initializable {
                     .build();
             stage.show();
         } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.viewCouldNotBeOpened"));
             alert.showAndWait();
         }
     }
@@ -154,7 +154,7 @@ public class MainView implements Initializable {
                     .build();
             stage.show();
         } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.viewCouldNotBeOpened"));
             alert.showAndWait();
         }
     }
@@ -186,7 +186,7 @@ public class MainView implements Initializable {
 
     @FXML
     private void onDragDropped(DragEvent e) {
-        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
+        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
         if (view instanceof ImportView importView) {
             e.getDragboard().getFiles().stream().filter(this::isCsvFile).findFirst().ifPresent(importView.selectedFileProperty()::set);
         }
