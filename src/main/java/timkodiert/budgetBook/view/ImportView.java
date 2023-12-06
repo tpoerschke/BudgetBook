@@ -37,6 +37,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.util.converter.DefaultStringConverter;
+import lombok.Setter;
 
 import timkodiert.budgetBook.domain.model.AccountTurnover;
 import timkodiert.budgetBook.domain.model.FixedExpense;
@@ -45,6 +46,7 @@ import timkodiert.budgetBook.importer.ImportInformation;
 import timkodiert.budgetBook.importer.TurnoverImporter;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
+import timkodiert.budgetBook.util.DialogFactory;
 import timkodiert.budgetBook.util.FixedExpenseStringConverter;
 
 public class ImportView implements View, Initializable {
@@ -52,6 +54,7 @@ public class ImportView implements View, Initializable {
     private final Repository<FixedExpense> fixedExpenseRepository;
     private final Repository<AccountTurnover> accountTurnoverRepository;
     private final TurnoverImporter importer;
+    private final DialogFactory dialogFactory;
 
     @FXML
     private TableView<ImportInformation> importTable;
@@ -78,13 +81,18 @@ public class ImportView implements View, Initializable {
     private final CheckBox selectAll = new CheckBox();
     private final BooleanProperty allSelected = new SimpleBooleanProperty();
 
+    @Setter
+    private MainView mainView;
+
     @Inject
     public ImportView(Repository<FixedExpense> fixedExpenseRepository,
                       Repository<AccountTurnover> accountTurnoverRepository,
-                      TurnoverImporter importer) {
+                      TurnoverImporter importer,
+                      DialogFactory dialogFactory) {
         this.fixedExpenseRepository = fixedExpenseRepository;
         this.accountTurnoverRepository = accountTurnoverRepository;
         this.importer = importer;
+        this.dialogFactory = dialogFactory;
     }
 
     @Override
@@ -195,5 +203,7 @@ public class ImportView implements View, Initializable {
     @FXML
     private void importSelected(ActionEvent e) {
         importer.doImport();
+        dialogFactory.buildInformationDialog("Ausgaben wurden importiert.").showAndWait();
+        mainView.loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
     }
 }

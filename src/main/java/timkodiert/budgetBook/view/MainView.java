@@ -81,7 +81,7 @@ public class MainView implements Initializable {
         return "Version " + getClass().getPackage().getImplementationVersion();
     }
 
-    private @Nullable View loadViewPartial(String resource, String stageTitle) {
+    public @Nullable View loadViewPartial(String resource, String stageTitle) {
         try {
             FXMLLoader templateLoader = new FXMLLoader();
             templateLoader.setLocation(getClass().getResource(resource));
@@ -119,7 +119,10 @@ public class MainView implements Initializable {
 
     @FXML
     public void openImportView(ActionEvent event) {
-        loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
+        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
+        if (view instanceof ImportView importView) {
+            importView.setMainView(this);
+        }
     }
 
     @FXML
@@ -183,6 +186,7 @@ public class MainView implements Initializable {
     private void onDragDropped(DragEvent e) {
         View view = loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
         if (view instanceof ImportView importView) {
+            importView.setMainView(this);
             e.getDragboard().getFiles().stream().filter(this::isCsvFile).findFirst().ifPresent(importView.selectedFileProperty()::set);
         }
     }

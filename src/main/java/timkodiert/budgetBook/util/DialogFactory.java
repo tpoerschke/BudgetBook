@@ -3,9 +3,9 @@ package timkodiert.budgetBook.util;
 import javax.inject.Inject;
 
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 
 public class DialogFactory {
 
@@ -21,6 +21,11 @@ public class DialogFactory {
         Alert alert = new Alert(AlertType.CONFIRMATION, "Wie soll mit den Änderungen verfahren werden?",
                 SAVE_CHANGES, DISCARD_CHANGES, CANCEL);
         alert.setHeaderText("Es liegen ungespeicherte Änderungen vor.");
+        return alert;
+    }
+
+    public Alert buildInformationDialog(String information) {
+        Alert alert = new Alert(AlertType.INFORMATION, information);
         return alert;
     }
 }
