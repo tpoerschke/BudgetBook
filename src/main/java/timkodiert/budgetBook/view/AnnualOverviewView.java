@@ -37,18 +37,6 @@ import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
 public class AnnualOverviewView implements Initializable, View {
 
-    private static final List<String> MONTH_NAMES = List.of("month.january",
-                                                            "month.february",
-                                                            "month.march",
-                                                            "month.april",
-                                                            "month.may",
-                                                            "month.june",
-                                                            "month.july",
-                                                            "month.august",
-                                                            "month.september",
-                                                            "month.october",
-                                                            "month.november",
-                                                            "month.december");
     private static final int CURRENT_YEAR = LocalDate.now().getYear();
     private static final int START_YEAR = CURRENT_YEAR - 5;
     private static final int END_YEAR = CURRENT_YEAR + 1;
@@ -88,6 +76,7 @@ public class AnnualOverviewView implements Initializable, View {
         // Widget rechts einbinden
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ExpenseDetailWidget.fxml"));
+            loader.setResources(LanguageManager.getInstance().getResourceBundle());
             loader.setController(expenseDetailWidget);
             rootPane.setRight(loader.load());
         } catch (Exception e) {
@@ -100,7 +89,7 @@ public class AnnualOverviewView implements Initializable, View {
         // for i, month in enumerate(monthNames):
         //   ...
         // Java machts hier umständlich :/
-        ListIterator<String> iterator = MONTH_NAMES.listIterator();
+        ListIterator<String> iterator = LanguageManager.MONTH_NAMES.listIterator();
         while (iterator.hasNext()) {
             int index = iterator.nextIndex();
             String month = LanguageManager.getInstance().getLocString(iterator.next());

@@ -26,6 +26,7 @@ import lombok.Getter;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.i18n.LanguageManager;
 
 public class EditPaymentInformationWidget implements Initializable {
 
@@ -59,11 +60,12 @@ public class EditPaymentInformationWidget implements Initializable {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditPaymentInformationWidget.fxml"));
+            loader.setResources(LanguageManager.getInstance().getResourceBundle());
             loader.setController(this);
             parent.getChildren().add(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR, "Widget konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.widgetCouldNotBeOpened"));
             alert.showAndWait();
         }
     }

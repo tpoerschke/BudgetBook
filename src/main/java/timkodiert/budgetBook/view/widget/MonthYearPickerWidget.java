@@ -25,6 +25,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import lombok.Builder;
 import timkodiert.budgetBook.domain.model.MonthYear;
+import timkodiert.budgetBook.i18n.LanguageManager;
 
 public class MonthYearPickerWidget implements Initializable {
 
@@ -51,6 +52,7 @@ public class MonthYearPickerWidget implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MonthYearPickerWidget.fxml"));
             loader.setController(this);
+            loader.setResources(LanguageManager.getInstance().getResourceBundle());
             parent.getChildren().add(loader.load());
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR, "Widget konnte nicht geöffnet werden!");

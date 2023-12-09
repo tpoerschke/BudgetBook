@@ -1,5 +1,6 @@
 package timkodiert.budgetBook.i18n;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import static java.util.Locale.ENGLISH;
@@ -11,6 +12,19 @@ import timkodiert.budgetBook.util.PropertiesService;
 
 @Getter
 public class LanguageManager {
+
+    public static final List<String> MONTH_NAMES = List.of("month.january",
+                                                           "month.february",
+                                                           "month.march",
+                                                           "month.april",
+                                                           "month.may",
+                                                           "month.june",
+                                                           "month.july",
+                                                           "month.august",
+                                                           "month.september",
+                                                           "month.october",
+                                                           "month.november",
+                                                           "month.december");
 
     private static final String I_18_N_PACKAGE = "i18n.messages";
 
