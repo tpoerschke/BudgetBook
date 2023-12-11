@@ -23,6 +23,7 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.control.Alert.AlertType;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.util.ButtonTreeTableCell;
 
 public class ManageCategoriesView implements Initializable, View {
@@ -55,7 +56,7 @@ public class ManageCategoriesView implements Initializable, View {
     public void initialize(URL location, ResourceBundle resources) {
         nameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue().getName()));
         actionColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<Category>(cellData.getValue().getValue()));
-        actionColumn.setCellFactory(col -> new ButtonTreeTableCell<>("Löschen", this::deleteCategory));
+        actionColumn.setCellFactory(col -> new ButtonTreeTableCell<>(LanguageManager.getInstance().getLocString("button.delete"), this::deleteCategory));
 
         categoriesTable.getSelectionModel().selectedItemProperty()
                 .addListener((ObservableValue<? extends TreeItem<Category>> observable, TreeItem<Category> oldValue, TreeItem<Category> newValue) -> {
@@ -78,8 +79,7 @@ public class ManageCategoriesView implements Initializable, View {
     private void deleteCategory(Category category) {
         if (!category.getFixedExpenses().isEmpty() || !category.getUniqueExpenseInformation().isEmpty()) {
             Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setContentText("Dieser Kategorie sind Ausgaben zugeordnet. " +
-                    "Wenn Sie die Kategorie löschen, wird die Kategorie auch bei den betroffenen Ausgaben entfernt. Trotzdem löschen?");
+            alert.setContentText(LanguageManager.getInstance().getLocString("manageCategories.alert.expensesAreAssignedToThisCategory"));
 
             if (alert.showAndWait().filter(ButtonType.CANCEL::equals).isPresent()) {
                 return;
