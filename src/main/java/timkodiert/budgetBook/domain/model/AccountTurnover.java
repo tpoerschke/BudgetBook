@@ -2,7 +2,7 @@ package timkodiert.budgetBook.domain.model;
 
 import java.time.LocalDate;
 
-import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
 import com.opencsv.bean.CsvNumber;
 import jakarta.persistence.CascadeType;
@@ -13,24 +13,30 @@ import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
+
+/**
+ * Nutzt die @CsvBindByPosition wegen Encoding-Problemen (s. Auftraggeber/Empfänger)
+ */
 @Getter
 @Entity
 public class AccountTurnover extends BaseEntity {
 
-    @CsvBindByName(column = "Valuta")
+    public static final int SKIP_LINES = 14;
+
+    @CsvBindByPosition(position = 1)
     @CsvDate("dd.MM.yyyy")
     private LocalDate date;
 
-    @CsvBindByName(column = "Auftraggeber/Empfänger")
+    @CsvBindByPosition(position = 2)
     private String receiver;
 
-    @CsvBindByName(column = "Buchungstext")
+    @CsvBindByPosition(position = 3)
     private String postingText;
 
-    @CsvBindByName(column = "Verwendungszweck")
+    @CsvBindByPosition(position = 4)
     private String reference;
 
-    @CsvBindByName(column = "Betrag")
+    @CsvBindByPosition(position = 7)
     @CsvNumber("#.###,##")
     private double amount;
 
@@ -46,6 +52,17 @@ public class AccountTurnover extends BaseEntity {
 
     @Override
     public boolean contentEquals(Object other) {
+        if (other instanceof AccountTurnover accountTurnover) {
+            return date.equals(accountTurnover.getDate())
+                    && receiver.equals(accountTurnover.getReceiver())
+                    && reference.equals(accountTurnover.getReference())
+                    && amount == accountTurnover.getAmount();
+        }
         return false;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return contentEquals(obj);
     }
 }

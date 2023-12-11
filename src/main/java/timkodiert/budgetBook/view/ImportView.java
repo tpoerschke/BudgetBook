@@ -5,7 +5,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 import javax.inject.Inject;
 
 import atlantafx.base.controls.Notification;
@@ -38,6 +37,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.util.converter.DefaultStringConverter;
+import lombok.Setter;
 
 import timkodiert.budgetBook.domain.model.AccountTurnover;
 import timkodiert.budgetBook.domain.model.FixedExpense;
@@ -46,12 +46,15 @@ import timkodiert.budgetBook.importer.ImportInformation;
 import timkodiert.budgetBook.importer.TurnoverImporter;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
+import timkodiert.budgetBook.util.DialogFactory;
 import timkodiert.budgetBook.util.FixedExpenseStringConverter;
 
 public class ImportView implements View, Initializable {
 
     private final Repository<FixedExpense> fixedExpenseRepository;
     private final Repository<AccountTurnover> accountTurnoverRepository;
+    private final TurnoverImporter importer;
+    private final DialogFactory dialogFactory;
 
     @FXML
     private TableView<ImportInformation> importTable;
@@ -78,10 +81,18 @@ public class ImportView implements View, Initializable {
     private final CheckBox selectAll = new CheckBox();
     private final BooleanProperty allSelected = new SimpleBooleanProperty();
 
+    @Setter
+    private MainView mainView;
+
     @Inject
-    public ImportView(Repository<FixedExpense> fixedExpenseRepository, Repository<AccountTurnover> accountTurnoverRepository) {
+    public ImportView(Repository<FixedExpense> fixedExpenseRepository,
+                      Repository<AccountTurnover> accountTurnoverRepository,
+                      TurnoverImporter importer,
+                      DialogFactory dialogFactory) {
         this.fixedExpenseRepository = fixedExpenseRepository;
         this.accountTurnoverRepository = accountTurnoverRepository;
+        this.importer = importer;
+        this.dialogFactory = dialogFactory;
     }
 
     @Override
@@ -147,10 +158,13 @@ public class ImportView implements View, Initializable {
     }
 
     private void readFile() {
-        TurnoverImporter importer = new TurnoverImporter();
+
         try {
-            List<ImportInformation> importInformation = importer.parse(selectedFile.get());
-            importTable.getItems().setAll(importInformation);
+            ObservableList<ImportInformation> importInformation = importer.parse(selectedFile.get())
+                                                                          .linkWithExpenses()
+                                                                          .filterDuplicates()
+                                                                          .getImportInformationList();
+            importTable.setItems(importInformation);
 
             if (importInformation.isEmpty()) {
                 displayNotification(Styles.WARNING,
@@ -188,19 +202,8 @@ public class ImportView implements View, Initializable {
 
     @FXML
     private void importSelected(ActionEvent e) {
-        List<ImportInformation> importInformation = importTable.getItems().stream().filter(ImportInformation::isSelectedForImport).toList();
-
-        List<AccountTurnover> importsWithFixedExpense = importInformation.stream()
-                                                                         .filter(ImportInformation::hasFixedExpense)
-                                                                         .map(ImportInformation::accountTurnoverWithFixedExpense)
-                                                                         .toList();
-
-        List<AccountTurnover> importsWithUniqueExpense = importInformation.stream()
-                                                                          .filter(Predicate.not(ImportInformation::hasFixedExpense))
-                                                                          .map(ImportInformation::accountTurnoverWithUniqueExpense)
-                                                                          .toList();
-
-        accountTurnoverRepository.persist(importsWithFixedExpense);
-        accountTurnoverRepository.persist(importsWithUniqueExpense);
+        importer.doImport();
+        dialogFactory.buildInformationDialog("Ausgaben wurden importiert.").showAndWait();
+        mainView.loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
     }
 }

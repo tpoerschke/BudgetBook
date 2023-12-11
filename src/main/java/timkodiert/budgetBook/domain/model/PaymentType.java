@@ -15,20 +15,15 @@ public enum PaymentType {
 
     @Getter
     @NonNull
-    private String type;
+    private final String type;
 
     public static PaymentType fromString(String type) {
-        switch (type) {
-            case "monatlich":
-                return MONTHLY;
-            case "jährlich":
-                return ANNUAL;
-            case "halbjährlich":
-                return SEMIANNUAL;
-            case "vierteljährlich":
-                return QUARTERLY;
-            default:
-                return null;
-        }
+        return switch (type) {
+            case "monatlich" -> MONTHLY;
+            case "jährlich" -> ANNUAL;
+            case "halbjährlich" -> SEMIANNUAL;
+            case "vierteljährlich" -> QUARTERLY;
+            default -> null;
+        };
     }
 }
