@@ -13,18 +13,26 @@ import timkodiert.budgetBook.util.PropertiesService;
 @Getter
 public class LanguageManager {
 
-    public static final List<String> MONTH_NAMES = List.of("month.january",
-                                                           "month.february",
-                                                           "month.march",
-                                                           "month.april",
-                                                           "month.may",
-                                                           "month.june",
-                                                           "month.july",
-                                                           "month.august",
-                                                           "month.september",
-                                                           "month.october",
-                                                           "month.november",
-                                                           "month.december");
+    public static final List<String> MONTH_NAMES = List.of(
+        "month.january",
+        "month.february",
+        "month.march",
+        "month.april",
+        "month.may",
+        "month.june",
+        "month.july",
+        "month.august",
+        "month.september",
+        "month.october",
+        "month.november",
+        "month.december");
+
+    public static final List<String> YEAR_INTERVALS = List.of(
+        "time.monthly",
+        "time.yearly",
+        "time.half-yearly",
+        "time.quarterly"
+    );
 
     private static final String I_18_N_PACKAGE = "i18n.messages";
 
@@ -41,21 +49,36 @@ public class LanguageManager {
         this.fallbackRB = ResourceBundle.getBundle(I_18_N_PACKAGE, ENGLISH);
     }
 
-    private LanguageManager(){
+    private LanguageManager() {
         // Map String to Locale
         this.initialize(mapToLocale(PropertiesService.getInstance().getProperties().getProperty("language")));
     }
 
-    public static LanguageManager getInstance(){
-        if(INSTANCE == null){
+    public static LanguageManager getInstance() {
+        if (INSTANCE == null) {
             INSTANCE = new LanguageManager();
         }
         return INSTANCE;
     }
 
+    /**
+     * Short wrapper for <pre>LanguageManager.getInstance().getLocString(key)</pre>
+     */
+    public static String get(String key) {
+        return LanguageManager.getInstance().getLocString(key);
+    }
+
     public synchronized void setLocale(Locale locale) {
         this.locale = locale;
         this.resourceBundle = ResourceBundle.getBundle(I_18_N_PACKAGE, this.locale);
+    }
+
+    public String[] getMonths() {
+        return MONTH_NAMES.stream().map(LanguageManager::get).toArray(String[]::new);
+    }
+
+    public String[] getYearIntervals(){
+        return YEAR_INTERVALS.stream().map(LanguageManager::get).toArray(String[]::new);
     }
 
     public String getLocString(String key) {
@@ -65,9 +88,10 @@ public class LanguageManager {
         return this.getFallbackRB().getString(key);
     }
 
+
     // Intermediate solution until we have a dropdown menu for languages
     public static Locale mapToLocale(String language) {
-        if(language == null){
+        if (language == null) {
             return ENGLISH;
         }
         if (language.equalsIgnoreCase("Deutsch")) {

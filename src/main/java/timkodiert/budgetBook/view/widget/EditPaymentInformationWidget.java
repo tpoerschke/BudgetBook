@@ -106,14 +106,10 @@ public class EditPaymentInformationWidget implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Initialisieren
-        List<String> monthList = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
-        month1ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
-        month2ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
-        month3ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
-        month4ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
 
-        List<String> typeList = List.of("monatlich", "jährlich", "halbjährlich", "vierteljährlich");
-        typeChoiceBox.getItems().addAll(typeList);
+        List.of(month1ChoiceBox,month2ChoiceBox,month3ChoiceBox,month4ChoiceBox).forEach(e->e.getItems().addAll(FXCollections.observableArrayList(LanguageManager.getInstance().getMonths())));
+
+        typeChoiceBox.getItems().addAll(LanguageManager.getInstance().getYearIntervals());
         typeChoiceBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> obsValue, String oldValue, String newValue) -> {
             switch(newValue) {
                 case "jährlich":
@@ -160,12 +156,12 @@ public class EditPaymentInformationWidget implements Initializable {
         }
 
         startMonthWidget = MonthYearPickerWidget.builder()
-            .labelStr("Erster Monat")
+            .labelStr(LanguageManager.get("editPaymentInfo.label.firstMonthLtr"))
             .parent(startWidgetContainer)
             .initialValue(payInfo.getStart())
             .build();
         endMonthWidget = MonthYearPickerWidget.builder()
-            .labelStr("Letzter Monat (optional)")
+            .labelStr(LanguageManager.get("editPaymentInfo.label.lastMonthLtr"))
             .parent(endWidgetContainer)
             .initialValue(payInfo.getEnd())
             .showResetBtn(true)

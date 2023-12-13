@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import timkodiert.budgetBook.Constants;
 import timkodiert.budgetBook.domain.model.MonthYear;
+import timkodiert.budgetBook.i18n.LanguageManager;
 
 public class MonthFilter implements ObservableValue<MonthYear> {
 
@@ -89,12 +90,12 @@ public class MonthFilter implements ObservableValue<MonthYear> {
     @Override
     public void addListener(InvalidationListener listener) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addListener'");
+        throw new UnsupportedOperationException(LanguageManager.get("alert.unimplementedMethod").formatted("addListener"));
     }
 
     @Override
     public void removeListener(InvalidationListener listener) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeListener'");
+        throw new UnsupportedOperationException(LanguageManager.get("alert.unimplementedMethod").formatted("removeListener"));
     }
 }
