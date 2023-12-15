@@ -136,6 +136,44 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<!-- mvn process-resources -P build-manual -->
+			<id>build-manual</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.asciidoctor</groupId>
+						<artifactId>asciidoctor-maven-plugin</artifactId>
+						<version>2.2.4</version>
+						<executions>
+							<execution>
+								<id>asciidoc-to-html</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>process-asciidoc</goal>
+								</goals>
+								<configuration>
+									<sourceDirectory>asciidoc/user-manual</sourceDirectory>
+									<backend>html5</backend>
+									<doctype>book</doctype>
+									<attributes>
+										<source-highlighter>rouge</source-highlighter>
+										<toc>left</toc>
+										<pagenums/>
+										<idprefix/>
+										<idseparator>-</idseparator>
+										<project-version>${project.version}</project-version>
+									</attributes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
