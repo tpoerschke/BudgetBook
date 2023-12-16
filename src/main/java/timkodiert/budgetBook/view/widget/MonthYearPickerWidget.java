@@ -56,7 +56,7 @@ public class MonthYearPickerWidget implements Initializable {
             parent.getChildren().add(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR, "Widget konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.get("alert.widgetCouldNotBeOpened"));
             alert.showAndWait();
         }
     }
