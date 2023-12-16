@@ -16,7 +16,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="500.0" stylesheets="@../css/validation.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <Label text="Kategorie hinzufügen" BorderPane.alignment="CENTER">
+      <Label text="%newCategory.label.addNew" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
          </BorderPane.margin>
@@ -39,21 +39,21 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label text="Name" />
+                  <Label text="%newCategory.label.name" />
                   <TextField fx:id="nameTextField" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
                <children>
-                  <Label text="Beschreibung" />
+                  <Label text="%newCategory.label.description" />
                   <TextArea fx:id="descriptionTextArea" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
                <children>
-                  <Label text="Oberkategorie" />
+                  <Label text="%newCategory.label.parentCategory" />
                   <TreeView fx:id="categoriesTreeView" prefHeight="200.0" prefWidth="200.0" showRoot="false" />
-                  <Button mnemonicParsing="false" onAction="#resetParentSelection" styleClass="small" text="Auswahl zurücksetzen">
+                  <Button mnemonicParsing="false" onAction="#resetParentSelection" styleClass="small" text="%button.resetSelection">
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
@@ -62,8 +62,8 @@
             </VBox>
             <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                <children>
-                  <Button mnemonicParsing="false" onAction="#saveCategory" text="Speichern" />
-                  <Button mnemonicParsing="false" onAction="#closeStage" text="Abbrechen" />
+                  <Button mnemonicParsing="false" onAction="#saveCategory" text="%button.save" />
+                  <Button mnemonicParsing="false" onAction="#closeStage" text="%button.cancel" />
                </children>
             </HBox>
          </children>

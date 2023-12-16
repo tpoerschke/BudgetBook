@@ -37,6 +37,7 @@ import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.StageBuilder;
@@ -213,7 +214,7 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueExpense>
                     .build();
             stage.show();
         } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.get("alert.viewCouldNotBeOpened"));
             alert.showAndWait();
             e.printStackTrace();
         }
