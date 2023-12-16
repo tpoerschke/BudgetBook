@@ -37,7 +37,7 @@ public class MonthFilter implements ObservableValue<MonthYear> {
         prevBtn.setGraphic(new FontIcon(BootstrapIcons.CHEVRON_LEFT));
         prevBtn.setText("");
 
-        selectedMonthBox.getItems().setAll(Constants.MONTH_NAMES);
+        selectedMonthBox.getItems().setAll(LanguageManager.getInstance().getMonths());
         selectedYearBox.getItems().setAll(List.of(2020, 2021, 2022, 2023, 2024));
 
         this.value = MonthYear.now();
