@@ -122,10 +122,10 @@
                      </Label>
                      <TableView VBox.vgrow="ALWAYS">
                         <columns>
-                           <TableColumn text="%editExpense.column.date"/>
-                           <TableColumn text="%editExpense.column.recepient"/>
-                           <TableColumn text="%editExpense.column.reference"/>
-                           <TableColumn text="%editExpense.column.amount"/>
+                           <TableColumn fx:id="importsDateCol" prefWidth="100.0" text="%editExpense.column.date"/>
+                           <TableColumn fx:id="importsReceiverCol" prefWidth="250.0" text="%editExpense.column.recepient"/>
+                           <TableColumn fx:id="importsReferenceCol" prefWidth="300.0" text="%editExpense.column.reference"/>
+                           <TableColumn fx:id="importsAmountCol" prefWidth="100.0" text="%editExpense.column.amount"/>
                         </columns>
                      </TableView>
                   </VBox>

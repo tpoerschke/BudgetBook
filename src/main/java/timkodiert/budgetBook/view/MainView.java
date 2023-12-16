@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import javafx.event.ActionEvent;
@@ -85,7 +83,7 @@ public class MainView implements Initializable {
         return "Version " + getClass().getPackage().getImplementationVersion();
     }
 
-    private @Nullable View loadViewPartial(String resource, String stageTitle) {
+    public @Nullable View loadViewPartial(String resource, String stageTitle) {
         try {
             FXMLLoader templateLoader = new FXMLLoader();
             templateLoader.setLocation(getClass().getResource(resource));
@@ -124,7 +122,10 @@ public class MainView implements Initializable {
 
     @FXML
     public void openImportView(ActionEvent event) {
-        loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
+        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
+        if (view instanceof ImportView importView) {
+            importView.setMainView(this);
+        }
     }
 
     @FXML
@@ -188,6 +189,7 @@ public class MainView implements Initializable {
     private void onDragDropped(DragEvent e) {
         View view = loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
         if (view instanceof ImportView importView) {
+            importView.setMainView(this);
             e.getDragboard().getFiles().stream().filter(this::isCsvFile).findFirst().ifPresent(importView.selectedFileProperty()::set);
         }
     }

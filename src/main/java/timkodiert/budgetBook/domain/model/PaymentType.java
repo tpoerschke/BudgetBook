@@ -19,7 +19,7 @@ public enum PaymentType {
 
     @Getter
     @NonNull
-    private String type;
+    private final String type;
 
     public static PaymentType fromString(String type) {
         System.out.println(type);

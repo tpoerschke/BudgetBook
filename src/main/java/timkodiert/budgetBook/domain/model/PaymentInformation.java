@@ -1,8 +1,10 @@
 package timkodiert.budgetBook.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,9 +27,8 @@ public class PaymentInformation extends BaseEntity {
     @Setter
     @Enumerated(EnumType.STRING)
     private PaymentType type;
-
-    @Setter
-    private List<Integer> monthsOfPayment;
+    @Column(nullable = false)
+    private final List<Integer> monthsOfPayment = new ArrayList<>();
     @Setter
     private double value;
 
@@ -39,7 +40,7 @@ public class PaymentInformation extends BaseEntity {
     public PaymentInformation(FixedExpense expense, double value, List<Integer> monthsOfPayment, PaymentType type, MonthYear start, MonthYear end) {
         this.expense = expense;
         this.type = type;
-        this.monthsOfPayment = monthsOfPayment;
+        this.monthsOfPayment.addAll(monthsOfPayment);
         this.value = value;
         this.start = start;
         this.end = end;
@@ -58,6 +59,11 @@ public class PaymentInformation extends BaseEntity {
         }
 
         return true;
+    }
+
+    public void setMonthsOfPayment(List<Integer> monthsOfPayment) {
+        this.monthsOfPayment.clear();
+        this.monthsOfPayment.addAll(monthsOfPayment);
     }
 
     @Override
