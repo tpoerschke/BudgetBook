@@ -143,28 +143,17 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.asciidoctor</groupId>
-						<artifactId>asciidoctor-maven-plugin</artifactId>
-						<version>2.2.4</version>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>3.0.0</version>
 						<executions>
 							<execution>
-								<id>asciidoc-to-html</id>
-								<phase>generate-resources</phase>
+								<phase>process-resources</phase>
 								<goals>
-									<goal>process-asciidoc</goal>
+									<goal>exec</goal>
 								</goals>
 								<configuration>
-									<sourceDirectory>asciidoc/user-manual</sourceDirectory>
-									<backend>html5</backend>
-									<doctype>book</doctype>
-									<attributes>
-										<source-highlighter>rouge</source-highlighter>
-										<toc>left</toc>
-										<pagenums/>
-										<idprefix/>
-										<idseparator>-</idseparator>
-										<project-version>${project.version}</project-version>
-									</attributes>
+									<executable>build_user_manual.sh</executable>
 								</configuration>
 							</execution>
 						</executions>
