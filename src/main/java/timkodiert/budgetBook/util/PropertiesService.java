@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import atlantafx.base.theme.Styles;
@@ -14,14 +15,18 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
+
 import timkodiert.budgetBook.Constants;
 
 public class PropertiesService {
@@ -43,46 +48,61 @@ public class PropertiesService {
             this.properties.setProperty("db", "jdbc:sqlite:"
                     + Path.of(System.getProperty("user.home"), Constants.DATA_DIR, "sqlite.db").toString());
             this.properties.setProperty("useSystemMenuBar", "true");
+            this.properties.setProperty("language", "Deutsch");
             this.properties.store(new FileWriter(propsFile), "Store initial props");
         } else {
             this.properties.load(new FileInputStream(Constants.PROPERTIES_PATH));
         }
     }
 
-    public Stage buildWindow() {
-        List<HBox> propBoxes = properties.entrySet().stream().map(entry -> {
-            Label label = new Label(entry.getKey().toString());
-            label.getStyleClass().add(Styles.LEFT_PILL);
-            label.setPrefWidth(150);
-            TextField textField = new TextField(entry.getValue().toString());
-            textField.getStyleClass().add(Styles.RIGHT_PILL);
-            textField.setPrefWidth(300);
-            return new HBox(label, textField);
-        }).toList();
+    public void verifySettings() throws IOException {
+        // TODO
+        // Throw exceptions if settings are broken and offer a regeneration of the settings file.
+    }
 
-        VBox propBoxesContainer = new VBox();
-        propBoxesContainer.getChildren().addAll(propBoxes);
-        propBoxesContainer.setSpacing(10);
+    public Stage buildWindow() {
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(20, 20, 20, 20));
+        grid.setVgap(10);
+        grid.setHgap(10);
+
+        // language dropdown
+        ComboBox<String> languageComboBox = new ComboBox<>();
+        languageComboBox.getItems().addAll("Deutsch", "English");
+        languageComboBox.setPromptText("Select Language"); // replace label according to current language
+        languageComboBox.setValue(properties.getProperty("language"));
+        grid.add(new Label("Language"), 0, 0);
+        grid.add(languageComboBox, 1, 0);
+
+        // DB JDBC Path TextField
+        TextField jdbcPathTextField = new TextField();
+        jdbcPathTextField.setPromptText("Enter JDBC Path");
+        jdbcPathTextField.setText(properties.getProperty("db"));
+        grid.add(new Label("DB JDBC Path:"), 0, 1);
+        grid.add(jdbcPathTextField, 1, 1);
+
+        // Use System Menu Bar CheckBox
+        CheckBox useSystemMenuBarCheckBox = new CheckBox("Use System Menu Bar");
+        useSystemMenuBarCheckBox.setSelected(Boolean.parseBoolean(properties.getProperty("useSystemMenuBar")));
+        grid.add(useSystemMenuBarCheckBox, 0, 2, 2, 1);
+
 
         Button saveBtn = new Button("Speichern");
         saveBtn.setOnAction(event -> {
-            Properties newProps = new Properties();
-            propBoxes.forEach(box -> {
-                // Jede Box hat genau 2 Kinder (Label & TextField) -> s.o.
-                String key = ((Label) box.getChildren().get(0)).getText();
-                String value = ((TextField) box.getChildren().get(1)).getText();
-                newProps.setProperty(key, value);
-            });
-
-            // Speichern
-            File propsFile = Path.of(Constants.PROPERTIES_PATH).toFile();
-            this.properties = newProps;
             try {
+
+                Properties newProps = new Properties();
+                newProps.setProperty("language", languageComboBox.getValue());
+                newProps.setProperty("db", jdbcPathTextField.getText());
+                newProps.setProperty("useSystemMenuBar", String.valueOf(useSystemMenuBarCheckBox));
+                // Speichern
+                File propsFile = Path.of(Constants.PROPERTIES_PATH).toFile();
+                this.properties = newProps;
                 this.properties.store(new FileWriter(propsFile), "JBudgetBook properties");
                 Alert alert = new Alert(AlertType.INFORMATION,
-                        "Einstellungen wurden gespeichert. Die Anwendung muss neugestartet werden!");
+                                        "Einstellungen wurden gespeichert. Die Anwendung muss neugestartet werden!");
                 alert.showAndWait();
-            } catch (IOException ioe) {
+            } catch (Exception e) {
                 Alert alert = new Alert(AlertType.ERROR, "Einstellungen konnten nicht gespeichert werden!");
                 alert.showAndWait();
             }
@@ -92,7 +112,7 @@ public class PropertiesService {
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
         BorderPane root = new BorderPane();
-        root.setCenter(propBoxesContainer);
+        root.setCenter(grid);
         root.setBottom(buttonBox);
         root.setPadding(new Insets(20));
 

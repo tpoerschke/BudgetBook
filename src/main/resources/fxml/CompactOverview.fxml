@@ -11,16 +11,16 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox spacing="10.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<HBox spacing="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox HBox.hgrow="ALWAYS">
          <children>
-            <Label style="-fx-font-weight: bold;" text="Monatlich" />
+            <Label style="-fx-font-weight: bold;" text="%compactView.label.monthly" />
             <TableView fx:id="monthlyTable" editable="true" prefWidth="320.0">
                <columns>
-                  <TableColumn fx:id="monthlyPositionCol" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" sortable="false" text="Position" />
-                  <TableColumn fx:id="monthlyValueCol" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="Ausgabe" />
-                  <TableColumn fx:id="monthlyTypeCol" maxWidth="98.0" minWidth="98.0" prefWidth="98.0" resizable="false" sortable="false" text="Art" />
+                  <TableColumn fx:id="monthlyPositionCol" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" sortable="false" text="%compactView.column.position" />
+                  <TableColumn fx:id="monthlyValueCol" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="%compactView.column.expense" />
+                  <TableColumn fx:id="monthlyTypeCol" maxWidth="98.0" minWidth="98.0" prefWidth="98.0" resizable="false" sortable="false" text="%compactView.column.type" />
                </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -40,7 +40,7 @@
                </rowConstraints>
                <children>
                   <Label fx:id="monthlySumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" />
-                  <Label text="Summe:" />
+                  <Label text="%compactView.label.sum" />
                </children>
                <VBox.margin>
                   <Insets top="5.0" />
@@ -50,12 +50,12 @@
       </VBox>
       <VBox HBox.hgrow="ALWAYS">
          <children>
-            <Label style="-fx-font-weight: bold;" text="Diesen Monat" />
+            <Label style="-fx-font-weight: bold;" text="%compactView.label.thisMonth" />
             <TableView fx:id="currentMonthTable" prefWidth="320.0">
                <columns>
-                  <TableColumn fx:id="currentMonthPositionCol" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" sortable="false" text="Position" />
-                  <TableColumn fx:id="currentMonthValueCol" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="Ausgabe" />
-                  <TableColumn fx:id="currentMonthTypeCol" maxWidth="98.0" minWidth="98.0" prefWidth="98.0" resizable="false" sortable="false" text="Art" />
+                  <TableColumn fx:id="currentMonthPositionCol" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" sortable="false" text="%compactView.column.position" />
+                  <TableColumn fx:id="currentMonthValueCol" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="%compactView.column.expense" />
+                  <TableColumn fx:id="currentMonthTypeCol" maxWidth="98.0" minWidth="98.0" prefWidth="98.0" resizable="false" sortable="false" text="%compactView.column.type" />
                </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -78,8 +78,8 @@
                <children>
                   <Label fx:id="currentMonthSumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" />
                   <Label fx:id="currentMonthTotalSumLabel" alignment="CENTER_RIGHT" prefWidth="60.0" styleClass="text-bold" text="00,00 €" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Summe:" />
-                  <Label styleClass="text-bold" text="Gesamt:" GridPane.rowIndex="3" />
+                  <Label text="%compactView.label.sum" />
+                  <Label styleClass="text-bold" text="%compactView.label.total" GridPane.rowIndex="3" />
                   <Label fx:id="monthlySumLabel1" alignment="CENTER_RIGHT" prefWidth="60.0" text="00,00 €" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="+" GridPane.rowIndex="1" />
                   <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />

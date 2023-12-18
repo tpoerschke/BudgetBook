@@ -42,6 +42,7 @@ import lombok.Setter;
 import timkodiert.budgetBook.domain.model.AccountTurnover;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.importer.ImportInformation;
 import timkodiert.budgetBook.importer.TurnoverImporter;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
@@ -168,7 +169,7 @@ public class ImportView implements View, Initializable {
 
             if (importInformation.isEmpty()) {
                 displayNotification(Styles.WARNING,
-                                    "Keine Umsätze in der Datei gefunden. Möglicherweise ist die Struktur der Datei nicht kompatibel.");
+                                    LanguageManager.getInstance().getLocString("alert.noTurnOversFoundInFile_maybeNotCompatible"));
             }
         } catch (Exception e) {
             //            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
@@ -195,7 +196,7 @@ public class ImportView implements View, Initializable {
     @FXML
     private void onSelectFile(ActionEvent e) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV-Dateien", "*.csv"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(LanguageManager.getInstance().getLocString("fileChooser.description.csv-files"), "*.csv"));
         File file = fileChooser.showOpenDialog(((Node) e.getSource()).getScene().getWindow());
         selectedFile.set(file);
     }

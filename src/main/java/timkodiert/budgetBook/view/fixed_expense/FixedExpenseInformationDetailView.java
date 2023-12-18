@@ -23,10 +23,9 @@ import javafx.stage.Stage;
 
 import timkodiert.budgetBook.domain.model.PaymentInformation;
 import timkodiert.budgetBook.domain.model.PaymentType;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.view.mdv_base.BaseDetailView;
 import timkodiert.budgetBook.view.widget.MonthYearPickerWidget;
-
-import static timkodiert.budgetBook.Constants.MONTH_NAMES;
 
 public class FixedExpenseInformationDetailView extends BaseDetailView<PaymentInformation> implements Initializable {
 
@@ -72,10 +71,8 @@ public class FixedExpenseInformationDetailView extends BaseDetailView<PaymentInf
         typeChoiceBox.getItems().addAll(typeList);
         typeChoiceBox.getSelectionModel().selectedItemProperty().addListener(this::typeChoiceBoxListener);
 
-        month1ChoiceBox.getItems().addAll(FXCollections.observableArrayList(MONTH_NAMES));
-        month2ChoiceBox.getItems().addAll(FXCollections.observableArrayList(MONTH_NAMES));
-        month3ChoiceBox.getItems().addAll(FXCollections.observableArrayList(MONTH_NAMES));
-        month4ChoiceBox.getItems().addAll(FXCollections.observableArrayList(MONTH_NAMES));
+        List.of(month1ChoiceBox,month2ChoiceBox,month3ChoiceBox,month4ChoiceBox).forEach(e->e.getItems().addAll(FXCollections.observableArrayList(
+                LanguageManager.getInstance().getMonths())));
     }
 
     @FXML

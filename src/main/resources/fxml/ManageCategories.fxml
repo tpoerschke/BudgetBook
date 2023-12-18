@@ -11,11 +11,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/validation.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/validation.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <TreeTableView fx:id="categoriesTable" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" showRoot="false" BorderPane.alignment="CENTER">
         <columns>
-          <TreeTableColumn fx:id="nameColumn" editable="false" minWidth="-Infinity" prefWidth="200.0" resizable="false" sortable="false" text="Name" />
+          <TreeTableColumn fx:id="nameColumn" editable="false" minWidth="-Infinity" prefWidth="200.0" resizable="false" sortable="false" text="%manageCategories.column.name" />
           <TreeTableColumn fx:id="actionColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="98.0" resizable="false" sortable="false" />
         </columns>
          <columnResizePolicy>
@@ -26,13 +26,13 @@
    <right>
       <VBox fx:id="editContainer" disable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Name">
+            <Label text="%manageCategories.label.name">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Label>
             <TextField fx:id="nameTextField" />
-            <Label text="Beschreibung">
+            <Label text="%manageCategories.label.description">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
@@ -43,12 +43,12 @@
                   <Insets top="20.0" />
                </VBox.margin>
                <children>
-                  <Button mnemonicParsing="false" onAction="#saveCategory" text="Speichern">
+                  <Button mnemonicParsing="false" onAction="#saveCategory" text="%button.save">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#resetCategory" text="Verwerfen" />
+                  <Button mnemonicParsing="false" onAction="#resetCategory" text="%button.discard" />
                </children>
             </HBox>
          </children>

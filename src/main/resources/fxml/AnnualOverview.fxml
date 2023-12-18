@@ -13,7 +13,7 @@
     <VBox BorderPane.alignment="CENTER">
       <TableView fx:id="mainTable" prefHeight="400.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="positionColumn" minWidth="100.0" prefWidth="150.0" styleClass="annual-overview-tablecolumn" text="Position"/>
+          <TableColumn fx:id="positionColumn" minWidth="100.0" prefWidth="150.0" styleClass="annual-overview-tablecolumn" text="%annualOverview.mainTable.column.position"/>
         </columns>
       </TableView>
       <!--
@@ -38,7 +38,7 @@
   <top>
     <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
       <items>
-        <Label text="Jahr:" />
+        <Label text="%annualOverview.toolbar.label.year" />
         <ComboBox fx:id="displayYearComboBox" prefWidth="100.0" />
       </items>
     </ToolBar>

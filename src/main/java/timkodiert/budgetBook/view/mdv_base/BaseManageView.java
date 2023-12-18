@@ -20,6 +20,7 @@ import timkodiert.budgetBook.domain.model.Adaptable;
 import timkodiert.budgetBook.domain.model.Adapter;
 import timkodiert.budgetBook.domain.model.ContentEquals;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.util.DialogFactory;
 import timkodiert.budgetBook.view.ControllerFactory;
 import timkodiert.budgetBook.view.View;
@@ -55,6 +56,7 @@ public abstract class BaseManageView<T extends Adaptable<A> & ContentEquals, A e
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource(getDetailViewFxmlLocation()));
         loader.setControllerFactory(controllerFactory::create);
+        loader.setResources(LanguageManager.getInstance().getResourceBundle());
         try {
             detailViewContainer.getChildren().add(loader.load());
         } catch (IOException ioe) {

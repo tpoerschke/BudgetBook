@@ -31,6 +31,7 @@ import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
 import timkodiert.budgetBook.table.cell.GroupTableCell;
@@ -92,7 +93,7 @@ public class MonthlyOverview implements Initializable, View {
                     .filter(d -> !RowType.getGroupTypes().contains(d.type()))
                     .mapToDouble(TableData::value).sum();
             sumTable.getItems().clear();
-            sumTable.getItems().add(new TableData("Summe", totalSum, null, null, RowType.SUM));
+            sumTable.getItems().add(new TableData(LanguageManager.getInstance().getLocString("monthlyOverview.label.sum"), totalSum, null, null, RowType.SUM));
         });
 
         List<FixedExpense> fixedExpenses = fixedExpenseRepository.findAll();
@@ -158,7 +159,7 @@ public class MonthlyOverview implements Initializable, View {
 
     private void initUniqueExpenseGroup(List<UniqueExpense> expenses) {
         initDataGroup(expenses, ToTableDataMapper::mapUniqueExpense, UniqueExpense::getTotalValue,
-                "Einzigartige Ausgaben", RowType.UNIQUE_EXPENSE_GROUP);
+                LanguageManager.getInstance().getLocString("monthlyOverview.label.uniqueExpenses"), RowType.UNIQUE_EXPENSE_GROUP);
     }
 
     private void initFixedExpenseGroup(List<FixedExpense> expenses) {
@@ -166,7 +167,7 @@ public class MonthlyOverview implements Initializable, View {
         initDataGroup(expenses,
                 exp -> ToTableDataMapper.mapFixedExpense(exp, monthYear),
                 exp -> exp.getValueFor(monthYear),
-                "Regelmäßige Ausgaben", RowType.FIXED_EXPENSE_GROUP);
+                LanguageManager.getInstance().getLocString("monthlyOverview.label.fixedExpenses"), RowType.FIXED_EXPENSE_GROUP);
     }
 
     private <T> void initDataGroup(List<T> expenses, Function<T, TableData> expToData,

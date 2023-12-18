@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.view.View;
 
 public class StageBuilder {
@@ -52,6 +54,7 @@ public class StageBuilder {
 
     public Stage build() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcePath));
+        loader.setResources(LanguageManager.getInstance().getResourceBundle());
         loader.setController(viewController);
 
         Parent parent = (Parent)loader.load();

@@ -2,29 +2,30 @@ package timkodiert.budgetBook.view.widget;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
-
-import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import atlantafx.base.theme.Styles;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import lombok.Builder;
+import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import timkodiert.budgetBook.domain.model.MonthYear;
+import timkodiert.budgetBook.i18n.LanguageManager;
 
 public class MonthYearPickerWidget implements Initializable {
 
@@ -51,9 +52,11 @@ public class MonthYearPickerWidget implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MonthYearPickerWidget.fxml"));
             loader.setController(this);
+            loader.setResources(LanguageManager.getInstance().getResourceBundle());
             parent.getChildren().add(loader.load());
         } catch (IOException e) {
-            Alert alert = new Alert(AlertType.ERROR, "Widget konnte nicht geöffnet werden!");
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.get("alert.widgetCouldNotBeOpened"));
             alert.showAndWait();
         }
     }
@@ -99,8 +102,7 @@ public class MonthYearPickerWidget implements Initializable {
 
         label.setText(labelStr);
 
-        List<String> monthList = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
-        monthChoiceBox.getItems().setAll(monthList);
+        monthChoiceBox.getItems().setAll(Arrays.stream(LanguageManager.getInstance().getMonths()).toList());
 
         if (this.value != null) {
             monthChoiceBox.getSelectionModel().select(this.value.getMonth() - 1);

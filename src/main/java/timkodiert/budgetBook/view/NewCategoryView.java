@@ -19,6 +19,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.Alert.AlertType;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.util.EntityManager;
 
 public class NewCategoryView implements Initializable, View {
@@ -76,7 +77,7 @@ public class NewCategoryView implements Initializable, View {
             }
 
             Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setContentText("Ausgabe \"" + category.getName() + "\" hinzugefügt.");
+            alert.setContentText(LanguageManager.get("alert.expenseAdded").formatted(category.getName()));
             alert.showAndWait();
             closeStage(event);
         }

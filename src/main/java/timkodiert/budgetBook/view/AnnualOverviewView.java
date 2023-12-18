@@ -29,6 +29,7 @@ import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.PaymentType;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.column.BoldTableColumn;
 import timkodiert.budgetBook.table.row.BoldTableRow;
@@ -36,8 +37,6 @@ import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
 public class AnnualOverviewView implements Initializable, View {
 
-    private static final List<String> MONTH_NAMES = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli",
-                                                            "August", "September", "Oktober", "November", "Dezember");
     private static final int CURRENT_YEAR = LocalDate.now().getYear();
     private static final int START_YEAR = CURRENT_YEAR - 5;
     private static final int END_YEAR = CURRENT_YEAR + 1;
@@ -70,13 +69,14 @@ public class AnnualOverviewView implements Initializable, View {
         displayYearComboBox.getItems().addAll(IntStream.rangeClosed(START_YEAR, END_YEAR).boxed().toList());
         displayYearComboBox.getSelectionModel().select(Integer.valueOf(CURRENT_YEAR));
         displayYearComboBox.getSelectionModel().selectedItemProperty()
-                .addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
-                    mainTable.refresh();
-                });
+                           .addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
+                               mainTable.refresh();
+                           });
 
         // Widget rechts einbinden
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ExpenseDetailWidget.fxml"));
+            loader.setResources(LanguageManager.getInstance().getResourceBundle());
             loader.setController(expenseDetailWidget);
             rootPane.setRight(loader.load());
         } catch (Exception e) {
@@ -89,10 +89,10 @@ public class AnnualOverviewView implements Initializable, View {
         // for i, month in enumerate(monthNames):
         //   ...
         // Java machts hier umständlich :/
-        ListIterator<String> iterator = MONTH_NAMES.listIterator();
+        ListIterator<String> iterator = LanguageManager.MONTH_NAMES.listIterator();
         while (iterator.hasNext()) {
             int index = iterator.nextIndex();
-            String month = iterator.next();
+            String month = LanguageManager.getInstance().getLocString(iterator.next());
 
             TableColumn<FixedTurnover, Number> tableColumn = new TableColumn<>(month);
             tableColumn.setPrefWidth(90);

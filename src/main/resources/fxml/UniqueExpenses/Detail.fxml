@@ -25,7 +25,7 @@
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
          <tabs>
-            <Tab text="Informationen">
+            <Tab text="%detail.tab.information">
                <content>
                   <GridPane hgap="20.0" maxHeight="400.0" vgap="20.0">
                      <columnConstraints>
@@ -39,25 +39,25 @@
                      <children>
                         <VBox>
                            <children>
-                              <Label text="Rechnungssteller" />
+                              <Label text="%detail.label.biller" />
                               <AutoCompleteTextField fx:id="billerTextField" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
                            </children>
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
                            <children>
-                              <Label text="Bemerkung" />
+                              <Label text="%detail.label.remark" />
                               <TextArea fx:id="noteTextArea" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="200.0" />
                            </children>
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
                            <children>
-                              <Label text="Datum" />
+                              <Label text="%detail.label.date" />
                               <DatePicker fx:id="datePicker" maxWidth="1.7976931348623157E308" />
                            </children>
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <Label text="Pfad zum Beleg / Kassenbon" />
+                              <Label text="%detail.label.receiptPath" />
                               <TextField fx:id="receiptTextField">
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
@@ -73,22 +73,22 @@
                   </GridPane>
                </content>
             </Tab>
-            <Tab text="Positionen">
+            <Tab text="%detail.tab.positions">
                <content>
                   <HBox>
                      <children>
                         <TableView fx:id="expenseInfoTable" HBox.hgrow="ALWAYS">
                            <columns>
-                              <TableColumn fx:id="expenseInfoPositionCol" maxWidth="1.7976931348623157E308" prefWidth="200.0" text="Position" />
-                              <TableColumn fx:id="expenseInfoValueCol" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Betrag" />
-                              <TableColumn fx:id="expenseInfoCategoriesCol" maxWidth="1.7976931348623157E308" prefWidth="250.0" text="Kategorien" />
+                              <TableColumn fx:id="expenseInfoPositionCol" maxWidth="1.7976931348623157E308" prefWidth="200.0" text="%detail.column.position" />
+                              <TableColumn fx:id="expenseInfoValueCol" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="%detail.column.amount" />
+                              <TableColumn fx:id="expenseInfoCategoriesCol" maxWidth="1.7976931348623157E308" prefWidth="250.0" text="%detail.column.categories" />
                            </columns>
                         </TableView>
                         <VBox spacing="10.0">
                            <children>
-                              <Button fx:id="addUniqueExpenseInformationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#newUniqueExpenseInformation" text="Hinzufügen" />
-                              <Button fx:id="editUniqueExpenseInformationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#editUniqueExpenseInformation" text="Bearbeiten" />
-                              <Button fx:id="deleteUniqueExpenseInformationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteUniqueExpenseInformation" text="Löschen" />
+                              <Button fx:id="addUniqueExpenseInformationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#newUniqueExpenseInformation" text="%button.add" />
+                              <Button fx:id="editUniqueExpenseInformationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#editUniqueExpenseInformation" text="%button.edit" />
+                              <Button fx:id="deleteUniqueExpenseInformationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteUniqueExpenseInformation" text="%button.delete" />
                            </children>
                            <HBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -104,9 +104,9 @@
    <bottom>
       <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <buttons>
-            <Button mnemonicParsing="false" onAction="#discardChanges" text="Verwerfen" />
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#save" text="Speichern" />
-            <Button mnemonicParsing="false" onAction="#delete" styleClass="danger" text="Löschen" />
+            <Button mnemonicParsing="false" onAction="#discardChanges" text="%button.discard" />
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#save" text="%button.save" />
+            <Button mnemonicParsing="false" onAction="#delete" styleClass="danger" text="%button.delete" />
          </buttons>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

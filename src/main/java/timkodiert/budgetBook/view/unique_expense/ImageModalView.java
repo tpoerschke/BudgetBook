@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.view.View;
 
 public class ImageModalView implements View, Initializable {
@@ -30,7 +31,7 @@ public class ImageModalView implements View, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        pathLabel.setText(String.format("Datei: %s", path));
+        pathLabel.setText(LanguageManager.getInstance().getLocString("imageView.label.file")+path);
         imageView.setImage(new Image(new File(path).toURI().toString()));
         imageView.fitWidthProperty().bind(root.widthProperty());
         imageView.fitHeightProperty().bind(root.heightProperty().subtract(pathLabel.heightProperty()));
