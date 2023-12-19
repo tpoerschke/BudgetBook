@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import lombok.Getter;
 
 import timkodiert.budgetBook.domain.model.AccountTurnover;
 import timkodiert.budgetBook.domain.model.FixedExpense;
@@ -22,7 +23,8 @@ import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
 public class ImportInformation {
 
     private static final String ANNOTATION_EMPTY = "";
-    private static final String ANNOTATION_UNIQUE_EXPENSE = "Wird zu einzigartiger Ausgabe";
+    public static final String ANNOTATION_UNIQUE_EXPENSE = "Wird zu einzigartiger Ausgabe.";
+    public static final String ANNOTATION_ALREADY_IMPORTED = "Ausgabe wurde bereits importiert.";
 
     private final BooleanProperty selectedForImport = new SimpleBooleanProperty(true);
 
@@ -33,7 +35,9 @@ public class ImportInformation {
     private final DoubleProperty amount = new SimpleDoubleProperty();
     private final ObjectProperty<FixedExpense> fixedExpense = new SimpleObjectProperty<>();
     private final StringProperty annotation = new SimpleStringProperty();
+    private final BooleanProperty alreadyImported = new SimpleBooleanProperty();
 
+    @Getter
     private final AccountTurnover accountTurnover;
 
     private ImportInformation(AccountTurnover accountTurnover) {
@@ -44,15 +48,34 @@ public class ImportInformation {
         postingText.set(accountTurnover.getPostingText());
         reference.set(accountTurnover.getReference());
         amount.set(accountTurnover.getAmount());
-        annotation.set(ANNOTATION_UNIQUE_EXPENSE);
 
-        fixedExpense.addListener((observableValue, oldVal, newVal) -> {
-            if (newVal == null) {
-                annotation.set(ANNOTATION_UNIQUE_EXPENSE);
-            } else {
-                annotation.set(ANNOTATION_EMPTY);
-            }
-        });
+        fixedExpense.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
+        alreadyImported.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
+        selectedForImport.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
+        updateAnnotation();
+
+        if (amount.get() > 0) {
+            selectedForImport.set(false);
+        }
+    }
+
+    private void updateAnnotation() {
+        if (alreadyImported.get()) {
+            annotation.set(ANNOTATION_ALREADY_IMPORTED);
+            return;
+        }
+
+        if (!selectedForImport.get()) {
+            annotation.set(ANNOTATION_EMPTY);
+            return;
+        }
+
+        if (fixedExpense.get() == null) {
+            annotation.set(ANNOTATION_UNIQUE_EXPENSE);
+            return;
+        }
+
+        annotation.set(ANNOTATION_EMPTY);
     }
 
     static ImportInformation from(AccountTurnover accountTurnover) {
@@ -112,5 +135,9 @@ public class ImportInformation {
 
     public StringProperty annotationProperty() {
         return annotation;
+    }
+
+    public BooleanProperty alreadyImportedProperty() {
+        return alreadyImported;
     }
 }

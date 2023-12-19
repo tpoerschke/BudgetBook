@@ -1,7 +1,5 @@
 package timkodiert.budgetBook.view;
 
-import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
-
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.List;
@@ -9,7 +7,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.IntStream;
-
 import javax.inject.Inject;
 
 import jakarta.validation.ConstraintViolation;
@@ -33,13 +30,17 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.converter.CurrencyStringConverter;
+
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedExpense;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.view.widget.MonthYearPickerWidget;
+
+import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
 
 public class NewExpenseView implements Initializable, View {
 
@@ -81,17 +82,12 @@ public class NewExpenseView implements Initializable, View {
                 new TextFormatter<>(new CurrencyStringConverter(NumberFormat.getInstance(Locale.GERMAN))));
 
         // Monatsauswahlen initialisieren
-        List<String> monthList = List.of("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August",
-                "September", "Oktober", "November", "Dezember");
-        month1ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
-        month2ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
-        month3ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
-        month4ChoiceBox.getItems().addAll(FXCollections.observableArrayList(monthList));
+        List.of(month1ChoiceBox,month2ChoiceBox,month3ChoiceBox,month4ChoiceBox).forEach(e->e.getItems().addAll(FXCollections.observableArrayList(LanguageManager.getInstance().getMonths())));
 
         month1ChoiceBox.getSelectionModel().selectedIndexProperty()
                 .addListener((ObservableValue<? extends Number> obs, Number oldIndex, Number newIndex) -> {
                     int month = newIndex.intValue();
-                    if (typeChoiceBox.getSelectionModel().getSelectedItem().equals("halbjährlich")) {
+                    if (typeChoiceBox.getSelectionModel().getSelectedItem().equals(LanguageManager.getInstance().getLocString("time.half-yearly"))) {
                         month2ChoiceBox.getSelectionModel().select(((month + 6) % 12));
                     } else if (typeChoiceBox.getSelectionModel().getSelectedItem().equals("vierteljährlich")) {
                         month2ChoiceBox.getSelectionModel().select(((month + 3) % 12));
@@ -100,7 +96,11 @@ public class NewExpenseView implements Initializable, View {
                     }
                 });
 
-        List<String> typeList = List.of("monatlich", "jährlich", "halbjährlich", "vierteljährlich");
+        List<String> typeList = List.of(
+            LanguageManager.getInstance().getLocString("time.monthly"),
+            LanguageManager.getInstance().getLocString("time.yearly"),
+            LanguageManager.getInstance().getLocString("time.half-yearly"),
+            LanguageManager.getInstance().getLocString("time.quarterly"));
         typeChoiceBox.getItems().addAll(typeList);
         // Monatsboxen mit ChangeListener ausblenden
         typeChoiceBox.getSelectionModel().selectedItemProperty()
@@ -155,7 +155,7 @@ public class NewExpenseView implements Initializable, View {
         String position = positionTextField.getText().trim();
         double value = Double.parseDouble(valueTextField.getText().replace(".", "").replace(",", "."));
         List<Integer> datesOfPayment = IntStream.rangeClosed(1, 12).boxed().toList();
-        if (!typeChoiceBox.getSelectionModel().getSelectedItem().equals("monatlich")) {
+        if (!typeChoiceBox.getSelectionModel().getSelectedItem().equals(LanguageManager.getInstance().getLocString("time.monthly"))) {
             datesOfPayment = List.of(month1ChoiceBox, month2ChoiceBox, month3ChoiceBox, month4ChoiceBox)
                     .stream()
                     .map(box -> box.getSelectionModel().getSelectedIndex())
@@ -196,7 +196,7 @@ public class NewExpenseView implements Initializable, View {
         } else {
             expensesRepository.persist(newExpense);
             Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setContentText("Ausgabe \"" + newExpense.getPosition() + "\" hinzugefügt.");
+            alert.setContentText(LanguageManager.get("alert.expenseAdded").formatted(newExpense.getPosition()));
             alert.showAndWait();
         }
     }

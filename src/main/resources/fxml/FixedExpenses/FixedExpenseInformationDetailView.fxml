@@ -14,14 +14,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<BorderPane minWidth="400.0" stylesheets="@../../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane minWidth="400.0" stylesheets="@../../css/general-styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <VBox prefWidth="300.0" spacing="20.0">
          <children>
             <VBox>
                <children>
-                  <Label text="Betrag" />
+                  <Label text="%fixedExpenseInformationDetailView.label.amount" />
                   <HBox>
                      <children>
                         <TextField fx:id="valueTextField" prefWidth="150.0" styleClass="left-pill" />
@@ -33,7 +32,7 @@
             <HBox fx:id="dateContainer" spacing="20.0" />
             <VBox>
                <children>
-                  <Label text="Typ" />
+                  <Label text="%fixedExpenseInformationDetailView.label.type" />
                   <ComboBox fx:id="typeChoiceBox" prefWidth="182.5" />
                </children>
             </VBox>
@@ -49,25 +48,25 @@
                <children>
                   <VBox GridPane.rowIndex="1">
                      <children>
-                        <Label fx:id="month3Label" text="3. Monat" />
+                        <Label fx:id="month3Label" text="%fixedExpenseInformationDetailView.label.thirdMonth" />
                         <ChoiceBox fx:id="month3ChoiceBox" maxWidth="1.7976931348623157E308" prefWidth="150.0" />
                      </children>
                   </VBox>
                   <VBox>
                      <children>
-                        <Label fx:id="month1Label" text="1. Monat" />
+                        <Label fx:id="month1Label" text="%fixedExpenseInformationDetailView.label.firstMonth" />
                         <ChoiceBox fx:id="month1ChoiceBox" maxWidth="1.7976931348623157E308" prefWidth="150.0" />
                      </children>
                   </VBox>
                   <VBox GridPane.columnIndex="1">
                      <children>
-                        <Label fx:id="month2Label" text="2. Monat" />
+                        <Label fx:id="month2Label" text="%fixedExpenseInformationDetailView.label.secondMonth" />
                         <ChoiceBox fx:id="month2ChoiceBox" maxWidth="1.7976931348623157E308" prefWidth="150.0" />
                      </children>
                   </VBox>
                   <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <Label fx:id="month4Label" text="4. Monat" />
+                        <Label fx:id="month4Label" text="%fixedExpenseInformationDetailView.label.fourthMonth" />
                         <ChoiceBox fx:id="month4ChoiceBox" maxWidth="1.7976931348623157E308" prefWidth="150.0" />
                      </children>
                   </VBox>
@@ -80,7 +79,7 @@
       </VBox>
    </center>
    <top>
-      <Label styleClass="text-bold" stylesheets="@../../css/general-styles.css" text="Informationen bearbeiten" BorderPane.alignment="CENTER">
+      <Label styleClass="text-bold" stylesheets="@../../css/general-styles.css" text="%fixedExpenseInformationDetailView.label.editInformation" BorderPane.alignment="CENTER">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
@@ -92,8 +91,8 @@
    <bottom>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
          <items>
-            <Button mnemonicParsing="false" onAction="#onSave" text="Speichern" />
-            <Button mnemonicParsing="false" onAction="#onRevert" text="Verwerfen" />
+            <Button mnemonicParsing="false" onAction="#onSave" text="%fixedExpenseInformationDetailView.button.save" />
+            <Button mnemonicParsing="false" onAction="#onRevert" text="%fixedExpenseInformationDetailView.button.cancel" />
          </items>
       </ToolBar>
    </bottom>

@@ -17,9 +17,9 @@
          <center>
             <TableView fx:id="entityTable" BorderPane.alignment="CENTER">
               <columns>
-                <TableColumn fx:id="billerCol" minWidth="80.0" text="Rechnungssteller" />
-                <TableColumn fx:id="dateCol" prefWidth="70.0" sortType="DESCENDING" text="Datum" />
-                  <TableColumn fx:id="valueCol" text="Betrag" />
+                <TableColumn fx:id="billerCol" minWidth="80.0" text="%uniqueExpensesMV.col.biller" />
+                <TableColumn fx:id="dateCol" prefWidth="70.0" sortType="DESCENDING" text="%uniqueExpensesMV.col.date" />
+                  <TableColumn fx:id="valueCol" text="%uniqueExpensesMV.col.value" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -29,12 +29,12 @@
          <top>
             <HBox alignment="CENTER_LEFT" spacing="10.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label styleClass="text-bold" text="Einzigartige Ausgaben verwalten">
+                  <Label styleClass="text-bold" text="%uniqueExpensesMV.label.manageUniqueExpenses">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#newUniqueExpense" styleClass="small" text="Hinzufügen" />
+                  <Button mnemonicParsing="false" onAction="#newUniqueExpense" styleClass="small" text="%button.add" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

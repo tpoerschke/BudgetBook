@@ -1,34 +1,30 @@
 package timkodiert.budgetBook.domain.model;
 
+import java.util.Arrays;
+
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import timkodiert.budgetBook.i18n.LanguageManager;
+
 @RequiredArgsConstructor
 public enum PaymentType {
 
-    MONTHLY("monatlich"),
-    ANNUAL("jährlich"),
-    SEMIANNUAL("halbjährlich"),
-    QUARTERLY("vierteljährlich"),
-    CUMULATIVE("Gesamt");
+    MONTHLY(LanguageManager.get("time.monthly")),
+    ANNUAL(LanguageManager.get("time.yearly")),
+    SEMIANNUAL(LanguageManager.get("time.half-yearly")),
+    QUARTERLY(LanguageManager.get("time.quarterly")),
+    CUMULATIVE(LanguageManager.get("domain.term.total"));
 
     @Getter
     @NonNull
-    private String type;
+    private final String type;
 
     public static PaymentType fromString(String type) {
-        switch (type) {
-            case "monatlich":
-                return MONTHLY;
-            case "jährlich":
-                return ANNUAL;
-            case "halbjährlich":
-                return SEMIANNUAL;
-            case "vierteljährlich":
-                return QUARTERLY;
-            default:
-                return null;
-        }
+        System.out.println(type);
+        return Arrays.stream(PaymentType.values()).filter(
+                e -> e.type.equals(type)
+        ).findFirst().orElse(null);
     }
 }

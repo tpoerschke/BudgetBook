@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetBook.controller.FixedExpenseController;
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.PropertiesService;
 import timkodiert.budgetBook.util.StageBuilder;
@@ -57,12 +58,13 @@ public class MainView implements Initializable {
 
         try {
             FXMLLoader templateLoader = new FXMLLoader();
+            templateLoader.setResources(LanguageManager.getInstance().getResourceBundle());
             templateLoader.setLocation(getClass().getResource("/fxml/Main.fxml"));
             templateLoader.setController(this);
             this.primaryStage.setScene(new Scene(templateLoader.load()));
             this.primaryStage.show();
         } catch (IOException e) {
-            Alert alert = new Alert(AlertType.ERROR, "Hauptansicht konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.mainViewCouldNotBeOpened"));
             alert.showAndWait();
         }
     }
@@ -74,24 +76,25 @@ public class MainView implements Initializable {
         menuBar.useSystemMenuBarProperty().set(useSystemMenuBar);
 
         // Das Kind laden (default)
-        loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
+        loadViewPartial("/fxml/MonthlyOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.monthlyOverView"));
     }
 
     private String getVersion() {
         return "Version " + getClass().getPackage().getImplementationVersion();
     }
 
-    private @Nullable View loadViewPartial(String resource, String stageTitle) {
+    public @Nullable View loadViewPartial(String resource, String stageTitle) {
         try {
             FXMLLoader templateLoader = new FXMLLoader();
             templateLoader.setLocation(getClass().getResource(resource));
             templateLoader.setControllerFactory(controllerFactory::create);
+            templateLoader.setResources(LanguageManager.getInstance().getResourceBundle());
             this.root.setCenter(templateLoader.load());
             this.primaryStage.setTitle(String.format("%s – JBudgetBook – %s", stageTitle, getVersion()));
             return templateLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.viewCouldNotBeOpened"));
             alert.showAndWait();
         }
         return null;
@@ -99,27 +102,30 @@ public class MainView implements Initializable {
 
     @FXML
     public void showMonthlyOverview(ActionEvent event) {
-        loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
+        loadViewPartial("/fxml/MonthlyOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.monthlyOverView"));
     }
 
     @FXML
     public void showAnnualOverview(ActionEvent event) {
-        loadViewPartial("/fxml/AnnualOverview.fxml", "Jahresübersicht");
+        loadViewPartial("/fxml/AnnualOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.annualOverView"));
     }
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        loadViewPartial("/fxml/ManageExpenses.fxml", "Regelmäßige Ausgaben verwalten");
+        loadViewPartial("/fxml/ManageExpenses.fxml", LanguageManager.getInstance().getLocString("stageTitle.regularExpensesOverview"));
     }
 
     @FXML
     private void openUniqueExpensesManageView(ActionEvent event) {
-        loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", "Einzigartige Ausgaben verwalten");
+        loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", LanguageManager.getInstance().getLocString("stageTitle.uniqueExpensesOverview"));
     }
 
     @FXML
     public void openImportView(ActionEvent event) {
-        loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
+        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
+        if (view instanceof ImportView importView) {
+            importView.setMainView(this);
+        }
     }
 
     @FXML
@@ -133,7 +139,7 @@ public class MainView implements Initializable {
                     .build();
             stage.show();
         } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.viewCouldNotBeOpened"));
             alert.showAndWait();
         }
     }
@@ -149,7 +155,7 @@ public class MainView implements Initializable {
                     .build();
             stage.show();
         } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
+            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.viewCouldNotBeOpened"));
             alert.showAndWait();
         }
     }
@@ -181,8 +187,9 @@ public class MainView implements Initializable {
 
     @FXML
     private void onDragDropped(DragEvent e) {
-        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", "Umsätze importieren");
+        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
         if (view instanceof ImportView importView) {
+            importView.setMainView(this);
             e.getDragboard().getFiles().stream().filter(this::isCsvFile).findFirst().ifPresent(importView.selectedFileProperty()::set);
         }
     }

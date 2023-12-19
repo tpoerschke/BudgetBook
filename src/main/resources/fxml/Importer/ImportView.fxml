@@ -12,7 +12,7 @@
 <StackPane fx:id="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.ImportView">
     <BorderPane>
         <top>
-            <Label text="Umsätze importieren" BorderPane.alignment="CENTER_LEFT" styleClass="text-bold">
+            <Label text="%stageTitle.importView" BorderPane.alignment="CENTER_LEFT" styleClass="text-bold">
                 <BorderPane.margin>
                     <Insets bottom="10.0"/>
                 </BorderPane.margin>
@@ -21,23 +21,23 @@
         <center>
             <VBox spacing="10.0" BorderPane.alignment="CENTER">
                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                    <Button mnemonicParsing="false" text="Datei auswählen" onAction="#onSelectFile"/>
+                    <Button mnemonicParsing="false" text="%fileChooser.button.selectFile" onAction="#onSelectFile"/>
                     <Label fx:id="filePathLabel"/>
                 </HBox>
                 <TableView fx:id="importTable" editable="true" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="selectedCol" prefWidth="80.0"/>
-                        <TableColumn fx:id="dateCol" prefWidth="100.0" text="Valuta"/>
-                        <TableColumn fx:id="receiverCol" prefWidth="250.0" text="Empfänger"/>
-                        <TableColumn fx:id="postingTextCol" prefWidth="180.0" text="Buchungstext"/>
-                        <TableColumn fx:id="referenceCol" prefWidth="350.0" text="Verwendungszweck"/>
-                        <TableColumn fx:id="amountCol" prefWidth="100.0" text="Betrag"/>
-                        <TableColumn fx:id="associatedCol" prefWidth="160.0" text="Regelmäßige Ausgabe"/>
-                        <TableColumn fx:id="annotationCol" prefWidth="200.0" text="Anmerkung"/>
+                        <TableColumn fx:id="dateCol" prefWidth="100.0" text="%importView.table-column.dateCol"/>
+                        <TableColumn fx:id="receiverCol" prefWidth="250.0" text="%importView.table-column.receiverCol"/>
+                        <TableColumn fx:id="postingTextCol" prefWidth="180.0" text="%importView.table-column.postingTextCol"/>
+                        <TableColumn fx:id="referenceCol" prefWidth="350.0" text="%importView.table-column.reference"/>
+                        <TableColumn fx:id="amountCol" prefWidth="100.0" text="%importView.table-column.amount"/>
+                        <TableColumn fx:id="associatedCol" prefWidth="160.0" text="%importView.table-column.regularExpense"/>
+                        <TableColumn fx:id="annotationCol" prefWidth="220.0" text="%importView.table-column.remarks"/>
                     </columns>
                 </TableView>
                 <HBox>
-                    <Button text="Ausgewählte Importieren" onAction="#importSelected"/>
+                    <Button text="%fileChooser.button.importSelected" onAction="#importSelected"/>
                 </HBox>
             </VBox>
         </center>

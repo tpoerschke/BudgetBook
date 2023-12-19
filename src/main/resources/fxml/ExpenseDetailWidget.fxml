@@ -9,7 +9,7 @@
 
 <VBox maxWidth="-Infinity" prefWidth="250.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="positionLabel" text="Label">
+      <Label fx:id="positionLabel" text="%expenseDetailWidget.label.label">
          <font>
             <Font size="24.0" />
          </font>
@@ -17,12 +17,12 @@
       <TextFlow fx:id="noteTextFlow" />
       <FlowPane fx:id="categoriesFlow" hgap="5.0" vgap="5.0">
          <children>
-            <Label style="-fx-background-color: #dfdfdf; -fx-background-radius: 4px;" styleClass="tag" text="Eine Kategorie">
+            <Label style="-fx-background-color: #dfdfdf; -fx-background-radius: 4px;" styleClass="tag" text="%expenseDetailWidget.label.category">
                <padding>
                   <Insets bottom="2.0" left="4.0" right="4.0" top="2.0" />
                </padding>
             </Label>
-            <Label style="-fx-background-color: #dfdfdf; -fx-background-radius: 4px;" styleClass="tag" text="Kategorie #2 :)">
+            <Label style="-fx-background-color: #dfdfdf; -fx-background-radius: 4px;" styleClass="tag" text="%expenseDetailWidget.label.category2">
                <padding>
                   <Insets bottom="2.0" left="4.0" right="4.0" top="2.0" />
                </padding>

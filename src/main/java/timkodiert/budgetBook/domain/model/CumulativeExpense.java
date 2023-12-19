@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import timkodiert.budgetBook.i18n.LanguageManager;
+
 public class CumulativeExpense implements FixedTurnover {
 
     private final Map<MonthYear, Double> valueMap = new HashMap<>();
@@ -26,7 +28,7 @@ public class CumulativeExpense implements FixedTurnover {
 
     @Override
     public String getPosition() {
-        return "Gesamt";
+        return LanguageManager.get("domain.term.total");
     }
 
     @Override

@@ -22,24 +22,24 @@
             <TableColumn fx:id="buttonCol" editable="false" maxWidth="-Infinity" minWidth="55.0"
                prefWidth="55.0" resizable="false" sortable="false" />
             <TableColumn fx:id="positionCol" maxWidth="1.7976931348623157E308" minWidth="-1.0"
-               prefWidth="300.0" text="Position" />
+               prefWidth="300.0" text="%monthlyOverview.dataTable.column.position" />
             <TableColumn fx:id="valueCol" maxWidth="1.7976931348623157E308" minWidth="-1.0"
-               prefWidth="120.0" styleClass="value-col, border-right" text="Betrag" />
+               prefWidth="120.0" styleClass="value-col, border-right" text="%monthlyOverview.dataTable.column.amount" />
             <TableColumn fx:id="dateCol" maxWidth="1.7976931348623157E308" minWidth="90.0"
-               prefWidth="-1.0" styleClass="border-right" text="Datum" />
+               prefWidth="-1.0" styleClass="border-right" text="%monthlyOverview.dataTable.column.date" />
             <TableColumn fx:id="categoriesCol" maxWidth="1.7976931348623157E308" minWidth="200.0"
-               prefWidth="-1.0" text="Kategorien" />
+               prefWidth="-1.0" text="%monthlyOverview.dataTable.column.categories" />
          </columns>
       </TableView>
    </center>
    <bottom>
       <TableView fx:id="sumTable" prefHeight="42.0" BorderPane.alignment="CENTER">
          <columns>
-            <TableColumn fx:id="sumTableCol0" prefWidth="75.0" text="Column X" />
+            <TableColumn fx:id="sumTableCol0" prefWidth="75.0" text="%monthlyOverview.sumTable.column.columnX" />
             <TableColumn fx:id="sumTableCol1" maxWidth="1.7976931348623157E308" minWidth="-1.0"
-               prefWidth="-1.0" text="C1" />
+               prefWidth="-1.0" text="%monthlyOverview.sumTable.column.c1" />
             <TableColumn fx:id="sumTableCol2" maxWidth="1.7976931348623157E308" minWidth="-1.0"
-               prefWidth="-1.0" styleClass="value-col" text="C2" />
+               prefWidth="-1.0" styleClass="value-col" text="%monthlyOverview.sumTable.column.c2" />
          </columns>
          <styleClass>
             <String fx:value="noheader" />
@@ -50,7 +50,7 @@
    <top>
       <VBox spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <Label styleClass="text-bold" text="Monatsansicht">
+            <Label styleClass="text-bold" text="%monthlyOverview.label.monthlyView">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
