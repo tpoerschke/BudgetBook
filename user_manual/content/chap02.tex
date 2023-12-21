@@ -1,13 +1,21 @@
-\chapter{Importieren von Ausgaben}
+\chapter{Umsätze importieren}
 
-\section{Grundbegriffe}
+Über die Ansicht "`Umsätze importieren"' können Kontoauszüge im CSV-Format importiert werden. Aktuell werden ausschließlich Dateien im Exportformat der ING verarbeitet. Die Ansicht ist im Menü unter "`Daten $\rightarrow$ Importieren"' zu finden.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ut tortor finibus, feugiat orci et, porta velit. Suspendisse faucibus arcu eget leo tempor volutpat. Donec gravida pulvinar porta. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sit amet ultricies purus. Ut gravida feugiat feugiat. Morbi blandit eu sem non pretium. Sed egestas consectetur leo, et bibendum enim condimentum eget. Vivamus felis diam, malesuada ut sem at, pulvinar cursus nisi. Praesent vehicula augue sed sapien efficitur rhoncus. Maecenas non eros ex. 
+\section{Ablauf: Umsätze importieren}
 
-\section{Weiterer Abschnitt}
+Eine CSV-Datei kann über den Button "`Datei auswählen"' oder per Drag & Drop (in jeder Ansicht) importiert werden. Dann werden die gefundenen Umsätze in einer Tabelle angezeigt (s. Abbildung \ref{fig:ImportView}). Sobald eine Importdatei geöffnet wird, findet eine Zuordnung der gefunden Umsätze zu den \textit{regelmäßigen Ausgaben} im System statt. Umsätze, die bereits importiert wurden, werden standardmäßig nicht importiert und mit einer entsprechenden Anmerkung versehen. Zurzeit werden Einnahmen nicht importiert.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ut tortor finibus, feugiat orci et, porta velit. Suspendisse faucibus arcu eget leo tempor volutpat. Donec gravida pulvinar porta. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sit amet ultricies purus. Ut gravida feugiat feugiat. Morbi blandit eu sem non pretium. Sed egestas consectetur leo, et bibendum enim condimentum eget. Vivamus felis diam, malesuada ut sem at, pulvinar cursus nisi. Praesent vehicula augue sed sapien efficitur rhoncus. Maecenas non eros ex.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{img/Screenshot-ImportView}
+	\vspace{-2em}
+	\caption{Ansicht "`Umsätze importieren"'}
+	\label{fig:ImportView}
+\end{figure}
 
-In ex enim, ullamcorper ornare consectetur eu, ullamcorper ut augue. Vivamus ultrices semper mauris, quis sagittis diam gravida quis. Fusce vitae aliquam tortor. Fusce dapibus faucibus tellus viverra iaculis. Cras vitae turpis enim. Nam lacinia leo sapien, nec accumsan purus aliquet in. Donec dictum purus est, in tempor mi vehicula non.
+\section{Importregeln}
 
-Morbi vel mattis lacus. Cras ut gravida tellus, sed efficitur ante. Pellentesque in blandit urna. Donec dignissim accumsan tellus nec tristique. Ut tempus in neque a consequat. In sagittis tristique velit. Mauris lorem leo, euismod ut ipsum nec, accumsan posuere justo. Nunc bibendum metus eget lectus iaculis consectetur. Mauris hendrerit dui elit, at cursus sapien tempus at. Fusce lacus dui, efficitur eu congue et, dictum at velit. Integer vel rutrum nibh, sit amet euismod odio. Ut viverra sapien leo, non mollis arcu tempus et.
+Wie reale Umsätze den regelmäßigen Ausgaben zugeordnet werden sollen, kann in der Detailansicht dieser bestimmt werden. Dort kann festgelegt werden, welchen Text der Empfänger oder der Verwendungszweck enthalten muss. Sind Texte in beiden Bedingungen eingetragen, so müssen beide zutreffen (Und-Verknüpfung). 
+
+Unterhalb dieser Konfiguration ist eine Tabelle zu sehen, die die bereits importierten Umsätze zu dieser Ausgabe auflistet. 
