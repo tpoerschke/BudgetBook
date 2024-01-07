@@ -34,10 +34,23 @@
     linkcolor=.,
     filecolor=.,      
     urlcolor=.,
-    pdftitle={\APPNAME Handbuch},
+    pdftitle={\APPNAME\ Handbuch},
     pdfauthor={Tim Poerschke \& Noah Skrzypczyk}
 }
 \urlstyle{same}
+
+
+% Boxen / Frames
+
+\usepackage{xcolor}
+\usepackage{mdframed}
+
+\newmdenv[%
+	roundcorner=5pt,
+	frametitle={Info},
+	frametitlerule=true,
+	frametitlebackgroundcolor=blue!15!white,
+]{infobox}
 
 
 % Weitere Pakete

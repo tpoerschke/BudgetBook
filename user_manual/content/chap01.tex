@@ -1,13 +1,33 @@
-\chapter{Einleitung}
+\chapter{Grundlegende Konzepte}
 
-\section{Grundbegriffe}
+Die Software unterscheidet zwischen zwei Typen von Ausgaben:
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ut tortor finibus, feugiat orci et, porta velit. Suspendisse faucibus arcu eget leo tempor volutpat. Donec gravida pulvinar porta. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sit amet ultricies purus. Ut gravida feugiat feugiat. Morbi blandit eu sem non pretium. Sed egestas consectetur leo, et bibendum enim condimentum eget. Vivamus felis diam, malesuada ut sem at, pulvinar cursus nisi. Praesent vehicula augue sed sapien efficitur rhoncus. Maecenas non eros ex. 
+\begin{itemize}[nosep]
+	\item Regelmäßige Ausgaben
+	\item Einzigartige Ausgaben
+\end{itemize}
 
-\section{Weiterer Abschnitt}
+\section{Regelmäßige Ausgaben} \label{sec:fixedExpenses}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ut tortor finibus, feugiat orci et, porta velit. Suspendisse faucibus arcu eget leo tempor volutpat. Donec gravida pulvinar porta. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sit amet ultricies purus. Ut gravida feugiat feugiat. Morbi blandit eu sem non pretium. Sed egestas consectetur leo, et bibendum enim condimentum eget. Vivamus felis diam, malesuada ut sem at, pulvinar cursus nisi. Praesent vehicula augue sed sapien efficitur rhoncus. Maecenas non eros ex.
+Regelmäßige bzw. wiederkehrende Ausgaben treten in einem bestimmten Rhythmus auf (bspw. vierteljährlich oder monatlich).
 
-In ex enim, ullamcorper ornare consectetur eu, ullamcorper ut augue. Vivamus ultrices semper mauris, quis sagittis diam gravida quis. Fusce vitae aliquam tortor. Fusce dapibus faucibus tellus viverra iaculis. Cras vitae turpis enim. Nam lacinia leo sapien, nec accumsan purus aliquet in. Donec dictum purus est, in tempor mi vehicula non.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{img/Screenshot-FixedExpenses-MDV}
+	\vspace{-2em}
+	\caption{Listen- \& Detailansicht der regelmäßigen Ausgaben}
+	\label{fig:mdvFixedExpenses}
+\end{figure}
 
-Morbi vel mattis lacus. Cras ut gravida tellus, sed efficitur ante. Pellentesque in blandit urna. Donec dignissim accumsan tellus nec tristique. Ut tempus in neque a consequat. In sagittis tristique velit. Mauris lorem leo, euismod ut ipsum nec, accumsan posuere justo. Nunc bibendum metus eget lectus iaculis consectetur. Mauris hendrerit dui elit, at cursus sapien tempus at. Fusce lacus dui, efficitur eu congue et, dictum at velit. Integer vel rutrum nibh, sit amet euismod odio. Ut viverra sapien leo, non mollis arcu tempus et.
+In der Detailansicht (s. Abbildung \ref{fig:mdvFixedExpenses} rechts) kann u. a. der Zyklus/Rhythmus der Ausgabe und die Importregel festgelegt werden. 
+
+\begin{infobox}
+\textbf{Hinweis zu importieren Umsätzen}: Sollten zu einer Ausgabe reale Umsätze importiert worden sein, werden in den Übersichten (bspw. Monatsansicht) der Betrag dieser importierten Umsätze verwendet und der im System konfigurierte Betrag nur noch als Fallback verwendet. 
+\end{infobox}
+
+Da reale Ausgaben (bzw. Importe) über die Importregeln einer regelmäßigen Ausgabe zugeordnet werden können und dann dieser reale Umsatz in der Software angezeigt wird, können auch wiederkehrende Ausgaben mit schwankenden Beträgen -- wie es beim Tanken der Fall ist -- gruppiert werden.
+
+
+\section{Einzigartige Ausgaben}
+
+Einzigartige Ausgaben bzw. einmalige Ausgaben treten einmalig oder selten auf, sodass es keinen Mehrwert bietet, diese als regelmäßige Ausgaben zu gruppieren (da bspw. keine wiederkehrende Importe zu Ausgaben dieser Art erwartet werden.
