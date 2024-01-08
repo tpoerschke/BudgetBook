@@ -1,0 +1,62 @@
+
+% Seitenformatierung
+
+\usepackage{geometry}
+\geometry{
+	a4paper,
+	left = 3.5cm,
+	right = 2.5cm,
+	top = 2.5cm,
+	bottom = 2.5cm
+}
+\paperheight 297mm % optional
+\paperwidth 210mm % optional
+
+
+% Sprachpakete
+
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+
+
+% Kopf-, Fußzeile, Seitennummerierung, Font
+
+\usepackage{fancyhdr}
+\usepackage{palatino}
+
+
+% Links
+
+\usepackage{hyperref}
+\hypersetup{
+	hidelinks,
+    colorlinks=false,
+    linkcolor=.,
+    filecolor=.,      
+    urlcolor=.,
+    pdftitle={\APPNAME\ Handbuch},
+    pdfauthor={Tim Poerschke \& Noah Skrzypczyk}
+}
+\urlstyle{same}
+
+
+% Boxen / Frames
+
+\usepackage{xcolor}
+\usepackage{mdframed}
+
+\newmdenv[%
+	roundcorner=5pt,
+	frametitle={Info},
+	frametitlerule=true,
+	frametitlebackgroundcolor=blue!15!white,
+]{infobox}
+
+
+% Weitere Pakete
+
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{setspace} % optional, für Variable Abstände
+\usepackage{float} % optional, zur erweiterten Ausrichtung von Bildern
+
