@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
@@ -18,6 +19,7 @@ import lombok.Setter;
  * Nutzt die @CsvBindByPosition wegen Encoding-Problemen (s. Auftraggeber/Empfänger)
  */
 @Getter
+@NoArgsConstructor
 @Entity
 public class AccountTurnover extends BaseEntity {
 
@@ -49,6 +51,14 @@ public class AccountTurnover extends BaseEntity {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "unique_expense_id")
     private UniqueExpense uniqueExpense;
+
+    public AccountTurnover(LocalDate date, String receiver, String postingText, String reference, double amount) {
+        this.date = date;
+        this.receiver = receiver;
+        this.postingText = postingText;
+        this.reference = reference;
+        this.amount = amount;
+    }
 
     @Override
     public boolean contentEquals(Object other) {

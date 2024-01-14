@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @Getter
 public class MonthYear implements Comparable<MonthYear> {
+
     @Column(nullable = true)
     private int month;
     @Column(nullable = true)

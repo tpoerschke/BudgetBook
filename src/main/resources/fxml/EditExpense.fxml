@@ -120,7 +120,7 @@
                            <Insets left="5.0"/>
                         </padding>
                      </Label>
-                     <TableView VBox.vgrow="ALWAYS">
+                     <TableView fx:id="importsTable" VBox.vgrow="ALWAYS">
                         <columns>
                            <TableColumn fx:id="importsDateCol" prefWidth="100.0" text="%editExpense.column.date"/>
                            <TableColumn fx:id="importsReceiverCol" prefWidth="250.0" text="%editExpense.column.recepient"/>

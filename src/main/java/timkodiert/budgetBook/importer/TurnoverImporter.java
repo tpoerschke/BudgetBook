@@ -36,7 +36,7 @@ public class TurnoverImporter {
     }
 
     public TurnoverImporter parse(File file) throws IOException, IllegalStateException {
-        var builder = new CsvToBeanBuilder<AccountTurnover>(new FileReader(file, Charset.forName("ISO_8859_1")));
+        var builder = new CsvToBeanBuilder<AccountTurnover>(new FileReader(file, Charset.forName("UTF-8")));
         List<AccountTurnover> imports = builder.withSkipLines(SKIP_LINES).withSeparator(';').withType(AccountTurnover.class).build().parse();
         importInformationList.setAll(imports.stream().map(ImportInformation::from).toList());
         return this;

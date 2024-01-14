@@ -3,6 +3,7 @@ package timkodiert.budgetBook.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import jakarta.persistence.CascadeType;
@@ -15,6 +16,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Entity
@@ -80,8 +82,13 @@ public class FixedExpense extends BaseEntity implements FixedTurnover, Categoriz
     }
 
     private double getValueFor(int year, int month) {
-        // Idee: Wenn es einen Import zu diesem Monat gibt, dann soll der importierte Betrag verwendet werden?
-        PaymentInformation payInfo = this.findPaymentInformation(MonthYear.of(month, year));
+        // Importe auswerten
+        List<AccountTurnover> accountTurnover = findImports(MonthYear.of(month, year));
+        if(!accountTurnover.isEmpty()) {
+            return accountTurnover.stream().mapToDouble(AccountTurnover::getAmount).sum();
+        }
+        // Konfigurierten Rhythmus auswerten
+        PaymentInformation payInfo = findPaymentInformation(MonthYear.of(month, year));
         if (payInfo != null) {
             return payInfo.getValueFor(MonthYear.of(month, year));
         }
@@ -100,6 +107,10 @@ public class FixedExpense extends BaseEntity implements FixedTurnover, Categoriz
             }
         }
         return null;
+    }
+
+    private List<AccountTurnover> findImports(MonthYear monthYear) {
+        return accountTurnover.stream().filter(at -> monthYear.containsDate(at.getDate())).toList();
     }
 
     @Override
