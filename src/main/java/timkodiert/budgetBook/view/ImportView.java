@@ -40,7 +40,7 @@ import javafx.util.converter.DefaultStringConverter;
 import lombok.Setter;
 
 import timkodiert.budgetBook.domain.model.AccountTurnover;
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.importer.ImportInformation;
@@ -52,7 +52,7 @@ import timkodiert.budgetBook.util.FixedExpenseStringConverter;
 
 public class ImportView implements View, Initializable {
 
-    private final Repository<FixedExpense> fixedExpenseRepository;
+    private final Repository<FixedTurnover> fixedExpenseRepository;
     private final Repository<AccountTurnover> accountTurnoverRepository;
     private final TurnoverImporter importer;
     private final DialogFactory dialogFactory;
@@ -68,7 +68,7 @@ public class ImportView implements View, Initializable {
     @FXML
     private TableColumn<ImportInformation, Number> amountCol;
     @FXML
-    private TableColumn<ImportInformation, FixedExpense> associatedCol;
+    private TableColumn<ImportInformation, FixedTurnover> associatedCol;
     @FXML
     public TableColumn<ImportInformation, String> annotationCol;
 
@@ -86,7 +86,7 @@ public class ImportView implements View, Initializable {
     private MainView mainView;
 
     @Inject
-    public ImportView(Repository<FixedExpense> fixedExpenseRepository,
+    public ImportView(Repository<FixedTurnover> fixedExpenseRepository,
                       Repository<AccountTurnover> accountTurnoverRepository,
                       TurnoverImporter importer,
                       DialogFactory dialogFactory) {
@@ -98,7 +98,7 @@ public class ImportView implements View, Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<FixedExpense> fixedExpenses = FXCollections.observableArrayList();
+        ObservableList<FixedTurnover> fixedExpenses = FXCollections.observableArrayList();
         fixedExpenses.add(null);
         fixedExpenses.addAll(fixedExpenseRepository.findAll());
 

@@ -5,7 +5,7 @@ import dagger.Module;
 
 import timkodiert.budgetBook.domain.model.AccountTurnover;
 import timkodiert.budgetBook.domain.model.Category;
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.ImportRule;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
@@ -18,7 +18,7 @@ public interface RepositoryModule {
     Repository<Category> provideCategoriesRepository(CategoriesRepository impl);
 
     @Binds
-    Repository<FixedExpense> provideFixedExpensesRepository(FixedExpensesRepository impl);
+    Repository<FixedTurnover> provideFixedExpensesRepository(FixedExpensesRepository impl);
 
     @Binds
     Repository<PaymentInformation> providePaymentInformationsRepository(PaymentInformationsRepository impl);

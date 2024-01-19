@@ -14,10 +14,10 @@ public class CumulativeExpenseTest {
     @Test
     @DisplayName("Grundlegender Test")
     void test() {
-        List<FixedExpense> expenses = new ArrayList<>();
-        expenses.add(new FixedExpense("Test-Ausgabe 1", 10, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null));
-        expenses.add(new FixedExpense("Test-Ausgabe 2", 42, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null));
-        expenses.add(new FixedExpense("Test-Ausgabe 3", 100, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null));
+        List<FixedTurnover> expenses = new ArrayList<>();
+        expenses.add(new FixedTurnover("Test-Ausgabe 1", 10, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null));
+        expenses.add(new FixedTurnover("Test-Ausgabe 2", 42, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null));
+        expenses.add(new FixedTurnover("Test-Ausgabe 3", 100, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null));
         CumulativeExpense ce = new CumulativeExpense(expenses, 2022, 2023);
 
         assertEquals(152.0, ce.getValueFor(MonthYear.of(1, 2023)));

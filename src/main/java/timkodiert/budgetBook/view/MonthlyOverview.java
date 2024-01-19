@@ -27,7 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.repository.Repository;
@@ -65,11 +65,11 @@ public class MonthlyOverview implements Initializable, View {
     private ObservableList<TableData> data = FXCollections.observableArrayList();
 
     private final Repository<UniqueExpense> uniqueExpenseRepository;
-    private final Repository<FixedExpense> fixedExpenseRepository;
+    private final Repository<FixedTurnover> fixedExpenseRepository;
 
     @Inject
     public MonthlyOverview(Repository<UniqueExpense> uniqueExpenseRepository,
-            Repository<FixedExpense> fixedExpenseRepository) {
+            Repository<FixedTurnover> fixedExpenseRepository) {
         this.uniqueExpenseRepository = uniqueExpenseRepository;
         this.fixedExpenseRepository = fixedExpenseRepository;
     }
@@ -96,7 +96,7 @@ public class MonthlyOverview implements Initializable, View {
             sumTable.getItems().add(new TableData(LanguageManager.getInstance().getLocString("monthlyOverview.label.sum"), totalSum, null, null, RowType.SUM));
         });
 
-        List<FixedExpense> fixedExpenses = fixedExpenseRepository.findAll();
+        List<FixedTurnover> fixedExpenses = fixedExpenseRepository.findAll();
         initFixedExpenseGroup(fixedExpenses);
 
         List<UniqueExpense> uniqueExpenses = uniqueExpenseRepository.findAll().stream()
@@ -146,8 +146,8 @@ public class MonthlyOverview implements Initializable, View {
         //
         monthFilter.addListener((observable, oldValue, newValue) -> {
             data.clear();
-            List<FixedExpense> fixedExpensesForMonth = fixedExpenseRepository.findAll().stream()
-                    .filter(exp -> exp.getValueFor(newValue) != 0).toList();
+            List<FixedTurnover> fixedExpensesForMonth = fixedExpenseRepository.findAll().stream()
+                                                                              .filter(exp -> exp.getValueFor(newValue) != 0).toList();
             initFixedExpenseGroup(fixedExpensesForMonth);
 
             List<UniqueExpense> uniqueExpensesForMonth = uniqueExpenseRepository.findAll().stream()
@@ -162,7 +162,7 @@ public class MonthlyOverview implements Initializable, View {
                 LanguageManager.getInstance().getLocString("monthlyOverview.label.uniqueExpenses"), RowType.UNIQUE_EXPENSE_GROUP);
     }
 
-    private void initFixedExpenseGroup(List<FixedExpense> expenses) {
+    private void initFixedExpenseGroup(List<FixedTurnover> expenses) {
         MonthYear monthYear = monthFilter.getValue();
         initDataGroup(expenses,
                 exp -> ToTableDataMapper.mapFixedExpense(exp, monthYear),

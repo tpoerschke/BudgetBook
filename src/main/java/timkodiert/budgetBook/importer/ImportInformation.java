@@ -14,7 +14,7 @@ import javafx.beans.property.StringProperty;
 import lombok.Getter;
 
 import timkodiert.budgetBook.domain.model.AccountTurnover;
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
 
@@ -33,7 +33,7 @@ public class ImportInformation {
     private final StringProperty postingText = new SimpleStringProperty();
     private final StringProperty reference = new SimpleStringProperty();
     private final DoubleProperty amount = new SimpleDoubleProperty();
-    private final ObjectProperty<FixedExpense> fixedExpense = new SimpleObjectProperty<>();
+    private final ObjectProperty<FixedTurnover> fixedExpense = new SimpleObjectProperty<>();
     private final StringProperty annotation = new SimpleStringProperty();
     private final BooleanProperty alreadyImported = new SimpleBooleanProperty();
 
@@ -129,7 +129,7 @@ public class ImportInformation {
         return amount;
     }
 
-    public ObjectProperty<FixedExpense> fixedExpenseProperty() {
+    public ObjectProperty<FixedTurnover> fixedExpenseProperty() {
         return fixedExpense;
     }
 

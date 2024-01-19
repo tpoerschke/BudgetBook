@@ -19,6 +19,7 @@
                <columns>
                   <TableColumn fx:id="positionCol" minWidth="80.0" text="%manageExpenses.column.position" />
                   <TableColumn fx:id="typeCol" prefWidth="75.0" text="%manageExpenses.column.type" />
+                  <TableColumn fx:id="directionCol" prefWidth="100.0" text="Richtung" />
                </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

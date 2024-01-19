@@ -45,7 +45,7 @@ public class Category extends BaseEntity {
     private List<Category> children = new ArrayList<>();
 
     @ManyToMany(mappedBy = "categories")
-    private List<FixedExpense> fixedExpenses = new ArrayList<>();
+    private List<FixedTurnover> fixedExpenses = new ArrayList<>();
 
     @ManyToMany(mappedBy = "categories")
     private List<UniqueExpenseInformation> uniqueExpenseInformation = new ArrayList<>();

@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 import javafx.util.converter.CurrencyStringConverter;
 
 import timkodiert.budgetBook.domain.model.Category;
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.repository.Repository;
@@ -63,13 +63,13 @@ public class NewExpenseView implements Initializable, View {
     @FXML
     private HBox widgetContainer;
 
-    private Repository<FixedExpense> expensesRepository;
+    private Repository<FixedTurnover> expensesRepository;
     private Repository<Category> categoriesRepository;
 
     private MonthYearPickerWidget startMonthWidget, endMonthWidget;
 
     @Inject
-    public NewExpenseView(Repository<FixedExpense> expensesRepository, Repository<Category> categoiesRepository) {
+    public NewExpenseView(Repository<FixedTurnover> expensesRepository, Repository<Category> categoiesRepository) {
         this.expensesRepository = expensesRepository;
         this.categoriesRepository = categoiesRepository;
     }
@@ -167,12 +167,12 @@ public class NewExpenseView implements Initializable, View {
         PaymentType type = PaymentType.fromString(typeChoiceBox.getSelectionModel().getSelectedItem());
         List<Category> categories = categoryTreeHelper.getSelectedCategories();
 
-        FixedExpense newExpense = new FixedExpense(position, value, type, datesOfPayment, startMonthWidget.getValue(),
-                endMonthWidget.getValue());
+        FixedTurnover newExpense = new FixedTurnover(position, value, type, datesOfPayment, startMonthWidget.getValue(),
+                                                     endMonthWidget.getValue());
         newExpense.getCategories().addAll(categories);
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<FixedExpense>> violations = validator.validate(newExpense);
+        Set<ConstraintViolation<FixedTurnover>> violations = validator.validate(newExpense);
         if (!violations.isEmpty()) {
             violations.stream().forEach(violation -> {
                 switch (violation.getPropertyPath().toString()) {

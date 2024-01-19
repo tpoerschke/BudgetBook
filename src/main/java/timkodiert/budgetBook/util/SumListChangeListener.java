@@ -6,17 +6,17 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import timkodiert.budgetBook.domain.model.FixedExpense;
-import timkodiert.budgetBook.domain.model.FixedExpenseAdapter;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
+import timkodiert.budgetBook.domain.model.FixedTurnoverAdapter;
 
-public class SumListChangeListener<T extends FixedExpenseAdapter> extends AbstractSumChangeListener<T>
+public class SumListChangeListener<T extends FixedTurnoverAdapter> extends AbstractSumChangeListener<T>
         implements ListChangeListener<T> {
 
     protected final ObservableList<T> observableList;
-    private ToDoubleFunction<FixedExpense> doubleMapper;
+    private ToDoubleFunction<FixedTurnover> doubleMapper;
 
     public SumListChangeListener(ObservableList<T> observableList, DoubleProperty sumProp, StringProperty sumTextProp,
-            ToDoubleFunction<FixedExpense> doubleMapper) {
+            ToDoubleFunction<FixedTurnover> doubleMapper) {
         super(sumProp, sumTextProp);
         this.observableList = observableList;
         this.doubleMapper = doubleMapper;

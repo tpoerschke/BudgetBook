@@ -2,12 +2,12 @@ package timkodiert.budgetBook.domain.repository;
 
 import javax.inject.Inject;
 
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 
-public class FixedExpensesRepository extends Repository<FixedExpense> {
+public class FixedExpensesRepository extends Repository<FixedTurnover> {
 
     @Inject
     public FixedExpensesRepository() {
-        super(FixedExpense.class);
+        super(FixedTurnover.class);
     }
 }

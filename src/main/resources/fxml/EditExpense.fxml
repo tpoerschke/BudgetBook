@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ComboBox?>
 <BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="700.0" stylesheets="@../css/general-styles.css"
             xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="timkodiert.budgetBook.view.fixed_expense.FixedExpenseDetailView">
@@ -33,9 +34,9 @@
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints minHeight="-Infinity" prefHeight="50.0" />
-                        <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
                      </rowConstraints>
                      <children>
                         <VBox>
@@ -44,11 +45,15 @@
                               <TextField fx:id="positionTextField" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
                            </children>
                         </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+                        <VBox GridPane.rowIndex="1">
                            <children>
                               <Label text="%editExpense.label.remark" />
                               <TextArea fx:id="noteTextArea" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="200.0" />
                            </children>
+                        </VBox>
+                        <VBox GridPane.rowIndex="2">
+                           <Label text="Richtung"/>
+                           <ComboBox fx:id="directionComboBox" prefWidth="200.0"/>
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowSpan="2147483647">
                            <children>

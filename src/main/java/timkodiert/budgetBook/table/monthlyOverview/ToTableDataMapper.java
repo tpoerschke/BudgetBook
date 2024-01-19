@@ -3,7 +3,7 @@ package timkodiert.budgetBook.table.monthlyOverview;
 import static java.util.stream.Collectors.toSet;
 
 import timkodiert.budgetBook.domain.model.Category;
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.UniqueExpense;
 import timkodiert.budgetBook.view.MonthlyOverview.RowType;
@@ -18,7 +18,7 @@ public class ToTableDataMapper {
                 categories, RowType.UNIQUE_EXPENSE);
     }
 
-    public static TableData mapFixedExpense(FixedExpense expense, MonthYear monthYear) {
+    public static TableData mapFixedExpense(FixedTurnover expense, MonthYear monthYear) {
         return new TableData(expense.getPosition(), expense.getValueFor(monthYear), null,
                 String.join(", ", expense.getCategories().stream().map(Category::getName).collect(toSet())),
                 RowType.FIXED_EXPENSE);

@@ -13,7 +13,7 @@ public class FixedExpenseTest {
     @Test
     @DisplayName("Monatliche Ausgabe: Konfigurierte PaymentInformation")
     void monthlyFixedExpense() {
-        FixedExpense expense = new FixedExpense("Test-Ausgabe", 9.99, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null);
+        FixedTurnover expense = new FixedTurnover("Test-Ausgabe", 9.99, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null);
 
         assertEquals(0.0, expense.getValueFor(MonthYear.of(12, 2022)));
         assertEquals(9.99, expense.getValueFor(MonthYear.of(1, 2023)));
@@ -24,7 +24,7 @@ public class FixedExpenseTest {
     @Test
     @DisplayName("Monatliche Ausgabe: Betrag der Importe verwenden")
     void monthlyFixedExpenseImportedAmounts() {
-        FixedExpense expense = new FixedExpense("Test-Ausgabe", 9.5, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null);
+        FixedTurnover expense = new FixedTurnover("Test-Ausgabe", 9.5, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null);
         // Import für Februar vorliegend
         expense.getAccountTurnover().add(new AccountTurnover(LocalDate.of(2023, 2, 1), "Test", "Test", "Test", 20));
         // Zwei Importe für März vorliegend

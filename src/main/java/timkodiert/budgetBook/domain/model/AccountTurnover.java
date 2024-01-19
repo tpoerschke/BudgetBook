@@ -45,7 +45,7 @@ public class AccountTurnover extends BaseEntity {
     @Setter
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "fixed_expense_id")
-    private FixedExpense fixedExpense;
+    private FixedTurnover fixedExpense;
 
     @Setter
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

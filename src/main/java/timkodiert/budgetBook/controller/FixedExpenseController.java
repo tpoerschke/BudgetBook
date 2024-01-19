@@ -6,24 +6,24 @@ import javax.inject.Singleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.repository.Repository;
 
 @Singleton
 public class FixedExpenseController {
 
     @Getter
-    private final ObservableList<FixedExpense> allExpenses;
+    private final ObservableList<FixedTurnover> allExpenses;
 
-    private Repository<FixedExpense> repository;
+    private Repository<FixedTurnover> repository;
 
     @Inject
-    public FixedExpenseController(Repository<FixedExpense> repository) {
+    public FixedExpenseController(Repository<FixedTurnover> repository) {
         this.repository = repository;
         this.allExpenses = FXCollections.observableArrayList();
     }
 
-    public FixedExpense getExpense(int id) {
+    public FixedTurnover getExpense(int id) {
         return this.allExpenses.stream().filter(exp -> exp.getId() == id).findFirst().get();
     }
 
