@@ -10,8 +10,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.FixedTurnoverAdapter;
+import timkodiert.budgetBook.domain.model.TurnoverDirection;
 import timkodiert.budgetBook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetBook.util.DialogFactory;
+import timkodiert.budgetBook.util.string_converter.EnumStringConverter;
 import timkodiert.budgetBook.view.ControllerFactory;
 import timkodiert.budgetBook.view.mdv_base.BaseManageView;
 
@@ -29,7 +31,8 @@ public class FixedExpensesManageView extends BaseManageView<FixedTurnover, Fixed
     protected void initControls() {
         positionCol.setCellValueFactory(new PropertyValueFactory<>("position"));
         typeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
-        directionCol.setCellValueFactory(new PropertyValueFactory<>("direction"));
+        EnumStringConverter<TurnoverDirection> enumStrConverter = new EnumStringConverter<>();
+        directionCol.setCellValueFactory(cellData -> new SimpleStringProperty(enumStrConverter.toString(cellData.getValue().directionProperty().get())));
     }
 
     @Override

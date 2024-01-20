@@ -57,6 +57,7 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
         initAdapter();
     }
 
+    @Deprecated(forRemoval = true)
     public FixedTurnover(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start, MonthYear end) {
         this.paymentInformations.add(new PaymentInformation(this, value, datesOfPayment, type, start, end));
         importRule = new ImportRule(this);
@@ -96,7 +97,7 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
         // Konfigurierten Rhythmus auswerten
         PaymentInformation payInfo = findPaymentInformation(MonthYear.of(month, year));
         if (payInfo != null) {
-            return payInfo.getValueFor(MonthYear.of(month, year));
+            return direction.getSign() * payInfo.getValueFor(MonthYear.of(month, year));
         }
         return 0;
     }

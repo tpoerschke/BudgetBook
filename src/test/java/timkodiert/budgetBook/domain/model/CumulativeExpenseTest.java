@@ -20,7 +20,7 @@ public class CumulativeExpenseTest {
         expenses.add(new FixedTurnover("Test-Ausgabe 3", 100, PaymentType.MONTHLY, IntStream.rangeClosed(1, 12).boxed().toList(), MonthYear.of(1, 2023), null));
         CumulativeExpense ce = new CumulativeExpense(expenses, 2022, 2023);
 
-        assertEquals(152.0, ce.getValueFor(MonthYear.of(1, 2023)));
-        assertEquals(152.0 * 12, ce.getValueForYear(2023));
+        assertEquals(-152.0, ce.getValueFor(MonthYear.of(1, 2023)));
+        assertEquals(-152.0 * 12, ce.getValueForYear(2023));
     }
 }
