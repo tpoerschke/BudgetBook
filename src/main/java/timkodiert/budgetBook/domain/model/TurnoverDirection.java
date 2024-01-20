@@ -1,15 +1,13 @@
 package timkodiert.budgetBook.domain.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
 public enum TurnoverDirection {
 
     IN(1), OUT(-1);
 
-    @Getter
     private final int sign;
-
-    TurnoverDirection(int sign) {
-        this.sign = sign;
-    }
 }

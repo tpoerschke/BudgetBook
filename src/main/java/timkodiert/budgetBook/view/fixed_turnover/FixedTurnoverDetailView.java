@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.fixed_expense;
+package timkodiert.budgetBook.view.fixed_turnover;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -52,7 +52,7 @@ import timkodiert.budgetBook.view.mdv_base.EntityBaseDetailView;
 
 import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
 
-public class FixedExpenseDetailView extends EntityBaseDetailView<FixedTurnover> implements Initializable {
+public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover> implements Initializable {
 
     @FXML
     private Pane root;
@@ -99,7 +99,7 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedTurnover> 
     private final Repository<PaymentInformation> expInfoRepository;
 
     @Inject
-    public FixedExpenseDetailView(Repository<FixedTurnover> repository, Repository<PaymentInformation> expInfoRepository) {
+    public FixedTurnoverDetailView(Repository<FixedTurnover> repository, Repository<PaymentInformation> expInfoRepository) {
         super(FixedTurnover::new, repository);
         this.expInfoRepository = expInfoRepository;
     }
@@ -229,11 +229,11 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedTurnover> 
 
     private void openUniqueExpenseInformationDetailView(Optional<PaymentInformation> optionalEntity) {
         try {
-            var subDetailView = new FixedExpenseInformationDetailView(PaymentInformation::new, this::updateExpenseInformation);
+            var subDetailView = new FixedTurnoverInformationDetailView(PaymentInformation::new, this::updateExpenseInformation);
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(Window.getWindows().get(0))
-                    .withFXMLResource("/fxml/FixedExpenses/FixedExpenseInformationDetailView.fxml")
+                    .withFXMLResource("/fxml/fixed_turnover/FixedExpenseInformationDetailView.fxml")
                     .withView(subDetailView)
                     .build();
             stage.show();

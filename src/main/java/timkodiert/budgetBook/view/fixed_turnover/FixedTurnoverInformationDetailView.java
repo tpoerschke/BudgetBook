@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.fixed_expense;
+package timkodiert.budgetBook.view.fixed_turnover;
 
 import java.net.URL;
 import java.util.List;
@@ -27,7 +27,7 @@ import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.view.mdv_base.BaseDetailView;
 import timkodiert.budgetBook.view.widget.MonthYearPickerWidget;
 
-public class FixedExpenseInformationDetailView extends BaseDetailView<PaymentInformation> implements Initializable {
+public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentInformation> implements Initializable {
 
     @FXML
     private TextField valueTextField;
@@ -44,7 +44,7 @@ public class FixedExpenseInformationDetailView extends BaseDetailView<PaymentInf
 
     private Consumer<PaymentInformation> onSaveCallback;
 
-    public FixedExpenseInformationDetailView(Supplier<PaymentInformation> emptyEntityProducer, Consumer<PaymentInformation> onSaveCallback) {
+    public FixedTurnoverInformationDetailView(Supplier<PaymentInformation> emptyEntityProducer, Consumer<PaymentInformation> onSaveCallback) {
         super(emptyEntityProducer);
         this.onSaveCallback = onSaveCallback;
     }

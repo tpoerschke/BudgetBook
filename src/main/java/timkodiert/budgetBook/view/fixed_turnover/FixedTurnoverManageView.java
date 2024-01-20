@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.fixed_expense;
+package timkodiert.budgetBook.view.fixed_turnover;
 
 import javax.inject.Inject;
 
@@ -17,13 +17,13 @@ import timkodiert.budgetBook.util.string_converter.EnumStringConverter;
 import timkodiert.budgetBook.view.ControllerFactory;
 import timkodiert.budgetBook.view.mdv_base.BaseManageView;
 
-public class FixedExpensesManageView extends BaseManageView<FixedTurnover, FixedTurnoverAdapter> {
+public class FixedTurnoverManageView extends BaseManageView<FixedTurnover, FixedTurnoverAdapter> {
 
     @FXML
     private TableColumn<FixedTurnoverAdapter, String> positionCol, typeCol, directionCol;
 
     @Inject
-    public FixedExpensesManageView(FixedExpensesRepository repository, DialogFactory dialogFactory, ControllerFactory controllerFactory) {
+    public FixedTurnoverManageView(FixedExpensesRepository repository, DialogFactory dialogFactory, ControllerFactory controllerFactory) {
         super(FixedTurnover::new, repository, controllerFactory, dialogFactory);
     }
 
@@ -37,7 +37,7 @@ public class FixedExpensesManageView extends BaseManageView<FixedTurnover, Fixed
 
     @Override
     public String getDetailViewFxmlLocation() {
-        return "/fxml/EditExpense.fxml";
+        return "/fxml/fixed_turnover/Detail.fxml";
     }
 
     @FXML

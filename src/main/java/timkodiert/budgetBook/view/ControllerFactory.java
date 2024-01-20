@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.function.Supplier;
 import javax.inject.Inject;
 
-import timkodiert.budgetBook.view.fixed_expense.FixedExpenseDetailView;
-import timkodiert.budgetBook.view.fixed_expense.FixedExpensesManageView;
+import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverDetailView;
+import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverManageView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpensesManageView;
 
@@ -28,8 +28,8 @@ public class ControllerFactory {
         viewControllerMap.put(MonthlyOverview.class, viewComponent::getMonthlyOverview);
         viewControllerMap.put(ImportView.class, viewComponent::getImportView);
         // MDV / Stammdaten
-        viewControllerMap.put(FixedExpensesManageView.class, viewComponent::getFixedExpenseManageView);
-        viewControllerMap.put(FixedExpenseDetailView.class, viewComponent::getEditExpenseView);
+        viewControllerMap.put(FixedTurnoverManageView.class, viewComponent::getFixedTurnoverManageView);
+        viewControllerMap.put(FixedTurnoverDetailView.class, viewComponent::getFixedTurnoverDetailView);
         viewControllerMap.put(UniqueExpensesManageView.class, viewComponent::getUniqueExpensesManageView);
         viewControllerMap.put(UniqueExpenseDetailView.class, viewComponent::getUniqueExpenseDetailView);
     }
