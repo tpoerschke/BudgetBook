@@ -6,28 +6,29 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
-import atlantafx.base.theme.Styles;
+import atlantafx.base.theme.PrimerDark;
+import atlantafx.base.theme.PrimerLight;
+import atlantafx.base.theme.Theme;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
 
 import timkodiert.budgetBook.Constants;
+import timkodiert.budgetBook.i18n.LanguageManager;
 
 public class PropertiesService {
 
@@ -35,6 +36,8 @@ public class PropertiesService {
 
     @Getter
     private Properties properties;
+
+    private List<ThemeOption> themeComboBoxItems;
 
     private PropertiesService() {
         this.properties = new Properties();
@@ -49,10 +52,19 @@ public class PropertiesService {
                     + Path.of(System.getProperty("user.home"), Constants.DATA_DIR, "sqlite.db").toString());
             this.properties.setProperty("useSystemMenuBar", "true");
             this.properties.setProperty("language", "Deutsch");
+            this.properties.setProperty("theme", "0");
             this.properties.store(new FileWriter(propsFile), "Store initial props");
         } else {
             this.properties.load(new FileInputStream(Constants.PROPERTIES_PATH));
         }
+        initializeDataStructures();
+    }
+
+    private void initializeDataStructures() {
+        themeComboBoxItems = List.of(
+                new ThemeOption("0", LanguageManager.get("settings.comboItem.light"), PrimerLight.class),
+                new ThemeOption("1", LanguageManager.get("settings.comboItem.dark"), PrimerDark.class)
+        );
     }
 
     public void verifySettings() throws IOException {
@@ -69,9 +81,9 @@ public class PropertiesService {
         // language dropdown
         ComboBox<String> languageComboBox = new ComboBox<>();
         languageComboBox.getItems().addAll("Deutsch", "English");
-        languageComboBox.setPromptText("Select Language"); // replace label according to current language
+        languageComboBox.setPromptText(LanguageManager.get("settings.prompt.selectLanguage")); // replace label according to current language
         languageComboBox.setValue(properties.getProperty("language"));
-        grid.add(new Label("Language"), 0, 0);
+        grid.add(new Label(LanguageManager.get("settings.label.language")), 0, 0);
         grid.add(languageComboBox, 1, 0);
 
         // DB JDBC Path TextField
@@ -86,8 +98,25 @@ public class PropertiesService {
         useSystemMenuBarCheckBox.setSelected(Boolean.parseBoolean(properties.getProperty("useSystemMenuBar")));
         grid.add(useSystemMenuBarCheckBox, 0, 2, 2, 1);
 
+        ComboBox<ThemeOption> themeComboBox = new ComboBox<>();
+        themeComboBox.getItems().addAll(themeComboBoxItems);
+        themeComboBox.setPromptText(LanguageManager.get("settings.prompt.selectTheme"));
+        themeComboBox.setValue(getCurrentThemeOption());
+        themeComboBox.setConverter(new javafx.util.StringConverter<>() {
+            @Override
+            public String toString(ThemeOption themeOption) {
+                return themeOption != null ? themeOption.name() : null;
+            }
+            @Override
+            public ThemeOption fromString(String string) {
+                return null;
+            }
+        });
+        grid.add(new Label(LanguageManager.get("settings.label.theme")), 0, 3);
+        grid.add(themeComboBox, 1, 3);
 
-        Button saveBtn = new Button("Speichern");
+
+        Button saveBtn = new Button(LanguageManager.get("button.save"));
         saveBtn.setOnAction(event -> {
             try {
 
@@ -95,15 +124,16 @@ public class PropertiesService {
                 newProps.setProperty("language", languageComboBox.getValue());
                 newProps.setProperty("db", jdbcPathTextField.getText());
                 newProps.setProperty("useSystemMenuBar", String.valueOf(useSystemMenuBarCheckBox));
+                newProps.setProperty("theme", themeComboBox.getValue().id());
                 // Speichern
                 File propsFile = Path.of(Constants.PROPERTIES_PATH).toFile();
                 this.properties = newProps;
                 this.properties.store(new FileWriter(propsFile), "JBudgetBook properties");
                 Alert alert = new Alert(AlertType.INFORMATION,
-                                        "Einstellungen wurden gespeichert. Die Anwendung muss neugestartet werden!");
+                                        LanguageManager.get("settings.alert.savedPleaseRestart"));
                 alert.showAndWait();
             } catch (Exception e) {
-                Alert alert = new Alert(AlertType.ERROR, "Einstellungen konnten nicht gespeichert werden!");
+                Alert alert = new Alert(AlertType.ERROR, LanguageManager.get("settings.alert.saveError"));
                 alert.showAndWait();
             }
         });
@@ -118,8 +148,23 @@ public class PropertiesService {
 
         Stage stage = new Stage();
         stage.setScene(new Scene(root, 500, 300));
-        stage.setTitle("Einstellungen");
+        stage.setTitle(LanguageManager.get("settings.stage.title"));
         return stage;
+    }
+
+    private ThemeOption getCurrentThemeOption() {
+        return themeComboBoxItems
+                .stream()
+                .filter(e -> e.id()
+                              .equals(
+                                      properties.getProperty("theme")
+                              )
+                ).findFirst()
+                .orElse(themeComboBoxItems.get(0));
+    }
+
+    public Class<? extends Theme> getTheme() {
+        return getCurrentThemeOption().theme();
     }
 
     public static PropertiesService getInstance() {
@@ -129,3 +174,4 @@ public class PropertiesService {
         return INSTANCE;
     }
 }
+
