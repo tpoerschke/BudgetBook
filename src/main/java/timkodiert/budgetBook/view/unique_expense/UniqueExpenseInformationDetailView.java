@@ -18,7 +18,7 @@ import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
 
 import timkodiert.budgetBook.domain.model.Category;
-import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
+import timkodiert.budgetBook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
 import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.util.EntityManager;
@@ -29,9 +29,9 @@ import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
 
 public class UniqueExpenseInformationDetailView implements View, Initializable {
 
-    private UniqueExpenseInformation expenseInfo;
+    private UniqueTurnoverInformation expenseInfo;
     private boolean isNew;
-    private Consumer<UniqueExpenseInformation> newEntityCallback;
+    private Consumer<UniqueTurnoverInformation> newEntityCallback;
 
     private List<String> labelSuggestions;
 
@@ -43,9 +43,9 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
     private TreeView<Category> categoriesTreeView;
     private CategoryTreeHelper categoryTreeHelper;
 
-    public UniqueExpenseInformationDetailView(Optional<UniqueExpenseInformation> optionalEntity,
-            Consumer<UniqueExpenseInformation> newEntityCallback, List<String> labelSuggestions) {
-        this.expenseInfo = optionalEntity.orElse(new UniqueExpenseInformation());
+    public UniqueExpenseInformationDetailView(Optional<UniqueTurnoverInformation> optionalEntity,
+                                              Consumer<UniqueTurnoverInformation> newEntityCallback, List<String> labelSuggestions) {
+        this.expenseInfo = optionalEntity.orElse(new UniqueTurnoverInformation());
         this.isNew = optionalEntity.isEmpty();
         this.newEntityCallback = newEntityCallback;
         this.labelSuggestions = labelSuggestions;
@@ -61,7 +61,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
         showEntity(expenseInfo);
     }
 
-    public void showEntity(UniqueExpenseInformation entity) {
+    public void showEntity(UniqueTurnoverInformation entity) {
         positionTextField.setText(expenseInfo.getLabel());
         valueTextField.setText(String.valueOf(expenseInfo.getValue()));
         // Kategorien anzeigen
@@ -69,12 +69,12 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
     }
 
     public boolean validate() {
-        UniqueExpenseInformation info = patchEntity(new UniqueExpenseInformation());
+        UniqueTurnoverInformation info = patchEntity(new UniqueTurnoverInformation());
 
         Map<String, Control> validationMap = new HashMap<>();
         validationMap.put("label", positionTextField);
 
-        ValidationWrapper<UniqueExpenseInformation> validation = new ValidationWrapper<>(validationMap);
+        ValidationWrapper<UniqueTurnoverInformation> validation = new ValidationWrapper<>(validationMap);
 
         if (!validation.validate(info)) {
             return false;
@@ -82,7 +82,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
         return true;
     }
 
-    public UniqueExpenseInformation patchEntity(UniqueExpenseInformation entity) {
+    public UniqueTurnoverInformation patchEntity(UniqueTurnoverInformation entity) {
         entity.setLabel(positionTextField.getText());
         entity.setValue(Double.valueOf(valueTextField.getText()));
         entity.getCategories().clear();

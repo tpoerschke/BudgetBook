@@ -29,7 +29,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.MonthYear;
-import timkodiert.budgetBook.domain.model.UniqueExpense;
+import timkodiert.budgetBook.domain.model.UniqueTurnover;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
@@ -64,11 +64,11 @@ public class MonthlyOverview implements Initializable, View {
 
     private ObservableList<TableData> data = FXCollections.observableArrayList();
 
-    private final Repository<UniqueExpense> uniqueExpenseRepository;
+    private final Repository<UniqueTurnover> uniqueExpenseRepository;
     private final Repository<FixedTurnover> fixedExpenseRepository;
 
     @Inject
-    public MonthlyOverview(Repository<UniqueExpense> uniqueExpenseRepository,
+    public MonthlyOverview(Repository<UniqueTurnover> uniqueExpenseRepository,
             Repository<FixedTurnover> fixedExpenseRepository) {
         this.uniqueExpenseRepository = uniqueExpenseRepository;
         this.fixedExpenseRepository = fixedExpenseRepository;
@@ -99,8 +99,8 @@ public class MonthlyOverview implements Initializable, View {
         List<FixedTurnover> fixedExpenses = fixedExpenseRepository.findAll();
         initFixedExpenseGroup(fixedExpenses);
 
-        List<UniqueExpense> uniqueExpenses = uniqueExpenseRepository.findAll().stream()
-                .filter(exp -> MonthYear.now().containsDate(exp.getDate())).toList();
+        List<UniqueTurnover> uniqueExpenses = uniqueExpenseRepository.findAll().stream()
+                                                                     .filter(exp -> MonthYear.now().containsDate(exp.getDate())).toList();
         initUniqueExpenseGroup(uniqueExpenses);
 
         FilteredList<TableData> filteredData = new FilteredList<>(data);
@@ -150,16 +150,16 @@ public class MonthlyOverview implements Initializable, View {
                                                                               .filter(exp -> exp.getValueFor(newValue) != 0).toList();
             initFixedExpenseGroup(fixedExpensesForMonth);
 
-            List<UniqueExpense> uniqueExpensesForMonth = uniqueExpenseRepository.findAll().stream()
-                    .filter(exp -> newValue.containsDate(exp.getDate())).toList();
+            List<UniqueTurnover> uniqueExpensesForMonth = uniqueExpenseRepository.findAll().stream()
+                                                                                 .filter(exp -> newValue.containsDate(exp.getDate())).toList();
             initUniqueExpenseGroup(uniqueExpensesForMonth);
         });
 
     }
 
-    private void initUniqueExpenseGroup(List<UniqueExpense> expenses) {
-        initDataGroup(expenses, ToTableDataMapper::mapUniqueExpense, UniqueExpense::getTotalValue,
-                LanguageManager.getInstance().getLocString("monthlyOverview.label.uniqueExpenses"), RowType.UNIQUE_EXPENSE_GROUP);
+    private void initUniqueExpenseGroup(List<UniqueTurnover> expenses) {
+        initDataGroup(expenses, ToTableDataMapper::mapUniqueExpense, UniqueTurnover::getTotalValue,
+                      LanguageManager.getInstance().getLocString("monthlyOverview.label.uniqueExpenses"), RowType.UNIQUE_EXPENSE_GROUP);
     }
 
     private void initFixedExpenseGroup(List<FixedTurnover> expenses) {

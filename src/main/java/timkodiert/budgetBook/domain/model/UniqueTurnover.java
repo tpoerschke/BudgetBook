@@ -20,7 +20,7 @@ import static timkodiert.budgetBook.domain.model.ContentEquals.listsContentEqual
 
 @Getter
 @Entity
-public class UniqueExpense extends BaseEntity implements Adaptable<UniqueExpenseAdapter> {
+public class UniqueTurnover extends BaseEntity implements Adaptable<UniqueTurnoverAdapter> {
 
     @Setter
     @NotBlank(message = "Es muss ein Rechnungsteller angegeben werden.")
@@ -39,22 +39,22 @@ public class UniqueExpense extends BaseEntity implements Adaptable<UniqueExpense
     @Setter
     @Size(min = 1)
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
-    private List<UniqueExpenseInformation> paymentInformations = new ArrayList<>();
+    private List<UniqueTurnoverInformation> paymentInformations = new ArrayList<>();
 
     @OneToOne(mappedBy = "uniqueExpense", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private AccountTurnover accountTurnover;
 
     @Transient
-    private transient UniqueExpenseAdapter adapter;
+    private transient UniqueTurnoverAdapter adapter;
 
-    public UniqueExpense() {
+    public UniqueTurnover() {
         initAdapter();
     }
 
     @Override
     public void initAdapter() {
         try {
-            this.adapter = new UniqueExpenseAdapter(this);
+            this.adapter = new UniqueTurnoverAdapter(this);
         } catch (NoSuchMethodException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -62,13 +62,13 @@ public class UniqueExpense extends BaseEntity implements Adaptable<UniqueExpense
     }
 
     public double getTotalValue() {
-        return paymentInformations.stream().mapToDouble(UniqueExpenseInformation::getValue).sum();
+        return paymentInformations.stream().mapToDouble(UniqueTurnoverInformation::getValue).sum();
     }
 
     @Override
     public boolean contentEquals(Object other) {
 
-        if (other instanceof UniqueExpense uniqueExpense) {
+        if (other instanceof UniqueTurnover uniqueExpense) {
             boolean equals = Objects.equals(this.getBiller(), uniqueExpense.getBiller())
                     && Objects.equals(this.getNote(), uniqueExpense.getNote())
                     && Objects.equals(this.getDate(), uniqueExpense.getDate())

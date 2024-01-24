@@ -15,8 +15,8 @@ import lombok.Getter;
 
 import timkodiert.budgetBook.domain.model.AccountTurnover;
 import timkodiert.budgetBook.domain.model.FixedTurnover;
-import timkodiert.budgetBook.domain.model.UniqueExpense;
-import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
+import timkodiert.budgetBook.domain.model.UniqueTurnover;
+import timkodiert.budgetBook.domain.model.UniqueTurnoverInformation;
 
 
 // Aus den Werten der Properties wird u.a. eine einzigartige Ausgabe
@@ -89,10 +89,10 @@ public class ImportInformation {
     }
 
     public AccountTurnover accountTurnoverWithUniqueExpense() {
-        UniqueExpense exp = new UniqueExpense();
+        UniqueTurnover exp = new UniqueTurnover();
         exp.setBiller(receiver.get());
         exp.setDate(accountTurnover.getDate());
-        exp.setPaymentInformations(List.of(UniqueExpenseInformation.total(exp, Math.abs(accountTurnover.getAmount()))));
+        exp.setPaymentInformations(List.of(UniqueTurnoverInformation.total(exp, Math.abs(accountTurnover.getAmount()))));
         accountTurnover.setUniqueExpense(exp);
         return accountTurnover;
     }
