@@ -61,8 +61,8 @@ public class UniqueTurnoverInformation implements Categorizable, ContentEquals {
         return info;
     }
 
-    public double getValue() {
-        return direction.getSign() * value;
+    public double getValueSigned() {
+        return this.value * this.getDirection().getSign();
     }
 
     @Override

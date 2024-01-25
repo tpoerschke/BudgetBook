@@ -117,7 +117,7 @@ public class MainView implements Initializable {
 
     @FXML
     private void openUniqueExpensesManageView(ActionEvent event) {
-        loadViewPartial("/fxml/UniqueExpenses/Manage.fxml", LanguageManager.getInstance().getLocString("stageTitle.uniqueExpensesOverview"));
+        loadViewPartial("/fxml/unique_turnover/Manage.fxml", LanguageManager.getInstance().getLocString("stageTitle.uniqueExpensesOverview"));
     }
 
     @FXML

@@ -46,7 +46,7 @@ public class UniqueExpensesManageView extends BaseManageView<UniqueTurnover, Uni
 
     @Override
     public String getDetailViewFxmlLocation() {
-        return "/fxml/UniqueExpenses/Detail.fxml";
+        return "/fxml/unique_turnover/Detail.fxml";
     }
 
     @FXML

@@ -62,7 +62,7 @@ public class UniqueTurnover extends BaseEntity implements Adaptable<UniqueTurnov
     }
 
     public double getTotalValue() {
-        return paymentInformations.stream().mapToDouble(UniqueTurnoverInformation::getValue).sum();
+        return paymentInformations.stream().mapToDouble(UniqueTurnoverInformation::getValueSigned).sum();
     }
 
     @Override

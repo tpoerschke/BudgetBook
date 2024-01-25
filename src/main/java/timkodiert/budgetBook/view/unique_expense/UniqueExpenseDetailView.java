@@ -127,7 +127,7 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
                 .setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getLabel()));
         expenseInfoValueCol.setCellValueFactory(cellData -> {
             DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
-            return new ReadOnlyStringWrapper(converter.format(cellData.getValue().getValue()));
+            return new ReadOnlyStringWrapper(converter.format(cellData.getValue().getValueSigned()));
         });
         expenseInfoCategoriesCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(
                 String.join(", ", cellData.getValue().getCategories().stream().map(Category::getName).toList())));
@@ -208,7 +208,7 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(Window.getWindows().get(0))
-                    .withFXMLResource("/fxml/UniqueExpenses/Information.fxml")
+                    .withFXMLResource("/fxml/unique_turnover/Information.fxml")
                     .withView(new UniqueExpenseInformationDetailView(optionalEntity, this::addNewExpenseInformation,
                             this.getUniqueExpenseInformationSuggestions()))
                     .build();

@@ -12,8 +12,8 @@
 <?import javafx.scene.text.Font?>
 <?import timkodiert.budgetBook.ui.control.AutoCompleteTextField?>
 
-<BorderPane stylesheets="@../../css/general-styles.css" xmlns="http://javafx.com/javafx/18"
-   xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.control.ComboBox?>
+<BorderPane stylesheets="@../../css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <VBox prefWidth="300.0" spacing="20.0">
          <children>
@@ -33,6 +33,10 @@
                      </children>
                   </HBox>
                </children>
+            </VBox>
+            <VBox>
+               <Label text="Richtung"/>
+               <ComboBox fx:id="directionComboBox" prefWidth="200.0"/>
             </VBox>
             <VBox>
                <children>
