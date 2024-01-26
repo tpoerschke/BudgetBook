@@ -47,7 +47,7 @@
                   <TextArea fx:id="noteTextArea" prefHeight="200.0"/>
                </VBox>
                <VBox GridPane.rowIndex="2">
-                  <Label text="Richtung"/>
+                  <Label text="%editExpense.label.direction"/>
                   <ComboBox fx:id="directionComboBox" prefWidth="200.0"/>
                </VBox>
                <VBox GridPane.columnIndex="1" GridPane.rowSpan="3">

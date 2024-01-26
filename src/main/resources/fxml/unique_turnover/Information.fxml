@@ -35,7 +35,7 @@
                </children>
             </VBox>
             <VBox>
-               <Label text="Richtung"/>
+               <Label text="%uniqueExpensesInfoDV.label.direction"/>
                <ComboBox fx:id="directionComboBox" prefWidth="200.0"/>
             </VBox>
             <VBox>

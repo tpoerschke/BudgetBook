@@ -32,7 +32,7 @@
                         <TableColumn fx:id="postingTextCol" prefWidth="180.0" text="%importView.table-column.postingTextCol"/>
                         <TableColumn fx:id="referenceCol" prefWidth="350.0" text="%importView.table-column.reference"/>
                         <TableColumn fx:id="amountCol" prefWidth="100.0" text="%importView.table-column.amount"/>
-                        <TableColumn fx:id="associatedCol" prefWidth="160.0" text="%importView.table-column.regularExpense"/>
+                        <TableColumn fx:id="associatedCol" prefWidth="180.0" text="%importView.table-column.regularExpense"/>
                         <TableColumn fx:id="annotationCol" prefWidth="220.0" text="%importView.table-column.remarks"/>
                     </columns>
                 </TableView>
