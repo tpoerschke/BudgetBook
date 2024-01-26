@@ -66,11 +66,13 @@ public class TurnoverImporter {
 
     public void doImport() {
         List<AccountTurnover> importsWithFixedExpense = importInformationList.stream()
+                                                                             .filter(ImportInformation::isSelectedForImport)
                                                                              .filter(ImportInformation::hasFixedExpense)
                                                                              .map(ImportInformation::accountTurnoverWithFixedExpense)
                                                                              .toList();
 
         List<AccountTurnover> importsWithUniqueExpense = importInformationList.stream()
+                                                                              .filter(ImportInformation::isSelectedForImport)
                                                                               .filter(Predicate.not(ImportInformation::hasFixedExpense))
                                                                               .map(ImportInformation::accountTurnoverWithUniqueExpense)
                                                                               .toList();

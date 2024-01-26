@@ -53,10 +53,6 @@ public class ImportInformation {
         alreadyImported.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
         selectedForImport.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
         updateAnnotation();
-
-        if (amount.get() > 0) {
-            selectedForImport.set(false);
-        }
     }
 
     private void updateAnnotation() {
