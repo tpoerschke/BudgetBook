@@ -1,26 +1,28 @@
 package timkodiert.budgetBook.table.row;
 
 import javafx.scene.control.TableRow;
-import timkodiert.budgetBook.domain.model.IFixedTurnover;
-import timkodiert.budgetBook.domain.model.PaymentType;
 
-public class BoldTableRow extends TableRow<IFixedTurnover> {
+import timkodiert.budgetBook.util.HasType;
 
-    // Alle Ausgaben dieses Typs werden fett dargestellt
-    private PaymentType expenseType;
+public class BoldTableRow<I extends HasType<T>, T> extends TableRow<I> {
 
-    public BoldTableRow(PaymentType expenseType) {
+    private static final String CSS_CLASS = "text-bold";
+
+    // Die Rows dieses Typs werden fett dargestellt
+    private final T type;
+
+    public BoldTableRow(T type) {
         super();
-        this.expenseType = expenseType;
+        this.type = type;
     }
 
     @Override
-    protected void updateItem(IFixedTurnover item, boolean empty) {
+    protected void updateItem(I item, boolean empty) {
         super.updateItem(item, empty);
-        if (!empty && this.expenseType.equals(item.getType())) {
-            getStyleClass().add("text-bold");
+        if (!empty && this.type.equals(item.getType())) {
+            getStyleClass().add(CSS_CLASS);
         } else {
-            getStyleClass().remove("text-bold");
+            getStyleClass().remove(CSS_CLASS);
         }
     }
 }

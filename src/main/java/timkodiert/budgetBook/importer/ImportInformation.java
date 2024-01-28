@@ -17,10 +17,12 @@ import timkodiert.budgetBook.domain.model.AccountTurnover;
 import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.UniqueTurnover;
 import timkodiert.budgetBook.domain.model.UniqueTurnoverInformation;
+import timkodiert.budgetBook.util.HasType;
+import timkodiert.budgetBook.view.MonthlyOverview;
 
 
 // Aus den Werten der Properties wird u.a. eine einzigartige Ausgabe
-public class ImportInformation {
+public class ImportInformation implements HasType<MonthlyOverview.RowType> {
 
     private static final String ANNOTATION_EMPTY = "";
     public static final String ANNOTATION_UNIQUE_EXPENSE = "Wird zu einzigartiger Ausgabe.";
@@ -135,5 +137,10 @@ public class ImportInformation {
 
     public BooleanProperty alreadyImportedProperty() {
         return alreadyImported;
+    }
+
+    @Override
+    public MonthlyOverview.RowType getType() {
+        return MonthlyOverview.RowType.IMPORT;
     }
 }

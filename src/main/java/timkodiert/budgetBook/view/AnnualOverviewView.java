@@ -123,7 +123,7 @@ public class AnnualOverviewView implements Initializable, View {
         CumulativeExpense cumulativeExpense = new CumulativeExpense(fixedExpenseController.getAllExpenses(), START_YEAR, END_YEAR);
 
         mainTable.setRowFactory(tableView -> {
-            TableRow<IFixedTurnover> row = new BoldTableRow(PaymentType.CUMULATIVE);
+            TableRow<IFixedTurnover> row = new BoldTableRow<>(PaymentType.CUMULATIVE);
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 1 && !row.isEmpty() && row.getItem() instanceof FixedTurnover expense) {
                     expenseDetailWidget.setExpense(expense);

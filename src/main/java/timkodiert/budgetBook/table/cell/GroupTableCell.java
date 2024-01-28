@@ -2,15 +2,15 @@ package timkodiert.budgetBook.table.cell;
 
 import java.util.Map;
 
-import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
-import org.kordamp.ikonli.javafx.FontIcon;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
+import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
+import org.kordamp.ikonli.javafx.FontIcon;
+
+import timkodiert.budgetBook.table.monthlyOverview.TableData;
 import timkodiert.budgetBook.view.MonthlyOverview.RowType;
-import timkodiert.budgetBook.view.MonthlyOverview.TableData;
 
 public class GroupTableCell extends TableCell<TableData, TableData> {
 

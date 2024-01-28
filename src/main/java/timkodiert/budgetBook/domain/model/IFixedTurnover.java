@@ -1,10 +1,10 @@
 package timkodiert.budgetBook.domain.model;
 
-public interface IFixedTurnover {
+import timkodiert.budgetBook.util.HasType;
+
+public interface IFixedTurnover extends HasType<PaymentType> {
 
     String getPosition();
-
-    PaymentType getType();
 
     double getValueFor(MonthYear monthYear);
 

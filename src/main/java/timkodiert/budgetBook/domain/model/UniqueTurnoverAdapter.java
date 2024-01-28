@@ -8,7 +8,11 @@ import javafx.beans.property.adapter.ReadOnlyJavaBeanObjectPropertyBuilder;
 import javafx.beans.property.adapter.ReadOnlyJavaBeanStringPropertyBuilder;
 import lombok.Getter;
 
-public class UniqueTurnoverAdapter implements Adapter<UniqueTurnover> {
+import timkodiert.budgetBook.util.HasType;
+import timkodiert.budgetBook.view.MonthlyOverview;
+
+public class UniqueTurnoverAdapter implements Adapter<UniqueTurnover>, HasType<MonthlyOverview.RowType> {
+
     private final ReadOnlyStringProperty biller, note;
     private final ReadOnlyObjectProperty<LocalDate> date;
 
@@ -33,5 +37,11 @@ public class UniqueTurnoverAdapter implements Adapter<UniqueTurnover> {
 
     public ReadOnlyObjectProperty<LocalDate> dateProperty() {
         return this.date;
+    }
+
+    @Override
+    public MonthlyOverview.RowType getType() {
+        // TODO: Refactoring => Konzept entwickeln. RowTypes werden für die Stylings der TableCells verwendet.
+        return MonthlyOverview.RowType.UNIQUE_EXPENSE;
     }
 }
