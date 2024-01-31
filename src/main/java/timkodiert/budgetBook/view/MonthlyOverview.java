@@ -96,7 +96,12 @@ public class MonthlyOverview implements Initializable, View {
                     .filter(d -> !RowType.getGroupTypes().contains(d.type()))
                     .mapToDouble(TableData::value).sum();
             sumTable.getItems().clear();
-            sumTable.getItems().add(new TableData(LanguageManager.getInstance().getLocString("monthlyOverview.label.sum"), totalSum, null, null, RowType.SUM));
+            sumTable.getItems()
+                    .add(new TableData(LanguageManager.getInstance().getLocString("monthlyOverview.label.sumExpenses"),
+                                       totalSum,
+                                       null,
+                                       null,
+                                       RowType.SUM));
 
             // Summe der Einnahmen für den Monat
             double incomeSum = fixedExpenseRepository.findAll()
@@ -110,8 +115,9 @@ public class MonthlyOverview implements Initializable, View {
                                                 .filter(t -> t.getTotalValue() > 0)
                                                 .mapToDouble(UniqueTurnover::getTotalValue)
                                                 .sum();
-            sumTable.getItems().add(new TableData("Einnahmen (Summe)", incomeSum, null, null, RowType.SUM));
-            sumTable.getItems().add(new TableData("Summe", incomeSum + totalSum, null, null, RowType.TOTAL_SUM));
+
+            sumTable.getItems().addAll(new TableData(LanguageManager.get("monthlyOverview.label.sumEarnings"), incomeSum, null, null, RowType.SUM),
+                                       new TableData(LanguageManager.get("monthlyOverview.label.sum"), incomeSum + totalSum, null, null, RowType.TOTAL_SUM));
         });
 
         initDataGroups(MonthYear.now());
