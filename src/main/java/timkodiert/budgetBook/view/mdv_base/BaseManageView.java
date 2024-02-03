@@ -1,6 +1,5 @@
 package timkodiert.budgetBook.view.mdv_base;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -10,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -21,7 +19,8 @@ import timkodiert.budgetBook.domain.model.Adapter;
 import timkodiert.budgetBook.domain.model.ContentEquals;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.util.DialogFactory;
+import timkodiert.budgetBook.util.dialog.DialogFactory;
+import timkodiert.budgetBook.util.dialog.StackTraceAlert;
 import timkodiert.budgetBook.view.ControllerFactory;
 import timkodiert.budgetBook.view.View;
 
@@ -59,10 +58,9 @@ public abstract class BaseManageView<T extends Adaptable<A> & ContentEquals, A e
         loader.setResources(LanguageManager.getInstance().getResourceBundle());
         try {
             detailViewContainer.getChildren().add(loader.load());
-        } catch (IOException ioe) {
-            Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
-            alert.showAndWait();
-            ioe.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            StackTraceAlert.of(LanguageManager.get("alert.viewCouldNotBeOpened"), e).showAndWait();
             return;
         }
 

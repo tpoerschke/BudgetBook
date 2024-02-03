@@ -12,7 +12,7 @@ import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.FixedTurnoverAdapter;
 import timkodiert.budgetBook.domain.model.TurnoverDirection;
 import timkodiert.budgetBook.domain.repository.FixedExpensesRepository;
-import timkodiert.budgetBook.util.DialogFactory;
+import timkodiert.budgetBook.util.dialog.DialogFactory;
 import timkodiert.budgetBook.util.string_converter.EnumStringConverter;
 import timkodiert.budgetBook.view.ControllerFactory;
 import timkodiert.budgetBook.view.mdv_base.BaseManageView;

@@ -14,7 +14,7 @@ import timkodiert.budgetBook.domain.model.UniqueTurnoverAdapter;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
-import timkodiert.budgetBook.util.DialogFactory;
+import timkodiert.budgetBook.util.dialog.DialogFactory;
 import timkodiert.budgetBook.view.ControllerFactory;
 import timkodiert.budgetBook.view.mdv_base.BaseManageView;
 
