@@ -158,7 +158,7 @@ WIP
 - [x] Einzigartige Ausgaben
 - [ ] Import von Umsätzen
 - [ ] Analyseübersicht
-- [ ] Einnahmen verwalten
+- [x] Einnahmen verwalten
 - [ ] Exportfunktionalität
 
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
