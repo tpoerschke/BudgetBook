@@ -4,17 +4,17 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
-import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
+import timkodiert.budgetBook.domain.model.UniqueTurnoverInformation;
 
-public class UniqueExpenseInformationRepository extends Repository<UniqueExpenseInformation> {
+public class UniqueExpenseInformationRepository extends Repository<UniqueTurnoverInformation> {
 
     @Inject
     public UniqueExpenseInformationRepository() {
-        super(UniqueExpenseInformation.class);
+        super(UniqueTurnoverInformation.class);
     }
 
     @Override
-    public void remove(Collection<UniqueExpenseInformation> entities) {
+    public void remove(Collection<UniqueTurnoverInformation> entities) {
         // Zunächst die Entity aus ihren Beziehungen lösen
         entities.forEach(entity -> {
             entity.getExpense().getPaymentInformations().remove(entity);

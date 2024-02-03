@@ -34,8 +34,8 @@ import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetBook.domain.model.Category;
-import timkodiert.budgetBook.domain.model.UniqueExpense;
-import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
+import timkodiert.budgetBook.domain.model.UniqueTurnover;
+import timkodiert.budgetBook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
@@ -43,7 +43,7 @@ import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.StageBuilder;
 import timkodiert.budgetBook.view.mdv_base.EntityBaseDetailView;
 
-public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueExpense> implements Initializable {
+public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover> implements Initializable {
 
     @FXML
     private Pane root;
@@ -66,22 +66,22 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueExpense>
     private Button deleteUniqueExpenseInformationButton;
 
     @FXML
-    private TableView<UniqueExpenseInformation> expenseInfoTable;
+    private TableView<UniqueTurnoverInformation> expenseInfoTable;
     @FXML
-    private TableColumn<UniqueExpenseInformation, String> expenseInfoPositionCol, expenseInfoValueCol,
+    private TableColumn<UniqueTurnoverInformation, String> expenseInfoPositionCol, expenseInfoValueCol,
             expenseInfoCategoriesCol;
 
     @FXML
     private ColumnConstraints rightColumn;
 
-    private ObservableList<UniqueExpenseInformation> paymentInfoList = FXCollections.observableArrayList();
+    private ObservableList<UniqueTurnoverInformation> paymentInfoList = FXCollections.observableArrayList();
 
-    private Repository<UniqueExpenseInformation> expInfoRepository;
+    private Repository<UniqueTurnoverInformation> expInfoRepository;
 
     @Inject
-    public UniqueExpenseDetailView(Repository<UniqueExpense> repository,
-            Repository<UniqueExpenseInformation> expInfoRepository) {
-        super(() -> new UniqueExpense(), repository);
+    public UniqueExpenseDetailView(Repository<UniqueTurnover> repository,
+            Repository<UniqueTurnoverInformation> expInfoRepository) {
+        super(() -> new UniqueTurnover(), repository);
         this.expInfoRepository = expInfoRepository;
     }
 
@@ -127,27 +127,27 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueExpense>
                 .setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getLabel()));
         expenseInfoValueCol.setCellValueFactory(cellData -> {
             DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
-            return new ReadOnlyStringWrapper(converter.format(cellData.getValue().getValue()));
+            return new ReadOnlyStringWrapper(converter.format(cellData.getValue().getValueSigned()));
         });
         expenseInfoCategoriesCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(
                 String.join(", ", cellData.getValue().getCategories().stream().map(Category::getName).toList())));
         expenseInfoTable.setItems(paymentInfoList);
 
         billerTextField.getAvailableEntries()
-                .addAll(repository.findAll().stream().map(UniqueExpense::getBiller).toList());
+                .addAll(repository.findAll().stream().map(UniqueTurnover::getBiller).toList());
 
         validationMap.put("biller", billerTextField);
         validationMap.put("date", datePicker);
         validationMap.put("paymentInformations", expenseInfoTable);
     }
 
-    private void addNewExpenseInformation(UniqueExpenseInformation newInfo) {
+    private void addNewExpenseInformation(UniqueTurnoverInformation newInfo) {
         newInfo.setExpense(entity.get());
         paymentInfoList.add(newInfo);
     }
 
     @Override
-    protected UniqueExpense patchEntity(UniqueExpense entity) {
+    protected UniqueTurnover patchEntity(UniqueTurnover entity) {
         entity.setBiller(billerTextField.getText());
         entity.setNote(noteTextArea.getText());
         entity.setPaymentInformations(paymentInfoList);
@@ -157,7 +157,7 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueExpense>
     }
 
     @Override
-    protected void patchUi(UniqueExpense entity) {
+    protected void patchUi(UniqueTurnover entity) {
         billerTextField.setText(entity.getBiller());
         noteTextArea.setText(entity.getNote());
         datePicker.setValue(entity.getDate());
@@ -186,29 +186,29 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueExpense>
 
     @FXML
     private void editUniqueExpenseInformation(ActionEvent event) {
-        Optional<UniqueExpenseInformation> optionalEntity = Optional
+        Optional<UniqueTurnoverInformation> optionalEntity = Optional
                 .of(expenseInfoTable.getSelectionModel().getSelectedItem());
         openUniqueExpenseInformationDetailView(optionalEntity);
     }
 
     @FXML
     private void deleteUniqueExpenseInformation(ActionEvent event) {
-        UniqueExpenseInformation expInfo = expenseInfoTable.getSelectionModel().getSelectedItem();
+        UniqueTurnoverInformation expInfo = expenseInfoTable.getSelectionModel().getSelectedItem();
         expInfoRepository.remove(expInfo);
         paymentInfoList.remove(expInfo);
     }
 
     private List<String> getUniqueExpenseInformationSuggestions() {
         return repository.findAll().stream().flatMap(exp -> exp.getPaymentInformations().stream())
-                .map(UniqueExpenseInformation::getLabel).distinct().toList();
+                         .map(UniqueTurnoverInformation::getLabel).distinct().toList();
     }
 
-    private void openUniqueExpenseInformationDetailView(Optional<UniqueExpenseInformation> optionalEntity) {
+    private void openUniqueExpenseInformationDetailView(Optional<UniqueTurnoverInformation> optionalEntity) {
         try {
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(Window.getWindows().get(0))
-                    .withFXMLResource("/fxml/UniqueExpenses/Information.fxml")
+                    .withFXMLResource("/fxml/unique_turnover/Information.fxml")
                     .withView(new UniqueExpenseInformationDetailView(optionalEntity, this::addNewExpenseInformation,
                             this.getUniqueExpenseInformationSuggestions()))
                     .build();

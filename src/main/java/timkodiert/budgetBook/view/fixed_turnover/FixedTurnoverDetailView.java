@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.fixed_expense;
+package timkodiert.budgetBook.view.fixed_turnover;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -20,6 +20,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -34,10 +35,11 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetBook.domain.model.AccountTurnover;
 import timkodiert.budgetBook.domain.model.Category;
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.ImportRule;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.PaymentInformation;
+import timkodiert.budgetBook.domain.model.TurnoverDirection;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.table.cell.DateTableCell;
 import timkodiert.budgetBook.table.cell.MonthYearTableCell;
@@ -45,20 +47,22 @@ import timkodiert.budgetBook.util.CategoryTreeHelper;
 import timkodiert.budgetBook.util.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.StageBuilder;
+import timkodiert.budgetBook.util.string_converter.EnumStringConverter;
 import timkodiert.budgetBook.view.mdv_base.EntityBaseDetailView;
 
 import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
 
-public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> implements Initializable {
+public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover> implements Initializable {
 
     @FXML
     private Pane root;
 
     @FXML
     private TextField positionTextField;
-
     @FXML
     private TextArea noteTextArea;
+    @FXML
+    private ComboBox<TurnoverDirection> directionComboBox;
 
     @FXML
     private TreeView<Category> categoriesTreeView;
@@ -95,8 +99,8 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
     private final Repository<PaymentInformation> expInfoRepository;
 
     @Inject
-    public FixedExpenseDetailView(Repository<FixedExpense> repository, Repository<PaymentInformation> expInfoRepository) {
-        super(FixedExpense::new, repository);
+    public FixedTurnoverDetailView(Repository<FixedTurnover> repository, Repository<PaymentInformation> expInfoRepository) {
+        super(FixedTurnover::new, repository);
         this.expInfoRepository = expInfoRepository;
     }
 
@@ -112,6 +116,8 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
         root.disableProperty().bind(entity.isNull());
         List<Category> categories = EntityManager.getInstance().findAll(Category.class);
         categoryTreeHelper = from(categoriesTreeView, categories);
+        directionComboBox.getItems().setAll(TurnoverDirection.values());
+        directionComboBox.setConverter(new EnumStringConverter<>());
 
         // Tabelle der Unterelemente
         expenseInfoTypeCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getType().getType()));
@@ -157,9 +163,10 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
     }
 
     @Override
-    protected FixedExpense patchEntity(FixedExpense entity) {
+    protected FixedTurnover patchEntity(FixedTurnover entity) {
         entity.setPosition(positionTextField.getText());
         entity.setNote(noteTextArea.getText());
+        entity.setDirection(directionComboBox.getSelectionModel().getSelectedItem());
         entity.getCategories().clear();
         entity.getCategories().addAll(categoryTreeHelper.getSelectedCategories());
         entity.getPaymentInformations().clear();
@@ -172,9 +179,10 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
     }
 
     @Override
-    protected void patchUi(FixedExpense entity) {
+    protected void patchUi(FixedTurnover entity) {
         positionTextField.setText(entity.getPosition());
         noteTextArea.setText(entity.getNote());
+        directionComboBox.getSelectionModel().select(entity.getDirection());
         // Kategorien der Ausgabe abhacken
         categoryTreeHelper.selectCategories(entity);
         paymentInfoList.setAll(entity.getPaymentInformations());
@@ -187,7 +195,7 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
     }
 
     // TODO 01.11.23: Ausbauen, wenn sichergestellt ist, dass ImportRules nicht null sein können
-    private void createImportRuleIfNotExists(FixedExpense expense) {
+    private void createImportRuleIfNotExists(FixedTurnover expense) {
         if (expense.getImportRule() == null) {
             expense.setImportRule(new ImportRule(expense));
         }
@@ -221,11 +229,11 @@ public class FixedExpenseDetailView extends EntityBaseDetailView<FixedExpense> i
 
     private void openUniqueExpenseInformationDetailView(Optional<PaymentInformation> optionalEntity) {
         try {
-            var subDetailView = new FixedExpenseInformationDetailView(PaymentInformation::new, this::updateExpenseInformation);
+            var subDetailView = new FixedTurnoverInformationDetailView(PaymentInformation::new, this::updateExpenseInformation);
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(Window.getWindows().get(0))
-                    .withFXMLResource("/fxml/FixedExpenses/FixedExpenseInformationDetailView.fxml")
+                    .withFXMLResource("/fxml/fixed_turnover/FixedExpenseInformationDetailView.fxml")
                     .withView(subDetailView)
                     .build();
             stage.show();

@@ -13,33 +13,24 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="timkodiert.budgetBook.view.MonthlyOverview">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.MonthlyOverview">
    <center>
-      <TableView fx:id="dataTable" editable="true" maxHeight="1.7976931348623157E308"
-         maxWidth="1.7976931348623157E308" styleClass="monthly-table" BorderPane.alignment="CENTER">
+      <TableView fx:id="dataTable" editable="true" styleClass="monthly-table" BorderPane.alignment="CENTER">
          <columns>
-            <TableColumn fx:id="buttonCol" editable="false" maxWidth="-Infinity" minWidth="55.0"
-               prefWidth="55.0" resizable="false" sortable="false" />
-            <TableColumn fx:id="positionCol" maxWidth="1.7976931348623157E308" minWidth="-1.0"
-               prefWidth="300.0" text="%monthlyOverview.dataTable.column.position" />
-            <TableColumn fx:id="valueCol" maxWidth="1.7976931348623157E308" minWidth="-1.0"
-               prefWidth="120.0" styleClass="value-col, border-right" text="%monthlyOverview.dataTable.column.amount" />
-            <TableColumn fx:id="dateCol" maxWidth="1.7976931348623157E308" minWidth="90.0"
-               prefWidth="-1.0" styleClass="border-right" text="%monthlyOverview.dataTable.column.date" />
-            <TableColumn fx:id="categoriesCol" maxWidth="1.7976931348623157E308" minWidth="200.0"
-               prefWidth="-1.0" text="%monthlyOverview.dataTable.column.categories" />
+            <TableColumn fx:id="buttonCol" editable="false" minWidth="55.0" prefWidth="55.0" resizable="false" sortable="false" />
+            <TableColumn fx:id="positionCol" minWidth="-1.0" prefWidth="300.0" text="%monthlyOverview.dataTable.column.position" />
+            <TableColumn fx:id="valueCol" minWidth="-1.0" prefWidth="120.0" styleClass="value-col, border-right" text="%monthlyOverview.dataTable.column.amount" />
+            <TableColumn fx:id="dateCol" minWidth="90.0" prefWidth="-1.0" styleClass="border-right" text="%monthlyOverview.dataTable.column.date" />
+            <TableColumn fx:id="categoriesCol" minWidth="200.0" prefWidth="-1.0" text="%monthlyOverview.dataTable.column.categories" />
          </columns>
       </TableView>
    </center>
    <bottom>
-      <TableView fx:id="sumTable" prefHeight="42.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="sumTable" prefHeight="120.0" BorderPane.alignment="CENTER">
          <columns>
             <TableColumn fx:id="sumTableCol0" prefWidth="75.0" text="%monthlyOverview.sumTable.column.columnX" />
-            <TableColumn fx:id="sumTableCol1" maxWidth="1.7976931348623157E308" minWidth="-1.0"
-               prefWidth="-1.0" text="%monthlyOverview.sumTable.column.c1" />
-            <TableColumn fx:id="sumTableCol2" maxWidth="1.7976931348623157E308" minWidth="-1.0"
-               prefWidth="-1.0" styleClass="value-col" text="%monthlyOverview.sumTable.column.c2" />
+            <TableColumn fx:id="sumTableCol1" minWidth="-1.0" prefWidth="-1.0" text="%monthlyOverview.sumTable.column.c1" />
+            <TableColumn fx:id="sumTableCol2" minWidth="-1.0" prefWidth="-1.0" styleClass="value-col" text="%monthlyOverview.sumTable.column.c2" />
          </columns>
          <styleClass>
             <String fx:value="noheader" />

@@ -7,11 +7,11 @@ import java.util.stream.IntStream;
 
 import timkodiert.budgetBook.i18n.LanguageManager;
 
-public class CumulativeExpense implements FixedTurnover {
+public class CumulativeExpense implements IFixedTurnover {
 
     private final Map<MonthYear, Double> valueMap = new HashMap<>();
 
-    public CumulativeExpense(List<? extends FixedTurnover> turnovers, int startYear, int endYear) {
+    public CumulativeExpense(List<? extends IFixedTurnover> turnovers, int startYear, int endYear) {
         IntStream.rangeClosed(startYear, endYear).boxed().forEach(year -> {
             IntStream.rangeClosed(1, 12).forEach(month -> {
                 valueMap.put(MonthYear.of(month, year), 0.0);

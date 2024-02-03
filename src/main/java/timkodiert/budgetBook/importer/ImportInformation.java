@@ -14,13 +14,15 @@ import javafx.beans.property.StringProperty;
 import lombok.Getter;
 
 import timkodiert.budgetBook.domain.model.AccountTurnover;
-import timkodiert.budgetBook.domain.model.FixedExpense;
-import timkodiert.budgetBook.domain.model.UniqueExpense;
-import timkodiert.budgetBook.domain.model.UniqueExpenseInformation;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
+import timkodiert.budgetBook.domain.model.UniqueTurnover;
+import timkodiert.budgetBook.domain.model.UniqueTurnoverInformation;
+import timkodiert.budgetBook.util.HasType;
+import timkodiert.budgetBook.view.MonthlyOverview;
 
 
 // Aus den Werten der Properties wird u.a. eine einzigartige Ausgabe
-public class ImportInformation {
+public class ImportInformation implements HasType<MonthlyOverview.RowType> {
 
     private static final String ANNOTATION_EMPTY = "";
     public static final String ANNOTATION_UNIQUE_EXPENSE = "Wird zu einzigartiger Ausgabe.";
@@ -33,7 +35,7 @@ public class ImportInformation {
     private final StringProperty postingText = new SimpleStringProperty();
     private final StringProperty reference = new SimpleStringProperty();
     private final DoubleProperty amount = new SimpleDoubleProperty();
-    private final ObjectProperty<FixedExpense> fixedExpense = new SimpleObjectProperty<>();
+    private final ObjectProperty<FixedTurnover> fixedExpense = new SimpleObjectProperty<>();
     private final StringProperty annotation = new SimpleStringProperty();
     private final BooleanProperty alreadyImported = new SimpleBooleanProperty();
 
@@ -53,10 +55,6 @@ public class ImportInformation {
         alreadyImported.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
         selectedForImport.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
         updateAnnotation();
-
-        if (amount.get() > 0) {
-            selectedForImport.set(false);
-        }
     }
 
     private void updateAnnotation() {
@@ -89,10 +87,10 @@ public class ImportInformation {
     }
 
     public AccountTurnover accountTurnoverWithUniqueExpense() {
-        UniqueExpense exp = new UniqueExpense();
+        UniqueTurnover exp = new UniqueTurnover();
         exp.setBiller(receiver.get());
         exp.setDate(accountTurnover.getDate());
-        exp.setPaymentInformations(List.of(UniqueExpenseInformation.total(exp, Math.abs(accountTurnover.getAmount()))));
+        exp.setPaymentInformations(List.of(UniqueTurnoverInformation.total(exp, Math.abs(accountTurnover.getAmount()))));
         accountTurnover.setUniqueExpense(exp);
         return accountTurnover;
     }
@@ -129,7 +127,7 @@ public class ImportInformation {
         return amount;
     }
 
-    public ObjectProperty<FixedExpense> fixedExpenseProperty() {
+    public ObjectProperty<FixedTurnover> fixedExpenseProperty() {
         return fixedExpense;
     }
 
@@ -139,5 +137,10 @@ public class ImportInformation {
 
     public BooleanProperty alreadyImportedProperty() {
         return alreadyImported;
+    }
+
+    @Override
+    public MonthlyOverview.RowType getType() {
+        return MonthlyOverview.RowType.IMPORT;
     }
 }

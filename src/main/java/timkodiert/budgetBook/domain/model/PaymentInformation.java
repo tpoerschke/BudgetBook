@@ -35,9 +35,9 @@ public class PaymentInformation extends BaseEntity {
     @Setter
     @ManyToOne
     @JoinColumn(name = "expense_id", nullable = false)
-    private FixedExpense expense;
+    private FixedTurnover expense;
 
-    public PaymentInformation(FixedExpense expense, double value, List<Integer> monthsOfPayment, PaymentType type, MonthYear start, MonthYear end) {
+    public PaymentInformation(FixedTurnover expense, double value, List<Integer> monthsOfPayment, PaymentType type, MonthYear start, MonthYear end) {
         this.expense = expense;
         this.type = type;
         this.monthsOfPayment.addAll(monthsOfPayment);

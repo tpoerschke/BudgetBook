@@ -35,6 +35,6 @@
 }
 
 .monthly-table .value-col.table-cell {
-    -fx-font-family: 'Menlo', 'monospace';
+    /*-fx-font-family: 'Menlo', 'monospace';*/
     -fx-alignment: center-right;
 }

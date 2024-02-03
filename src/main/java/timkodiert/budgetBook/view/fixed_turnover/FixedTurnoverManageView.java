@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view.fixed_expense;
+package timkodiert.budgetBook.view.fixed_turnover;
 
 import javax.inject.Inject;
 
@@ -8,33 +8,36 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import timkodiert.budgetBook.domain.model.FixedExpense;
-import timkodiert.budgetBook.domain.model.FixedExpenseAdapter;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
+import timkodiert.budgetBook.domain.model.FixedTurnoverAdapter;
+import timkodiert.budgetBook.domain.model.TurnoverDirection;
 import timkodiert.budgetBook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetBook.util.DialogFactory;
+import timkodiert.budgetBook.util.string_converter.EnumStringConverter;
 import timkodiert.budgetBook.view.ControllerFactory;
 import timkodiert.budgetBook.view.mdv_base.BaseManageView;
 
-public class FixedExpensesManageView extends BaseManageView<FixedExpense, FixedExpenseAdapter> {
+public class FixedTurnoverManageView extends BaseManageView<FixedTurnover, FixedTurnoverAdapter> {
 
     @FXML
-    private TableColumn<FixedExpenseAdapter, String> positionCol, typeCol;
+    private TableColumn<FixedTurnoverAdapter, String> positionCol, typeCol, directionCol;
 
     @Inject
-    public FixedExpensesManageView(FixedExpensesRepository repository, DialogFactory dialogFactory, ControllerFactory controllerFactory) {
-        super(FixedExpense::new, repository, controllerFactory, dialogFactory);
+    public FixedTurnoverManageView(FixedExpensesRepository repository, DialogFactory dialogFactory, ControllerFactory controllerFactory) {
+        super(FixedTurnover::new, repository, controllerFactory, dialogFactory);
     }
 
     @Override
     protected void initControls() {
-        positionCol.setCellValueFactory(new PropertyValueFactory<FixedExpenseAdapter, String>("position"));
-        typeCol.setCellValueFactory(
-                cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
+        positionCol.setCellValueFactory(new PropertyValueFactory<>("position"));
+        typeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().paymentTypeProperty().get().getType()));
+        EnumStringConverter<TurnoverDirection> enumStrConverter = new EnumStringConverter<>();
+        directionCol.setCellValueFactory(cellData -> new SimpleStringProperty(enumStrConverter.toString(cellData.getValue().directionProperty().get())));
     }
 
     @Override
     public String getDetailViewFxmlLocation() {
-        return "/fxml/EditExpense.fxml";
+        return "/fxml/fixed_turnover/Detail.fxml";
     }
 
     @FXML

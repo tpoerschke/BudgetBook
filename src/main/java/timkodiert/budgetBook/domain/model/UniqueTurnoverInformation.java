@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -22,7 +25,7 @@ import static timkodiert.budgetBook.domain.model.ContentEquals.listsContentEqual
 @Getter
 @Entity
 @NoArgsConstructor
-public class UniqueExpenseInformation implements Categorizable, ContentEquals {
+public class UniqueTurnoverInformation implements Categorizable, ContentEquals {
 
     @Id
     @GeneratedValue(generator = "increment")
@@ -37,26 +40,35 @@ public class UniqueExpenseInformation implements Categorizable, ContentEquals {
     private double value;
 
     @Setter
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private TurnoverDirection direction = TurnoverDirection.OUT;
+
+    @Setter
     @ManyToOne
     @JoinColumn(name = "expense_id", nullable = false)
-    private UniqueExpense expense;
+    private UniqueTurnover expense;
 
     @Setter
     @ManyToMany(cascade = { CascadeType.PERSIST })
     private List<Category> categories = new ArrayList<>();
 
-    public static UniqueExpenseInformation total(UniqueExpense exp, double value) {
-        UniqueExpenseInformation info = new UniqueExpenseInformation();
+    public static UniqueTurnoverInformation total(UniqueTurnover exp, double value) {
+        UniqueTurnoverInformation info = new UniqueTurnoverInformation();
         info.setLabel("Gesamt");
         info.setValue(value);
         info.setExpense(exp);
         return info;
     }
 
+    public double getValueSigned() {
+        return this.value * this.getDirection().getSign();
+    }
+
     @Override
     public boolean contentEquals(Object other) {
 
-        if (other instanceof UniqueExpenseInformation info) {
+        if (other instanceof UniqueTurnoverInformation info) {
             boolean equals = Objects.equals(this.getLabel(), info.getLabel())
                     && this.getValue() == info.getValue()
                     && this.getExpense().getId() == info.getExpense().getId();

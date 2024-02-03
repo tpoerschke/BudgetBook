@@ -9,8 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import timkodiert.budgetBook.domain.model.UniqueExpense;
-import timkodiert.budgetBook.domain.model.UniqueExpenseAdapter;
+import timkodiert.budgetBook.domain.model.UniqueTurnover;
+import timkodiert.budgetBook.domain.model.UniqueTurnoverAdapter;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
@@ -18,24 +18,24 @@ import timkodiert.budgetBook.util.DialogFactory;
 import timkodiert.budgetBook.view.ControllerFactory;
 import timkodiert.budgetBook.view.mdv_base.BaseManageView;
 
-public class UniqueExpensesManageView extends BaseManageView<UniqueExpense, UniqueExpenseAdapter> {
+public class UniqueExpensesManageView extends BaseManageView<UniqueTurnover, UniqueTurnoverAdapter> {
 
     @FXML
-    private TableColumn<UniqueExpenseAdapter, String> billerCol;
+    private TableColumn<UniqueTurnoverAdapter, String> billerCol;
     @FXML
-    private TableColumn<UniqueExpenseAdapter, LocalDate> dateCol;
+    private TableColumn<UniqueTurnoverAdapter, LocalDate> dateCol;
     @FXML
-    private TableColumn<UniqueExpenseAdapter, Number> valueCol;
+    private TableColumn<UniqueTurnoverAdapter, Number> valueCol;
 
     @Inject
-    public UniqueExpensesManageView(Repository<UniqueExpense> repository, DialogFactory dialogFactory, ControllerFactory controllerFactory) {
-        super(UniqueExpense::new, repository, controllerFactory, dialogFactory);
+    public UniqueExpensesManageView(Repository<UniqueTurnover> repository, DialogFactory dialogFactory, ControllerFactory controllerFactory) {
+        super(UniqueTurnover::new, repository, controllerFactory, dialogFactory);
     }
 
     @Override
     public void initControls() {
-        billerCol.setCellValueFactory(new PropertyValueFactory<UniqueExpenseAdapter, String>("biller"));
-        dateCol.setCellValueFactory(new PropertyValueFactory<UniqueExpenseAdapter, LocalDate>("date"));
+        billerCol.setCellValueFactory(new PropertyValueFactory<UniqueTurnoverAdapter, String>("biller"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<UniqueTurnoverAdapter, LocalDate>("date"));
         dateCol.setCellFactory(col -> new DateTableCell<>());
         valueCol.setCellValueFactory(
                 cellData -> new SimpleDoubleProperty(cellData.getValue().getBean().getTotalValue()));
@@ -46,7 +46,7 @@ public class UniqueExpensesManageView extends BaseManageView<UniqueExpense, Uniq
 
     @Override
     public String getDetailViewFxmlLocation() {
-        return "/fxml/UniqueExpenses/Detail.fxml";
+        return "/fxml/unique_turnover/Detail.fxml";
     }
 
     @FXML

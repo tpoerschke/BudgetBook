@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
-
 import javax.inject.Inject;
 
 import javafx.beans.property.BooleanProperty;
@@ -27,16 +26,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import timkodiert.budgetBook.domain.model.FixedExpense;
+
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.MonthYear;
-import timkodiert.budgetBook.domain.model.UniqueExpense;
+import timkodiert.budgetBook.domain.model.UniqueTurnover;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
 import timkodiert.budgetBook.table.cell.GroupTableCell;
 import timkodiert.budgetBook.table.monthlyOverview.MonthlyOverviewCurrencyTableCell;
+import timkodiert.budgetBook.table.monthlyOverview.TableData;
 import timkodiert.budgetBook.table.monthlyOverview.ToTableDataMapper;
+import timkodiert.budgetBook.table.row.BoldTableRow;
 
 public class MonthlyOverview implements Initializable, View {
 
@@ -64,12 +66,11 @@ public class MonthlyOverview implements Initializable, View {
 
     private ObservableList<TableData> data = FXCollections.observableArrayList();
 
-    private final Repository<UniqueExpense> uniqueExpenseRepository;
-    private final Repository<FixedExpense> fixedExpenseRepository;
+    private final Repository<UniqueTurnover> uniqueExpenseRepository;
+    private final Repository<FixedTurnover> fixedExpenseRepository;
 
     @Inject
-    public MonthlyOverview(Repository<UniqueExpense> uniqueExpenseRepository,
-            Repository<FixedExpense> fixedExpenseRepository) {
+    public MonthlyOverview(Repository<UniqueTurnover> uniqueExpenseRepository, Repository<FixedTurnover> fixedExpenseRepository) {
         this.uniqueExpenseRepository = uniqueExpenseRepository;
         this.fixedExpenseRepository = fixedExpenseRepository;
     }
@@ -88,21 +89,38 @@ public class MonthlyOverview implements Initializable, View {
         sumTableCol2.setCellValueFactory(cell -> new SimpleDoubleProperty(cell.getValue().value()));
         sumTableCol2.setCellFactory(col -> new CurrencyTableCell<>());
 
+        sumTable.setRowFactory(tableView -> new BoldTableRow<>(RowType.TOTAL_SUM));
+
         data.addListener((ListChangeListener.Change<? extends TableData> c) -> {
             double totalSum = data.stream()
                     .filter(d -> !RowType.getGroupTypes().contains(d.type()))
                     .mapToDouble(TableData::value).sum();
             sumTable.getItems().clear();
-            sumTable.getItems().add(new TableData(LanguageManager.getInstance().getLocString("monthlyOverview.label.sum"), totalSum, null, null, RowType.SUM));
+            sumTable.getItems()
+                    .add(new TableData(LanguageManager.getInstance().getLocString("monthlyOverview.label.sumExpenses"),
+                                       totalSum,
+                                       null,
+                                       null,
+                                       RowType.SUM));
+
+            // Summe der Einnahmen für den Monat
+            double incomeSum = fixedExpenseRepository.findAll()
+                                                     .stream()
+                                                     .filter(t -> t.getValueFor(monthFilter.getValue()) > 0)
+                                                     .mapToDouble(t -> t.getValueFor(monthFilter.getValue()))
+                                                     .sum();
+            incomeSum += uniqueExpenseRepository.findAll()
+                                                .stream()
+                                                .filter(t -> monthFilter.getValue().containsDate(t.getDate()))
+                                                .filter(t -> t.getTotalValue() > 0)
+                                                .mapToDouble(UniqueTurnover::getTotalValue)
+                                                .sum();
+
+            sumTable.getItems().addAll(new TableData(LanguageManager.get("monthlyOverview.label.sumEarnings"), incomeSum, null, null, RowType.SUM),
+                                       new TableData(LanguageManager.get("monthlyOverview.label.sum"), incomeSum + totalSum, null, null, RowType.TOTAL_SUM));
         });
 
-        List<FixedExpense> fixedExpenses = fixedExpenseRepository.findAll();
-        initFixedExpenseGroup(fixedExpenses);
-
-        List<UniqueExpense> uniqueExpenses = uniqueExpenseRepository.findAll().stream()
-                .filter(exp -> MonthYear.now().containsDate(exp.getDate())).toList();
-        initUniqueExpenseGroup(uniqueExpenses);
-
+        initDataGroups(MonthYear.now());
         FilteredList<TableData> filteredData = new FilteredList<>(data);
 
         SimpleBooleanProperty isUniqueCollapsedProperty = new SimpleBooleanProperty(false);
@@ -144,25 +162,31 @@ public class MonthlyOverview implements Initializable, View {
         //
         // INIT FILTER
         //
-        monthFilter.addListener((observable, oldValue, newValue) -> {
-            data.clear();
-            List<FixedExpense> fixedExpensesForMonth = fixedExpenseRepository.findAll().stream()
-                    .filter(exp -> exp.getValueFor(newValue) != 0).toList();
-            initFixedExpenseGroup(fixedExpensesForMonth);
-
-            List<UniqueExpense> uniqueExpensesForMonth = uniqueExpenseRepository.findAll().stream()
-                    .filter(exp -> newValue.containsDate(exp.getDate())).toList();
-            initUniqueExpenseGroup(uniqueExpensesForMonth);
-        });
-
+        monthFilter.addListener((observable, oldValue, newValue) -> initDataGroups(newValue));
     }
 
-    private void initUniqueExpenseGroup(List<UniqueExpense> expenses) {
-        initDataGroup(expenses, ToTableDataMapper::mapUniqueExpense, UniqueExpense::getTotalValue,
-                LanguageManager.getInstance().getLocString("monthlyOverview.label.uniqueExpenses"), RowType.UNIQUE_EXPENSE_GROUP);
+    private void initDataGroups(MonthYear monthYear) {
+        data.clear();
+        List<FixedTurnover> fixedExpensesForMonth = fixedExpenseRepository.findAll()
+                                                                          .stream()
+                                                                          .filter(exp -> exp.getValueFor(monthYear) < 0)
+                                                                          .toList();
+        initFixedExpenseGroup(fixedExpensesForMonth);
+
+        List<UniqueTurnover> uniqueExpensesForMonth = uniqueExpenseRepository.findAll()
+                                                                             .stream()
+                                                                             .filter(exp -> monthYear.containsDate(exp.getDate()))
+                                                                             .filter(exp -> exp.getTotalValue() < 0)
+                                                                             .toList();
+        initUniqueExpenseGroup(uniqueExpensesForMonth);
     }
 
-    private void initFixedExpenseGroup(List<FixedExpense> expenses) {
+    private void initUniqueExpenseGroup(List<UniqueTurnover> expenses) {
+        initDataGroup(expenses, ToTableDataMapper::mapUniqueExpense, UniqueTurnover::getTotalValue,
+                      LanguageManager.getInstance().getLocString("monthlyOverview.label.uniqueExpenses"), RowType.UNIQUE_EXPENSE_GROUP);
+    }
+
+    private void initFixedExpenseGroup(List<FixedTurnover> expenses) {
         MonthYear monthYear = monthFilter.getValue();
         initDataGroup(expenses,
                 exp -> ToTableDataMapper.mapFixedExpense(exp, monthYear),
@@ -178,13 +202,10 @@ public class MonthlyOverview implements Initializable, View {
     }
 
     public enum RowType {
-        UNIQUE_EXPENSE, FIXED_EXPENSE, UNIQUE_EXPENSE_GROUP, FIXED_EXPENSE_GROUP, SUM;
+        UNIQUE_EXPENSE, FIXED_EXPENSE, UNIQUE_EXPENSE_GROUP, FIXED_EXPENSE_GROUP, IMPORT, SUM, TOTAL_SUM;
 
         public static List<RowType> getGroupTypes() {
             return List.of(UNIQUE_EXPENSE_GROUP, FIXED_EXPENSE_GROUP);
         }
-    }
-
-    public record TableData(String position, double value, LocalDate date, String categories, RowType type) {
     }
 }

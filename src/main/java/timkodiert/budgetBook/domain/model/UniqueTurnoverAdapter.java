@@ -8,14 +8,18 @@ import javafx.beans.property.adapter.ReadOnlyJavaBeanObjectPropertyBuilder;
 import javafx.beans.property.adapter.ReadOnlyJavaBeanStringPropertyBuilder;
 import lombok.Getter;
 
-public class UniqueExpenseAdapter implements Adapter<UniqueExpense> {
+import timkodiert.budgetBook.util.HasType;
+import timkodiert.budgetBook.view.MonthlyOverview;
+
+public class UniqueTurnoverAdapter implements Adapter<UniqueTurnover>, HasType<MonthlyOverview.RowType> {
+
     private final ReadOnlyStringProperty biller, note;
     private final ReadOnlyObjectProperty<LocalDate> date;
 
     @Getter
-    private final UniqueExpense bean;
+    private final UniqueTurnover bean;
 
-    public UniqueExpenseAdapter(UniqueExpense expense) throws NoSuchMethodException {
+    public UniqueTurnoverAdapter(UniqueTurnover expense) throws NoSuchMethodException {
         this.biller = ReadOnlyJavaBeanStringPropertyBuilder.create().bean(expense).name("biller").build();
         this.note = ReadOnlyJavaBeanStringPropertyBuilder.create().bean(expense).name("note").build();
         this.date = ReadOnlyJavaBeanObjectPropertyBuilder.<LocalDate>create().bean(expense).name("date").build();
@@ -33,5 +37,11 @@ public class UniqueExpenseAdapter implements Adapter<UniqueExpense> {
 
     public ReadOnlyObjectProperty<LocalDate> dateProperty() {
         return this.date;
+    }
+
+    @Override
+    public MonthlyOverview.RowType getType() {
+        // TODO: Refactoring => Konzept entwickeln. RowTypes werden für die Stylings der TableCells verwendet.
+        return MonthlyOverview.RowType.UNIQUE_EXPENSE;
     }
 }

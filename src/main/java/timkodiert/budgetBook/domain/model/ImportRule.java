@@ -20,11 +20,11 @@ public class ImportRule extends BaseEntity {
     private String referenceContains;
 
     @OneToOne
-    private FixedExpense linkedFixedExpense;
+    private FixedTurnover linkedFixedExpense;
 
     public ImportRule() {}
 
-    public ImportRule(FixedExpense expense) {
+    public ImportRule(FixedTurnover expense) {
         this.linkedFixedExpense = expense;
     }
 

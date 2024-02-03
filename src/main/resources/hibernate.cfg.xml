@@ -32,11 +32,11 @@
             org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl</property>
 
         <!-- Names the annotated entity class -->
-        <mapping class="timkodiert.budgetBook.domain.model.FixedExpense" />
+        <mapping class="timkodiert.budgetBook.domain.model.FixedTurnover" />
         <mapping class="timkodiert.budgetBook.domain.model.PaymentInformation" />
         <mapping class="timkodiert.budgetBook.domain.model.Category" />
-        <mapping class="timkodiert.budgetBook.domain.model.UniqueExpense" />
-        <mapping class="timkodiert.budgetBook.domain.model.UniqueExpenseInformation" />
+        <mapping class="timkodiert.budgetBook.domain.model.UniqueTurnover" />
+        <mapping class="timkodiert.budgetBook.domain.model.UniqueTurnoverInformation" />
         <mapping class="timkodiert.budgetBook.domain.model.AccountTurnover"/>
         <mapping class="timkodiert.budgetBook.domain.model.ImportRule"/>
 

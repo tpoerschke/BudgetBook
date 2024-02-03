@@ -10,7 +10,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import timkodiert.budgetBook.domain.model.FixedExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.view.View;
 
 public class ExpenseDetailWidget implements View, Initializable {
@@ -22,13 +22,13 @@ public class ExpenseDetailWidget implements View, Initializable {
     @FXML
     private FlowPane categoriesFlow;
 
-    private FixedExpense expense;
+    private FixedTurnover expense;
 
     public ExpenseDetailWidget() {
-        expense = new FixedExpense();
+        expense = new FixedTurnover();
     }
 
-    public void setExpense(FixedExpense expense) {
+    public void setExpense(FixedTurnover expense) {
         this.expense = expense;
         initProperties();
     }

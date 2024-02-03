@@ -3,11 +3,11 @@ package timkodiert.budgetBook.table.monthlyOverview;
 import java.util.Map;
 
 import javafx.beans.property.BooleanProperty;
+
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.view.MonthlyOverview.RowType;
-import timkodiert.budgetBook.view.MonthlyOverview.TableData;
 
-public class MonthlyOverviewCurrencyTableCell extends CurrencyTableCell<TableData, Number> {
+public class MonthlyOverviewCurrencyTableCell extends CurrencyTableCell<TableData, Number, RowType> {
 
     private final Map<RowType, BooleanProperty> isCollapsedProperties;
 

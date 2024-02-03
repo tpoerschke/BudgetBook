@@ -45,10 +45,10 @@ public class Category extends BaseEntity {
     private List<Category> children = new ArrayList<>();
 
     @ManyToMany(mappedBy = "categories")
-    private List<FixedExpense> fixedExpenses = new ArrayList<>();
+    private List<FixedTurnover> fixedExpenses = new ArrayList<>();
 
     @ManyToMany(mappedBy = "categories")
-    private List<UniqueExpenseInformation> uniqueExpenseInformation = new ArrayList<>();
+    private List<UniqueTurnoverInformation> uniqueExpenseInformation = new ArrayList<>();
 
     @Transient
     private CheckBoxTreeItem<Category> treeItem = new CheckBoxTreeItem<>();
@@ -80,8 +80,8 @@ public class Category extends BaseEntity {
             List<Integer> otherExpIds = cat.getFixedExpenses().stream().map(BaseEntity::getId).toList();
             equals = equals && thisExpIds.containsAll(otherExpIds) && otherExpIds.containsAll(thisExpIds);
 
-            List<Integer> thisInfoIds = this.getUniqueExpenseInformation().stream().map(UniqueExpenseInformation::getId).toList();
-            List<Integer> otherInfoIds = cat.getUniqueExpenseInformation().stream().map(UniqueExpenseInformation::getId).toList();
+            List<Integer> thisInfoIds = this.getUniqueExpenseInformation().stream().map(UniqueTurnoverInformation::getId).toList();
+            List<Integer> otherInfoIds = cat.getUniqueExpenseInformation().stream().map(UniqueTurnoverInformation::getId).toList();
             equals = equals && thisInfoIds.containsAll(otherInfoIds) && otherInfoIds.containsAll(thisInfoIds);
             return equals;
         }
