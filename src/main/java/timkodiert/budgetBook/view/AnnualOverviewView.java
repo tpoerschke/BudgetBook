@@ -9,19 +9,23 @@ import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 import javax.inject.Inject;
 
+import atlantafx.base.controls.ModalPane;
+import atlantafx.base.theme.Styles;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.domain.model.CumulativeExpense;
@@ -31,7 +35,6 @@ import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
-import timkodiert.budgetBook.table.column.BoldTableColumn;
 import timkodiert.budgetBook.table.row.BoldTableRow;
 import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
 
@@ -42,7 +45,7 @@ public class AnnualOverviewView implements Initializable, View {
     private static final int END_YEAR = CURRENT_YEAR + 1;
 
     @FXML
-    private BorderPane rootPane;
+    private StackPane rootPane;
     @FXML
     private TableView<IFixedTurnover> mainTable;
     @FXML
@@ -53,7 +56,9 @@ public class AnnualOverviewView implements Initializable, View {
     private List<TableColumn<IFixedTurnover, Number>> monthColumns = new ArrayList<>();
     private TableColumn<IFixedTurnover, Number> cumulativeColumn;
 
-    private ExpenseDetailWidget expenseDetailWidget = new ExpenseDetailWidget();
+    private final ModalPane modalPane = new ModalPane(ModalPane.Z_FRONT);
+    private final ExpenseDetailWidget expenseDetailWidget = new ExpenseDetailWidget();
+    private Pane turnoverWidgetNode;
 
     private final FixedExpenseController fixedExpenseController;
 
@@ -78,11 +83,17 @@ public class AnnualOverviewView implements Initializable, View {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ExpenseDetailWidget.fxml"));
             loader.setResources(LanguageManager.getInstance().getResourceBundle());
             loader.setController(expenseDetailWidget);
-            rootPane.setRight(loader.load());
+            turnoverWidgetNode = loader.load();
         } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, "Widget konnte nicht geöffnet werden!");
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Widget konnte nicht geöffnet werden!");
             alert.showAndWait();
         }
+
+        // ModalPane konfigurieren
+        modalPane.setAlignment(Pos.TOP_RIGHT);
+        modalPane.usePredefinedTransitionFactories(Side.RIGHT);
+        rootPane.getChildren().add(modalPane);
 
         positionColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPosition()));
         // Hätte gerne sowas wie in Python:
@@ -95,9 +106,8 @@ public class AnnualOverviewView implements Initializable, View {
             String month = LanguageManager.getInstance().getLocString(iterator.next());
 
             TableColumn<IFixedTurnover, Number> tableColumn = new TableColumn<>(month);
-            tableColumn.setPrefWidth(90);
+            tableColumn.setPrefWidth(120);
             tableColumn.setResizable(false);
-            tableColumn.getStyleClass().add("annual-overview-tablecolumn");
             tableColumn.setCellFactory(col -> new CurrencyTableCell<>());
             tableColumn.setCellValueFactory(cellData -> {
                 IFixedTurnover expense = cellData.getValue();
@@ -109,10 +119,10 @@ public class AnnualOverviewView implements Initializable, View {
         }
 
         // Kummulative Spalte
-        cumulativeColumn = new BoldTableColumn<>(PaymentType.CUMULATIVE.getType());
-        cumulativeColumn.setPrefWidth(90);
+        cumulativeColumn = new TableColumn<>(PaymentType.CUMULATIVE.getType());
+        cumulativeColumn.setPrefWidth(120);
         cumulativeColumn.setResizable(false);
-        cumulativeColumn.setCellFactory(col -> new CurrencyTableCell<>());
+        cumulativeColumn.setCellFactory(col -> new CurrencyTableCell<>(true));
         cumulativeColumn.setCellValueFactory(cellData -> {
             IFixedTurnover turnover = cellData.getValue();
             int selectedYear = displayYearComboBox.getValue();
@@ -127,11 +137,13 @@ public class AnnualOverviewView implements Initializable, View {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 1 && !row.isEmpty() && row.getItem() instanceof FixedTurnover expense) {
                     expenseDetailWidget.setExpense(expense);
+                    modalPane.show(turnoverWidgetNode);
                 }
             });
             return row;
         });
 
+        mainTable.getStyleClass().add(Styles.BORDERED);
         mainTable.getItems().addAll(fixedExpenseController.getAllExpenses());
         mainTable.getItems().add(cumulativeExpense);
     }

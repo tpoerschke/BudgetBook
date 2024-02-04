@@ -1,7 +1,3 @@
-.annual-overview-tablecolumn {
-    -fx-border-color: #D9DFE4;
-    -fx-border-width: 0 2px 0 0;
-}
 
 .text-bold {
     -fx-font: bold 1em sans-serif;
@@ -34,7 +30,7 @@
     -fx-border-width: 0 1px 0 0;
 }
 
-.monthly-table .value-col.table-cell {
+.value-col.table-cell {
     /*-fx-font-family: 'Menlo', 'monospace';*/
     -fx-alignment: center-right;
 }

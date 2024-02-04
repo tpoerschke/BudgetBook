@@ -6,31 +6,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
-
-<VBox maxWidth="-Infinity" prefWidth="250.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Label fx:id="positionLabel" text="%expenseDetailWidget.label.label">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <TextFlow fx:id="noteTextFlow" />
-      <FlowPane fx:id="categoriesFlow" hgap="5.0" vgap="5.0">
-         <children>
-            <Label style="-fx-background-color: #dfdfdf; -fx-background-radius: 4px;" styleClass="tag" text="%expenseDetailWidget.label.category">
-               <padding>
-                  <Insets bottom="2.0" left="4.0" right="4.0" top="2.0" />
-               </padding>
-            </Label>
-            <Label style="-fx-background-color: #dfdfdf; -fx-background-radius: 4px;" styleClass="tag" text="%expenseDetailWidget.label.category2">
-               <padding>
-                  <Insets bottom="2.0" left="4.0" right="4.0" top="2.0" />
-               </padding>
-            </Label>
-         </children>
-      </FlowPane>
-   </children>
+<VBox fx:id="root" maxWidth="-Infinity" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
    </padding>
+   <Label fx:id="positionLabel" text="%expenseDetailWidget.label.label">
+      <font>
+         <Font size="24.0"/>
+      </font>
+   </Label>
+   <TextFlow fx:id="noteTextFlow"/>
+   <FlowPane fx:id="categoriesFlow" hgap="5.0" vgap="5.0">
+      <Label style="-fx-background-color: #dfdfdf; -fx-background-radius: 4px;" styleClass="tag" text="%expenseDetailWidget.label.category">
+         <padding>
+            <Insets bottom="2.0" left="4.0" right="4.0" top="2.0"/>
+         </padding>
+      </Label>
+      <Label style="-fx-background-color: #dfdfdf; -fx-background-radius: 4px;" styleClass="tag" text="%expenseDetailWidget.label.category2">
+         <padding>
+            <Insets bottom="2.0" left="4.0" right="4.0" top="2.0"/>
+         </padding>
+      </Label>
+   </FlowPane>
 </VBox>

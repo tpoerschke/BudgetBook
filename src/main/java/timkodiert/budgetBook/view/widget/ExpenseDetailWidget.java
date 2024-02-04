@@ -3,8 +3,10 @@ package timkodiert.budgetBook.view.widget;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import atlantafx.base.theme.Styles;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
@@ -15,6 +17,8 @@ import timkodiert.budgetBook.view.View;
 
 public class ExpenseDetailWidget implements View, Initializable {
 
+    @FXML
+    private Node root;
     @FXML
     private Label positionLabel;
     @FXML
@@ -36,6 +40,7 @@ public class ExpenseDetailWidget implements View, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initProperties();
+        initStyles();
     }
 
     private void initProperties() {
@@ -48,5 +53,9 @@ public class ExpenseDetailWidget implements View, Initializable {
             label.getStyleClass().add("tag");
             categoriesFlow.getChildren().add(label);
         });
+    }
+
+    private void initStyles() {
+        root.getStyleClass().add(Styles.BG_DEFAULT);
     }
 }
