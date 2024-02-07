@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.util;
+package timkodiert.budgetBook.util.dialog;
 
 import javax.inject.Inject;
 

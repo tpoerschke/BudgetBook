@@ -47,8 +47,8 @@ import timkodiert.budgetBook.importer.ImportInformation;
 import timkodiert.budgetBook.importer.TurnoverImporter;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
-import timkodiert.budgetBook.util.DialogFactory;
 import timkodiert.budgetBook.util.FixedExpenseStringConverter;
+import timkodiert.budgetBook.util.dialog.DialogFactory;
 
 public class ImportView implements View, Initializable {
 

@@ -1,7 +1,6 @@
 package timkodiert.budgetBook.view;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
@@ -28,6 +27,7 @@ import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.PropertiesService;
 import timkodiert.budgetBook.util.StageBuilder;
+import timkodiert.budgetBook.util.dialog.StackTraceAlert;
 
 public class MainView implements Initializable {
 
@@ -63,9 +63,8 @@ public class MainView implements Initializable {
             templateLoader.setController(this);
             this.primaryStage.setScene(new Scene(templateLoader.load()));
             this.primaryStage.show();
-        } catch (IOException e) {
-            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.mainViewCouldNotBeOpened"));
-            alert.showAndWait();
+        } catch (Exception e) {
+            StackTraceAlert.of(LanguageManager.get("alert.mainViewCouldNotBeOpened"), e).showAndWait();
         }
     }
 
@@ -92,10 +91,9 @@ public class MainView implements Initializable {
             this.root.setCenter(templateLoader.load());
             this.primaryStage.setTitle(String.format("%s – JBudgetBook – %s", stageTitle, getVersion()));
             return templateLoader.getController();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.viewCouldNotBeOpened"));
-            alert.showAndWait();
+            StackTraceAlert.of(LanguageManager.get("alert.viewCouldNotBeOpened"), e).showAndWait();
         }
         return null;
     }
