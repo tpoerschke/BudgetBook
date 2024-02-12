@@ -75,7 +75,7 @@ public class MainView implements Initializable {
         menuBar.useSystemMenuBarProperty().set(useSystemMenuBar);
 
         // Das Kind laden (default)
-        loadViewPartial("/fxml/MonthlyOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.monthlyOverView"));
+        loadViewPartial("/fxml/MonthlyOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.monthlyOverview"));
     }
 
     private String getVersion() {
@@ -100,7 +100,7 @@ public class MainView implements Initializable {
 
     @FXML
     public void showMonthlyOverview(ActionEvent event) {
-        loadViewPartial("/fxml/MonthlyOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.monthlyOverView"));
+        loadViewPartial("/fxml/MonthlyOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.monthlyOverview"));
     }
 
     @FXML
