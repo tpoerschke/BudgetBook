@@ -19,8 +19,7 @@ public class EntityManager {
     private EntityManager() {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure() // configures settings from hibernate.cfg.xml
-                .applySetting("hibernate.connection.url",
-                        PropertiesService.getInstance().getProperties().getProperty("db"))
+                .applySetting("hibernate.connection.url", PropertiesService.getInstance().getDbPath())
                 .build();
 
         SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
