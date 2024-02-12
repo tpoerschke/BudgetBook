@@ -68,7 +68,8 @@ public class PropertiesService {
     private void initializeDataStructures() {
         themeComboBoxItems = List.of(
                 new ThemeOption("0", LanguageManager.get("settings.comboItem.light"), PrimerLight.class),
-                new ThemeOption("1", LanguageManager.get("settings.comboItem.dark"), PrimerDark.class)
+                new ThemeOption("1", LanguageManager.get("settings.comboItem.dark"), PrimerDark.class),
+                new ThemeOption("2", LanguageManager.get("settings.comboItem.auto"), null)
         );
     }
 
@@ -110,7 +111,7 @@ public class PropertiesService {
         themeComboBox.setConverter(new javafx.util.StringConverter<>() {
             @Override
             public String toString(ThemeOption themeOption) {
-                return themeOption != null ? themeOption.name() : null;
+                return themeOption != null ? themeOption.getName() : null;
             }
             @Override
             public ThemeOption fromString(String string) {
@@ -128,7 +129,7 @@ public class PropertiesService {
                 newProps.setProperty("language", languageComboBox.getValue());
                 newProps.setProperty("db", jdbcPathTextField.getText());
                 newProps.setProperty("useSystemMenuBar", String.valueOf(useSystemMenuBarCheckBox));
-                newProps.setProperty("theme", themeComboBox.getValue().id());
+                newProps.setProperty("theme", themeComboBox.getValue().getId());
                 // Speichern
                 File propsFile = Path.of(getPropertiesPath()).toFile();
                 this.properties = newProps;
@@ -159,7 +160,7 @@ public class PropertiesService {
     private ThemeOption getCurrentThemeOption() {
         return themeComboBoxItems
                 .stream()
-                .filter(e -> e.id()
+                .filter(e -> e.getId()
                               .equals(
                                       properties.getProperty("theme")
                               )
@@ -168,7 +169,7 @@ public class PropertiesService {
     }
 
     public Class<? extends Theme> getTheme() {
-        return getCurrentThemeOption().theme();
+        return getCurrentThemeOption().getTheme();
     }
 
     private String getPropertiesPath() {
