@@ -128,7 +128,7 @@ public class PropertiesService {
                 Properties newProps = new Properties();
                 newProps.setProperty("language", languageComboBox.getValue());
                 newProps.setProperty("db", jdbcPathTextField.getText());
-                newProps.setProperty("useSystemMenuBar", String.valueOf(useSystemMenuBarCheckBox));
+                newProps.setProperty("useSystemMenuBar", String.valueOf(useSystemMenuBarCheckBox.isSelected()));
                 newProps.setProperty("theme", themeComboBox.getValue().getId());
                 // Speichern
                 File propsFile = Path.of(getPropertiesPath()).toFile();
