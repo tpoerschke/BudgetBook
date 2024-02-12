@@ -172,6 +172,10 @@ public class PropertiesService {
         return getCurrentThemeOption().getTheme();
     }
 
+    public String getDbPath() {
+        return properties.getProperty("db");
+    }
+
     private String getPropertiesPath() {
         return String.format(Constants.PROPERTIES_PATH_TEMPLATE, operationMode.getPropertiesPostfix());
     }

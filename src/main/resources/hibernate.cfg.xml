@@ -23,10 +23,10 @@
         <property name="hibernate.cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
 
         <!-- Echo all executed SQL to stdout -->
-        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.show_sql">false</property>
 
         <!-- Drop and re-create the database schema on startup -->
-        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.hbm2ddl.auto">validate</property>
 
         <property name="hibernate.implicit_naming_strategy">
             org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl</property>
