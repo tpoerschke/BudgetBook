@@ -26,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import lombok.Getter;
+import lombok.Setter;
 
 import timkodiert.budgetBook.Constants;
 import timkodiert.budgetBook.i18n.LanguageManager;
@@ -37,6 +38,10 @@ public class PropertiesService {
     @Getter
     private Properties properties;
 
+    @Getter
+    @Setter
+    private OperationMode operationMode = OperationMode.PRODUCTION;
+
     private List<ThemeOption> themeComboBoxItems;
 
     private PropertiesService() {
@@ -44,7 +49,7 @@ public class PropertiesService {
     }
 
     public void load() throws IOException {
-        File propsFile = Path.of(Constants.PROPERTIES_PATH).toFile();
+        File propsFile = Path.of(getPropertiesPath()).toFile();
         if (!propsFile.exists()) {
             Path.of(propsFile.getParent()).toFile().mkdirs();
             propsFile.createNewFile();
@@ -55,7 +60,7 @@ public class PropertiesService {
             this.properties.setProperty("theme", "0");
             this.properties.store(new FileWriter(propsFile), "Store initial props");
         } else {
-            this.properties.load(new FileInputStream(Constants.PROPERTIES_PATH));
+            this.properties.load(new FileInputStream(getPropertiesPath()));
         }
         initializeDataStructures();
     }
@@ -120,14 +125,13 @@ public class PropertiesService {
         Button saveBtn = new Button(LanguageManager.get("button.save"));
         saveBtn.setOnAction(event -> {
             try {
-
                 Properties newProps = new Properties();
                 newProps.setProperty("language", languageComboBox.getValue());
                 newProps.setProperty("db", jdbcPathTextField.getText());
                 newProps.setProperty("useSystemMenuBar", String.valueOf(useSystemMenuBarCheckBox));
                 newProps.setProperty("theme", themeComboBox.getValue().getId());
                 // Speichern
-                File propsFile = Path.of(Constants.PROPERTIES_PATH).toFile();
+                File propsFile = Path.of(getPropertiesPath()).toFile();
                 this.properties = newProps;
                 this.properties.store(new FileWriter(propsFile), "JBudgetBook properties");
                 Alert alert = new Alert(AlertType.INFORMATION,
@@ -166,6 +170,10 @@ public class PropertiesService {
 
     public Class<? extends Theme> getTheme() {
         return getCurrentThemeOption().getTheme();
+    }
+
+    private String getPropertiesPath() {
+        return String.format(Constants.PROPERTIES_PATH_TEMPLATE, operationMode.getPropertiesPostfix());
     }
 
     public static PropertiesService getInstance() {
