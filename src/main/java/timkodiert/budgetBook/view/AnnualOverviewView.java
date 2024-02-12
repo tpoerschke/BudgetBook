@@ -1,5 +1,7 @@
 package timkodiert.budgetBook.view;
 
+import static timkodiert.budgetBook.view.FxmlResource.EXPENSE_DETAIL_WIDGET;
+
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -80,7 +82,7 @@ public class AnnualOverviewView implements Initializable, View {
 
         // Widget rechts einbinden
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ExpenseDetailWidget.fxml"));
+            FXMLLoader loader = FxmlResource.loadResourceIntoFxmlLoader(getClass(), EXPENSE_DETAIL_WIDGET);
             loader.setResources(LanguageManager.getInstance().getResourceBundle());
             loader.setController(expenseDetailWidget);
             turnoverWidgetNode = loader.load();

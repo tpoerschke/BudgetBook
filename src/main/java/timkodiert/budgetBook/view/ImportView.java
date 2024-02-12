@@ -1,5 +1,7 @@
 package timkodiert.budgetBook.view;
 
+import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
+
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
@@ -205,6 +207,6 @@ public class ImportView implements View, Initializable {
     private void importSelected(ActionEvent e) {
         importer.doImport();
         dialogFactory.buildInformationDialog("Ausgaben wurden importiert.").showAndWait();
-        mainView.loadViewPartial("/fxml/MonthlyOverview.fxml", "Monatsübersicht");
+        mainView.loadViewPartial(MONTHLY_OVERVIEW.toString(), LanguageManager.get("stageTitle.monthlyOverview"));
     }
 }
