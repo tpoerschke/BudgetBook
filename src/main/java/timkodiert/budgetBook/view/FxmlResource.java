@@ -11,8 +11,11 @@ public enum FxmlResource {
     IMPORT_VIEW("/fxml/Importer/ImportView.fxml"),
     MAIN_VIEW("/fxml/Main.fxml"),
     MONTHLY_OVERVIEW("/fxml/MonthlyOverview.fxml"),
+    MANAGE_CATEGORIES_VIEW("/fxml/ManageCategories.fxml"),
     MANAGE_FIXED_EXPENSES_VIEW("/fxml/fixed_turnover/Manage.fxml"),
     MANAGE_UNIQUE_EXPENSES_VIEW("/fxml/unique_turnover/Manage.fxml"),
+    NEW_CATEGORY_VIEW("/fxml/NewCategory.fxml"),
+    FIXED_EXPENSE_INFORMATION_DETAIL_VIEW("/fxml/fixed_turnover/FixedExpenseInformationDetailView.fxml"),
     ;
 
     private final String path;

@@ -1,10 +1,13 @@
 package timkodiert.budgetBook.view;
 
 import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
+import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MAIN_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MANAGE_CATEGORIES_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MANAGE_FIXED_EXPENSES_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MANAGE_UNIQUE_EXPENSES_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
+import static timkodiert.budgetBook.view.FxmlResource.NEW_CATEGORY_VIEW;
 
 import java.io.File;
 import java.net.URL;
@@ -126,7 +129,7 @@ public class MainView implements Initializable {
 
     @FXML
     public void openImportView(ActionEvent event) {
-        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
+        View view = loadViewPartial(IMPORT_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.importView"));
         if (view instanceof ImportView importView) {
             importView.setMainView(this);
         }
@@ -138,7 +141,7 @@ public class MainView implements Initializable {
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(this.primaryStage)
-                    .withFXMLResource("/fxml/ManageCategories.fxml")
+                    .withFXMLResource(MANAGE_CATEGORIES_VIEW.toString())
                     .withView(viewComponent.getManageCategoriesView())
                     .build();
             stage.show();
@@ -154,7 +157,7 @@ public class MainView implements Initializable {
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(this.primaryStage)
-                    .withFXMLResource("/fxml/NewCategory.fxml")
+                    .withFXMLResource(NEW_CATEGORY_VIEW.toString())
                     .withView(viewComponent.getNewCategoryView())
                     .build();
             stage.show();
@@ -191,7 +194,7 @@ public class MainView implements Initializable {
 
     @FXML
     private void onDragDropped(DragEvent e) {
-        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
+        View view = loadViewPartial(IMPORT_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.importView"));
         if (view instanceof ImportView importView) {
             importView.setMainView(this);
             e.getDragboard().getFiles().stream().filter(this::isCsvFile).findFirst().ifPresent(importView.selectedFileProperty()::set);

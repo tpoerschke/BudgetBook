@@ -51,6 +51,7 @@ import timkodiert.budgetBook.util.string_converter.EnumStringConverter;
 import timkodiert.budgetBook.view.mdv_base.EntityBaseDetailView;
 
 import static timkodiert.budgetBook.util.CategoryTreeHelper.from;
+import static timkodiert.budgetBook.view.FxmlResource.FIXED_EXPENSE_INFORMATION_DETAIL_VIEW;
 
 public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover> implements Initializable {
 
@@ -233,7 +234,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(Window.getWindows().get(0))
-                    .withFXMLResource("/fxml/fixed_turnover/FixedExpenseInformationDetailView.fxml")
+                    .withFXMLResource(FIXED_EXPENSE_INFORMATION_DETAIL_VIEW.toString())
                     .withView(subDetailView)
                     .build();
             stage.show();
