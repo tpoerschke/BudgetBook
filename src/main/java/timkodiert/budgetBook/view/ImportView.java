@@ -206,7 +206,7 @@ public class ImportView implements View, Initializable {
     @FXML
     private void importSelected(ActionEvent e) {
         importer.doImport();
-        dialogFactory.buildInformationDialog("Ausgaben wurden importiert.").showAndWait();
+        dialogFactory.buildInformationDialog(LanguageManager.get("importView.dialog.expensesImported")).showAndWait();
         mainView.loadViewPartial(MONTHLY_OVERVIEW.toString(), LanguageManager.get("stageTitle.monthlyOverview"));
     }
 }

@@ -1,5 +1,7 @@
 package timkodiert.budgetBook.view.fixed_turnover;
 
+import static timkodiert.budgetBook.view.FxmlResource.FIXED_EXPENSE_INFORMATION_DETAIL_VIEW;
+
 import javax.inject.Inject;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -37,7 +39,7 @@ public class FixedTurnoverManageView extends BaseManageView<FixedTurnover, Fixed
 
     @Override
     public String getDetailViewFxmlLocation() {
-        return "/fxml/fixed_turnover/Detail.fxml";
+        return FIXED_EXPENSE_INFORMATION_DETAIL_VIEW.toString();
     }
 
     @FXML

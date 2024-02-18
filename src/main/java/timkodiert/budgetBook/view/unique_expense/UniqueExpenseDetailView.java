@@ -1,5 +1,8 @@
 package timkodiert.budgetBook.view.unique_expense;
 
+import static timkodiert.budgetBook.view.FxmlResource.IMAGE_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.UNIQUE_TURNOVER_INFORMATION_VIEW;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -111,7 +114,7 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
             }
             try {
                 StageBuilder.create()
-                        .withFXMLResource("/fxml/ImageView.fxml")
+                        .withFXMLResource(IMAGE_VIEW.toString())
                         .withModality(Modality.APPLICATION_MODAL)
                         .withTitle("Beleg / Kassenbon")
                         .withView(new ImageModalView(path))
@@ -208,7 +211,7 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(Window.getWindows().get(0))
-                    .withFXMLResource("/fxml/unique_turnover/Information.fxml")
+                    .withFXMLResource(UNIQUE_TURNOVER_INFORMATION_VIEW.toString())
                     .withView(new UniqueExpenseInformationDetailView(optionalEntity, this::addNewExpenseInformation,
                             this.getUniqueExpenseInformationSuggestions()))
                     .build();
