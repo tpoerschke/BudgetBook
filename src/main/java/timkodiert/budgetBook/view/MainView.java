@@ -4,7 +4,7 @@ import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
 import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MAIN_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MANAGE_CATEGORIES_VIEW;
-import static timkodiert.budgetBook.view.FxmlResource.MANAGE_FIXED_EXPENSES_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MANAGE_REGULAR_EXPENSES_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MANAGE_UNIQUE_EXPENSES_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
 import static timkodiert.budgetBook.view.FxmlResource.NEW_CATEGORY_VIEW;
@@ -119,7 +119,7 @@ public class MainView implements Initializable {
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        loadViewPartial(MANAGE_FIXED_EXPENSES_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.regularExpensesOverview"));
+        loadViewPartial(MANAGE_REGULAR_EXPENSES_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.regularExpensesOverview"));
     }
 
     @FXML

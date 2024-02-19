@@ -15,7 +15,7 @@ public enum FxmlResource {
     MONTHLY_OVERVIEW("/fxml/MonthlyOverview.fxml"),
     MONTH_YEAR_PICKER_WIDGET("/fxml/MonthYearPickerWidget.fxml"),
     MANAGE_CATEGORIES_VIEW("/fxml/ManageCategories.fxml"),
-    MANAGE_FIXED_EXPENSES_VIEW("/fxml/fixed_turnover/Manage.fxml"),
+    MANAGE_REGULAR_EXPENSES_VIEW("/fxml/fixed_turnover/Manage.fxml"),
     MANAGE_UNIQUE_EXPENSES_VIEW("/fxml/unique_turnover/Manage.fxml"),
     NEW_CATEGORY_VIEW("/fxml/NewCategory.fxml"),
     FIXED_EXPENSE_INFORMATION_DETAIL_VIEW("/fxml/fixed_turnover/FixedExpenseInformationDetailView.fxml"),
