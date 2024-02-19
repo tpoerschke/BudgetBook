@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum FxmlResource {
 
-    ANNUAL_OVERVIEW("/fxml/MonthlyOverview.fxml"),
+    ANNUAL_OVERVIEW("/fxml/AnnualOverview.fxml"),
     EXPENSE_DETAIL_WIDGET("/fxml/ExpenseDetailWidget.fxml"),
     FIXED_TURNOVER_DETAIL_VIEW("/fxml/fixed_turnover/Detail.fxml"),
     IMPORT_VIEW("/fxml/Importer/ImportView.fxml"),
