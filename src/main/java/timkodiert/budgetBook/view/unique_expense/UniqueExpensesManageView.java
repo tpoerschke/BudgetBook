@@ -1,5 +1,7 @@
 package timkodiert.budgetBook.view.unique_expense;
 
+import static timkodiert.budgetBook.view.FxmlResource.UNIQUE_TURNOVER_DETAIL_VIEW;
+
 import java.time.LocalDate;
 import javax.inject.Inject;
 
@@ -46,7 +48,7 @@ public class UniqueExpensesManageView extends BaseManageView<UniqueTurnover, Uni
 
     @Override
     public String getDetailViewFxmlLocation() {
-        return "/fxml/unique_turnover/Detail.fxml";
+        return UNIQUE_TURNOVER_DETAIL_VIEW.toString();
     }
 
     @FXML

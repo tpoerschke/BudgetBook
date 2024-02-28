@@ -1,5 +1,7 @@
 package timkodiert.budgetBook.view.widget;
 
+import static timkodiert.budgetBook.view.FxmlResource.MONTH_YEAR_PICKER_WIDGET;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -50,7 +52,7 @@ public class MonthYearPickerWidget implements Initializable {
         this.showResetBtn = showResetBtn;
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MonthYearPickerWidget.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(MONTH_YEAR_PICKER_WIDGET.toString()));
             loader.setController(this);
             loader.setResources(LanguageManager.getInstance().getResourceBundle());
             parent.getChildren().add(loader.load());

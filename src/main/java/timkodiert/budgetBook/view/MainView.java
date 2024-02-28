@@ -1,5 +1,14 @@
 package timkodiert.budgetBook.view;
 
+import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
+import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MAIN_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MANAGE_CATEGORIES_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MANAGE_REGULAR_EXPENSES_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MANAGE_UNIQUE_EXPENSES_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
+import static timkodiert.budgetBook.view.FxmlResource.NEW_CATEGORY_VIEW;
+
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -59,7 +68,7 @@ public class MainView implements Initializable {
         try {
             FXMLLoader templateLoader = new FXMLLoader();
             templateLoader.setResources(LanguageManager.getInstance().getResourceBundle());
-            templateLoader.setLocation(getClass().getResource("/fxml/Main.fxml"));
+            templateLoader.setLocation(getClass().getResource(MAIN_VIEW.toString()));
             templateLoader.setController(this);
             this.primaryStage.setScene(new Scene(templateLoader.load()));
             this.primaryStage.show();
@@ -75,7 +84,7 @@ public class MainView implements Initializable {
         menuBar.useSystemMenuBarProperty().set(useSystemMenuBar);
 
         // Das Kind laden (default)
-        loadViewPartial("/fxml/MonthlyOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.monthlyOverView"));
+        loadViewPartial(MONTHLY_OVERVIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.monthlyOverview"));
     }
 
     private String getVersion() {
@@ -100,27 +109,27 @@ public class MainView implements Initializable {
 
     @FXML
     public void showMonthlyOverview(ActionEvent event) {
-        loadViewPartial("/fxml/MonthlyOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.monthlyOverView"));
+        loadViewPartial(MONTHLY_OVERVIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.monthlyOverview"));
     }
 
     @FXML
     public void showAnnualOverview(ActionEvent event) {
-        loadViewPartial("/fxml/AnnualOverview.fxml", LanguageManager.getInstance().getLocString("stageTitle.annualOverView"));
+        loadViewPartial(ANNUAL_OVERVIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.annualOverView"));
     }
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        loadViewPartial("/fxml/fixed_turnover/Manage.fxml", LanguageManager.getInstance().getLocString("stageTitle.regularExpensesOverview"));
+        loadViewPartial(MANAGE_REGULAR_EXPENSES_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.regularExpensesOverview"));
     }
 
     @FXML
     private void openUniqueExpensesManageView(ActionEvent event) {
-        loadViewPartial("/fxml/unique_turnover/Manage.fxml", LanguageManager.getInstance().getLocString("stageTitle.uniqueExpensesOverview"));
+        loadViewPartial(MANAGE_UNIQUE_EXPENSES_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.uniqueExpensesOverview"));
     }
 
     @FXML
     public void openImportView(ActionEvent event) {
-        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
+        View view = loadViewPartial(IMPORT_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.importView"));
         if (view instanceof ImportView importView) {
             importView.setMainView(this);
         }
@@ -132,7 +141,7 @@ public class MainView implements Initializable {
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(this.primaryStage)
-                    .withFXMLResource("/fxml/ManageCategories.fxml")
+                    .withFXMLResource(MANAGE_CATEGORIES_VIEW.toString())
                     .withView(viewComponent.getManageCategoriesView())
                     .build();
             stage.show();
@@ -148,7 +157,7 @@ public class MainView implements Initializable {
             Stage stage = StageBuilder.create()
                     .withModality(Modality.APPLICATION_MODAL)
                     .withOwner(this.primaryStage)
-                    .withFXMLResource("/fxml/NewCategory.fxml")
+                    .withFXMLResource(NEW_CATEGORY_VIEW.toString())
                     .withView(viewComponent.getNewCategoryView())
                     .build();
             stage.show();
@@ -185,7 +194,7 @@ public class MainView implements Initializable {
 
     @FXML
     private void onDragDropped(DragEvent e) {
-        View view = loadViewPartial("/fxml/Importer/ImportView.fxml", LanguageManager.getInstance().getLocString("stageTitle.importView"));
+        View view = loadViewPartial(IMPORT_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.importView"));
         if (view instanceof ImportView importView) {
             importView.setMainView(this);
             e.getDragboard().getFiles().stream().filter(this::isCsvFile).findFirst().ifPresent(importView.selectedFileProperty()::set);
