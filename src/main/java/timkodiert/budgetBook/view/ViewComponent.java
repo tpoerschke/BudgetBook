@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 import timkodiert.budgetBook.domain.repository.RepositoryModule;
+import timkodiert.budgetBook.util.MigrationService;
 import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverDetailView;
 import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverManageView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
@@ -43,4 +44,10 @@ public interface ViewComponent {
     // Umsätze importieren
     // -----------------------------------
     ImportView getImportView();
+
+    // -----------------------------------
+    // Technische Ansichten
+    // -----------------------------------
+    MigrationService getMigrationService();
+    MigrationView getMigrationView();
 }

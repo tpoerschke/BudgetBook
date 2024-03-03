@@ -32,6 +32,8 @@ public class ControllerFactory {
         viewControllerMap.put(FixedTurnoverDetailView.class, viewComponent::getFixedTurnoverDetailView);
         viewControllerMap.put(UniqueExpensesManageView.class, viewComponent::getUniqueExpensesManageView);
         viewControllerMap.put(UniqueExpenseDetailView.class, viewComponent::getUniqueExpenseDetailView);
+        // Technische Ansichten
+        viewControllerMap.put(MigrationView.class, viewComponent::getMigrationView);
     }
 
     public View create(Class<?> viewControllerClass) {
