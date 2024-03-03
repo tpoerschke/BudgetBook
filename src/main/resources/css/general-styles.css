@@ -34,3 +34,9 @@
     /*-fx-font-family: 'Menlo', 'monospace';*/
     -fx-alignment: center-right;
 }
+
+.progress-indicator-text {
+    -fx-background-color: -color-base-0;
+    -fx-padding: 3px 3px 3px 3px;
+    -fx-background-radius: 3px;
+}

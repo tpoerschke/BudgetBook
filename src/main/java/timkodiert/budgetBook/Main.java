@@ -3,7 +3,6 @@ package timkodiert.budgetBook;
 import atlantafx.base.theme.Theme;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.flywaydb.core.Flyway;
 
 import timkodiert.budgetBook.util.OperationMode;
 import timkodiert.budgetBook.util.PropertiesService;
@@ -28,12 +27,19 @@ public class Main extends Application {
         }
         propsService.load();
 
-        Flyway flyway = Flyway.configure().dataSource(propsService.getDbPath(), "sa", "").load();
-        flyway.migrate();
-
         Class<? extends Theme> theme = propsService.getTheme();
         Application.setUserAgentStylesheet(theme.getConstructor().newInstance().getUserAgentStylesheet());
+
         ViewComponent viewComponent = DaggerViewComponent.create();
+        //        Flyway flyway = Flyway.configure().dataSource(propsService.getDbPath(), "sa", "").load();
+        //        if (flyway.info().pending().length > 0) {
+        viewComponent.getMigrationService().show();
+        //        }
+
+        System.exit(0);
+        //        flyway.migrate();
+
+        // Programm starten
         viewComponent.getMainView().setAndShowPrimaryStage(primaryStage);
     }
 
