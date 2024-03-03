@@ -4,6 +4,7 @@ import atlantafx.base.theme.Theme;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import timkodiert.budgetBook.util.MigrationService;
 import timkodiert.budgetBook.util.OperationMode;
 import timkodiert.budgetBook.util.PropertiesService;
 import timkodiert.budgetBook.view.DaggerViewComponent;
@@ -30,16 +31,12 @@ public class Main extends Application {
         Class<? extends Theme> theme = propsService.getTheme();
         Application.setUserAgentStylesheet(theme.getConstructor().newInstance().getUserAgentStylesheet());
 
+        // Migration & Programmstart
         ViewComponent viewComponent = DaggerViewComponent.create();
-        //        Flyway flyway = Flyway.configure().dataSource(propsService.getDbPath(), "sa", "").load();
-        //        if (flyway.info().pending().length > 0) {
-        viewComponent.getMigrationService().show();
-        //        }
-
-        System.exit(0);
-        //        flyway.migrate();
-
-        // Programm starten
+        MigrationService migrationService = viewComponent.getMigrationService();
+        if (migrationService.hasPendingMigrations()) {
+            migrationService.show();
+        }
         viewComponent.getMainView().setAndShowPrimaryStage(primaryStage);
     }
 
