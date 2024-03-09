@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,17 +42,25 @@ public class MigrationView implements View, Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         progressLabel.textProperty().bind(service.currentScriptProperty());
+        progressIndicatorText.setText(String.format("%d / %d", 0, service.getPendingCount()));
         progressIndicatorText.textProperty()
                              .bind(Bindings.createStringBinding(() -> String.format("%d / %d", service.numMigratedProperty().get(), service.getPendingCount()),
                                                                 service.numMigratedProperty()));
 
         service.migrationFinishedProperty().addListener((observableValue, oldVal, newVal) -> {
-            ((Stage) startButton.getScene().getWindow()).close();
+            getStage().close();
         });
 
         service.migrationErrorProperty().addListener((observableValue, oldVal, newVal) -> {
             dialogFactory.buildErrorDialog("Es ist ein Migrationsfehler aufgetreten.").showAndWait();
+            Platform.exit();
+            System.exit(1);
         });
+    }
+
+    private Stage getStage() {
+        return ((Stage) startButton.getScene().getWindow());
     }
 }

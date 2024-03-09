@@ -42,7 +42,7 @@ public class MigrationService {
     public MigrationService(ControllerFactory controllerFactory) {
         this.controllerFactory = controllerFactory;
         flyway = Flyway.configure()
-                       .dataSource(PropertiesService.getInstance().getDbPath(), "sa", "")
+                       .dataSource(PropertiesService.getInstance().getDbPath(), "bb", "")
                        .callbacks(new NotifierCallback())
                        .load();
     }
@@ -68,8 +68,10 @@ public class MigrationService {
             stage.setScene(new Scene(viewLoader.load()));
             stage.setWidth(600);
             stage.setOnHidden(event -> {
-                Platform.exit();
-                System.exit(0);
+                if (!migrationFinishedProperty().get()) {
+                    Platform.exit();
+                    System.exit(1);
+                }
             });
             stage.showAndWait();
         } catch (Exception e) {
