@@ -10,9 +10,9 @@
 <GridPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.MigrationView"
           stylesheets="@../css/general-styles.css" vgap="10">
 
-    <Label text="Datenbankmigration notwendig" alignment="CENTER" maxWidth="Infinity" styleClass="text-bold"
+    <Label text="%migration.label.title" alignment="CENTER" maxWidth="Infinity" styleClass="text-bold"
            GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" />
-    <Label text="Es ist eine Datenbankmigration notwendig. Bitte erstelle zuerst ein Backup der Datenbank." GridPane.rowIndex="1" GridPane.columnSpan="2" />
+    <Label text="%migration.label.description" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
 
     <StackPane GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
         <ProgressBar maxWidth="Infinity" prefHeight="30" progress="0.0" />

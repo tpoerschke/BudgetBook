@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.util.MigrationService;
 import timkodiert.budgetBook.util.dialog.DialogFactory;
 
@@ -44,7 +45,6 @@ public class MigrationView implements View, Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         progressLabel.textProperty().bind(service.currentScriptProperty());
-        progressIndicatorText.setText(String.format("%d / %d", 0, service.getPendingCount()));
         progressIndicatorText.textProperty()
                              .bind(Bindings.createStringBinding(() -> String.format("%d / %d", service.numMigratedProperty().get(), service.getPendingCount()),
                                                                 service.numMigratedProperty()));
@@ -54,7 +54,7 @@ public class MigrationView implements View, Initializable {
         });
 
         service.migrationErrorProperty().addListener((observableValue, oldVal, newVal) -> {
-            dialogFactory.buildErrorDialog("Es ist ein Migrationsfehler aufgetreten.").showAndWait();
+            dialogFactory.buildErrorDialog(LanguageManager.get("migration.error")).showAndWait();
             Platform.exit();
             System.exit(1);
         });

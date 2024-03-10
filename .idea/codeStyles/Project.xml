@@ -24,6 +24,9 @@
         </value>
       </option>
     </JavaCodeStyleSettings>
+    <Properties>
+      <option name="KEEP_BLANK_LINES" value="true" />
+    </Properties>
     <codeStyleSettings language="JAVA">
       <option name="RIGHT_MARGIN" value="170" />
       <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
