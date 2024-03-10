@@ -45,6 +45,7 @@ public class MigrationService {
                        .dataSource(PropertiesService.getInstance().getDbPath(), "bb", "")
                        .callbacks(new NotifierCallback())
                        .load();
+        pendingCount = flyway.info().pending().length;
     }
 
     public boolean hasPendingMigrations() {
@@ -52,7 +53,6 @@ public class MigrationService {
     }
 
     public void migrate() {
-        pendingCount = flyway.info().pending().length;
         flyway.migrate();
     }
 
