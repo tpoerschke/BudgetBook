@@ -28,4 +28,9 @@ public class DialogFactory {
         Alert alert = new Alert(AlertType.INFORMATION, information);
         return alert;
     }
+
+    public Alert buildErrorDialog(String message) {
+        Alert alert = new Alert(AlertType.ERROR, message);
+        return alert;
+    }
 }
