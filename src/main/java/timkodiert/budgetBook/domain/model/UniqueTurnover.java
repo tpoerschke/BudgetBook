@@ -65,6 +65,10 @@ public class UniqueTurnover extends BaseEntity implements Adaptable<UniqueTurnov
         return paymentInformations.stream().mapToDouble(UniqueTurnoverInformation::getValueSigned).sum();
     }
 
+    public boolean hasImport() {
+        return accountTurnover != null;
+    }
+
     @Override
     public boolean contentEquals(Object other) {
 

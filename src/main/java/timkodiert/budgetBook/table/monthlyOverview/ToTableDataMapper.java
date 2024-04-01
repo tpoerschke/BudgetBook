@@ -11,15 +11,17 @@ import timkodiert.budgetBook.view.MonthlyOverview.RowType;
 public class ToTableDataMapper {
 
     public static TableData mapUniqueExpense(UniqueTurnover expense) {
-        String categories = String.join(", ", expense.getPaymentInformations().stream()
-                .flatMap(info -> info.getCategories().stream()).map(Category::getName).collect(toSet()));
-        return new TableData(expense.getBiller(), expense.getTotalValue(), expense.getDate(),
-                categories, RowType.UNIQUE_EXPENSE);
+        String categories = String.join(", ",
+                                        expense.getPaymentInformations().stream().flatMap(info -> info.getCategories().stream()).map(Category::getName).collect(toSet()));
+        return new TableData(expense.getBiller(), expense.getTotalValue(), expense.getDate(), categories, expense.hasImport(), RowType.UNIQUE_EXPENSE);
     }
 
     public static TableData mapFixedExpense(FixedTurnover expense, MonthYear monthYear) {
-        return new TableData(expense.getPosition(), expense.getValueFor(monthYear), null,
-                String.join(", ", expense.getCategories().stream().map(Category::getName).collect(toSet())),
-                RowType.FIXED_EXPENSE);
+        return new TableData(expense.getPosition(),
+                             expense.getValueFor(monthYear),
+                             expense.getImportDate(monthYear),
+                             String.join(", ", expense.getCategories().stream().map(Category::getName).collect(toSet())),
+                             expense.hasImport(monthYear),
+                             RowType.FIXED_EXPENSE);
     }
 }

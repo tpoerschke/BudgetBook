@@ -19,9 +19,10 @@
          <columns>
             <TableColumn fx:id="buttonCol" editable="false" minWidth="55.0" prefWidth="55.0" resizable="false" sortable="false" />
             <TableColumn fx:id="positionCol" minWidth="-1.0" prefWidth="300.0" text="%monthlyOverview.dataTable.column.position" />
-            <TableColumn fx:id="valueCol" minWidth="-1.0" prefWidth="120.0" styleClass="value-col, border-right" text="%monthlyOverview.dataTable.column.amount" />
-            <TableColumn fx:id="dateCol" minWidth="90.0" prefWidth="-1.0" styleClass="border-right" text="%monthlyOverview.dataTable.column.date" />
-            <TableColumn fx:id="categoriesCol" minWidth="200.0" prefWidth="-1.0" text="%monthlyOverview.dataTable.column.categories" />
+            <TableColumn fx:id="valueCol" minWidth="120.0" prefWidth="120.0" styleClass="value-col, border-right" text="%monthlyOverview.dataTable.column.amount"/>
+            <TableColumn fx:id="dateCol" minWidth="90.0" prefWidth="90.0" styleClass="border-right" text="%monthlyOverview.dataTable.column.date"/>
+            <TableColumn fx:id="iconCol" minWidth="50.9" prefWidth="50.0" text=""/>
+            <TableColumn fx:id="categoriesCol" minWidth="300.0" prefWidth="-1.0" text="%monthlyOverview.dataTable.column.categories"/>
          </columns>
       </TableView>
    </center>

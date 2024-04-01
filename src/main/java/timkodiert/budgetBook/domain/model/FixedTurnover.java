@@ -1,5 +1,6 @@
 package timkodiert.budgetBook.domain.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Entity
@@ -88,6 +90,23 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
         return IntStream.rangeClosed(1, 12).mapToDouble(month -> this.getValueFor(year, month)).sum();
     }
 
+    @Override
+    public double getValueFor(MonthYear monthYear) {
+        return getValueFor(monthYear.getYear(), monthYear.getMonth());
+    }
+
+    public @Nullable LocalDate getImportDate(MonthYear monthYear) {
+        List<AccountTurnover> accountTurnover = findImports(monthYear);
+        if (!accountTurnover.isEmpty()) {
+            return accountTurnover.get(0).getDate();
+        }
+        return null;
+    }
+
+    public boolean hasImport(MonthYear monthYear) {
+        return getImportDate(monthYear) != null;
+    }
+
     private double getValueFor(int year, int month) {
         // Importe auswerten
         List<AccountTurnover> accountTurnover = findImports(MonthYear.of(month, year));
@@ -102,11 +121,6 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
         return 0;
     }
 
-    @Override
-    public double getValueFor(MonthYear monthYear) {
-        return getValueFor(monthYear.getYear(), monthYear.getMonth());
-    }
-
     private PaymentInformation findPaymentInformation(MonthYear monthYear) {
         for (PaymentInformation payInfo : this.paymentInformations) {
             if (payInfo.validFor(monthYear)) {
@@ -117,7 +131,7 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     }
 
     private List<AccountTurnover> findImports(MonthYear monthYear) {
-        return accountTurnover.stream().filter(at -> monthYear.containsDate(at.getDate())).toList();
+        return accountTurnover.stream().filter(at -> monthYear.containsDate(at.getDate())).sorted().toList();
     }
 
     @Override

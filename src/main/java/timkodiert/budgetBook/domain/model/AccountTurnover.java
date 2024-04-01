@@ -13,6 +13,7 @@ import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -21,7 +22,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Entity
-public class AccountTurnover extends BaseEntity {
+public class AccountTurnover extends BaseEntity implements Comparable<AccountTurnover> {
 
     public static final int SKIP_LINES = 14;
 
@@ -74,5 +75,10 @@ public class AccountTurnover extends BaseEntity {
     @Override
     public boolean equals(Object obj) {
         return contentEquals(obj);
+    }
+
+    @Override
+    public int compareTo(@NotNull AccountTurnover o) {
+        return date.compareTo(o.getDate());
     }
 }
