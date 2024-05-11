@@ -1,14 +1,5 @@
 package timkodiert.budgetBook.view;
 
-import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
-import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;
-import static timkodiert.budgetBook.view.FxmlResource.MAIN_VIEW;
-import static timkodiert.budgetBook.view.FxmlResource.MANAGE_CATEGORIES_VIEW;
-import static timkodiert.budgetBook.view.FxmlResource.MANAGE_REGULAR_EXPENSES_VIEW;
-import static timkodiert.budgetBook.view.FxmlResource.MANAGE_UNIQUE_EXPENSES_VIEW;
-import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
-import static timkodiert.budgetBook.view.FxmlResource.NEW_CATEGORY_VIEW;
-
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,12 +22,20 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.Nullable;
 
-import timkodiert.budgetBook.controller.FixedExpenseController;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.util.EntityManager;
 import timkodiert.budgetBook.util.PropertiesService;
 import timkodiert.budgetBook.util.StageBuilder;
 import timkodiert.budgetBook.util.dialog.StackTraceAlert;
+
+import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
+import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MAIN_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MANAGE_CATEGORIES_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MANAGE_REGULAR_EXPENSES_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MANAGE_UNIQUE_EXPENSES_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
+import static timkodiert.budgetBook.view.FxmlResource.NEW_CATEGORY_VIEW;
 
 public class MainView implements Initializable {
 
@@ -50,14 +49,12 @@ public class MainView implements Initializable {
     @FXML
     private RadioMenuItem viewMenuItem1, viewMenuItem2;
 
-    private FixedExpenseController fixedExpenseController;
     private ViewComponent viewComponent;
     private final ControllerFactory controllerFactory;
 
     @Inject
-    public MainView(ViewComponent viewComponennt, FixedExpenseController fixedExpenseController, ControllerFactory controllerFactory) {
+    public MainView(ViewComponent viewComponennt, ControllerFactory controllerFactory) {
         this.viewComponent = viewComponennt;
-        this.fixedExpenseController = fixedExpenseController;
         this.controllerFactory = controllerFactory;
     }
 
@@ -165,11 +162,6 @@ public class MainView implements Initializable {
             Alert alert = new Alert(AlertType.ERROR, LanguageManager.getInstance().getLocString("alert.viewCouldNotBeOpened"));
             alert.showAndWait();
         }
-    }
-
-    @FXML
-    private void reloadData(ActionEvent event) {
-        fixedExpenseController.loadAll();
     }
 
     @FXML
