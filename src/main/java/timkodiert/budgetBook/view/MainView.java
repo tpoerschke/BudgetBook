@@ -33,8 +33,8 @@ import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
 import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MAIN_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MANAGE_CATEGORIES_VIEW;
-import static timkodiert.budgetBook.view.FxmlResource.MANAGE_REGULAR_EXPENSES_VIEW;
-import static timkodiert.budgetBook.view.FxmlResource.MANAGE_UNIQUE_EXPENSES_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MANAGE_REGULAR_TURNOVER_VIEW;
+import static timkodiert.budgetBook.view.FxmlResource.MANAGE_UNIQUE_TURNOVER_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
 import static timkodiert.budgetBook.view.FxmlResource.NEW_CATEGORY_VIEW;
 
@@ -83,21 +83,21 @@ public class MainView implements Initializable {
         menuBar.useSystemMenuBarProperty().set(useSystemMenuBar);
 
         // Das Kind laden (default)
-        loadViewPartial(MONTHLY_OVERVIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.monthlyOverview"));
+        loadViewPartial(MONTHLY_OVERVIEW);
     }
 
     private String getVersion() {
         return "Version " + getClass().getPackage().getImplementationVersion();
     }
 
-    public @Nullable View loadViewPartial(String resource, String stageTitle) {
+    public @Nullable View loadViewPartial(FxmlResource resource) {
         try {
             FXMLLoader templateLoader = new FXMLLoader();
-            templateLoader.setLocation(getClass().getResource(resource));
+            templateLoader.setLocation(getClass().getResource(resource.getPath()));
             templateLoader.setControllerFactory(controllerFactory::create);
             templateLoader.setResources(LanguageManager.getInstance().getResourceBundle());
             this.root.setCenter(templateLoader.load());
-            this.primaryStage.setTitle(String.format("%s – JBudgetBook – %s", stageTitle, getVersion()));
+            this.primaryStage.setTitle(String.format("%s – JBudgetBook – %s", LanguageManager.get(resource.getStageTitle()), getVersion()));
             return templateLoader.getController();
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,27 +108,27 @@ public class MainView implements Initializable {
 
     @FXML
     public void showMonthlyOverview(ActionEvent event) {
-        loadViewPartial(MONTHLY_OVERVIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.monthlyOverview"));
+        loadViewPartial(MONTHLY_OVERVIEW);
     }
 
     @FXML
     public void showAnnualOverview(ActionEvent event) {
-        loadViewPartial(ANNUAL_OVERVIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.annualOverView"));
+        loadViewPartial(ANNUAL_OVERVIEW);
     }
 
     @FXML
     private void openManageExpensesView(ActionEvent event) {
-        loadViewPartial(MANAGE_REGULAR_EXPENSES_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.regularExpensesOverview"));
+        loadViewPartial(MANAGE_REGULAR_TURNOVER_VIEW);
     }
 
     @FXML
     private void openUniqueExpensesManageView(ActionEvent event) {
-        loadViewPartial(MANAGE_UNIQUE_EXPENSES_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.uniqueExpensesOverview"));
+        loadViewPartial(MANAGE_UNIQUE_TURNOVER_VIEW);
     }
 
     @FXML
     public void openImportView(ActionEvent event) {
-        View view = loadViewPartial(IMPORT_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.importView"));
+        View view = loadViewPartial(IMPORT_VIEW);
         if (view instanceof ImportView importView) {
             importView.setMainView(this);
         }
@@ -188,7 +188,7 @@ public class MainView implements Initializable {
 
     @FXML
     private void onDragDropped(DragEvent e) {
-        View view = loadViewPartial(IMPORT_VIEW.toString(), LanguageManager.getInstance().getLocString("stageTitle.importView"));
+        View view = loadViewPartial(IMPORT_VIEW);
         if (view instanceof ImportView importView) {
             importView.setMainView(this);
             e.getDragboard().getFiles().stream().filter(this::isCsvFile).findFirst().ifPresent(importView.selectedFileProperty()::set);

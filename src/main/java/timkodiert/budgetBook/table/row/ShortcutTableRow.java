@@ -33,8 +33,8 @@ public class ShortcutTableRow extends TableRow<TableData> {
 
     private @Nullable FxmlResource mapRowDataToFxmlResource(TableData tableData) {
         return switch (tableData.type()) {
-            case FIXED_EXPENSE -> FxmlResource.MANAGE_REGULAR_EXPENSES_VIEW;
-            case UNIQUE_EXPENSE -> FxmlResource.MANAGE_UNIQUE_EXPENSES_VIEW;
+            case FIXED_EXPENSE -> FxmlResource.MANAGE_REGULAR_TURNOVER_VIEW;
+            case UNIQUE_EXPENSE -> FxmlResource.MANAGE_UNIQUE_TURNOVER_VIEW;
             default -> null;
         };
     }

@@ -1,7 +1,5 @@
 package timkodiert.budgetBook.view;
 
-import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
-
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
@@ -51,6 +49,8 @@ import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
 import timkodiert.budgetBook.util.FixedExpenseStringConverter;
 import timkodiert.budgetBook.util.dialog.DialogFactory;
+
+import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
 
 public class ImportView implements View, Initializable {
 
@@ -207,6 +207,6 @@ public class ImportView implements View, Initializable {
     private void importSelected(ActionEvent e) {
         importer.doImport();
         dialogFactory.buildInformationDialog(LanguageManager.get("importView.dialog.expensesImported")).showAndWait();
-        mainView.loadViewPartial(MONTHLY_OVERVIEW.toString(), LanguageManager.get("stageTitle.monthlyOverview"));
+        mainView.loadViewPartial(MONTHLY_OVERVIEW);
     }
 }
