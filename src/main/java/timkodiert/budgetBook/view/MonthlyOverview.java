@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -40,6 +41,7 @@ import timkodiert.budgetBook.table.monthlyOverview.MonthlyOverviewCurrencyTableC
 import timkodiert.budgetBook.table.monthlyOverview.TableData;
 import timkodiert.budgetBook.table.monthlyOverview.ToTableDataMapper;
 import timkodiert.budgetBook.table.row.BoldTableRow;
+import timkodiert.budgetBook.table.row.ShortcutTableRow;
 
 public class MonthlyOverview implements Initializable, View {
 
@@ -71,11 +73,14 @@ public class MonthlyOverview implements Initializable, View {
 
     private final Repository<UniqueTurnover> uniqueExpenseRepository;
     private final Repository<FixedTurnover> fixedExpenseRepository;
+    private final Provider<ShortcutTableRow> shortcutTableRowProvider;
 
     @Inject
-    public MonthlyOverview(Repository<UniqueTurnover> uniqueExpenseRepository, Repository<FixedTurnover> fixedExpenseRepository) {
+    public MonthlyOverview(Repository<UniqueTurnover> uniqueExpenseRepository, Repository<FixedTurnover> fixedExpenseRepository,
+                           Provider<ShortcutTableRow> shortcutTableRowProvider) {
         this.uniqueExpenseRepository = uniqueExpenseRepository;
         this.fixedExpenseRepository = fixedExpenseRepository;
+        this.shortcutTableRowProvider = shortcutTableRowProvider;
     }
 
     @Override
@@ -99,7 +104,8 @@ public class MonthlyOverview implements Initializable, View {
                     .filter(d -> !RowType.getGroupTypes().contains(d.type()))
                     .mapToDouble(TableData::value).sum();
             sumTable.getItems().clear();
-            sumTable.getItems().add(new TableData(LanguageManager.getInstance().getLocString("monthlyOverview.label.sumExpenses"),
+            sumTable.getItems().add(new TableData(null,
+                                                  LanguageManager.getInstance().getLocString("monthlyOverview.label.sumExpenses"),
                                                   totalSum,
                                                   null,
                                                   null,
@@ -119,8 +125,8 @@ public class MonthlyOverview implements Initializable, View {
                                                 .mapToDouble(UniqueTurnover::getTotalValue)
                                                 .sum();
 
-            sumTable.getItems().addAll(new TableData(LanguageManager.get("monthlyOverview.label.sumEarnings"), incomeSum, null, null, false, RowType.SUM),
-                                       new TableData(LanguageManager.get("monthlyOverview.label.sum"), incomeSum + totalSum, null, null, false, RowType.TOTAL_SUM));
+            sumTable.getItems().addAll(new TableData(null, LanguageManager.get("monthlyOverview.label.sumEarnings"), incomeSum, null, null, false, RowType.SUM),
+                                       new TableData(null, LanguageManager.get("monthlyOverview.label.sum"), incomeSum + totalSum, null, null, false, RowType.TOTAL_SUM));
         });
 
         initDataGroups(MonthYear.now());
@@ -161,6 +167,7 @@ public class MonthlyOverview implements Initializable, View {
         iconCol.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue()));
         iconCol.setCellFactory(col -> new IconTableCell());
 
+        dataTable.setRowFactory(tv -> shortcutTableRowProvider.get());
         dataTable.getColumns().forEach(col -> col.setReorderable(false));
         dataTable.setItems(filteredData);
 
@@ -200,7 +207,7 @@ public class MonthlyOverview implements Initializable, View {
     }
 
     private <T> void initDataGroup(List<T> expenses, Function<T, TableData> expToData, ToDoubleFunction<T> expToTotalValue, String groupName, RowType groupRowType) {
-        data.add(new TableData(groupName, expenses.stream().mapToDouble(expToTotalValue).sum(), null, null, false, groupRowType));
+        data.add(new TableData(null, groupName, expenses.stream().mapToDouble(expToTotalValue).sum(), null, null, false, groupRowType));
         data.addAll(expenses.stream().map(expToData).toList());
     }
 

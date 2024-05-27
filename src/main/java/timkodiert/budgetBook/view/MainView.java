@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,6 +38,7 @@ import static timkodiert.budgetBook.view.FxmlResource.MANAGE_UNIQUE_EXPENSES_VIE
 import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
 import static timkodiert.budgetBook.view.FxmlResource.NEW_CATEGORY_VIEW;
 
+@Singleton
 public class MainView implements Initializable {
 
     private Stage primaryStage;

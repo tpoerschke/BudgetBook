@@ -16,7 +16,7 @@ import javafx.scene.layout.Pane;
 
 import timkodiert.budgetBook.domain.model.Adaptable;
 import timkodiert.budgetBook.domain.model.Adapter;
-import timkodiert.budgetBook.domain.model.ContentEquals;
+import timkodiert.budgetBook.domain.model.BaseEntity;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.util.dialog.DialogFactory;
@@ -24,7 +24,7 @@ import timkodiert.budgetBook.util.dialog.StackTraceAlert;
 import timkodiert.budgetBook.view.ControllerFactory;
 import timkodiert.budgetBook.view.View;
 
-public abstract class BaseManageView<T extends Adaptable<A> & ContentEquals, A extends Adapter<T>> implements View, Initializable {
+public abstract class BaseManageView<T extends BaseEntity & Adaptable<A>, A extends Adapter<T>> implements View, Initializable {
 
     @FXML
     protected Pane detailViewContainer;
@@ -91,6 +91,10 @@ public abstract class BaseManageView<T extends Adaptable<A> & ContentEquals, A e
         });
 
         initControls();
+    }
+
+    public void displayEntityById(int id) {
+        repository.findAll().stream().filter(e -> e.getId() == id).findAny().ifPresent(detailView::setEntity);
     }
 
     protected abstract void initControls();
