@@ -23,11 +23,12 @@ public class IconTableCell extends TableCell<TableData, TableData> {
 
     @Override
     protected void updateItem(TableData item, boolean empty) {
+        box.getChildren().clear();
+        
         if(empty || item == null) {
             return;
         }
 
-        box.getChildren().clear();
         if(item.hasImport()) {
             FontIcon importedIcon = new FontIcon(BootstrapIcons.FILE_EARMARK_ARROW_DOWN);
             Tooltip.install(box, tooltip); // Kann nicht direkt auf dem Icon installiert werden: https://github.com/kordamp/ikonli/issues/143

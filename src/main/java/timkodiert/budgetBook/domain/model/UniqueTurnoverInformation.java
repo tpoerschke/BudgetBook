@@ -56,7 +56,8 @@ public class UniqueTurnoverInformation implements Categorizable, ContentEquals {
     public static UniqueTurnoverInformation total(UniqueTurnover exp, double value) {
         UniqueTurnoverInformation info = new UniqueTurnoverInformation();
         info.setLabel("Gesamt");
-        info.setValue(value);
+        info.setValue(Math.abs(value));
+        info.setDirection(value > 0 ? TurnoverDirection.IN : TurnoverDirection.OUT);
         info.setExpense(exp);
         return info;
     }
