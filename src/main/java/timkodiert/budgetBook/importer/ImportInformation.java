@@ -90,7 +90,7 @@ public class ImportInformation implements HasType<MonthlyOverview.RowType> {
         UniqueTurnover exp = new UniqueTurnover();
         exp.setBiller(receiver.get());
         exp.setDate(accountTurnover.getDate());
-        exp.setPaymentInformations(List.of(UniqueTurnoverInformation.total(exp, Math.abs(accountTurnover.getAmount()))));
+        exp.setPaymentInformations(List.of(UniqueTurnoverInformation.total(exp, accountTurnover.getAmount())));
         accountTurnover.setUniqueExpense(exp);
         return accountTurnover;
     }
