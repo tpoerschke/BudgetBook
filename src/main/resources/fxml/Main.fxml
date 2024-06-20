@@ -30,8 +30,6 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#reloadData" text="%menuItem.reloadData" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="%menuBar.buttonData">
