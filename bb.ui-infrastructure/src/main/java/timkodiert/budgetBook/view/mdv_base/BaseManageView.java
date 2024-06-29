@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -20,7 +21,6 @@ import timkodiert.budgetBook.domain.adapter.Adapter;
 import timkodiert.budgetBook.domain.model.BaseEntity;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.view.BbFxmlLoader;
 import timkodiert.budgetBook.view.View;
 
 public abstract class BaseManageView<T extends BaseEntity & Adaptable<A>, A extends Adapter<T>> implements View, Initializable {
@@ -33,7 +33,7 @@ public abstract class BaseManageView<T extends BaseEntity & Adaptable<A>, A exte
 
     protected final Repository<T> repository;
     private final Supplier<T> emptyEntityProducer;
-    private final BbFxmlLoader fxmlLoader;
+    private final FXMLLoader fxmlLoader;
     private final DialogFactory dialogFactory;
     private final LanguageManager languageManager;
 
@@ -41,7 +41,7 @@ public abstract class BaseManageView<T extends BaseEntity & Adaptable<A>, A exte
 
     public BaseManageView(Supplier<T> emptyEntityProducer,
                           Repository<T> repository,
-                          BbFxmlLoader fxmlLoader,
+                          FXMLLoader fxmlLoader,
                           DialogFactory dialogFactory,
                           LanguageManager languageManager) {
         this.emptyEntityProducer = emptyEntityProducer;

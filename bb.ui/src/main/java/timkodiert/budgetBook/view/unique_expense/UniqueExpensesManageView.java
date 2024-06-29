@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -16,7 +17,6 @@ import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
-import timkodiert.budgetBook.view.BbFxmlLoader;
 import timkodiert.budgetBook.view.mdv_base.BaseManageView;
 
 import static timkodiert.budgetBook.view.FxmlResource.UNIQUE_TURNOVER_DETAIL_VIEW;
@@ -31,7 +31,7 @@ public class UniqueExpensesManageView extends BaseManageView<UniqueTurnover, Uni
     private TableColumn<UniqueTurnoverAdapter, Number> valueCol;
 
     @Inject
-    public UniqueExpensesManageView(Repository<UniqueTurnover> repository, DialogFactory dialogFactory, BbFxmlLoader fxmlLoader, LanguageManager languageManager) {
+    public UniqueExpensesManageView(Repository<UniqueTurnover> repository, DialogFactory dialogFactory, FXMLLoader fxmlLoader, LanguageManager languageManager) {
         super(UniqueTurnover::new, repository, fxmlLoader, dialogFactory, languageManager);
     }
 

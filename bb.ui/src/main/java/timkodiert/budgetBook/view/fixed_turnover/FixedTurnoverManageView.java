@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
@@ -17,7 +18,6 @@ import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.TurnoverDirection;
 import timkodiert.budgetBook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.view.BbFxmlLoader;
 import timkodiert.budgetBook.view.mdv_base.BaseManageView;
 
 import static timkodiert.budgetBook.view.FxmlResource.FIXED_TURNOVER_DETAIL_VIEW;
@@ -28,7 +28,7 @@ public class FixedTurnoverManageView extends BaseManageView<FixedTurnover, Fixed
     private TableColumn<FixedTurnoverAdapter, String> positionCol, typeCol, directionCol;
 
     @Inject
-    public FixedTurnoverManageView(FixedExpensesRepository repository, DialogFactory dialogFactory, BbFxmlLoader fxmlLoader, LanguageManager languageManager) {
+    public FixedTurnoverManageView(FixedExpensesRepository repository, DialogFactory dialogFactory, FXMLLoader fxmlLoader, LanguageManager languageManager) {
         super(FixedTurnover::new, repository, fxmlLoader, dialogFactory, languageManager);
     }
 
