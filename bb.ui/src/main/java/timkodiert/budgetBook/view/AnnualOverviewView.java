@@ -105,7 +105,13 @@ public class AnnualOverviewView implements Initializable, View {
         modalPane.usePredefinedTransitionFactories(Side.RIGHT);
         rootPane.getChildren().add(modalPane);
 
-        positionColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPosition()));
+        positionColumn.setCellValueFactory(cellData -> {
+            IFixedTurnover turnover = cellData.getValue();
+            if (turnover.getType() == PaymentType.CUMULATIVE) {
+                return new ReadOnlyStringWrapper(languageManager.get("domain.term.total"));
+            }
+            return new ReadOnlyStringWrapper(turnover.getPosition());
+        });
         // Hätte gerne sowas wie in Python:
         // for i, month in enumerate(monthNames):
         //   ...

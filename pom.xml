@@ -101,8 +101,6 @@
         <version>0.0.8</version>
         <configuration>
           <mainClass>${launcher.class}</mainClass>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
         </configuration>
         <executions>
           <execution>

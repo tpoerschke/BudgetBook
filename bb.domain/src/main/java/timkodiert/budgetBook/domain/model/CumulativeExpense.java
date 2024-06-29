@@ -26,8 +26,10 @@ public class CumulativeExpense implements IFixedTurnover {
 
     @Override
     public String getPosition() {
-        return "TODO ÜBERSETZUNG Total";
-        //return LanguageManager.get("domain.term.total");
+        // An der Stelle an der diese Methode aufgerufen wird, sollte im Falle
+        // einer kumulativen Ausgabe der LanguageManager verwendet werden:
+        // LanguageManager.get("domain.term.total");
+        return "FIXME Total (Cumulative Expense)";
     }
 
     @Override
