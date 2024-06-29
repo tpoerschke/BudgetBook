@@ -1,0 +1,161 @@
+package timkodiert.budgetBook.view;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.ResourceBundle;
+import java.util.stream.IntStream;
+import javax.inject.Inject;
+
+import atlantafx.base.controls.ModalPane;
+import atlantafx.base.theme.Styles;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.util.StringConverter;
+
+import timkodiert.budgetBook.converter.Converters;
+import timkodiert.budgetBook.domain.model.CumulativeExpense;
+import timkodiert.budgetBook.domain.model.FixedTurnover;
+import timkodiert.budgetBook.domain.model.IFixedTurnover;
+import timkodiert.budgetBook.domain.model.MonthYear;
+import timkodiert.budgetBook.domain.model.PaymentType;
+import timkodiert.budgetBook.domain.repository.Repository;
+import timkodiert.budgetBook.i18n.LanguageManager;
+import timkodiert.budgetBook.table.cell.CurrencyTableCell;
+import timkodiert.budgetBook.table.row.BoldTableRow;
+import timkodiert.budgetBook.view.widget.ExpenseDetailWidget;
+
+import static timkodiert.budgetBook.view.FxmlResource.EXPENSE_DETAIL_WIDGET;
+
+public class AnnualOverviewView implements Initializable, View {
+
+    private static final int CURRENT_YEAR = LocalDate.now().getYear();
+    private static final int START_YEAR = CURRENT_YEAR - 5;
+    private static final int END_YEAR = CURRENT_YEAR + 1;
+
+    @FXML
+    private StackPane rootPane;
+    @FXML
+    private TableView<IFixedTurnover> mainTable;
+    @FXML
+    private TableColumn<IFixedTurnover, String> positionColumn;
+    @FXML
+    private ComboBox<Integer> displayYearComboBox;
+
+    private List<TableColumn<IFixedTurnover, Number>> monthColumns = new ArrayList<>();
+    private TableColumn<IFixedTurnover, Number> cumulativeColumn;
+
+    private final ModalPane modalPane = new ModalPane(ModalPane.Z_FRONT);
+    private final ExpenseDetailWidget expenseDetailWidget = new ExpenseDetailWidget();
+    private Pane turnoverWidgetNode;
+
+    private final ObservableList<FixedTurnover> fixedTurnovers = FXCollections.observableArrayList();
+
+    private final LanguageManager languageManager;
+    private final Repository<FixedTurnover> fixedTurnoverRepository;
+
+    @Inject
+    public AnnualOverviewView(LanguageManager languageManager, Repository<FixedTurnover> fixedTurnoverRepository) {
+        this.languageManager = languageManager;
+        this.fixedTurnoverRepository = fixedTurnoverRepository;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        fixedTurnovers.setAll(fixedTurnoverRepository.findAll());
+
+        displayYearComboBox.getItems().addAll(IntStream.rangeClosed(START_YEAR, END_YEAR).boxed().toList());
+        displayYearComboBox.getSelectionModel().select(Integer.valueOf(CURRENT_YEAR));
+        displayYearComboBox.getSelectionModel().selectedItemProperty()
+                           .addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
+                               mainTable.refresh();
+                           });
+
+        // Widget rechts einbinden
+        try {
+            FXMLLoader loader = FxmlResource.loadResourceIntoFxmlLoader(getClass(), EXPENSE_DETAIL_WIDGET);
+            loader.setResources(languageManager.getResourceBundle());
+            loader.setController(expenseDetailWidget);
+            turnoverWidgetNode = loader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Widget konnte nicht geöffnet werden!");
+            alert.showAndWait();
+        }
+
+        // ModalPane konfigurieren
+        modalPane.setAlignment(Pos.TOP_RIGHT);
+        modalPane.usePredefinedTransitionFactories(Side.RIGHT);
+        rootPane.getChildren().add(modalPane);
+
+        positionColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPosition()));
+        // Hätte gerne sowas wie in Python:
+        // for i, month in enumerate(monthNames):
+        //   ...
+        // Java machts hier umständlich :/
+        ListIterator<String> iterator = LanguageManager.MONTH_NAMES.listIterator();
+        while (iterator.hasNext()) {
+            int index = iterator.nextIndex();
+            String month = languageManager.get(iterator.next());
+
+            TableColumn<IFixedTurnover, Number> tableColumn = new TableColumn<>(month);
+            tableColumn.setPrefWidth(120);
+            tableColumn.setResizable(false);
+            tableColumn.setCellFactory(col -> new CurrencyTableCell<>());
+            tableColumn.setCellValueFactory(cellData -> {
+                IFixedTurnover expense = cellData.getValue();
+                int selectedYear = displayYearComboBox.getValue();
+                return new ReadOnlyDoubleWrapper(expense.getValueFor(MonthYear.of(index + 1, selectedYear)));
+            });
+            monthColumns.add(tableColumn);
+            mainTable.getColumns().add(tableColumn);
+        }
+
+        // Kummulative Spalte
+        StringConverter<PaymentType> paymentTypeConverter = Converters.get(PaymentType.class);
+        cumulativeColumn = new TableColumn<>(paymentTypeConverter.toString(PaymentType.CUMULATIVE));
+        cumulativeColumn.setPrefWidth(120);
+        cumulativeColumn.setResizable(false);
+        cumulativeColumn.setCellFactory(col -> new CurrencyTableCell<>(true));
+        cumulativeColumn.setCellValueFactory(cellData -> {
+            IFixedTurnover turnover = cellData.getValue();
+            int selectedYear = displayYearComboBox.getValue();
+            return new ReadOnlyDoubleWrapper(turnover.getValueForYear(selectedYear));
+        });
+        mainTable.getColumns().add(cumulativeColumn);
+        //Kummulative Zeile
+        CumulativeExpense cumulativeExpense = new CumulativeExpense(fixedTurnovers, START_YEAR, END_YEAR);
+
+        mainTable.setRowFactory(tableView -> {
+            TableRow<IFixedTurnover> row = new BoldTableRow<>(PaymentType.CUMULATIVE);
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 1 && !row.isEmpty() && row.getItem() instanceof FixedTurnover expense) {
+                    expenseDetailWidget.setExpense(expense);
+                    modalPane.show(turnoverWidgetNode);
+                }
+            });
+            return row;
+        });
+
+        mainTable.getStyleClass().add(Styles.BORDERED);
+        mainTable.getItems().addAll(fixedTurnovers);
+        mainTable.getItems().add(cumulativeExpense);
+    }
+}

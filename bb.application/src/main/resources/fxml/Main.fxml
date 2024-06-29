@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="900.0" prefWidth="1600.0"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            onDragDropped="#onDragDropped" onDragOver="#onDragOver">
+   <top>
+      <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="%menuBar.buttonEdit">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openManageExpensesView" text="%menuItem.openManageExpensesView" />
+                  <MenuItem mnemonicParsing="false" onAction="#openUniqueExpensesManageView" text="%menuItem.openUniqueExpensesView" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="%menuItem.manageCategoriesView" />
+                  <MenuItem mnemonicParsing="false" onAction="#openNewCategoryView" text="%menuItem.openNewCategoryView" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#openSettingsView" text="%menuItem.openSettingsView" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="%menuBar.buttonViews">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#showAnnualOverview" text="%menuItem.showAnnualOverview" />
+                  <MenuItem mnemonicParsing="false" onAction="#showMonthlyOverview" text="%menuItem.showMonthlyOverview">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="%menuBar.buttonData">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#openImportView" text="%menuItem.openImportView" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+</BorderPane>
