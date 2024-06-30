@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetBook.view.AnnualOverviewView">
+  <BorderPane>
+    <center>
+      <VBox BorderPane.alignment="CENTER">
+        <TableView fx:id="mainTable" prefHeight="400.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
+          <columns>
+            <TableColumn fx:id="positionColumn" minWidth="100.0" prefWidth="150.0" styleClass="annual-overview-tablecolumn" text="%annualOverview.mainTable.column.position"/>
+          </columns>
+        </TableView>
+        <!--
+            <GridPane VBox.vgrow="NEVER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+            <TableView prefHeight="200.0" prefWidth="200.0" styleClass="noheader" VBox.vgrow="NEVER">
+              <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+              </columns>
+            </TableView>
+          -->
+      </VBox>
+    </center>
+    <top>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <Label text="%annualOverview.toolbar.label.year" />
+          <ComboBox fx:id="displayYearComboBox" prefWidth="100.0" />
+        </items>
+      </ToolBar>
+    </top>
+  </BorderPane>
+</StackPane>

@@ -20,7 +20,7 @@ elif [[ "$OSTYPE" == "msys" ]]; then
 fi
 
 mkdir target/input
-cp target/$MAIN_JAR target/input/$MAIN_JAR
+cp bb.application/target/$MAIN_JAR target/input/$MAIN_JAR
 
 jpackage --input target/input \
   --name $APP_NAME \

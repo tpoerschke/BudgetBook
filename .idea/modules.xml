@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/bb.application/bb.application.iml" filepath="$PROJECT_DIR$/bb.application/bb.application.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bb.ui/bb.ui.iml" filepath="$PROJECT_DIR$/bb.ui/bb.ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/budget-book.iml" filepath="$PROJECT_DIR$/budget-book.iml" />
     </modules>
   </component>
