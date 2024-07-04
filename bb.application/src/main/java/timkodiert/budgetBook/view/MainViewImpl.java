@@ -34,7 +34,6 @@ import timkodiert.budgetBook.util.StageBuilder;
 import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
 import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MAIN_VIEW;
-import static timkodiert.budgetBook.view.FxmlResource.MANAGE_CATEGORIES_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MANAGE_REGULAR_TURNOVER_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MANAGE_UNIQUE_TURNOVER_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
@@ -147,18 +146,19 @@ public class MainViewImpl implements Initializable, MainView {
 
     @FXML
     private void openManageCategoriesView(ActionEvent event) {
-        try {
-            Stage stage = StageBuilder.create(languageManager)
-                    .withModality(Modality.APPLICATION_MODAL)
-                    .withOwner(this.primaryStage)
-                    .withFXMLResource(MANAGE_CATEGORIES_VIEW.toString())
-                    .withView(viewComponent.getManageCategoriesView())
-                    .build();
-            stage.show();
-        } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, languageManager.get("alert.viewCouldNotBeOpened"));
-            alert.showAndWait();
-        }
+        loadViewPartial(FxmlResource.MANAGE_CATEGORY_VIEW);
+        //        try {
+        //            Stage stage = StageBuilder.create(languageManager)
+        //                    .withModality(Modality.APPLICATION_MODAL)
+        //                    .withOwner(this.primaryStage)
+        //                    .withFXMLResource(MANAGE_CATEGORIES_VIEW.toString())
+        //                    .withView(viewComponent.getManageCategoriesView())
+        //                    .build();
+        //            stage.show();
+        //        } catch (Exception e) {
+        //            Alert alert = new Alert(AlertType.ERROR, languageManager.get("alert.viewCouldNotBeOpened"));
+        //            alert.showAndWait();
+        //        }
     }
 
     @FXML
