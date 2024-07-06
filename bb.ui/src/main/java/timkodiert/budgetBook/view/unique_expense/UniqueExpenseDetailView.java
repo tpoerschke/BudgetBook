@@ -182,7 +182,7 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
         if (result.filter(ButtonType.YES::equals).isPresent()) {
             repository.remove(this.entity.get());
             setEntity(null);
-            onUpdate.run();
+            onUpdate.accept(null);
         }
     }
 

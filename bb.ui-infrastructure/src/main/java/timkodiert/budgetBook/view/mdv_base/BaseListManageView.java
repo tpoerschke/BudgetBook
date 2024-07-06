@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetBook.dialog.DialogFactory;
 import timkodiert.budgetBook.domain.adapter.Adaptable;
@@ -68,7 +69,7 @@ public abstract class BaseListManageView<T extends BaseEntity & Adaptable<A>, A 
     }
 
     @Override
-    protected void reloadTable() {
+    protected void reloadTable(@Nullable T updatedEntity) {
         entityTable.getItems().setAll(repository.findAll().stream().map(T::getAdapter).toList());
         entityTable.sort();
     }

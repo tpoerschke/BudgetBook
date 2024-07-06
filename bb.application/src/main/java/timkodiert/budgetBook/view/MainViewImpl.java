@@ -11,15 +11,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +26,6 @@ import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.injector.ControllerFactory;
 import timkodiert.budgetBook.injector.ViewComponent;
 import timkodiert.budgetBook.properties.PropertiesService;
-import timkodiert.budgetBook.util.StageBuilder;
 
 import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
 import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;
@@ -37,7 +33,6 @@ import static timkodiert.budgetBook.view.FxmlResource.MAIN_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MANAGE_REGULAR_TURNOVER_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MANAGE_UNIQUE_TURNOVER_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
-import static timkodiert.budgetBook.view.FxmlResource.NEW_CATEGORY_VIEW;
 
 @Singleton
 public class MainViewImpl implements Initializable, MainView {
@@ -147,34 +142,6 @@ public class MainViewImpl implements Initializable, MainView {
     @FXML
     private void openManageCategoriesView(ActionEvent event) {
         loadViewPartial(FxmlResource.MANAGE_CATEGORY_VIEW);
-        //        try {
-        //            Stage stage = StageBuilder.create(languageManager)
-        //                    .withModality(Modality.APPLICATION_MODAL)
-        //                    .withOwner(this.primaryStage)
-        //                    .withFXMLResource(MANAGE_CATEGORIES_VIEW.toString())
-        //                    .withView(viewComponent.getManageCategoriesView())
-        //                    .build();
-        //            stage.show();
-        //        } catch (Exception e) {
-        //            Alert alert = new Alert(AlertType.ERROR, languageManager.get("alert.viewCouldNotBeOpened"));
-        //            alert.showAndWait();
-        //        }
-    }
-
-    @FXML
-    private void openNewCategoryView(ActionEvent event) {
-        try {
-            Stage stage = StageBuilder.create(languageManager)
-                    .withModality(Modality.APPLICATION_MODAL)
-                    .withOwner(this.primaryStage)
-                    .withFXMLResource(NEW_CATEGORY_VIEW.toString())
-                    .withView(viewComponent.getNewCategoryView())
-                    .build();
-            stage.show();
-        } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR, languageManager.get("alert.viewCouldNotBeOpened"));
-            alert.showAndWait();
-        }
     }
 
     @FXML

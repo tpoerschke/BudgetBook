@@ -171,7 +171,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         if (result.filter(ButtonType.YES::equals).isPresent()) {
             entityManager.remove(this.entity.get());
             setEntity(null);
-            onUpdate.run();
+            onUpdate.accept(null);
         }
     }
 

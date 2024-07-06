@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
+import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetBook.dialog.StackTraceAlert;
 import timkodiert.budgetBook.domain.adapter.Adaptable;
@@ -38,7 +39,7 @@ public abstract class BaseManageView<T extends BaseEntity & Adaptable<A>, A exte
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        reloadTable();
+        reloadTable(null);
 
         fxmlLoader.setLocation(getClass().getResource(getDetailViewFxmlLocation()));
         try {
@@ -65,7 +66,7 @@ public abstract class BaseManageView<T extends BaseEntity & Adaptable<A>, A exte
 
     protected abstract void initControls();
 
-    protected abstract void reloadTable();
+    protected abstract void reloadTable(@Nullable T updatedEntity);
 
     protected abstract String getDetailViewFxmlLocation();
 }

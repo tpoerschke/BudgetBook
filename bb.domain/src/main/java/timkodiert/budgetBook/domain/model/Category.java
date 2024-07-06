@@ -67,9 +67,14 @@ public class Category extends BaseEntity implements Adaptable<CategoryAdapter> {
     }
 
     public CheckBoxTreeItem<Category> asTreeItem() {
-        this.treeItem.setValue(this);
-        this.treeItem.getChildren().setAll(this.getChildren().stream().map(Category::asTreeItem).toList());
-        return this.treeItem;
+        CheckBoxTreeItem<Category> treeItem = new CheckBoxTreeItem<>();
+        treeItem.setValue(this);
+        treeItem.getChildren().setAll(this.getChildren().stream().map(Category::asTreeItem).toList());
+        return treeItem;
+    }
+
+    public boolean hasParent() {
+        return parent != null;
     }
 
     @Override

@@ -13,9 +13,8 @@ import timkodiert.budgetBook.view.AnnualOverviewView;
 import timkodiert.budgetBook.view.ImportView;
 import timkodiert.budgetBook.view.MainViewImpl;
 import timkodiert.budgetBook.view.MonthlyOverview;
-import timkodiert.budgetBook.view.NewCategoryView;
+import timkodiert.budgetBook.view.category.CategoriesManageView;
 import timkodiert.budgetBook.view.category.CategoryDetailView;
-import timkodiert.budgetBook.view.category.ManageCategoriesView;
 import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverDetailView;
 import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverManageView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
@@ -35,9 +34,8 @@ public interface ViewComponent {
     // -----------------------------------
     // Kategorien Ausgaben
     // -----------------------------------
-    ManageCategoriesView getManageCategoriesView();
+    CategoriesManageView getManageCategoriesView();
     CategoryDetailView getCategoryDetailView();
-    NewCategoryView getNewCategoryView();
 
     // -----------------------------------
     // Regelmäßige Umsätze

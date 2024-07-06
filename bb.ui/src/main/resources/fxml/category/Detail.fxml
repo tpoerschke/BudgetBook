@@ -2,49 +2,61 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="timkodiert.budgetBook.view.category.CategoryDetailView">
     <center>
-        <VBox disable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" BorderPane.alignment="CENTER">
-            <children>
-                <Label text="%manageCategories.label.name">
+        <GridPane BorderPane.alignment="CENTER" hgap="10.0" vgap="10.0">
+            <VBox>
+                <Label text="%manageCategories.label.name"/>
+                <TextField fx:id="nameTextField"/>
+            </VBox>
+            <VBox GridPane.rowIndex="1">
+                <Label text="%manageCategories.label.description"/>
+                <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0"/>
+            </VBox>
+            <VBox fx:id="categoriesTreeViewContainer" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label text="%newCategory.label.parentCategory"/>
+                <TreeView fx:id="categoriesTreeView" showRoot="false"/>
+                <Button mnemonicParsing="false" onAction="#resetParentSelection" styleClass="small" text="%button.resetSelection">
                     <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets top="5.0"/>
                     </VBox.margin>
-                </Label>
-                <TextField fx:id="nameTextField" />
-                <Label text="%manageCategories.label.description">
-                    <VBox.margin>
-                        <Insets top="20.0" />
-                    </VBox.margin>
-                </Label>
-                <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0" />
-                <HBox prefHeight="100.0" prefWidth="200.0">
-                    <VBox.margin>
-                        <Insets top="20.0" />
-                    </VBox.margin>
-                    <children>
-                        <Button mnemonicParsing="false" onAction="#save" text="%button.save">
-                            <HBox.margin>
-                                <Insets right="10.0" />
-                            </HBox.margin>
-                        </Button>
-                        <Button mnemonicParsing="false" onAction="#discardChanges" text="%button.discard" />
-                    </children>
-                </HBox>
-            </children>
-            <BorderPane.margin>
-                <Insets />
-            </BorderPane.margin>
+                </Button>
+            </VBox>
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+            </rowConstraints>
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
-        </VBox>
+        </GridPane>
     </center>
+    <bottom>
+        <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <buttons>
+                <Button mnemonicParsing="false" onAction="#discardChanges" text="%editExpense.button.cancel"/>
+                <Button alignment="CENTER" mnemonicParsing="false" onAction="#save" text="%editExpense.button.save"/>
+            </buttons>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </ButtonBar>
+    </bottom>
 </BorderPane>
