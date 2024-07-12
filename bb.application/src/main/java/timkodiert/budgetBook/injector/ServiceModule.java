@@ -19,6 +19,6 @@ public interface ServiceModule {
 
     @Binds @Singleton PropertiesService bindPropertiesService(PropertiesServiceImpl impl);
 
-    @Binds @Singleton FXMLLoader bindFXMLLoader(BbFxmlLoader impl);
+    @Binds FXMLLoader bindFXMLLoader(BbFxmlLoader impl);
 }
 // @formatter:on

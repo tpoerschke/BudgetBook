@@ -22,7 +22,8 @@ public enum FxmlResource {
     IMPORT_VIEW("/fxml/Importer/ImportView.fxml", "stageTitle.importView"),
     IMAGE_VIEW("/fxml/ImageView.fxml", null),
     MONTH_YEAR_PICKER_WIDGET("/fxml/MonthYearPickerWidget.fxml", null),
-    MANAGE_CATEGORIES_VIEW("/fxml/ManageCategories.fxml", null),
+    MANAGE_CATEGORY_VIEW("/fxml/category/Manage.fxml", "stageTitle.mdv.categories"),
+    CATEGORY_DETAIL_VIEW("/fxml/category/Detail.fxml", null),
     NEW_CATEGORY_VIEW("/fxml/NewCategory.fxml", null),
     ;
 

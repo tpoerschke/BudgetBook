@@ -1,7 +1,5 @@
 package timkodiert.budgetBook.domain.model;
 
-import static timkodiert.budgetBook.util.ObjectUtils.nvl;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,16 +14,19 @@ import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import javafx.scene.control.CheckBoxTreeItem;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import timkodiert.budgetBook.domain.adapter.Adaptable;
+import timkodiert.budgetBook.domain.adapter.CategoryAdapter;
+
+import static timkodiert.budgetBook.util.ObjectUtils.nvl;
+
 @Getter
-@NoArgsConstructor
 @RequiredArgsConstructor
 @Entity
-public class Category extends BaseEntity {
+public class Category extends BaseEntity implements Adaptable<CategoryAdapter> {
 
     @Setter
     @NonNull
@@ -53,10 +54,27 @@ public class Category extends BaseEntity {
     @Transient
     private CheckBoxTreeItem<Category> treeItem = new CheckBoxTreeItem<>();
 
+    @Transient
+    private transient CategoryAdapter adapter;
+
+    public Category() {
+        initAdapter();
+    }
+
+    @Override
+    public void initAdapter() {
+        this.adapter = new CategoryAdapter(this);
+    }
+
     public CheckBoxTreeItem<Category> asTreeItem() {
-        this.treeItem.setValue(this);
-        this.treeItem.getChildren().setAll(this.getChildren().stream().map(Category::asTreeItem).toList());
-        return this.treeItem;
+        CheckBoxTreeItem<Category> treeItem = new CheckBoxTreeItem<>();
+        treeItem.setValue(this);
+        treeItem.getChildren().setAll(this.getChildren().stream().map(Category::asTreeItem).toList());
+        return treeItem;
+    }
+
+    public boolean hasParent() {
+        return parent != null;
     }
 
     @Override

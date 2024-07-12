@@ -1,20 +1,15 @@
 package timkodiert.budgetBook.view.mdv_base;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import org.jetbrains.annotations.Nullable;
 
-import timkodiert.budgetBook.dialog.DialogFactory;
 import timkodiert.budgetBook.dialog.StackTraceAlert;
 import timkodiert.budgetBook.domain.adapter.Adaptable;
 import timkodiert.budgetBook.domain.adapter.Adapter;
@@ -28,32 +23,23 @@ public abstract class BaseManageView<T extends BaseEntity & Adaptable<A>, A exte
     @FXML
     protected Pane detailViewContainer;
 
-    @FXML
-    protected TableView<A> entityTable;
-
-    protected final Repository<T> repository;
-    private final Supplier<T> emptyEntityProducer;
     private final FXMLLoader fxmlLoader;
-    private final DialogFactory dialogFactory;
     private final LanguageManager languageManager;
+    private final Repository<T> repository;
+    private final Supplier<T> emptyEntityProducer;
 
-    private EntityBaseDetailView<T> detailView;
+    protected EntityBaseDetailView<T> detailView;
 
-    public BaseManageView(Supplier<T> emptyEntityProducer,
-                          Repository<T> repository,
-                          FXMLLoader fxmlLoader,
-                          DialogFactory dialogFactory,
-                          LanguageManager languageManager) {
-        this.emptyEntityProducer = emptyEntityProducer;
-        this.repository = repository;
-        this.dialogFactory = dialogFactory;
+    protected BaseManageView(FXMLLoader fxmlLoader, LanguageManager languageManager, Repository<T> repository, Supplier<T> emptyEntityProducer) {
         this.fxmlLoader = fxmlLoader;
         this.languageManager = languageManager;
+        this.repository = repository;
+        this.emptyEntityProducer = emptyEntityProducer;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        reloadTable();
+        reloadTable(null);
 
         fxmlLoader.setLocation(getClass().getResource(getDetailViewFxmlLocation()));
         try {
@@ -67,29 +53,6 @@ public abstract class BaseManageView<T extends BaseEntity & Adaptable<A>, A exte
         detailView = fxmlLoader.getController();
         detailView.setOnUpdate(this::reloadTable);
 
-        entityTable.setRowFactory(tableView -> {
-            TableRow<A> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 1 && !row.isEmpty()) {
-                    if (detailView.isDirty()) {
-                        Alert alert = dialogFactory.buildConfirmationDialog();
-                        Optional<ButtonType> result = alert.showAndWait();
-                        if (result.get().equals(DialogFactory.CANCEL)) {
-                            entityTable.getSelectionModel().select(detailView.getEntity().get().getAdapter());
-                            return;
-                        }
-                        if (result.get().equals(DialogFactory.SAVE_CHANGES) && !detailView.save()) {
-                            entityTable.getSelectionModel().select(detailView.getEntity().get().getAdapter());
-                            return;
-                        }
-                    }
-
-                    detailView.setEntity(row.getItem().getBean());
-                }
-            });
-            return row;
-        });
-
         initControls();
     }
 
@@ -97,17 +60,13 @@ public abstract class BaseManageView<T extends BaseEntity & Adaptable<A>, A exte
         repository.findAll().stream().filter(e -> e.getId() == id).findAny().ifPresent(detailView::setEntity);
     }
 
-    protected abstract void initControls();
-
-    protected abstract String getDetailViewFxmlLocation();
-
     protected void displayNewEntity() {
         detailView.setEntity(emptyEntityProducer.get());
     }
 
-    private void reloadTable() {
-        entityTable.getItems().setAll(repository.findAll().stream().map(T::getAdapter).toList());
-        entityTable.sort();
-    }
+    protected abstract void initControls();
 
+    protected abstract void reloadTable(@Nullable T updatedEntity);
+
+    protected abstract String getDetailViewFxmlLocation();
 }

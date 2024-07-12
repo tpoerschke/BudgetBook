@@ -17,11 +17,11 @@ import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
-import timkodiert.budgetBook.view.mdv_base.BaseManageView;
+import timkodiert.budgetBook.view.mdv_base.BaseListManageView;
 
 import static timkodiert.budgetBook.view.FxmlResource.UNIQUE_TURNOVER_DETAIL_VIEW;
 
-public class UniqueExpensesManageView extends BaseManageView<UniqueTurnover, UniqueTurnoverAdapter> {
+public class UniqueExpensesManageView extends BaseListManageView<UniqueTurnover, UniqueTurnoverAdapter> {
 
     @FXML
     private TableColumn<UniqueTurnoverAdapter, String> billerCol;

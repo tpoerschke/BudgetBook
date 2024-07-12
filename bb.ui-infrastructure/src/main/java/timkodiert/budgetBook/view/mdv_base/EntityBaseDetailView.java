@@ -1,5 +1,6 @@
 package timkodiert.budgetBook.view.mdv_base;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javafx.event.ActionEvent;
@@ -13,7 +14,7 @@ import timkodiert.budgetBook.domain.util.EntityManager;
 public abstract class EntityBaseDetailView<T extends ContentEquals> extends BaseDetailView<T> {
 
     @Setter
-    protected Runnable onUpdate;
+    protected Consumer<T> onUpdate;
 
     protected final Repository<T> repository;
     protected final EntityManager entityManager;
@@ -42,7 +43,7 @@ public abstract class EntityBaseDetailView<T extends ContentEquals> extends Base
         T exp = patchEntity(this.entity.get());
         repository.persist(exp);
         entityManager.refresh(exp);
-        onUpdate.run();
+        onUpdate.accept(exp);
         return true;
     }
 

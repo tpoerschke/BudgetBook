@@ -18,11 +18,11 @@ import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.TurnoverDirection;
 import timkodiert.budgetBook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.view.mdv_base.BaseManageView;
+import timkodiert.budgetBook.view.mdv_base.BaseListManageView;
 
 import static timkodiert.budgetBook.view.FxmlResource.FIXED_TURNOVER_DETAIL_VIEW;
 
-public class FixedTurnoverManageView extends BaseManageView<FixedTurnover, FixedTurnoverAdapter> {
+public class FixedTurnoverManageView extends BaseListManageView<FixedTurnover, FixedTurnoverAdapter> {
 
     @FXML
     private TableColumn<FixedTurnoverAdapter, String> positionCol, typeCol, directionCol;
