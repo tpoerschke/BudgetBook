@@ -18,7 +18,6 @@
                   <MenuItem mnemonicParsing="false" onAction="#openUniqueExpensesManageView" text="%menuItem.openUniqueExpensesView" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="%menuItem.manageCategoriesView" />
-                  <MenuItem mnemonicParsing="false" onAction="#openNewCategoryView" text="%menuItem.openNewCategoryView" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#openSettingsView" text="%menuItem.openSettingsView" />
             </items>
