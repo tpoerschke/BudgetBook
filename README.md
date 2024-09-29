@@ -156,10 +156,11 @@ WIP
 - [x] Jahresübersicht
 - [x] Kategorien für Ausgaben
 - [x] Einzigartige Ausgaben
-- [ ] Import von Umsätzen
-- [ ] Analyseübersicht
 - [x] Einnahmen verwalten
-- [ ] Exportfunktionalität
+- [x] Import von Umsätzen
+- [ ] Budgets 
+- [ ] Analyseübersicht
+- [ ] (Exportfunktionalität)
 
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
