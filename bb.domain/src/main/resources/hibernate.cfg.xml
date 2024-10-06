@@ -35,6 +35,7 @@
         <mapping class="timkodiert.budgetBook.domain.model.FixedTurnover" />
         <mapping class="timkodiert.budgetBook.domain.model.PaymentInformation" />
         <mapping class="timkodiert.budgetBook.domain.model.Category" />
+        <mapping class="timkodiert.budgetBook.domain.model.CategoryGroup"/>
         <mapping class="timkodiert.budgetBook.domain.model.UniqueTurnover" />
         <mapping class="timkodiert.budgetBook.domain.model.UniqueTurnoverInformation" />
         <mapping class="timkodiert.budgetBook.domain.model.AccountTurnover"/>

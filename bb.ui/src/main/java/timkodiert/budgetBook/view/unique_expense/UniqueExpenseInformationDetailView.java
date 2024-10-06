@@ -24,11 +24,8 @@ import timkodiert.budgetBook.domain.model.TurnoverDirection;
 import timkodiert.budgetBook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetBook.domain.util.EntityManager;
 import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
-import timkodiert.budgetBook.ui.helper.CategoryTreeHelper;
 import timkodiert.budgetBook.validation.ValidationWrapper;
 import timkodiert.budgetBook.view.View;
-
-import static timkodiert.budgetBook.ui.helper.CategoryTreeHelper.from;
 
 public class UniqueExpenseInformationDetailView implements View, Initializable {
 
@@ -48,7 +45,6 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
     private ComboBox<TurnoverDirection> directionComboBox;
     @FXML
     private TreeView<Category> categoriesTreeView;
-    private CategoryTreeHelper categoryTreeHelper;
 
     public UniqueExpenseInformationDetailView(Optional<UniqueTurnoverInformation> optionalEntity,
                                               Consumer<UniqueTurnoverInformation> newEntityCallback,
@@ -64,7 +60,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         List<Category> categories = entityManager.findAll(Category.class);
-        categoryTreeHelper = from(categoriesTreeView, categories);
+        //categoryTreeHelper = from(categoriesTreeView, categories);
 
         positionTextField.getAvailableEntries().addAll(labelSuggestions);
         directionComboBox.getItems().setAll(TurnoverDirection.values());
@@ -78,7 +74,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
         valueTextField.setText(String.valueOf(expenseInfo.getValue()));
         directionComboBox.getSelectionModel().select(entity.getDirection());
         // Kategorien anzeigen
-        categoryTreeHelper.selectCategories(entity);
+        //categoryTreeHelper.selectCategories(entity);
     }
 
     public boolean validate() {
@@ -97,7 +93,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
         entity.setValue(Double.valueOf(valueTextField.getText()));
         entity.setDirection(directionComboBox.getSelectionModel().getSelectedItem());
         entity.getCategories().clear();
-        entity.getCategories().addAll(categoryTreeHelper.getSelectedCategories());
+        //entity.getCategories().addAll(categoryTreeHelper.getSelectedCategories());
         return entity;
     }
 

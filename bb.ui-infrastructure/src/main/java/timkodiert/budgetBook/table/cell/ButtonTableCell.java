@@ -3,11 +3,11 @@ package timkodiert.budgetBook.table.cell;
 import java.util.function.Consumer;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.TreeTableCell;
+import javafx.scene.control.TableCell;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ButtonTreeTableCell<S> extends TreeTableCell<S, S> {
+public class ButtonTableCell<S> extends TableCell<S, S> {
 
     private String buttonText;
     private Consumer<S> onClick;

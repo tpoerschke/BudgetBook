@@ -25,12 +25,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
+import org.controlsfx.control.CheckListView;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -49,11 +49,10 @@ import timkodiert.budgetBook.domain.util.EntityManager;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.table.cell.DateTableCell;
 import timkodiert.budgetBook.table.cell.MonthYearTableCell;
-import timkodiert.budgetBook.ui.helper.CategoryTreeHelper;
+import timkodiert.budgetBook.ui.helper.CategoryCheckListHelper;
 import timkodiert.budgetBook.util.StageBuilder;
 import timkodiert.budgetBook.view.mdv_base.EntityBaseDetailView;
 
-import static timkodiert.budgetBook.ui.helper.CategoryTreeHelper.from;
 import static timkodiert.budgetBook.view.FxmlResource.FIXED_TURNOVER_INFORMATION_VIEW;
 
 public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover> implements Initializable {
@@ -69,8 +68,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
     private ComboBox<TurnoverDirection> directionComboBox;
 
     @FXML
-    private TreeView<Category> categoriesTreeView;
-    private CategoryTreeHelper categoryTreeHelper;
+    private CheckListView<Category> categoriesListView;
 
     @FXML
     private Button addFixedExpenseInformationButton;
@@ -104,6 +102,8 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
     private final FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory;
     private final LanguageManager languageManager;
 
+    private CategoryCheckListHelper categoryCheckListHelper;
+
     @Inject
     public FixedTurnoverDetailView(Repository<FixedTurnover> repository,
                                    Repository<PaymentInformation> expInfoRepository,
@@ -127,7 +127,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
                 .bind(expenseInfoTable.getSelectionModel().selectedItemProperty().isNull());
         root.disableProperty().bind(entity.isNull());
         List<Category> categories = entityManager.findAll(Category.class);
-        categoryTreeHelper = from(categoriesTreeView, categories);
+        categoryCheckListHelper = new CategoryCheckListHelper(categoriesListView, categories);
         directionComboBox.getItems().setAll(TurnoverDirection.values());
         directionComboBox.setConverter(Converters.get(TurnoverDirection.class));
 
@@ -181,7 +181,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         entity.setNote(noteTextArea.getText());
         entity.setDirection(directionComboBox.getSelectionModel().getSelectedItem());
         entity.getCategories().clear();
-        entity.getCategories().addAll(categoryTreeHelper.getSelectedCategories());
+        entity.getCategories().addAll(categoryCheckListHelper.getCheckedCategories());
         entity.getPaymentInformations().clear();
         entity.getPaymentInformations().addAll(paymentInfoList);
         createImportRuleIfNotExists(entity);
@@ -197,7 +197,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         noteTextArea.setText(entity.getNote());
         directionComboBox.getSelectionModel().select(entity.getDirection());
         // Kategorien der Ausgabe abhacken
-        categoryTreeHelper.selectCategories(entity);
+        categoryCheckListHelper.selectCategories(entity);
         paymentInfoList.setAll(entity.getPaymentInformations());
         // Importe
         createImportRuleIfNotExists(entity);
