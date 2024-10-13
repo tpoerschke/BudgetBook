@@ -197,7 +197,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         noteTextArea.setText(entity.getNote());
         directionComboBox.getSelectionModel().select(entity.getDirection());
         // Kategorien der Ausgabe abhacken
-        categoryCheckListHelper.selectCategories(entity);
+        categoryCheckListHelper.checkCategories(entity);
         paymentInfoList.setAll(entity.getPaymentInformations());
         // Importe
         createImportRuleIfNotExists(entity);

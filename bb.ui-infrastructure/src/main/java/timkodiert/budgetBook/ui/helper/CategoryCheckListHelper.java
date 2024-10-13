@@ -20,7 +20,7 @@ public class CategoryCheckListHelper {
         checkListView.getItems().setAll(categories);
     }
 
-    public void selectCategories(Categorizable categorizable) {
+    public void checkCategories(Categorizable categorizable) {
         checkListView.getCheckModel().clearChecks();
         categorizable.getCategories().forEach(checkListView.getCheckModel()::check);
     }

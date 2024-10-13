@@ -15,8 +15,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
+import org.controlsfx.control.CheckListView;
 
 import timkodiert.budgetBook.converter.Converters;
 import timkodiert.budgetBook.domain.model.Category;
@@ -24,6 +24,7 @@ import timkodiert.budgetBook.domain.model.TurnoverDirection;
 import timkodiert.budgetBook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetBook.domain.util.EntityManager;
 import timkodiert.budgetBook.ui.control.AutoCompleteTextField;
+import timkodiert.budgetBook.ui.helper.CategoryCheckListHelper;
 import timkodiert.budgetBook.validation.ValidationWrapper;
 import timkodiert.budgetBook.view.View;
 
@@ -44,7 +45,9 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
     @FXML
     private ComboBox<TurnoverDirection> directionComboBox;
     @FXML
-    private TreeView<Category> categoriesTreeView;
+    private CheckListView<Category> categoriesListView;
+
+    private CategoryCheckListHelper categoryCheckListHelper;
 
     public UniqueExpenseInformationDetailView(Optional<UniqueTurnoverInformation> optionalEntity,
                                               Consumer<UniqueTurnoverInformation> newEntityCallback,
@@ -60,7 +63,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         List<Category> categories = entityManager.findAll(Category.class);
-        //categoryTreeHelper = from(categoriesTreeView, categories);
+        categoryCheckListHelper = new CategoryCheckListHelper(categoriesListView, categories);
 
         positionTextField.getAvailableEntries().addAll(labelSuggestions);
         directionComboBox.getItems().setAll(TurnoverDirection.values());
@@ -74,7 +77,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
         valueTextField.setText(String.valueOf(expenseInfo.getValue()));
         directionComboBox.getSelectionModel().select(entity.getDirection());
         // Kategorien anzeigen
-        //categoryTreeHelper.selectCategories(entity);
+        categoryCheckListHelper.checkCategories(entity);
     }
 
     public boolean validate() {
@@ -93,7 +96,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
         entity.setValue(Double.valueOf(valueTextField.getText()));
         entity.setDirection(directionComboBox.getSelectionModel().getSelectedItem());
         entity.getCategories().clear();
-        //entity.getCategories().addAll(categoryTreeHelper.getSelectedCategories());
+        entity.getCategories().addAll(categoryCheckListHelper.getCheckedCategories());
         return entity;
     }
 
