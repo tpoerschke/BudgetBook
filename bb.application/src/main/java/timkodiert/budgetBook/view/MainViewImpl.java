@@ -145,6 +145,11 @@ public class MainViewImpl implements Initializable, MainView {
     }
 
     @FXML
+    private void openManageCategoryGroupsView(ActionEvent event) {
+        loadViewPartial(FxmlResource.CATEGORY_GROUP_MANAGE_VIEW);
+    }
+
+    @FXML
     private void openSettingsView() {
         propertiesService.buildWindow().showAndWait();
     }

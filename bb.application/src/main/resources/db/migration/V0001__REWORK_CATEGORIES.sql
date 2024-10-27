@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS "CategoryGroup"
 (
     "id"   INTEGER NOT NULL,
     "name" VARCHAR(255) NOT NULL,
+    "description" VARCHAR(1000),
     PRIMARY KEY ("id")
 );
 

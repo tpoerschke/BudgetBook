@@ -13,14 +13,13 @@
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="%menuBar.buttonEdit">
-            <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openManageExpensesView" text="%menuItem.openManageExpensesView" />
-                  <MenuItem mnemonicParsing="false" onAction="#openUniqueExpensesManageView" text="%menuItem.openUniqueExpensesView" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="%menuItem.manageCategoriesView" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#openSettingsView" text="%menuItem.openSettingsView" />
-            </items>
+              <MenuItem mnemonicParsing="false" onAction="#openManageExpensesView" text="%menuItem.openManageExpensesView"/>
+              <MenuItem mnemonicParsing="false" onAction="#openUniqueExpensesManageView" text="%menuItem.openUniqueExpensesView"/>
+              <SeparatorMenuItem mnemonicParsing="false"/>
+              <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="%menuItem.manageCategoriesView"/>
+              <MenuItem mnemonicParsing="false" onAction="#openManageCategoryGroupsView" text="%menuItem.manageCategoryGroupsView"/>
+              <SeparatorMenuItem mnemonicParsing="false"/>
+              <MenuItem mnemonicParsing="false" onAction="#openSettingsView" text="%menuItem.openSettingsView"/>
           </Menu>
             <Menu mnemonicParsing="false" text="%menuBar.buttonViews">
                <items>
