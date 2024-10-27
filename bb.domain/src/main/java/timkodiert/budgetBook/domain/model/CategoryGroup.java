@@ -1,6 +1,7 @@
 package timkodiert.budgetBook.domain.model;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -49,6 +50,9 @@ public class CategoryGroup extends BaseEntity implements Adaptable<CategoryGroup
 
     @Override
     public boolean contentEquals(Object other) {
+        if (other instanceof CategoryGroup otherGroup) {
+            return Objects.equals(name, otherGroup.getName()) && Objects.equals(description, otherGroup.getDescription());
+        }
         return false;
     }
 
