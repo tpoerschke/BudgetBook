@@ -11,27 +11,26 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <SplitPane dividerPositions="0.5" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="timkodiert.budgetBook.view.category.CategoriesManageView">
+           fx:controller="timkodiert.budgetBook.view.category_group.CategoryGroupManageView">
     <BorderPane>
         <top>
             <HBox alignment="CENTER_LEFT" spacing="10.0" BorderPane.alignment="CENTER">
                 <padding>
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                 </padding>
-                <Label styleClass="text-bold" text="%manageCategories.label.manageCategories">
+                <Label styleClass="text-bold" text="%manageCategoryGroup.label.manageCategoryCroups">
                     <font>
                         <Font name="System Bold" size="13.0"/>
                     </font>
                 </Label>
-                <Button mnemonicParsing="false" onAction="#openNewCategory" styleClass="small" text="%button.add"/>
+                <Button mnemonicParsing="false" onAction="#openNewCategoryGroup" styleClass="small" text="%button.add"/>
             </HBox>
         </top>
         <center>
             <TableView fx:id="entityTable" BorderPane.alignment="CENTER">
                 <columns>
                     <TableColumn fx:id="nameColumn" editable="false" minWidth="-Infinity" prefWidth="200.0" sortable="false"
-                                 text="%manageCategories.column.name"/>
-                    <TableColumn fx:id="groupColumn" editable="false" prefWidth="200.0" sortable="false" text="%manageCategories.column.group"/>
+                                 text="%manageCategoryGroup.column.name"/>
                 </columns>
             </TableView>
         </center>

@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -13,20 +12,16 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane fx:id="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="timkodiert.budgetBook.view.category.CategoryDetailView">
+            fx:controller="timkodiert.budgetBook.view.category_group.CategoryGroupDetailView">
     <center>
         <GridPane BorderPane.alignment="CENTER" hgap="10.0" vgap="10.0">
             <VBox>
-                <Label text="%manageCategories.label.name"/>
+                <Label text="%CategoryGroupDV.label.name"/>
                 <TextField fx:id="nameTextField"/>
             </VBox>
             <VBox GridPane.rowIndex="1">
-                <Label text="%manageCategories.label.description"/>
-                <TextArea fx:id="descriptionTextArea" prefHeight="200.0" minWidth="200.0"/>
-            </VBox>
-            <VBox prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <Label text="%manageCategories.label.group"/>
-                <ComboBox fx:id="groupComboBox" maxWidth="Infinity"/>
+                <Label text="%CategoryGroupDV.label.description"/>
+                <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0"/>
             </VBox>
             <columnConstraints>
                 <ColumnConstraints hgrow="ALWAYS"/>

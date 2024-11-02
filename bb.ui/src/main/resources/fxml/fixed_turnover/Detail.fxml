@@ -13,13 +13,13 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.CheckListView?>
 <BorderPane fx:id="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverDetailView">
    <center>
@@ -52,7 +52,7 @@
                </VBox>
                <VBox GridPane.columnIndex="1" GridPane.rowSpan="3">
                   <Label text="%editExpense.label.categories"/>
-                  <TreeView fx:id="categoriesTreeView" showRoot="false"/>
+                  <CheckListView fx:id="categoriesListView"/>
                </VBox>
             </GridPane>
          </Tab>

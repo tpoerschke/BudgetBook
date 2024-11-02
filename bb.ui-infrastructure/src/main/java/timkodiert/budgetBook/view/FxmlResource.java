@@ -25,6 +25,8 @@ public enum FxmlResource {
     MANAGE_CATEGORY_VIEW("/fxml/category/Manage.fxml", "stageTitle.mdv.categories"),
     CATEGORY_DETAIL_VIEW("/fxml/category/Detail.fxml", null),
     NEW_CATEGORY_VIEW("/fxml/NewCategory.fxml", null),
+    CATEGORY_GROUP_MANAGE_VIEW("/fxml/category_group/Manage.fxml", "stageTitle.mdv.categoryGroups"),
+    CATEGORY_GROUP_DETAIL_VIEW("/fxml/category_group/Detail.fxml", null),
     ;
 
     private final String path;

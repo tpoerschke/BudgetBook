@@ -12,6 +12,8 @@ import timkodiert.budgetBook.view.MonthlyOverview;
 import timkodiert.budgetBook.view.View;
 import timkodiert.budgetBook.view.category.CategoriesManageView;
 import timkodiert.budgetBook.view.category.CategoryDetailView;
+import timkodiert.budgetBook.view.category_group.CategoryGroupDetailView;
+import timkodiert.budgetBook.view.category_group.CategoryGroupManageView;
 import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverDetailView;
 import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverManageView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
@@ -41,6 +43,8 @@ public class ControllerFactory {
         viewControllerMap.put(UniqueExpenseDetailView.class, viewComponent::getUniqueExpenseDetailView);
         viewControllerMap.put(CategoriesManageView.class, viewComponent::getManageCategoriesView);
         viewControllerMap.put(CategoryDetailView.class, viewComponent::getCategoryDetailView);
+        viewControllerMap.put(CategoryGroupManageView.class, viewComponent::getCategoryGroupManageView);
+        viewControllerMap.put(CategoryGroupDetailView.class, viewComponent::getCategoryGroupDetailView);
         // Technische Ansichten
         viewControllerMap.put(MigrationView.class, viewComponent::getMigrationView);
     }
