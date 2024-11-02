@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 import javafx.util.StringConverter;
 
+import timkodiert.budgetBook.domain.model.CategoryGroup;
 import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.TurnoverDirection;
 import timkodiert.budgetBook.i18n.LanguageManager;
@@ -15,6 +16,7 @@ import timkodiert.budgetBook.i18n.LanguageManager;
 public class Converters {
 
     private static final Map<Class<?>, StringConverter<?>> CONVERTER_MAP = new HashMap<>();
+    static final String NULL_STRING = "---";
 
     private final LanguageManager languageManager;
 
@@ -26,6 +28,7 @@ public class Converters {
     public void register() {
         CONVERTER_MAP.put(TurnoverDirection.class, new EnumStringConverter<>(languageManager));
         CONVERTER_MAP.put(PaymentType.class, new EnumStringConverter<>(languageManager));
+        CONVERTER_MAP.put(CategoryGroup.class, new CategoryGroupStringConverter());
     }
 
     public static <T> StringConverter<T> get(Class<T> type) {

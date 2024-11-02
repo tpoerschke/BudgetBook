@@ -22,11 +22,11 @@
             </VBox>
             <VBox GridPane.rowIndex="1">
                 <Label text="%manageCategories.label.description"/>
-                <TextArea fx:id="descriptionTextArea" prefHeight="200.0" prefWidth="200.0"/>
+                <TextArea fx:id="descriptionTextArea" prefHeight="200.0" minWidth="200.0"/>
             </VBox>
             <VBox prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <Label text="%newCategory.label.parentCategory"/>
-                <ComboBox fx:id="groupComboBox"/>
+                <Label text="%manageCategories.label.group"/>
+                <ComboBox fx:id="groupComboBox" maxWidth="Infinity"/>
             </VBox>
             <columnConstraints>
                 <ColumnConstraints hgrow="ALWAYS"/>

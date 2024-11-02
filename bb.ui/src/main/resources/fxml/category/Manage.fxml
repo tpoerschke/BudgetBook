@@ -31,7 +31,7 @@
                 <columns>
                     <TableColumn fx:id="nameColumn" editable="false" minWidth="-Infinity" prefWidth="200.0" sortable="false"
                                  text="%manageCategories.column.name"/>
-                    <TableColumn fx:id="actionColumn" editable="false" minWidth="98.0" prefWidth="98.0" maxWidth="98.0" sortable="false"/>
+                    <TableColumn fx:id="groupColumn" editable="false" prefWidth="200.0" sortable="false" text="%manageCategories.column.group"/>
                 </columns>
             </TableView>
         </center>

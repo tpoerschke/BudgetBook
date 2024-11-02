@@ -2,7 +2,6 @@ package timkodiert.budgetBook.view.category;
 
 import javax.inject.Inject;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -14,9 +13,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import timkodiert.budgetBook.dialog.DialogFactory;
 import timkodiert.budgetBook.domain.adapter.CategoryAdapter;
 import timkodiert.budgetBook.domain.model.Category;
+import timkodiert.budgetBook.domain.model.CategoryGroup;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.table.cell.ButtonTableCell;
+import timkodiert.budgetBook.table.cell.StringConverterTableCell;
 import timkodiert.budgetBook.view.FxmlResource;
 import timkodiert.budgetBook.view.mdv_base.BaseListManageView;
 
@@ -25,7 +25,7 @@ public class CategoriesManageView extends BaseListManageView<Category, CategoryA
     @FXML
     private TableColumn<CategoryAdapter, String> nameColumn;
     @FXML
-    private TableColumn<CategoryAdapter, CategoryAdapter> actionColumn;
+    private TableColumn<CategoryAdapter, CategoryGroup> groupColumn;
 
     private final Repository<Category> repository;
     private final LanguageManager languageManager;
@@ -40,8 +40,8 @@ public class CategoriesManageView extends BaseListManageView<Category, CategoryA
     @Override
     protected void initControls() {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        actionColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue()));
-        actionColumn.setCellFactory(col -> new ButtonTableCell<>(languageManager.get("button.delete"), this::deleteCategory));
+        groupColumn.setCellValueFactory(new PropertyValueFactory<>("group"));
+        groupColumn.setCellFactory(col -> new StringConverterTableCell<>(CategoryGroup.class));
     }
 
     @Override

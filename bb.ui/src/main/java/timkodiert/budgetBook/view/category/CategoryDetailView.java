@@ -15,8 +15,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
+import timkodiert.budgetBook.converter.Converters;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.CategoryGroup;
+import timkodiert.budgetBook.domain.repository.CategoryGroupsRepository;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.domain.util.EntityManager;
 import timkodiert.budgetBook.i18n.LanguageManager;
@@ -34,23 +36,31 @@ public class CategoryDetailView extends EntityBaseDetailView<Category> implement
     private ComboBox<CategoryGroup> groupComboBox;
 
     private final LanguageManager languageManager;
+    private final CategoryGroupsRepository groupsRepository;
 
     @Inject
-    protected CategoryDetailView(Repository<Category> repository, EntityManager entityManager, LanguageManager languageManager) {
+    protected CategoryDetailView(Repository<Category> repository,
+                                 EntityManager entityManager,
+                                 LanguageManager languageManager,
+                                 CategoryGroupsRepository groupsRepository) {
         super(Category::new, repository, entityManager);
         this.languageManager = languageManager;
+        this.groupsRepository = groupsRepository;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         root.disableProperty().bind(entity.isNull());
+        groupComboBox.setConverter(Converters.get(CategoryGroup.class));
+        groupComboBox.getItems().add(null);
+        groupComboBox.getItems().addAll(groupsRepository.findAll());
     }
 
     @Override
     protected Category patchEntity(Category entity) {
         entity.setName(nameTextField.getText());
         entity.setDescription(descriptionTextArea.getText());
-        // TODO: Hier die Gruppe setzen
+        entity.setGroup(groupComboBox.getSelectionModel().getSelectedItem());
         return entity;
     }
 
@@ -58,6 +68,7 @@ public class CategoryDetailView extends EntityBaseDetailView<Category> implement
     protected void patchUi(Category entity) {
         nameTextField.setText(entity.getName());
         descriptionTextArea.setText(entity.getDescription());
+        groupComboBox.getSelectionModel().select(entity.getGroup());
     }
 
     @Override

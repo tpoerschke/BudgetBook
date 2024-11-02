@@ -4,11 +4,10 @@ import javafx.util.StringConverter;
 
 import timkodiert.budgetBook.domain.model.FixedTurnover;
 
+import static timkodiert.budgetBook.converter.Converters.NULL_STRING;
 import static timkodiert.budgetBook.util.ObjectUtils.nvl;
 
 public class FixedExpenseStringConverter extends StringConverter<FixedTurnover> {
-
-    private static final String NULL_STRING = "---";
 
     @Override
     public String toString(FixedTurnover fixedExpense) {

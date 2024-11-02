@@ -69,18 +69,9 @@ public class Category extends BaseEntity implements Adaptable<CategoryAdapter> {
     public boolean contentEquals(Object other) {
 
         if (other instanceof Category cat) {
-            boolean equals = Objects.equals(this.getName(), cat.getName())
+            return Objects.equals(this.getName(), cat.getName())
                     && Objects.equals(this.getDescription(), cat.getDescription())
                     && Objects.equals(nvl(this.getGroup(), CategoryGroup::getId), nvl(cat.getGroup(), CategoryGroup::getId));
-
-            List<Integer> thisExpIds = this.getFixedExpenses().stream().map(BaseEntity::getId).toList();
-            List<Integer> otherExpIds = cat.getFixedExpenses().stream().map(BaseEntity::getId).toList();
-            equals = equals && thisExpIds.containsAll(otherExpIds) && otherExpIds.containsAll(thisExpIds);
-
-            List<Integer> thisInfoIds = this.getUniqueExpenseInformation().stream().map(UniqueTurnoverInformation::getId).toList();
-            List<Integer> otherInfoIds = cat.getUniqueExpenseInformation().stream().map(UniqueTurnoverInformation::getId).toList();
-            equals = equals && thisInfoIds.containsAll(otherInfoIds) && otherInfoIds.containsAll(thisInfoIds);
-            return equals;
         }
 
         return false;
