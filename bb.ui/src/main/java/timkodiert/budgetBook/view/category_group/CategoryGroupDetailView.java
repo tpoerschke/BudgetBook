@@ -37,6 +37,8 @@ public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroup>
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         root.disableProperty().bind(entity.isNull());
+
+        validationMap.put("name", nameTextField);
     }
 
     @Override

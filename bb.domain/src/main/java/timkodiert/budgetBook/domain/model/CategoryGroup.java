@@ -8,6 +8,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ import timkodiert.budgetBook.domain.adapter.CategoryGroupAdapter;
 public class CategoryGroup extends BaseEntity implements Adaptable<CategoryGroupAdapter> {
 
     @Setter
+    @NotEmpty
     private String name;
 
     @Setter
