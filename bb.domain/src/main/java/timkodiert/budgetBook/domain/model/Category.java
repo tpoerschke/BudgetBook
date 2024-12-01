@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -38,6 +40,16 @@ public class Category extends BaseEntity implements Adaptable<CategoryAdapter> {
     @JoinColumn(name = "group_id")
     private CategoryGroup group;
 
+    @Setter
+    private Double budgetValue;
+
+    @Setter
+    private boolean budgetActive = true;
+
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private BudgetType budgetType;
+
     @ManyToMany(mappedBy = "categories")
     private List<FixedTurnover> fixedExpenses = new ArrayList<>();
 
@@ -58,6 +70,37 @@ public class Category extends BaseEntity implements Adaptable<CategoryAdapter> {
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean hasActiveBudget() {
+        return budgetActive && budgetValue != null;
+    }
+
+    public double sumTurnovers(MonthYear monthYear) {
+        return switch (budgetType) {
+            case MONTHLY -> sumMonthlyBudget(monthYear);
+            case ANNUAL -> sumAnnualBudget(monthYear.getYear());
+        };
+    }
+
+    private double sumMonthlyBudget(MonthYear monthYear) {
+        double sum = 0;
+        sum += fixedExpenses.stream().mapToDouble(ft -> ft.getValueFor(monthYear)).sum();
+        sum += uniqueExpenseInformation.stream()
+                                       .filter(uti -> monthYear.containsDate(uti.getExpense().getDate()))
+                                       .mapToDouble(UniqueTurnoverInformation::getValueSigned)
+                                       .sum();
+        return sum;
+    }
+
+    private double sumAnnualBudget(int year) {
+        double sum = 0;
+        sum += fixedExpenses.stream().mapToDouble(ft -> ft.getValueForYear(year)).sum();
+        sum += uniqueExpenseInformation.stream()
+                                       .filter(uti -> uti.getExpense().getDate().getYear() == year)
+                                       .mapToDouble(UniqueTurnoverInformation::getValueSigned)
+                                       .sum();
+        return sum;
     }
 
     @Override

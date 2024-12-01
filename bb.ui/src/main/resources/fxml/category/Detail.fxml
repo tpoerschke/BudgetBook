@@ -40,17 +40,22 @@
             <VBox GridPane.rowIndex="3">
                 <Label text="%manageCategories.label.budget"/>
                 <InputGroup>
-                    <TextField prefWidth="100"/>
+                    <TextField fx:id="budgetValueTextField" prefWidth="100"/>
                     <Label text="€"/>
                 </InputGroup>
             </VBox>
-            <CheckBox text="%manageCategories.checkbox.active" GridPane.rowIndex="4"/>
+            <CheckBox fx:id="budgetActiveCheckBox" text="%manageCategories.checkbox.active" GridPane.rowIndex="4"/>
+            <VBox GridPane.rowIndex="5">
+                <Label text="%manageCategories.label.budgetType"/>
+                <ComboBox fx:id="budgetTypeComboBox" maxWidth="150"/>
+            </VBox>
 
             <columnConstraints>
                 <ColumnConstraints hgrow="ALWAYS"/>
                 <ColumnConstraints/>
             </columnConstraints>
             <rowConstraints>
+                <RowConstraints/>
                 <RowConstraints/>
                 <RowConstraints/>
                 <RowConstraints/>
