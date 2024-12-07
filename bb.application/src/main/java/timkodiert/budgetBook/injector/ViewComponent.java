@@ -21,6 +21,7 @@ import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverDetailView;
 import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverManageView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpensesManageView;
+import timkodiert.budgetBook.view.widget.BudgetWidget;
 
 @Singleton
 @Component(modules = {RepositoryModule.class, ServiceModule.class})
@@ -32,6 +33,7 @@ public interface ViewComponent {
     // -----------------------------------
     AnnualOverviewView getAnnualOverviewView();
     MonthlyOverview getMonthlyOverview();
+    BudgetWidget getBudgetWidget();
 
     // -----------------------------------
     // Kategorien Ausgaben

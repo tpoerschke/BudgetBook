@@ -26,6 +26,8 @@ import timkodiert.budgetBook.domain.util.EntityManager;
 import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.view.mdv_base.EntityBaseDetailView;
 
+import static timkodiert.budgetBook.util.ObjectUtils.nvl;
+
 public class CategoryDetailView extends EntityBaseDetailView<Category> implements Initializable {
 
     @FXML
@@ -72,7 +74,8 @@ public class CategoryDetailView extends EntityBaseDetailView<Category> implement
         entity.setName(nameTextField.getText());
         entity.setDescription(descriptionTextArea.getText());
         entity.setGroup(groupComboBox.getSelectionModel().getSelectedItem());
-        entity.setBudgetValue(Double.parseDouble(budgetValueTextField.getText()));
+        String budgetValueStr = budgetValueTextField.getText().trim();
+        entity.setBudgetValue(budgetValueStr.isEmpty() ? null : Double.parseDouble(budgetValueStr));
         entity.setBudgetActive(budgetActiveCheckBox.isSelected());
         entity.setBudgetType(budgetTypeComboBox.getSelectionModel().getSelectedItem());
         return entity;
@@ -83,7 +86,7 @@ public class CategoryDetailView extends EntityBaseDetailView<Category> implement
         nameTextField.setText(entity.getName());
         descriptionTextArea.setText(entity.getDescription());
         groupComboBox.getSelectionModel().select(entity.getGroup());
-        budgetValueTextField.setText(String.valueOf(entity.getBudgetValue()));
+        budgetValueTextField.setText(nvl(entity.getBudgetValue(), String::valueOf, ""));
         budgetActiveCheckBox.setSelected(entity.isBudgetActive());
         budgetTypeComboBox.getSelectionModel().select(entity.getBudgetType());
     }
@@ -91,9 +94,10 @@ public class CategoryDetailView extends EntityBaseDetailView<Category> implement
     @Override
     public boolean save() {
         boolean saved = super.save();
-        if (saved) {
+        CategoryGroup catGroup = entity.get().getGroup();
+        if (saved && catGroup != null) {
             // TODO: Dafür eine Schnittstelle schaffen bzw. ins Repository schieben
-            entityManager.refresh(entity.get().getGroup());
+            entityManager.refresh(catGroup);
             return true;
         }
         return false;

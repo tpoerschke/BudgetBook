@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -75,4 +76,13 @@
          </BorderPane.margin>
       </VBox>
    </top>
+   <right>
+      <ScrollPane styleClass="border-default" hbarPolicy="NEVER" minWidth="280">
+         <VBox fx:id="budgetBox" spacing="15">
+            <padding>
+               <Insets top="15" left="10" right="10" bottom="15"/>
+            </padding>
+         </VBox>
+      </ScrollPane>
+   </right>
 </BorderPane>

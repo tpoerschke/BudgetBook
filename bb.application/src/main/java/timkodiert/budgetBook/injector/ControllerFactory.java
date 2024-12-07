@@ -18,6 +18,7 @@ import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverDetailView;
 import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverManageView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpensesManageView;
+import timkodiert.budgetBook.view.widget.BudgetWidget;
 
 public class ControllerFactory {
 
@@ -35,6 +36,7 @@ public class ControllerFactory {
         // Daten-/Steuerungsansichten
         viewControllerMap.put(AnnualOverviewView.class, viewComponent::getAnnualOverviewView);
         viewControllerMap.put(MonthlyOverview.class, viewComponent::getMonthlyOverview);
+        viewControllerMap.put(BudgetWidget.class, viewComponent::getBudgetWidget);
         viewControllerMap.put(ImportView.class, viewComponent::getImportView);
         // MDV / Stammdaten
         viewControllerMap.put(FixedTurnoverManageView.class, viewComponent::getFixedTurnoverManageView);
