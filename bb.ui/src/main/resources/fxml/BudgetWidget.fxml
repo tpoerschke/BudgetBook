@@ -2,8 +2,12 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="timkodiert.budgetBook.view.widget.BudgetWidget" fx:id="root" spacing="5" prefWidth="250">
     <Label fx:id="budgetLabel" />
-    <ProgressBar fx:id="budgetProgressBar" styleClass="large"/>
+    <StackPane>
+        <ProgressBar fx:id="budgetProgressBar" styleClass="large"/>
+        <Label fx:id="budgetProgressLabel"/>
+    </StackPane>
 </VBox>

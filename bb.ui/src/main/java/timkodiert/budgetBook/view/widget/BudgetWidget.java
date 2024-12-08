@@ -14,6 +14,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 
+import timkodiert.budgetBook.converter.DoubleCurrencyStringConverter;
 import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.view.View;
@@ -29,20 +30,36 @@ public class BudgetWidget implements Initializable, View {
     private Label budgetLabel;
     @FXML
     private ProgressBar budgetProgressBar;
+    @FXML
+    private Label budgetProgressLabel;
 
     @Getter
     private final ObjectProperty<Category> categoryProperty = new SimpleObjectProperty<>();
     @Getter
     private final ObjectProperty<MonthYear> selectedMonthYearProperty = new SimpleObjectProperty<>();
 
+    private final DoubleCurrencyStringConverter currencyStringConverter;
+
     @Inject
-    public BudgetWidget() {}
+    public BudgetWidget(DoubleCurrencyStringConverter currencyStringConverter) {
+        this.currencyStringConverter = currencyStringConverter;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         budgetLabel.textProperty().bind(Bindings.createStringBinding(() -> nvl(categoryProperty.get(), Category::getName), categoryProperty));
         budgetProgressBar.progressProperty().bind(Bindings.createDoubleBinding(this::getProgress, categoryProperty, selectedMonthYearProperty));
         budgetProgressBar.prefWidthProperty().bind(root.widthProperty());
+        budgetProgressLabel.textProperty().bind(Bindings.createStringBinding(this::getProgressLabel, categoryProperty, selectedMonthYearProperty));
+    }
+
+    private String getProgressLabel() {
+        if (categoryProperty.get() == null || !categoryProperty.get().hasActiveBudget() || selectedMonthYearProperty.get() == null) {
+            return "";
+        }
+        double budgetValue = categoryProperty.get().getBudgetValue();
+        double categorySum = Math.abs(categoryProperty.get().sumTurnovers(selectedMonthYearProperty.get()));
+        return String.format("%s / %s", currencyStringConverter.format(categorySum), currencyStringConverter.format(budgetValue));
     }
 
     private double getProgress() {
