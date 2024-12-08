@@ -215,7 +215,6 @@ public class MonthlyOverview implements Initializable, View {
                 e.printStackTrace();
             }
         });
-        //budgetBox.getStyleClass().add(Styles.BORDER_DEFAULT);
     }
 
     private void initDataGroups(MonthYear monthYear) {

@@ -172,6 +172,15 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
         receiptTextField.setText(entity.getReceiptImagePath());
     }
 
+    @Override
+    public boolean save() {
+        boolean saved = super.save();
+        if (saved) {
+            entity.get().getPaymentInformations().stream().map(UniqueTurnoverInformation::getCategories).flatMap(List::stream).forEach(entityManager::refresh);
+        }
+        return saved;
+    }
+
     @FXML
     private void delete(ActionEvent event) {
         Alert confirmationAlert = new Alert(AlertType.CONFIRMATION,
