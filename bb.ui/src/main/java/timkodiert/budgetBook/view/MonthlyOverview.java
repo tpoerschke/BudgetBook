@@ -22,12 +22,16 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
 
+import timkodiert.budgetBook.domain.model.Category;
 import timkodiert.budgetBook.domain.model.FixedTurnover;
 import timkodiert.budgetBook.domain.model.MonthYear;
 import timkodiert.budgetBook.domain.model.UniqueTurnover;
@@ -43,6 +47,7 @@ import timkodiert.budgetBook.view.monthly_overview.IconTableCell;
 import timkodiert.budgetBook.view.monthly_overview.MonthlyOverviewCurrencyTableCell;
 import timkodiert.budgetBook.view.monthly_overview.TableData;
 import timkodiert.budgetBook.view.monthly_overview.ToTableDataMapper;
+import timkodiert.budgetBook.view.widget.BudgetWidget;
 
 public class MonthlyOverview implements Initializable, View {
 
@@ -70,23 +75,34 @@ public class MonthlyOverview implements Initializable, View {
     @FXML
     private TableColumn<TableData, TableData> iconCol;
 
-    private final ObservableList<TableData> data = FXCollections.observableArrayList();
+    // BUDGETS
+    @FXML
+    private VBox budgetBox;
 
+    private final ObservableList<TableData> data = FXCollections.observableArrayList();
+    private final ObservableList<Category> categories = FXCollections.observableArrayList();
+
+    private final Provider<FXMLLoader> fxmlLoader;
     private final LanguageManager languageManager;
     private final Repository<UniqueTurnover> uniqueExpenseRepository;
     private final Repository<FixedTurnover> fixedExpenseRepository;
+    private final Repository<Category> categoryRepository;
     private final Provider<ShortcutTableRow<TableData>> shortcutTableRowProvider;
     private final MonthFilterFactory monthFilterFactory;
 
     @Inject
-    public MonthlyOverview(LanguageManager languageManager,
+    public MonthlyOverview(Provider<FXMLLoader> fxmlLoader,
+                           LanguageManager languageManager,
                            Repository<UniqueTurnover> uniqueExpenseRepository,
                            Repository<FixedTurnover> fixedExpenseRepository,
+                           Repository<Category> categoryRepository,
                            Provider<ShortcutTableRow<TableData>> shortcutTableRowProvider,
                            MonthFilterFactory monthFilterFactory) {
+        this.fxmlLoader = fxmlLoader;
         this.languageManager = languageManager;
         this.uniqueExpenseRepository = uniqueExpenseRepository;
         this.fixedExpenseRepository = fixedExpenseRepository;
+        this.categoryRepository = categoryRepository;
         this.shortcutTableRowProvider = shortcutTableRowProvider;
         this.monthFilterFactory = monthFilterFactory;
     }
@@ -181,6 +197,24 @@ public class MonthlyOverview implements Initializable, View {
         // INIT FILTER
         //
         monthFilter.addListener((observable, oldValue, newValue) -> initDataGroups(newValue));
+
+        //
+        // INIT BUDGETS
+        //
+        categories.setAll(categoryRepository.findAll().stream().filter(Category::hasActiveBudget).toList());
+        categories.forEach(cat -> {
+            FXMLLoader loader = fxmlLoader.get();
+            loader.setLocation(getClass().getResource(FxmlResource.BUDGET_WIDGET.getPath()));
+            try {
+                loader.load();
+                BudgetWidget budgetWidget = loader.getController();
+                budgetWidget.getCategoryProperty().set(cat);
+                budgetWidget.getSelectedMonthYearProperty().bind(monthFilter);
+                budgetBox.getChildren().add(budgetWidget.getRoot());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void initDataGroups(MonthYear monthYear) {
@@ -217,4 +251,34 @@ public class MonthlyOverview implements Initializable, View {
         data.addAll(expenses.stream().map(expToData).toList());
     }
 
+    private class BudgetListCell extends ListCell<Category> {
+
+        private BudgetWidget budgetWidget;
+
+        BudgetListCell() {
+            super();
+            FXMLLoader loader = fxmlLoader.get();
+            loader.setLocation(getClass().getResource(FxmlResource.BUDGET_WIDGET.getPath()));
+            try {
+                loader.load();
+                budgetWidget = loader.getController();
+                budgetWidget.getSelectedMonthYearProperty().bind(monthFilter);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected void updateItem(Category item, boolean empty) {
+
+            if (empty || item == null || budgetWidget == null) {
+                setGraphic(null);
+                return;
+            }
+
+            budgetWidget.getCategoryProperty().set(item);
+            setGraphic(budgetWidget.getRoot());
+            //setHeight(budgetWidget.getRoot().getHeight());
+        }
+    }
 }

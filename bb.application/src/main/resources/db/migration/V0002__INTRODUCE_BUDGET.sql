@@ -1,0 +1,4 @@
+
+ALTER TABLE "Category" ADD COLUMN "budgetValue"  FLOAT NULL;
+ALTER TABLE "Category" ADD COLUMN "budgetActive" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "Category" ADD COLUMN "budgetType"   VARCHAR(255) NULL;

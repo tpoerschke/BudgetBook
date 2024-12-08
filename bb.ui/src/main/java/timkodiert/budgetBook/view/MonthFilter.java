@@ -1,7 +1,8 @@
 package timkodiert.budgetBook.view;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedInject;
@@ -24,7 +25,8 @@ public class MonthFilter implements ObservableValue<MonthYear> {
     private final ComboBox<Integer> selectedYearBox;
     private Button nextBtn, prevBtn;
 
-    private List<ChangeListener<? super MonthYear>> listeners = new ArrayList<>();
+    private final Set<ChangeListener<? super MonthYear>> listeners = new HashSet<>();
+    private final Set<InvalidationListener> invalidationListeners = new HashSet<>();
     private MonthYear value;
 
     @AssistedInject
@@ -45,14 +47,12 @@ public class MonthFilter implements ObservableValue<MonthYear> {
         prevBtn.setGraphic(new FontIcon(BootstrapIcons.CHEVRON_LEFT));
         prevBtn.setText("");
 
-        selectedMonthBox.getItems().setAll(languageManager.getMonths());
-        selectedYearBox.getItems().setAll(List.of(2020, 2021, 2022, 2023, 2024));
-
         this.value = MonthYear.now();
-        setSelection(value);
-
+        selectedMonthBox.getItems().setAll(languageManager.getMonths());
+        selectedYearBox.getItems().setAll(IntStream.rangeClosed(value.getYear() - 5, value.getYear() + 5).boxed().toList());
         selectedMonthBox.getSelectionModel().selectedIndexProperty().addListener(this::monthBoxListener);
         selectedYearBox.getSelectionModel().selectedItemProperty().addListener(this::yearBoxListener);
+        setSelection(value);
 
         nextBtn.setOnAction(event -> {
             setSelection(value.plusMonths(1));
@@ -66,6 +66,7 @@ public class MonthFilter implements ObservableValue<MonthYear> {
         MonthYear oldMonthYear = value;
         value = MonthYear.of(newValue.intValue() + 1, value.getYear());
         this.listeners.forEach(l -> l.changed(this, oldMonthYear, value));
+        this.invalidationListeners.forEach(l -> l.invalidated(this));
     }
 
     private void yearBoxListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -94,16 +95,13 @@ public class MonthFilter implements ObservableValue<MonthYear> {
         return value;
     }
 
-    // Hm? Was soll ich damit? :D
     @Override
     public void addListener(InvalidationListener listener) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(languageManager.get("alert.unimplementedMethod").formatted("addListener"));
+        invalidationListeners.add(listener);
     }
 
     @Override
     public void removeListener(InvalidationListener listener) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(languageManager.get("alert.unimplementedMethod").formatted("removeListener"));
+        invalidationListeners.remove(listener);
     }
 }
