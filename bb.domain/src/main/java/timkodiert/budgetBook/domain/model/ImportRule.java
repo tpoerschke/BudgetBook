@@ -28,6 +28,12 @@ public class ImportRule extends BaseEntity {
         this.linkedFixedExpense = expense;
     }
 
+    public ImportRule(boolean isActive, String receiverContains, String referenceContains) {
+        this.isActive = isActive;
+        this.receiverContains = receiverContains;
+        this.referenceContains = referenceContains;
+    }
+
     public boolean isEmpty() {
         return receiverContains == null && referenceContains == null;
     }

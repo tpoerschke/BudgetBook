@@ -69,6 +69,15 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
         initAdapter();
     }
 
+    public static FixedTurnover create(String position, TurnoverDirection direction, ImportRule importRule) {
+        FixedTurnover turnover = new FixedTurnover();
+        turnover.setPosition(position);
+        turnover.setDirection(direction);
+        turnover.setImportRule(importRule);
+        importRule.setLinkedFixedExpense(turnover);
+        return turnover;
+    }
+
     @Override
     public void initAdapter() {
         try {

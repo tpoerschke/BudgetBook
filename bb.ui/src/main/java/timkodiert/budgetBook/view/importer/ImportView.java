@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import atlantafx.base.controls.Notification;
 import atlantafx.base.theme.Styles;
@@ -68,6 +70,7 @@ public class ImportView implements View, Initializable {
     private final Repository<AccountTurnover> accountTurnoverRepository;
     private final TurnoverImporter importer;
     private final DialogFactory dialogFactory;
+    private final Provider<StageBuilder> stageBuilderProvider;
 
     @FXML
     private TableView<ImportInformation> importTable;
@@ -94,6 +97,8 @@ public class ImportView implements View, Initializable {
     private final CheckBox selectAll = new CheckBox();
     private final BooleanProperty allSelected = new SimpleBooleanProperty();
 
+    private final ObservableList<FixedTurnover> fixedTurnovers = FXCollections.observableArrayList();
+
     @Setter
     private MainView mainView;
 
@@ -102,19 +107,19 @@ public class ImportView implements View, Initializable {
                       Repository<FixedTurnover> fixedExpenseRepository,
                       Repository<AccountTurnover> accountTurnoverRepository,
                       TurnoverImporter importer,
-                      DialogFactory dialogFactory) {
+                      DialogFactory dialogFactory,
+                      Provider<StageBuilder> stageBuilderProvider) {
         this.languageManager = languageManager;
         this.fixedExpenseRepository = fixedExpenseRepository;
         this.accountTurnoverRepository = accountTurnoverRepository;
         this.importer = importer;
         this.dialogFactory = dialogFactory;
+        this.stageBuilderProvider = stageBuilderProvider;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<FixedTurnover> fixedExpenses = FXCollections.observableArrayList();
-        fixedExpenses.add(null);
-        fixedExpenses.addAll(fixedExpenseRepository.findAll());
+        reloadFixedTurnover();
 
         selectedCol.setCellValueFactory(new PropertyValueFactory<>("selectedForImport"));
         selectedCol.setCellFactory(CheckBoxTableCell.forTableColumn(selectedCol));
@@ -128,7 +133,7 @@ public class ImportView implements View, Initializable {
         postingTextCol.setCellValueFactory(new PropertyValueFactory<>("postingText"));
         referenceCol.setCellValueFactory(new PropertyValueFactory<>("reference"));
         associatedCol.setCellValueFactory(new PropertyValueFactory<>("fixedExpense"));
-        associatedCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(new FixedExpenseStringConverter(), fixedExpenses));
+        associatedCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(new FixedExpenseStringConverter(), fixedTurnovers));
         annotationCol.setCellValueFactory(new PropertyValueFactory<>("annotation"));
 
         importTable.getItems().addListener((ListChangeListener<? super ImportInformation>) change -> {
@@ -175,6 +180,13 @@ public class ImportView implements View, Initializable {
         });
     }
 
+    private void reloadFixedTurnover() {
+        List<FixedTurnover> turnovers = new ArrayList<>();
+        turnovers.add(null);
+        turnovers.addAll(fixedExpenseRepository.findAll());
+        fixedTurnovers.setAll(turnovers);
+    }
+
     public ObjectProperty<File> selectedFileProperty() {
         return selectedFile;
     }
@@ -200,15 +212,22 @@ public class ImportView implements View, Initializable {
 
     private void openWizard(ActionEvent event) {
         try {
-            StageTuple wizardTuple = StageBuilder.create(languageManager)
-                                                 .withModality(Modality.APPLICATION_MODAL)
-                                                 .withFXMLResource(FxmlResource.FIXED_TURNOVER_WIZARD_VIEW.getPath())
-                                                 .build();
-            ((FixedTurnoverWizardView) wizardTuple.view()).importInformationProperty().set(importTable.getSelectionModel().getSelectedItem());
+            StageTuple wizardTuple = stageBuilderProvider.get()
+                                                         .withModality(Modality.APPLICATION_MODAL)
+                                                         .withFXMLResource(FxmlResource.FIXED_TURNOVER_WIZARD_VIEW.getPath())
+                                                         .build();
+            FixedTurnoverWizardView wizardView = (FixedTurnoverWizardView) wizardTuple.view();
+            wizardView.setOnSaveCallback(this::selectCreatedFixedTurnover);
+            wizardView.importInformationProperty().set(importTable.getSelectionModel().getSelectedItem());
             wizardTuple.stage().showAndWait();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void selectCreatedFixedTurnover(FixedTurnover turnover) {
+        reloadFixedTurnover();
+        importTable.getSelectionModel().getSelectedItem().fixedExpenseProperty().set(turnover);
     }
 
     private void displayNotification(String style, String text) {

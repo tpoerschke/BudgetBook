@@ -1,7 +1,10 @@
 package timkodiert.budgetBook.dialog;
 
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 
+import jakarta.validation.ConstraintViolation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -25,12 +28,15 @@ public class DialogFactory {
     }
 
     public Alert buildInformationDialog(String information) {
-        Alert alert = new Alert(AlertType.INFORMATION, information);
-        return alert;
+        return new Alert(AlertType.INFORMATION, information);
+    }
+
+    public <T> Alert buildValidationErrorDialog(Set<ConstraintViolation<T>> violationSet) {
+        String informationStr = violationSet.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("\n"));
+        return buildInformationDialog(informationStr);
     }
 
     public Alert buildErrorDialog(String message) {
-        Alert alert = new Alert(AlertType.ERROR, message);
-        return alert;
+        return new Alert(AlertType.ERROR, message);
     }
 }

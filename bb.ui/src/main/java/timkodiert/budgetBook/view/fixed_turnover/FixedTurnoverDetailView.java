@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -45,7 +46,6 @@ import timkodiert.budgetBook.domain.model.PaymentType;
 import timkodiert.budgetBook.domain.model.TurnoverDirection;
 import timkodiert.budgetBook.domain.repository.Repository;
 import timkodiert.budgetBook.domain.util.EntityManager;
-import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.table.cell.DateTableCell;
 import timkodiert.budgetBook.table.cell.MonthYearTableCell;
 import timkodiert.budgetBook.ui.helper.CategoryCheckListHelper;
@@ -99,7 +99,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
     private final ObservableList<PaymentInformation> paymentInfoList = FXCollections.observableArrayList();
     private final Repository<PaymentInformation> expInfoRepository;
     private final FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory;
-    private final LanguageManager languageManager;
+    private final Provider<StageBuilder> stageBuilderProvider;
 
     private CategoryCheckListHelper categoryCheckListHelper;
 
@@ -108,11 +108,11 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
                                    Repository<PaymentInformation> expInfoRepository,
                                    EntityManager entityManager,
                                    FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory,
-                                   LanguageManager languageManager) {
+                                   Provider<StageBuilder> stageBuilderProvider) {
         super(FixedTurnover::new, repository, entityManager);
         this.expInfoRepository = expInfoRepository;
         this.fixedTurnoverInformationDetailViewFactory = fixedTurnoverInformationDetailViewFactory;
-        this.languageManager = languageManager;
+        this.stageBuilderProvider = stageBuilderProvider;
     }
 
     @Override
@@ -242,14 +242,14 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
     private void openUniqueExpenseInformationDetailView(Optional<PaymentInformation> optionalEntity) {
         try {
             var subDetailView = fixedTurnoverInformationDetailViewFactory.create(PaymentInformation::new, this::updateExpenseInformation);
-            StageBuilder.create(languageManager)
-                        .withModality(Modality.APPLICATION_MODAL)
-                        .withOwner(Window.getWindows().get(0))
-                        .withFXMLResource(FIXED_TURNOVER_INFORMATION_VIEW.toString())
-                        .withView(subDetailView)
-                        .build()
-                        .stage()
-                        .show();
+            stageBuilderProvider.get()
+                                .withModality(Modality.APPLICATION_MODAL)
+                                .withOwner(Window.getWindows().get(0))
+                                .withFXMLResource(FIXED_TURNOVER_INFORMATION_VIEW.toString())
+                                .withView(subDetailView)
+                                .build()
+                                .stage()
+                                .show();
             subDetailView.setEntity(optionalEntity.orElse(new PaymentInformation()));
         } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
