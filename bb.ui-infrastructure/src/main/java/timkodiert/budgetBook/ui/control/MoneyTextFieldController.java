@@ -38,7 +38,7 @@ class MoneyTextFieldController {
 
     public @Nullable Double getValue() {
         String value = stringValue.get();
-        if (!isStringFormatValid()) {
+        if (value == null || !isStringFormatValid()) {
             return null;
         }
         try {
