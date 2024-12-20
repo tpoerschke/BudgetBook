@@ -1,6 +1,7 @@
-package timkodiert.budgetBook.view;
+package timkodiert.budgetBook.view.importer;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -26,7 +27,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -36,6 +39,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.util.converter.DefaultStringConverter;
 import lombok.Setter;
 
@@ -49,7 +53,12 @@ import timkodiert.budgetBook.importer.ImportInformation;
 import timkodiert.budgetBook.importer.TurnoverImporter;
 import timkodiert.budgetBook.table.cell.CurrencyTableCell;
 import timkodiert.budgetBook.table.cell.DateTableCell;
+import timkodiert.budgetBook.util.StageBuilder;
+import timkodiert.budgetBook.view.FxmlResource;
+import timkodiert.budgetBook.view.MainView;
+import timkodiert.budgetBook.view.View;
 
+import static timkodiert.budgetBook.util.StageBuilder.StageTuple;
 import static timkodiert.budgetBook.view.FxmlResource.MONTHLY_OVERVIEW;
 
 public class ImportView implements View, Initializable {
@@ -135,6 +144,13 @@ public class ImportView implements View, Initializable {
                                                            importObservables.toArray(Observable[]::new)));
         });
 
+        MenuItem menuItem = new MenuItem("Wiederkehrenden Umsatz anlegen");
+        menuItem.setOnAction(this::openWizard);
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.getItems().add(menuItem);
+        importTable.contextMenuProperty()
+                   .bind(Bindings.when(importTable.getSelectionModel().selectedItemProperty().isNotNull()).then(contextMenu).otherwise((ContextMenu) null));
+
         ChangeListener<Boolean> selectAllListener = (observableValue, oldVal, newVal) -> {
             importTable.getItems()
                        .stream()
@@ -179,6 +195,19 @@ public class ImportView implements View, Initializable {
             //            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             //            alert.showAndWait();
             displayNotification(Styles.DANGER, e.getMessage());
+        }
+    }
+
+    private void openWizard(ActionEvent event) {
+        try {
+            StageTuple wizardTuple = StageBuilder.create(languageManager)
+                                                 .withModality(Modality.APPLICATION_MODAL)
+                                                 .withFXMLResource(FxmlResource.FIXED_TURNOVER_WIZARD_VIEW.getPath())
+                                                 .build();
+            ((FixedTurnoverWizardView) wizardTuple.view()).importInformationProperty().set(importTable.getSelectionModel().getSelectedItem());
+            wizardTuple.stage().showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

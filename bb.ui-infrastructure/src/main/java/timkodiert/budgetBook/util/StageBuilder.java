@@ -55,13 +55,14 @@ public class StageBuilder {
         return this;
     }
 
-    public Stage build() throws IOException {
+    public StageTuple build() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcePath));
         loader.setResources(languageManager.getResourceBundle());
         loader.setController(viewController);
 
         Parent parent = (Parent)loader.load();
         Scene scene = new Scene(parent);
+        scene.getStylesheets().add(getClass().getResource("/css/general-styles.css").toExternalForm());
 
         Stage stage = new Stage();
         stage.setTitle(title);
@@ -69,6 +70,8 @@ public class StageBuilder {
         stage.initModality(modality);
         stage.initOwner(owner);
 
-        return stage;
+        return new StageTuple(stage, loader.getController());
     }
+
+    public record StageTuple(Stage stage, View view) {}
 }

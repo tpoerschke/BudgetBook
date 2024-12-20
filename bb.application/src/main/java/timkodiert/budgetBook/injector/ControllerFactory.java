@@ -7,7 +7,6 @@ import javax.inject.Inject;
 
 import timkodiert.budgetBook.db.MigrationView;
 import timkodiert.budgetBook.view.AnnualOverviewView;
-import timkodiert.budgetBook.view.ImportView;
 import timkodiert.budgetBook.view.MonthlyOverview;
 import timkodiert.budgetBook.view.View;
 import timkodiert.budgetBook.view.category.CategoriesManageView;
@@ -16,6 +15,8 @@ import timkodiert.budgetBook.view.category_group.CategoryGroupDetailView;
 import timkodiert.budgetBook.view.category_group.CategoryGroupManageView;
 import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverDetailView;
 import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverManageView;
+import timkodiert.budgetBook.view.importer.FixedTurnoverWizardView;
+import timkodiert.budgetBook.view.importer.ImportView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpensesManageView;
 import timkodiert.budgetBook.view.widget.BudgetWidget;
@@ -38,6 +39,7 @@ public class ControllerFactory {
         viewControllerMap.put(MonthlyOverview.class, viewComponent::getMonthlyOverview);
         viewControllerMap.put(BudgetWidget.class, viewComponent::getBudgetWidget);
         viewControllerMap.put(ImportView.class, viewComponent::getImportView);
+        viewControllerMap.put(FixedTurnoverWizardView.class, viewComponent::getFixedTurnoverWizardView);
         // MDV / Stammdaten
         viewControllerMap.put(FixedTurnoverManageView.class, viewComponent::getFixedTurnoverManageView);
         viewControllerMap.put(FixedTurnoverDetailView.class, viewComponent::getFixedTurnoverDetailView);

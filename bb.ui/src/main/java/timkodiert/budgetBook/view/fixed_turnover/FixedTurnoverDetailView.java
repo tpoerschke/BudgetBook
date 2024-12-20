@@ -27,7 +27,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
 import org.controlsfx.control.CheckListView;
@@ -243,12 +242,14 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
     private void openUniqueExpenseInformationDetailView(Optional<PaymentInformation> optionalEntity) {
         try {
             var subDetailView = fixedTurnoverInformationDetailViewFactory.create(PaymentInformation::new, this::updateExpenseInformation);
-            Stage stage = StageBuilder.create(languageManager)
-                    .withModality(Modality.APPLICATION_MODAL)
-                                      .withOwner(Window.getWindows().get(0)).withFXMLResource(FIXED_TURNOVER_INFORMATION_VIEW.toString())
-                    .withView(subDetailView)
-                    .build();
-            stage.show();
+            StageBuilder.create(languageManager)
+                        .withModality(Modality.APPLICATION_MODAL)
+                        .withOwner(Window.getWindows().get(0))
+                        .withFXMLResource(FIXED_TURNOVER_INFORMATION_VIEW.toString())
+                        .withView(subDetailView)
+                        .build()
+                        .stage()
+                        .show();
             subDetailView.setEntity(optionalEntity.orElse(new PaymentInformation()));
         } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
