@@ -221,7 +221,7 @@ Project Link: [https://github.com/tpoerschke/BudgetBook](https://github.com/tpoe
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[product-screenshot]: images/MonatsansichtScreenshot.jpg
+[product-screenshot]: images/MonatsansichtScreenshot.png
 
 [OpenJDK-shield]: https://img.shields.io/badge/OpenJDK-222?style=for-the-badge&logo=OpenJDK
 [OpenJDK-url]: https://aws.amazon.com/corretto/
