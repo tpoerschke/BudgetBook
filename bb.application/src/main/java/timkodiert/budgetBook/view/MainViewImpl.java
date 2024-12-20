@@ -26,6 +26,7 @@ import timkodiert.budgetBook.i18n.LanguageManager;
 import timkodiert.budgetBook.injector.ControllerFactory;
 import timkodiert.budgetBook.injector.ViewComponent;
 import timkodiert.budgetBook.properties.PropertiesService;
+import timkodiert.budgetBook.view.importer.ImportView;
 
 import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
 import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;

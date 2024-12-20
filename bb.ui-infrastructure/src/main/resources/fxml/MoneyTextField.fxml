@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import atlantafx.base.layout.InputGroup?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<fx:root type="atlantafx.base.layout.InputGroup" xmlns:fx="http://javafx.com/fxml">
+    <TextField fx:id="textField"/>
+    <Label text="€" />
+</fx:root>

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -28,7 +29,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -81,15 +81,18 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
 
     private final Repository<UniqueTurnoverInformation> expInfoRepository;
     private final LanguageManager languageManager;
+    private final Provider<StageBuilder> stageBuilderProvider;
 
     @Inject
     public UniqueExpenseDetailView(Repository<UniqueTurnover> repository,
                                    EntityManager entityManager,
                                    Repository<UniqueTurnoverInformation> expInfoRepository,
-                                   LanguageManager languageManager) {
+                                   LanguageManager languageManager,
+                                   Provider<StageBuilder> stageBuilderProvider) {
         super(UniqueTurnover::new, repository, entityManager);
         this.expInfoRepository = expInfoRepository;
         this.languageManager = languageManager;
+        this.stageBuilderProvider = stageBuilderProvider;
     }
 
     @Override
@@ -117,13 +120,14 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
                 return;
             }
             try {
-                StageBuilder.create(languageManager)
-                        .withFXMLResource(IMAGE_VIEW.toString())
-                        .withModality(Modality.APPLICATION_MODAL)
-                        .withTitle("Beleg / Kassenbon")
-                        .withView(new ImageModalView(path))
-                        .build()
-                        .showAndWait();
+                stageBuilderProvider.get()
+                                    .withFXMLResource(IMAGE_VIEW.toString())
+                                    .withModality(Modality.APPLICATION_MODAL)
+                                    .withTitle("Beleg / Kassenbon")
+                                    .withView(new ImageModalView(path))
+                                    .build()
+                                    .stage()
+                                    .showAndWait();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -220,14 +224,17 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
 
     private void openUniqueExpenseInformationDetailView(Optional<UniqueTurnoverInformation> optionalEntity) {
         try {
-            Stage stage = StageBuilder.create(languageManager)
-                    .withModality(Modality.APPLICATION_MODAL)
-                    .withOwner(Window.getWindows().get(0))
-                    .withFXMLResource(UNIQUE_TURNOVER_INFORMATION_VIEW.toString())
-                    .withView(new UniqueExpenseInformationDetailView(optionalEntity, this::addNewExpenseInformation,
-                                                                     this.getUniqueExpenseInformationSuggestions(), entityManager))
-                    .build();
-            stage.show();
+            stageBuilderProvider.get()
+                                .withModality(Modality.APPLICATION_MODAL)
+                                .withOwner(Window.getWindows().get(0))
+                                .withFXMLResource(UNIQUE_TURNOVER_INFORMATION_VIEW.toString())
+                                .withView(new UniqueExpenseInformationDetailView(optionalEntity,
+                                                                                 this::addNewExpenseInformation,
+                                                                                 this.getUniqueExpenseInformationSuggestions(),
+                                                                                 entityManager))
+                                .build()
+                                .stage()
+                                .show();
         } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR, languageManager.get("alert.viewCouldNotBeOpened"));
             alert.showAndWait();

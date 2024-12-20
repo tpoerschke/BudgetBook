@@ -65,7 +65,6 @@ public class AutoCompleteTextField extends TextField {
     }
 
     private List<String> findSuitableEntries(String input) {
-        System.out.println(availableEntries);
         return availableEntries.stream().filter(str -> str.toLowerCase().contains(input.toLowerCase())).toList();
     }
 }

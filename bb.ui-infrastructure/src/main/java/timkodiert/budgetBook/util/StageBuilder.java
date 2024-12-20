@@ -1,6 +1,7 @@
 package timkodiert.budgetBook.util;
 
 import java.io.IOException;
+import javax.inject.Inject;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +16,7 @@ import timkodiert.budgetBook.view.View;
 public class StageBuilder {
 
     private final LanguageManager languageManager;
+    private final FXMLLoader fxmlLoader;
 
     private Window owner;
     private Modality modality;
@@ -22,12 +24,10 @@ public class StageBuilder {
     private View viewController;    
     private String title;
 
-    private StageBuilder(LanguageManager languageManager) {
+    @Inject
+    public StageBuilder(LanguageManager languageManager, FXMLLoader fxmlLoader) {
         this.languageManager = languageManager;
-    }
-
-    public static StageBuilder create(LanguageManager languageManager) {
-        return new StageBuilder(languageManager);
+        this.fxmlLoader = fxmlLoader;
     }
 
     public StageBuilder withModality(Modality modality) {
@@ -55,13 +55,13 @@ public class StageBuilder {
         return this;
     }
 
-    public Stage build() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcePath));
-        loader.setResources(languageManager.getResourceBundle());
-        loader.setController(viewController);
+    public StageTuple build() throws IOException {
+        fxmlLoader.setLocation(getClass().getResource(resourcePath));
+        fxmlLoader.setController(viewController);
 
-        Parent parent = (Parent)loader.load();
+        Parent parent = (Parent) fxmlLoader.load();
         Scene scene = new Scene(parent);
+        scene.getStylesheets().add(getClass().getResource("/css/general-styles.css").toExternalForm());
 
         Stage stage = new Stage();
         stage.setTitle(title);
@@ -69,6 +69,8 @@ public class StageBuilder {
         stage.initModality(modality);
         stage.initOwner(owner);
 
-        return stage;
+        return new StageTuple(stage, fxmlLoader.getController());
     }
+
+    public record StageTuple(Stage stage, View view) {}
 }
