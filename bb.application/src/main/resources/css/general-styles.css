@@ -40,3 +40,13 @@
     -fx-padding: 3px 3px 3px 3px;
     -fx-background-radius: 3px;
 }
+
+.progress-indicator-text-small {
+    -fx-background-color: -color-base-0;
+    -fx-padding: 0px 3px 0px 3px;
+    -fx-background-radius: 3px;
+}
+
+.budget-widget:danger .progress-bar {
+    -color-progress-bar-fill: -color-danger-emphasis;
+}
