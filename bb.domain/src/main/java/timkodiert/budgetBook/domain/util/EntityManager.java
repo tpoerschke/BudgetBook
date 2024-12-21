@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import jakarta.persistence.criteria.CriteriaQuery;
+import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -17,6 +18,7 @@ import timkodiert.budgetBook.properties.PropertiesService;
 @Singleton
 public class EntityManager {
 
+    @Getter
     private final Session session;
 
     @Inject

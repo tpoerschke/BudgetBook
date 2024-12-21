@@ -158,7 +158,7 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
     }
 
     @Override
-    protected UniqueTurnover patchEntity(UniqueTurnover entity) {
+    protected UniqueTurnover patchEntity(UniqueTurnover entity, boolean isSaving) {
         entity.setBiller(billerTextField.getText());
         entity.setNote(noteTextArea.getText());
         entity.setPaymentInformations(paymentInfoList);

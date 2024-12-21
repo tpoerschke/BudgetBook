@@ -85,7 +85,7 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
             return;
         }
 
-        var expenseInfo = patchEntity(entity.get());
+        var expenseInfo = patchEntity(entity.get(), true);
         onSaveCallback.accept(expenseInfo);
         // Das macht mich traurig ._.
         ((Stage) ((Node) e.getSource()).getScene().getWindow()).close();
@@ -97,7 +97,7 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
     }
 
     @Override
-    protected PaymentInformation patchEntity(PaymentInformation entity) {
+    protected PaymentInformation patchEntity(PaymentInformation entity, boolean isSaving) {
         entity.setValue(Double.parseDouble(valueTextField.getText()));
         entity.setStart(startMonthWidget.getValue());
         entity.setEnd(endMonthWidget.getValue());

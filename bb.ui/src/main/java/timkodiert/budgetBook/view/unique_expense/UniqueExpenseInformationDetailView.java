@@ -81,7 +81,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
     }
 
     public boolean validate() {
-        UniqueTurnoverInformation info = patchEntity(new UniqueTurnoverInformation());
+        UniqueTurnoverInformation info = patchEntity(new UniqueTurnoverInformation(), false);
 
         Map<String, Control> validationMap = new HashMap<>();
         validationMap.put("label", positionTextField);
@@ -91,12 +91,22 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
         return validation.validate(info);
     }
 
-    public UniqueTurnoverInformation patchEntity(UniqueTurnoverInformation entity) {
+    public UniqueTurnoverInformation patchEntity(UniqueTurnoverInformation entity, boolean isSaving) {
         entity.setLabel(positionTextField.getText());
         entity.setValue(Double.valueOf(valueTextField.getText()));
         entity.setDirection(directionComboBox.getSelectionModel().getSelectedItem());
         entity.getCategories().clear();
         entity.getCategories().addAll(categoryCheckListHelper.getCheckedCategories());
+
+        if (!isSaving) {
+            return entity;
+        }
+
+        entity.getCategories().forEach(category -> {
+            if (!category.getUniqueExpenseInformation().contains(entity)) {
+                category.getUniqueExpenseInformation().add(entity);
+            }
+        });
         return entity;
     }
 
@@ -107,7 +117,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
             return;
         }
 
-        expenseInfo = patchEntity(expenseInfo);
+        expenseInfo = patchEntity(expenseInfo, true);
 
         if (isNew) {
             newEntityCallback.accept(expenseInfo);

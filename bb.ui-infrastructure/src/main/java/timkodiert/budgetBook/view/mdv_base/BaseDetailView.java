@@ -34,16 +34,13 @@ public abstract class BaseDetailView<T> implements View {
     }
 
     protected boolean validate() {
-        T entityToValidate = patchEntity(emptyEntityProducer.get());
+        T entityToValidate = patchEntity(emptyEntityProducer.get(), false);
 
         ValidationWrapper<T> validation = new ValidationWrapper<>(validationMap);
-        if (!validation.validate(entityToValidate)) {
-            return false;
-        }
-        return true;
+        return validation.validate(entityToValidate);
     }
 
-    protected abstract T patchEntity(T entity);
+    protected abstract T patchEntity(T entity, boolean isSaving);
 
     protected abstract void patchUi(T entity);
 }

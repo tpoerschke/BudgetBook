@@ -73,6 +73,7 @@ public class MonthFilter implements ObservableValue<MonthYear> {
         MonthYear oldMonthYear = value;
         value = MonthYear.of(value.getMonth(), newValue.intValue());
         this.listeners.forEach(l -> l.changed(this, oldMonthYear, value));
+        this.invalidationListeners.forEach(l -> l.invalidated(this));
     }
 
     private void setSelection(MonthYear monthYear) {

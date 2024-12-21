@@ -42,7 +42,7 @@ public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroup>
     }
 
     @Override
-    protected CategoryGroup patchEntity(CategoryGroup entity) {
+    protected CategoryGroup patchEntity(CategoryGroup entity, boolean isSaving) {
         entity.setName(nameTextField.getText());
         entity.setDescription(descriptionTextArea.getText());
         return entity;

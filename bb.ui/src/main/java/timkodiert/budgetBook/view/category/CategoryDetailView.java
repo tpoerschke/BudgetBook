@@ -70,7 +70,7 @@ public class CategoryDetailView extends EntityBaseDetailView<Category> implement
     }
 
     @Override
-    protected Category patchEntity(Category entity) {
+    protected Category patchEntity(Category entity, boolean isSaving) {
         entity.setName(nameTextField.getText());
         entity.setDescription(descriptionTextArea.getText());
         entity.setGroup(groupComboBox.getSelectionModel().getSelectedItem());

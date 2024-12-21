@@ -10,13 +10,9 @@ import timkodiert.budgetBook.domain.model.Category;
 public class CategoryCheckListHelper {
 
     private final CheckListView<Category> checkListView;
-    private final List<Category> categories;
-
 
     public CategoryCheckListHelper(CheckListView<Category> checkListView, List<Category> categories) {
         this.checkListView = checkListView;
-        this.categories = categories;
-
         checkListView.getItems().setAll(categories);
     }
 

@@ -175,7 +175,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
     }
 
     @Override
-    protected FixedTurnover patchEntity(FixedTurnover entity) {
+    protected FixedTurnover patchEntity(FixedTurnover entity, boolean isSaving) {
         entity.setPosition(positionTextField.getText());
         entity.setNote(noteTextArea.getText());
         entity.setDirection(directionComboBox.getSelectionModel().getSelectedItem());
@@ -187,6 +187,17 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         entity.getImportRule().setActive(importActiveCheckbox.isSelected());
         entity.getImportRule().setReceiverContains(importReceiverTextField.getText());
         entity.getImportRule().setReferenceContains(importReferenceTextField.getText());
+
+        if (!isSaving) {
+            return entity;
+        }
+        // Einige Verknüpfungen sollen nicht vorgenommen werden, wenn bspw. eine (leere) Entity
+        // zur Validierung befüllt wird, die gar nicht persistiert wird.
+        entity.getCategories().forEach(category -> {
+            if (!category.getFixedExpenses().contains(entity)) {
+                category.getFixedExpenses().add(entity);
+            }
+        });
         return entity;
     }
 

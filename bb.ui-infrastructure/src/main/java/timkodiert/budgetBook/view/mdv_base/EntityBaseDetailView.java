@@ -30,7 +30,7 @@ public abstract class EntityBaseDetailView<T extends ContentEquals> extends Base
             return false;
         }
 
-        T fromUi = patchEntity(emptyEntityProducer.get());
+        T fromUi = patchEntity(emptyEntityProducer.get(), false);
         return !fromUi.contentEquals(this.entity.get());
     }
 
@@ -40,7 +40,7 @@ public abstract class EntityBaseDetailView<T extends ContentEquals> extends Base
             return false;
         }
 
-        T exp = patchEntity(this.entity.get());
+        T exp = patchEntity(this.entity.get(), true);
         repository.persist(exp);
         entityManager.refresh(exp);
         onUpdate.accept(exp);
