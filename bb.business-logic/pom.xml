@@ -4,7 +4,7 @@
   <parent>
     <groupId>timkodiert.budgetBook</groupId>
     <artifactId>budget-book</artifactId>
-    <version>BETA-2</version>
+    <version>BETA-3</version>
   </parent>
 
   <artifactId>bb.business-logic</artifactId>
