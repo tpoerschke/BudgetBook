@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
 
+import atlantafx.base.theme.Styles;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -48,6 +49,9 @@ public class BudgetWidget implements Initializable, View {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         budgetLabel.textProperty().bind(Bindings.createStringBinding(() -> nvl(categoryProperty.get(), Category::getName), categoryProperty));
+        budgetProgressBar.progressProperty().addListener((observable, oldVal, newVal) -> {
+            root.pseudoClassStateChanged(Styles.STATE_DANGER, newVal.doubleValue() >= 0.9);
+        });
         budgetProgressBar.progressProperty().bind(Bindings.createDoubleBinding(this::getProgress, categoryProperty, selectedMonthYearProperty));
         budgetProgressBar.prefWidthProperty().bind(root.widthProperty());
         budgetProgressLabel.textProperty().bind(Bindings.createStringBinding(this::getProgressLabel, categoryProperty, selectedMonthYearProperty));
