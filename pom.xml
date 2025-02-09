@@ -12,20 +12,30 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
 
     <main.class>timkodiert.budgetBook.Main</main.class>
     <launcher.class>timkodiert.budgetBook.Launch</launcher.class>
 
-    <version.jfx>17</version.jfx>
-    <version.dagger>2.51.1</version.dagger>
-    <version.lombok>1.18.34</version.lombok>
-    <version.hibernate>6.5.2.Final</version.hibernate>
+    <version.jfx>21.0.6</version.jfx>
+    <version.dagger>2.55</version.dagger>
+    <version.lombok>1.18.36</version.lombok>
     <!-- UI -->
     <version.ikonli>12.3.1</version.ikonli>
     <version.atlantafx>2.0.1</version.atlantafx>
     <version.controlsfx>11.2.1</version.controlsfx>
+    <!-- Database -->
+    <version.sqlite-jdbc>3.49.0.0</version.sqlite-jdbc>
+    <version.hibernate>6.6.6.Final</version.hibernate>
+    <version.flyway>11.3.1</version.flyway>
+    <!-- Validation -->
+    <version.validation-api>2.0.1.Final</version.validation-api>
+    <version.hibernate-validator>7.0.5.Final</version.hibernate-validator>
+    <version.el>6.0.1</version.el>
+    <version.expressly>5.0.0</version.expressly>
+    <!-- Testing -->
+    <version.junit>5.11.4</version.junit>
   </properties>
 
   <modules>
@@ -238,12 +248,12 @@
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.45.3.0</version>
+      <version>${version.sqlite-jdbc}</version>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
-      <version>10.7.1</version>
+      <version>${version.flyway}</version>
     </dependency>
     <!-- Theme -->
     <dependency>
@@ -255,23 +265,29 @@
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-      <version>2.0.1.Final</version>
+      <version>${version.validation-api}</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>7.0.5.Final</version>
+      <version>${version.hibernate-validator}</version>
     </dependency>
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>jakarta.el</artifactId>
-      <version>4.0.2</version>
+      <groupId>jakarta.el</groupId>
+      <artifactId>jakarta.el-api</artifactId>
+      <version>${version.el}</version>
     </dependency>
+    <dependency>
+      <groupId>org.glassfish.expressly</groupId>
+      <artifactId>expressly</artifactId>
+      <version>${version.expressly}</version>
+    </dependency>
+
     <!-- Testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.10.0</version>
+      <version>${version.junit}</version>
       <!-- can be omitted when using the BOM -->
       <scope>test</scope>
     </dependency>
