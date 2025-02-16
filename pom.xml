@@ -18,6 +18,8 @@
     <main.class>timkodiert.budgetBook.Main</main.class>
     <launcher.class>timkodiert.budgetBook.Launch</launcher.class>
 
+    <maven.exec.skip>false</maven.exec.skip>
+
     <version.jfx>21.0.6</version.jfx>
     <version.dagger>2.55</version.dagger>
     <version.lombok>1.18.36</version.lombok>
@@ -172,6 +174,7 @@
                 </goals>
                 <configuration>
                   <executable>build_user_manual.sh</executable>
+                  <skip>${maven.exec.skip}</skip>
                 </configuration>
               </execution>
             </executions>

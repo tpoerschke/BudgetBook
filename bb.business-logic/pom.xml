@@ -11,6 +11,7 @@
   <packaging>jar</packaging>
 
   <properties>
+    <maven.exec.skip>true</maven.exec.skip>
   </properties>
 
   <dependencies>
