@@ -15,6 +15,9 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
 
+    <sonar.organization>tpoerschke</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
     <main.class>timkodiert.budgetBook.Main</main.class>
     <launcher.class>timkodiert.budgetBook.Launch</launcher.class>
 
