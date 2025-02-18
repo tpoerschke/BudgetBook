@@ -97,6 +97,7 @@ Das Projekt befindet sich noch in einem frühen Stadium, weswegen Bugs auftreten
 [![SQLite][SQLite-shield]][SQLite-url]
 [![Lombok][Lombok-shield]][Lombok-url]
 [![Dagger2][Dagger-shield]][Dagger-url]
+[![SonarQube][SonarQube-shield]][SonarQube-url]
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -235,3 +236,5 @@ Project Link: [https://github.com/tpoerschke/BudgetBook](https://github.com/tpoe
 [Lombok-url]: https://projectlombok.org/
 [Dagger-shield]: https://img.shields.io/badge/Dagger-2196F3?style=for-the-badge
 [Dagger-url]: https://dagger.dev/
+[SonarQube-shield]: https://img.shields.io/badge/SonarQube-222?style=for-the-badge&logo=SonarCloud
+[SonarQube-url]:https://sonarcloud.io/
