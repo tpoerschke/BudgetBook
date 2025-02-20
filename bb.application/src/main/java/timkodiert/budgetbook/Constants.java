@@ -1,4 +1,4 @@
-package timkodiert.budgetBook;
+package timkodiert.budgetbook;
 
 import java.nio.file.Path;
 

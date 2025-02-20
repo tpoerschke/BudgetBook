@@ -1,11 +1,11 @@
-package timkodiert.budgetBook.view;
+package timkodiert.budgetbook.view;
 
 import javax.inject.Inject;
 
 import javafx.fxml.FXMLLoader;
 
 import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.injector.ControllerFactory;
+import timkodiert.budgetbook.injector.ControllerFactory;
 
 public class BbFxmlLoader extends FXMLLoader {
 

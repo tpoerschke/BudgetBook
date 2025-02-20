@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.properties;
+package timkodiert.budgetbook.properties;
 
 import java.io.IOException;
 
@@ -7,10 +7,6 @@ import atlantafx.base.theme.PrimerLight;
 import atlantafx.base.theme.Theme;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import static timkodiert.budgetBook.properties.OperatingSystem.LINUX;
-import static timkodiert.budgetBook.properties.OperatingSystem.OSX;
-import static timkodiert.budgetBook.properties.OperatingSystem.WINDOWS;
 
 // IDEA: USE ENUM FOR THEMES LIKE E.G. => LIGHT(PrimerLight.class)
 @Data
@@ -24,11 +20,11 @@ public class ThemeOption {
         if(this.theme == null){ // If auto mode
             OperatingSystem os = OperatingSystem.get();
             // OS-dependent decision making
-            if (os.equals(WINDOWS)) {
+            if (os.equals(OperatingSystem.WINDOWS)) {
                 return fromWindowsTheme();
-            } else if (os.equals(OSX)) {
+            } else if (os.equals(OperatingSystem.OSX)) {
                 return fromOsxTheme();
-            } else if (os.equals(LINUX)) {
+            } else if (os.equals(OperatingSystem.LINUX)) {
                 return fromLinuxTheme();
             }
             // If no known OS could be detected => use fallback

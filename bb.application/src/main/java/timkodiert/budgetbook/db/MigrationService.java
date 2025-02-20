@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.db;
+package timkodiert.budgetbook.db;
 
 import java.util.Set;
 import javax.inject.Inject;
@@ -22,8 +22,8 @@ import org.flywaydb.core.api.callback.Event;
 
 import timkodiert.budgetBook.dialog.StackTraceAlert;
 import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.injector.ControllerFactory;
 import timkodiert.budgetBook.properties.PropertiesService;
+import timkodiert.budgetbook.injector.ControllerFactory;
 
 @Singleton
 public class MigrationService {

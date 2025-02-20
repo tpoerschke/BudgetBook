@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.view;
+package timkodiert.budgetbook.view;
 
 import java.io.File;
 import java.net.URL;
@@ -23,10 +23,13 @@ import org.jetbrains.annotations.Nullable;
 import timkodiert.budgetBook.dialog.StackTraceAlert;
 import timkodiert.budgetBook.domain.util.EntityManager;
 import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.injector.ControllerFactory;
-import timkodiert.budgetBook.injector.ViewComponent;
 import timkodiert.budgetBook.properties.PropertiesService;
+import timkodiert.budgetBook.view.FxmlResource;
+import timkodiert.budgetBook.view.MainView;
+import timkodiert.budgetBook.view.View;
 import timkodiert.budgetBook.view.importer.ImportView;
+import timkodiert.budgetbook.injector.ControllerFactory;
+import timkodiert.budgetbook.injector.ViewComponent;
 
 import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
 import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;

@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.properties;
+package timkodiert.budgetbook.properties;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,8 +31,9 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
-import timkodiert.budgetBook.Constants;
 import timkodiert.budgetBook.i18n.LanguageManager;
+import timkodiert.budgetBook.properties.PropertiesService;
+import timkodiert.budgetbook.Constants;
 
 @Singleton
 public class PropertiesServiceImpl implements PropertiesService {

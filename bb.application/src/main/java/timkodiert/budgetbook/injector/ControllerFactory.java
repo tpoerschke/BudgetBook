@@ -1,11 +1,10 @@
-package timkodiert.budgetBook.injector;
+package timkodiert.budgetbook.injector;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 import javax.inject.Inject;
 
-import timkodiert.budgetBook.db.MigrationView;
 import timkodiert.budgetBook.view.AnnualOverviewView;
 import timkodiert.budgetBook.view.MonthlyOverview;
 import timkodiert.budgetBook.view.View;
@@ -20,6 +19,7 @@ import timkodiert.budgetBook.view.importer.ImportView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpensesManageView;
 import timkodiert.budgetBook.view.widget.BudgetWidget;
+import timkodiert.budgetbook.db.MigrationView;
 
 public class ControllerFactory {
 

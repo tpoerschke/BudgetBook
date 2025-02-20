@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.properties;
+package timkodiert.budgetbook.properties;
 
 public enum OperationMode {
     DEV, TEST, PRODUCTION;

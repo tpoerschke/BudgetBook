@@ -1,16 +1,12 @@
-package timkodiert.budgetBook.injector;
+package timkodiert.budgetbook.injector;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
 
 import timkodiert.budgetBook.converter.Converters;
-import timkodiert.budgetBook.db.MigrationService;
-import timkodiert.budgetBook.db.MigrationView;
 import timkodiert.budgetBook.domain.repository.RepositoryModule;
-import timkodiert.budgetBook.properties.PropertiesServiceImpl;
 import timkodiert.budgetBook.view.AnnualOverviewView;
-import timkodiert.budgetBook.view.MainViewImpl;
 import timkodiert.budgetBook.view.MonthlyOverview;
 import timkodiert.budgetBook.view.category.CategoriesManageView;
 import timkodiert.budgetBook.view.category.CategoryDetailView;
@@ -23,6 +19,10 @@ import timkodiert.budgetBook.view.importer.ImportView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
 import timkodiert.budgetBook.view.unique_expense.UniqueExpensesManageView;
 import timkodiert.budgetBook.view.widget.BudgetWidget;
+import timkodiert.budgetbook.db.MigrationService;
+import timkodiert.budgetbook.db.MigrationView;
+import timkodiert.budgetbook.properties.PropertiesServiceImpl;
+import timkodiert.budgetbook.view.MainViewImpl;
 
 @Singleton
 @Component(modules = {RepositoryModule.class, ServiceModule.class})

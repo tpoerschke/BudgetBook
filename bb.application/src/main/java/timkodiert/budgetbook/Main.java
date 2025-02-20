@@ -1,17 +1,17 @@
-package timkodiert.budgetBook;
+package timkodiert.budgetbook;
 
 import atlantafx.base.theme.Theme;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import timkodiert.budgetBook.converter.Converters;
-import timkodiert.budgetBook.db.MigrationService;
-import timkodiert.budgetBook.injector.DaggerViewComponent;
-import timkodiert.budgetBook.injector.ViewComponent;
-import timkodiert.budgetBook.properties.OperationMode;
-import timkodiert.budgetBook.properties.PropertiesServiceImpl;
+import timkodiert.budgetbook.db.MigrationService;
+import timkodiert.budgetbook.injector.DaggerViewComponent;
+import timkodiert.budgetbook.injector.ViewComponent;
+import timkodiert.budgetbook.properties.OperationMode;
+import timkodiert.budgetbook.properties.PropertiesServiceImpl;
 
-import static timkodiert.budgetBook.Constants.OPERATION_MODE_ARGUMENT_NAME;
+import static timkodiert.budgetbook.Constants.OPERATION_MODE_ARGUMENT_NAME;
 
 /**
  * Hello world!

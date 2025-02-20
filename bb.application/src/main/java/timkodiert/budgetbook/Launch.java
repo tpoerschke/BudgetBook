@@ -1,4 +1,4 @@
-package timkodiert.budgetBook;
+package timkodiert.budgetbook;
 
 /*
 BudgetBook - Organize your fixed expenses

@@ -1,4 +1,4 @@
-package timkodiert.budgetBook.db;
+package timkodiert.budgetbook.db;
 
 import java.net.URL;
 import java.util.ResourceBundle;
