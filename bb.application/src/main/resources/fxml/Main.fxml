@@ -22,13 +22,14 @@
               <MenuItem mnemonicParsing="false" onAction="#openSettingsView" text="%menuItem.openSettingsView"/>
           </Menu>
             <Menu mnemonicParsing="false" text="%menuBar.buttonViews">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#showAnnualOverview" text="%menuItem.showAnnualOverview" />
-                  <MenuItem mnemonicParsing="false" onAction="#showMonthlyOverview" text="%menuItem.showMonthlyOverview">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
-               </items>
+                <MenuItem mnemonicParsing="false" onAction="#showAnnualOverview" text="%menuItem.showAnnualOverview"/>
+                <MenuItem mnemonicParsing="false" onAction="#showMonthlyOverview" text="%menuItem.showMonthlyOverview">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false" onAction="#showAnalysisView" text="Analyse"/>
             </Menu>
             <Menu mnemonicParsing="false" text="%menuBar.buttonData">
               <items>

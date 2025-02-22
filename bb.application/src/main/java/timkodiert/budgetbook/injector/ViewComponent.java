@@ -5,9 +5,14 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 import timkodiert.budgetbook.converter.Converters;
+import timkodiert.budgetbook.db.MigrationService;
+import timkodiert.budgetbook.db.MigrationView;
 import timkodiert.budgetbook.domain.repository.RepositoryModule;
+import timkodiert.budgetbook.properties.PropertiesServiceImpl;
 import timkodiert.budgetbook.view.AnnualOverviewView;
+import timkodiert.budgetbook.view.MainViewImpl;
 import timkodiert.budgetbook.view.MonthlyOverview;
+import timkodiert.budgetbook.view.analysis.AnalysisView;
 import timkodiert.budgetbook.view.category.CategoriesManageView;
 import timkodiert.budgetbook.view.category.CategoryDetailView;
 import timkodiert.budgetbook.view.category_group.CategoryGroupDetailView;
@@ -19,10 +24,6 @@ import timkodiert.budgetbook.view.importer.ImportView;
 import timkodiert.budgetbook.view.unique_expense.UniqueExpenseDetailView;
 import timkodiert.budgetbook.view.unique_expense.UniqueExpensesManageView;
 import timkodiert.budgetbook.view.widget.BudgetWidget;
-import timkodiert.budgetbook.db.MigrationService;
-import timkodiert.budgetbook.db.MigrationView;
-import timkodiert.budgetbook.properties.PropertiesServiceImpl;
-import timkodiert.budgetbook.view.MainViewImpl;
 
 @Singleton
 @Component(modules = {RepositoryModule.class, ServiceModule.class})
@@ -35,6 +36,11 @@ public interface ViewComponent {
     AnnualOverviewView getAnnualOverviewView();
     MonthlyOverview getMonthlyOverview();
     BudgetWidget getBudgetWidget();
+
+    // -----------------------------------
+    // Analyse
+    // -----------------------------------
+    AnalysisView getAnalysisView();
 
     // -----------------------------------
     // Kategorien Ausgaben

@@ -23,11 +23,12 @@ import org.jetbrains.annotations.Nullable;
 import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.util.EntityManager;
 import timkodiert.budgetbook.i18n.LanguageManager;
+import timkodiert.budgetbook.injector.ControllerFactory;
 import timkodiert.budgetbook.properties.PropertiesService;
 import timkodiert.budgetbook.view.importer.ImportView;
-import timkodiert.budgetbook.injector.ControllerFactory;
 
 import static timkodiert.budgetbook.properties.PropertiesService.USE_SYSTEM_MENU_BAR;
+import static timkodiert.budgetbook.view.FxmlResource.ANALYSIS_VIEW;
 import static timkodiert.budgetbook.view.FxmlResource.ANNUAL_OVERVIEW;
 import static timkodiert.budgetbook.view.FxmlResource.IMPORT_VIEW;
 import static timkodiert.budgetbook.view.FxmlResource.MAIN_VIEW;
@@ -118,6 +119,11 @@ public class MainViewImpl implements Initializable, MainView {
     @FXML
     public void showAnnualOverview(ActionEvent event) {
         loadViewPartial(ANNUAL_OVERVIEW);
+    }
+
+    @FXML
+    private void showAnalysisView() {
+        loadViewPartial(ANALYSIS_VIEW);
     }
 
     @FXML
