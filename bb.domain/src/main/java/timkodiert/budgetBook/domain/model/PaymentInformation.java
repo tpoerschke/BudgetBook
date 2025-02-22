@@ -51,14 +51,10 @@ public class PaymentInformation extends BaseEntity {
     }
 
     public boolean validFor(MonthYear monthYear) {
-        if (this.start != null && this.start.compareTo(monthYear) == 1) {
+        if (this.start != null && this.start.compareTo(monthYear) > 0) {
             return false;
         }
-        if (this.end != null && this.end.compareTo(monthYear) == -1) {
-            return false;
-        }
-
-        return true;
+        return this.end == null || this.end.compareTo(monthYear) >= 0;
     }
 
     public void setMonthsOfPayment(List<Integer> monthsOfPayment) {

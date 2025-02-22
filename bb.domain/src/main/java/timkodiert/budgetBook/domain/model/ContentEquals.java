@@ -10,7 +10,7 @@ public interface ContentEquals {
 
     static boolean listsContentEquals(List<? extends ContentEquals> l1, List<? extends ContentEquals> l2) {
         Set<ContentEquals> matched = new HashSet<>();
-        return l1.stream().map(i -> {
+        return l1.stream().allMatch(i -> {
             for (ContentEquals e : l2) {
                 if (i.contentEquals(e) && !matched.contains(e)) {
                     matched.add(e);
@@ -18,6 +18,6 @@ public interface ContentEquals {
                 }
             }
             return false;
-        }).allMatch(b -> b.booleanValue());
+        });
     }
 }

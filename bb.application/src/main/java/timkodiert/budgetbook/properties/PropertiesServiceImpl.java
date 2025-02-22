@@ -66,9 +66,13 @@ public class PropertiesServiceImpl implements PropertiesService {
             this.properties.setProperty(USE_SYSTEM_MENU_BAR, "true");
             this.properties.setProperty(LANGUAGE, "Deutsch");
             this.properties.setProperty(THEME, "0");
-            this.properties.store(new FileWriter(propsFile), "Store initial props");
+            try (FileWriter fileWriter = new FileWriter(propsFile)) {
+                this.properties.store(fileWriter, "Store initial props");
+            }
         } else {
-            this.properties.load(new FileInputStream(getPropertiesPath()));
+            try (FileInputStream fis = new FileInputStream(getPropertiesPath())) {
+                this.properties.load(fis);
+            }
         }
         initializeDataStructures();
     }

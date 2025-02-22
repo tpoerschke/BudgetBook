@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetBook.dialog.DialogFactory;
@@ -28,7 +29,7 @@ public abstract class BaseListManageView<T extends BaseEntity & Adaptable<A>, A 
     protected final Repository<T> repository;
     private final DialogFactory dialogFactory;
 
-    public BaseListManageView(Supplier<T> emptyEntityProducer,
+    protected BaseListManageView(Supplier<T> emptyEntityProducer,
                               Repository<T> repository,
                               FXMLLoader fxmlLoader,
                               DialogFactory dialogFactory,
@@ -44,28 +45,33 @@ public abstract class BaseListManageView<T extends BaseEntity & Adaptable<A>, A 
 
         entityTable.setRowFactory(tableView -> {
             TableRow<A> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 1 && !row.isEmpty()) {
-                    if (detailView.isDirty()) {
-                        Alert alert = dialogFactory.buildConfirmationDialog();
-                        Optional<ButtonType> result = alert.showAndWait();
-                        if (result.get().equals(DialogFactory.CANCEL)) {
-                            entityTable.getSelectionModel().select(detailView.getEntity().get().getAdapter());
-                            return;
-                        }
-                        if (result.get().equals(DialogFactory.SAVE_CHANGES) && !detailView.save()) {
-                            entityTable.getSelectionModel().select(detailView.getEntity().get().getAdapter());
-                            return;
-                        }
-                    }
-
-                    detailView.setEntity(row.getItem().getBean());
-                }
-            });
+            row.setOnMouseClicked(event -> handleMouseClickOnTableRow(event, row));
             return row;
         });
 
         initControls();
+    }
+
+    private void handleMouseClickOnTableRow(MouseEvent event, TableRow<A> row) {
+        if (event.getClickCount() != 1 || row.isEmpty()) {
+            return;
+        }
+        if (!detailView.isDirty()) {
+            detailView.setEntity(row.getItem().getBean());
+            return;
+        }
+
+        Alert alert = dialogFactory.buildConfirmationDialog();
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.orElseThrow().equals(DialogFactory.CANCEL)) {
+            entityTable.getSelectionModel().select(detailView.getEntity().get().getAdapter());
+            return;
+        }
+        if (result.orElseThrow().equals(DialogFactory.SAVE_CHANGES) && !detailView.save()) {
+            entityTable.getSelectionModel().select(detailView.getEntity().get().getAdapter());
+            return;
+        }
+        detailView.setEntity(row.getItem().getBean());
     }
 
     @Override

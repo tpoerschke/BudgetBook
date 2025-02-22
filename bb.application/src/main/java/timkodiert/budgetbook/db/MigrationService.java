@@ -29,7 +29,6 @@ import timkodiert.budgetbook.injector.ControllerFactory;
 public class MigrationService {
 
     private final LanguageManager languageManager;
-    private final PropertiesService propertiesService;
     private final ControllerFactory controllerFactory;
 
     private final Flyway flyway;
@@ -44,7 +43,6 @@ public class MigrationService {
     @Inject
     public MigrationService(LanguageManager languageManager, PropertiesService propertiesService, ControllerFactory controllerFactory) {
         this.languageManager = languageManager;
-        this.propertiesService = propertiesService;
         this.controllerFactory = controllerFactory;
         flyway = Flyway.configure()
                        .dataSource(propertiesService.getDbPath(), "bb", "")
@@ -119,6 +117,9 @@ public class MigrationService {
                 case AFTER_EACH_MIGRATE -> numMigrated.set(numMigrated.get() + 1);
                 case AFTER_MIGRATE_ERROR -> migrationError.set(true);
                 case AFTER_MIGRATE_OPERATION_FINISH -> migrationFinished.set(true);
+                default -> {
+                    // Andere Events sind nicht relevant
+                }
             }
         }
 
