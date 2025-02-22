@@ -3,8 +3,9 @@ target/
 *.db
 *.app
 dependency-reduced-pom.xml
-JBudgetBook
+JBudgetBook.app.zip
 JBudgetBook.tar.gz
 env.tex
 
 .idea/ClojureProjectResolveSettings.xml
+.idea/sonarlint.xml

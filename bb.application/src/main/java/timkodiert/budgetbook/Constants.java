@@ -3,7 +3,10 @@ package timkodiert.budgetbook;
 import java.nio.file.Path;
 
 public class Constants {
-        
+
+        private Constants() {
+        }
+
         public static final String INITIAL_AMOUNT_STRING = "0,00 €";
 
         public static final String OPERATION_MODE_ARGUMENT_NAME = "mode";

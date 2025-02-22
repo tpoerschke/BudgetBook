@@ -12,12 +12,13 @@ import javafx.scene.control.ButtonType;
 
 public class DialogFactory {
 
-    public static ButtonType CANCEL = new ButtonType("Abbrechen", ButtonData.CANCEL_CLOSE);
-    public static ButtonType SAVE_CHANGES = new ButtonType("Änderungen speichern", ButtonData.YES);
-    public static ButtonType DISCARD_CHANGES = new ButtonType("Änderungen verwerfen", ButtonData.NO);
+    public static final ButtonType CANCEL = new ButtonType("Abbrechen", ButtonData.CANCEL_CLOSE);
+    public static final ButtonType SAVE_CHANGES = new ButtonType("Änderungen speichern", ButtonData.YES);
+    public static final ButtonType DISCARD_CHANGES = new ButtonType("Änderungen verwerfen", ButtonData.NO);
 
     @Inject
     public DialogFactory() {
+        // Default-Konstruktor für Inject-Annotation
     }
 
     public Alert buildConfirmationDialog() {

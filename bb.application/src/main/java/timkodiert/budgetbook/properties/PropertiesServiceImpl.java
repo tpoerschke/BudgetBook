@@ -61,11 +61,11 @@ public class PropertiesServiceImpl implements PropertiesService {
         if (!propsFile.exists()) {
             Path.of(propsFile.getParent()).toFile().mkdirs();
             propsFile.createNewFile();
-            this.properties.setProperty("db", "jdbc:sqlite:"
+            this.properties.setProperty(DB, "jdbc:sqlite:"
                     + Path.of(System.getProperty("user.home"), Constants.DATA_DIR, "sqlite.db").toString());
-            this.properties.setProperty("useSystemMenuBar", "true");
-            this.properties.setProperty("language", "Deutsch");
-            this.properties.setProperty("theme", "0");
+            this.properties.setProperty(USE_SYSTEM_MENU_BAR, "true");
+            this.properties.setProperty(LANGUAGE, "Deutsch");
+            this.properties.setProperty(THEME, "0");
             this.properties.store(new FileWriter(propsFile), "Store initial props");
         } else {
             this.properties.load(new FileInputStream(getPropertiesPath()));
@@ -96,20 +96,20 @@ public class PropertiesServiceImpl implements PropertiesService {
         ComboBox<String> languageComboBox = new ComboBox<>();
         languageComboBox.getItems().addAll("Deutsch", "English");
         languageComboBox.setPromptText(languageManager.get().get("settings.prompt.selectLanguage")); // replace label according to current language
-        languageComboBox.setValue(properties.getProperty("language"));
+        languageComboBox.setValue(properties.getProperty(LANGUAGE));
         grid.add(new Label(languageManager.get().get("settings.label.language")), 0, 0);
         grid.add(languageComboBox, 1, 0);
 
         // DB JDBC Path TextField
         TextField jdbcPathTextField = new TextField();
         jdbcPathTextField.setPromptText("Enter JDBC Path");
-        jdbcPathTextField.setText(properties.getProperty("db"));
+        jdbcPathTextField.setText(properties.getProperty(DB));
         grid.add(new Label("DB JDBC Path:"), 0, 1);
         grid.add(jdbcPathTextField, 1, 1);
 
         // Use System Menu Bar CheckBox
         CheckBox useSystemMenuBarCheckBox = new CheckBox("Use System Menu Bar");
-        useSystemMenuBarCheckBox.setSelected(Boolean.parseBoolean(properties.getProperty("useSystemMenuBar")));
+        useSystemMenuBarCheckBox.setSelected(Boolean.parseBoolean(properties.getProperty(USE_SYSTEM_MENU_BAR)));
         grid.add(useSystemMenuBarCheckBox, 0, 2, 2, 1);
 
         ComboBox<ThemeOption> themeComboBox = new ComboBox<>();
@@ -134,16 +134,15 @@ public class PropertiesServiceImpl implements PropertiesService {
         saveBtn.setOnAction(event -> {
             try {
                 Properties newProps = new Properties();
-                newProps.setProperty("language", languageComboBox.getValue());
-                newProps.setProperty("db", jdbcPathTextField.getText());
-                newProps.setProperty("useSystemMenuBar", String.valueOf(useSystemMenuBarCheckBox.isSelected()));
-                newProps.setProperty("theme", themeComboBox.getValue().getId());
+                newProps.setProperty(LANGUAGE, languageComboBox.getValue());
+                newProps.setProperty(DB, jdbcPathTextField.getText());
+                newProps.setProperty(USE_SYSTEM_MENU_BAR, String.valueOf(useSystemMenuBarCheckBox.isSelected()));
+                newProps.setProperty(THEME, themeComboBox.getValue().getId());
                 // Speichern
                 File propsFile = Path.of(getPropertiesPath()).toFile();
                 this.properties = newProps;
                 this.properties.store(new FileWriter(propsFile), "JBudgetBook properties");
-                Alert alert = new Alert(AlertType.INFORMATION,
-                                        languageManager.get().get("settings.alert.savedPleaseRestart"));
+                Alert alert = new Alert(AlertType.INFORMATION, languageManager.get().get("settings.alert.savedPleaseRestart"));
                 alert.showAndWait();
             } catch (Exception e) {
                 Alert alert = new Alert(AlertType.ERROR, languageManager.get().get("settings.alert.saveError"));
@@ -166,14 +165,10 @@ public class PropertiesServiceImpl implements PropertiesService {
     }
 
     private ThemeOption getCurrentThemeOption() {
-        return themeComboBoxItems
-                .stream()
-                .filter(e -> e.getId()
-                              .equals(
-                                      properties.getProperty("theme")
-                              )
-                ).findFirst()
-                .orElse(themeComboBoxItems.get(0));
+        return themeComboBoxItems.stream()
+                                 .filter(e -> e.getId().equals(properties.getProperty(THEME)))
+                                 .findFirst()
+                                 .orElse(themeComboBoxItems.getFirst());
     }
 
     public Class<? extends Theme> getTheme() {
@@ -182,12 +177,12 @@ public class PropertiesServiceImpl implements PropertiesService {
 
     @Override
     public String getDbPath() {
-        return properties.getProperty("db");
+        return properties.getProperty(DB);
     }
 
     @Override
     public String getLanguage() {
-        return properties.getProperty("language");
+        return properties.getProperty(LANGUAGE);
     }
 
     private String getPropertiesPath() {

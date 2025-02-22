@@ -29,8 +29,8 @@ import timkodiert.budgetBook.view.MainView;
 import timkodiert.budgetBook.view.View;
 import timkodiert.budgetBook.view.importer.ImportView;
 import timkodiert.budgetbook.injector.ControllerFactory;
-import timkodiert.budgetbook.injector.ViewComponent;
 
+import static timkodiert.budgetBook.properties.PropertiesService.USE_SYSTEM_MENU_BAR;
 import static timkodiert.budgetBook.view.FxmlResource.ANNUAL_OVERVIEW;
 import static timkodiert.budgetBook.view.FxmlResource.IMPORT_VIEW;
 import static timkodiert.budgetBook.view.FxmlResource.MAIN_VIEW;
@@ -51,15 +51,13 @@ public class MainViewImpl implements Initializable, MainView {
     @FXML
     private RadioMenuItem viewMenuItem1, viewMenuItem2;
 
-    private final ViewComponent viewComponent;
     private final ControllerFactory controllerFactory;
     private final EntityManager entityManager;
     private final PropertiesService propertiesService;
     private final LanguageManager languageManager;
 
     @Inject
-    public MainViewImpl(ViewComponent viewComponent, ControllerFactory controllerFactory, EntityManager entityManager, PropertiesService propertiesService, LanguageManager languageManager) {
-        this.viewComponent = viewComponent;
+    public MainViewImpl(ControllerFactory controllerFactory, EntityManager entityManager, PropertiesService propertiesService, LanguageManager languageManager) {
         this.controllerFactory = controllerFactory;
         this.entityManager = entityManager;
         this.propertiesService = propertiesService;
@@ -87,7 +85,7 @@ public class MainViewImpl implements Initializable, MainView {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        boolean useSystemMenuBar = "true".equals(propertiesService.getProperties().getProperty("useSystemMenuBar", "false")); // <- das mach ich noch besser ... bestimmt :D
+        boolean useSystemMenuBar = "true".equals(propertiesService.getProperties().getProperty(USE_SYSTEM_MENU_BAR, "false"));
         menuBar.useSystemMenuBarProperty().set(useSystemMenuBar);
 
         // Das Kind laden (default)

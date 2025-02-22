@@ -3,7 +3,7 @@ package timkodiert.budgetBook.importer;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Predicate;
 import javax.inject.Inject;
@@ -36,7 +36,7 @@ public class TurnoverImporter {
     }
 
     public TurnoverImporter parse(File file) throws IOException, IllegalStateException {
-        var builder = new CsvToBeanBuilder<AccountTurnover>(new FileReader(file, Charset.forName("UTF-8")));
+        var builder = new CsvToBeanBuilder<AccountTurnover>(new FileReader(file, StandardCharsets.UTF_8));
         List<AccountTurnover> imports = builder.withSkipLines(SKIP_LINES).withSeparator(';').withType(AccountTurnover.class).build().parse();
         importInformationList.setAll(imports.stream().map(ImportInformation::from).toList());
         return this;
