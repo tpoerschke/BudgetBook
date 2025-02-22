@@ -31,8 +31,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
-import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.properties.PropertiesService;
+import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.Constants;
 
 @Singleton

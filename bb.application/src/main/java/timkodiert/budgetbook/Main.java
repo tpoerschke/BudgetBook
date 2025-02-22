@@ -4,7 +4,7 @@ import atlantafx.base.theme.Theme;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import timkodiert.budgetBook.converter.Converters;
+import timkodiert.budgetbook.converter.Converters;
 import timkodiert.budgetbook.db.MigrationService;
 import timkodiert.budgetbook.injector.DaggerViewComponent;
 import timkodiert.budgetbook.injector.ViewComponent;

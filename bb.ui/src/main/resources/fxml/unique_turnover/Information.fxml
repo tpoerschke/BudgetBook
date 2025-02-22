@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckListView?>
-<?import timkodiert.budgetBook.ui.control.AutoCompleteTextField?>
+<?import timkodiert.budgetbook.ui.control.AutoCompleteTextField?>
 <BorderPane stylesheets="@../../../../../../src/main/resources/css/general-styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <VBox prefWidth="300.0" spacing="20.0">

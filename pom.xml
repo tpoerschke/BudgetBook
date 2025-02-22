@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>timkodiert.budgetBook</groupId>
+  <groupId>timkodiert.budgetbook</groupId>
   <artifactId>budget-book</artifactId>
   <name>jBudgetBook</name>
   <url>https://timkodiert.de</url>
@@ -18,8 +18,8 @@
     <sonar.organization>tpoerschke</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
-    <main.class>timkodiert.budgetBook.Main</main.class>
-    <launcher.class>timkodiert.budgetBook.Launch</launcher.class>
+    <main.class>timkodiert.budgetbook.Main</main.class>
+    <launcher.class>timkodiert.budgetbook.Launch</launcher.class>
 
     <maven.exec.skip>false</maven.exec.skip>
 

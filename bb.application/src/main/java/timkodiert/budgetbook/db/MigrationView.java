@@ -13,9 +13,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-import timkodiert.budgetBook.dialog.DialogFactory;
-import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.view.View;
+import timkodiert.budgetbook.dialog.DialogFactory;
+import timkodiert.budgetbook.i18n.LanguageManager;
+import timkodiert.budgetbook.view.View;
 
 public class MigrationView implements View, Initializable {
 

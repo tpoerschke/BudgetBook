@@ -20,9 +20,9 @@ import org.flywaydb.core.api.callback.Callback;
 import org.flywaydb.core.api.callback.Context;
 import org.flywaydb.core.api.callback.Event;
 
-import timkodiert.budgetBook.dialog.StackTraceAlert;
-import timkodiert.budgetBook.i18n.LanguageManager;
-import timkodiert.budgetBook.properties.PropertiesService;
+import timkodiert.budgetbook.dialog.StackTraceAlert;
+import timkodiert.budgetbook.i18n.LanguageManager;
+import timkodiert.budgetbook.properties.PropertiesService;
 import timkodiert.budgetbook.injector.ControllerFactory;
 
 @Singleton

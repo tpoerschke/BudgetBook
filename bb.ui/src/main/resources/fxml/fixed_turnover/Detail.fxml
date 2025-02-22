@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.CheckListView?>
 <BorderPane fx:id="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverDetailView">
+            fx:controller="timkodiert.budgetbook.view.fixed_turnover.FixedTurnoverDetailView">
    <center>
       <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
          <Tab text="%editExpense.tab.information">

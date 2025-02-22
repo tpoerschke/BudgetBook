@@ -6,8 +6,8 @@ import dagger.Binds;
 import dagger.Module;
 import javafx.fxml.FXMLLoader;
 
-import timkodiert.budgetBook.properties.PropertiesService;
-import timkodiert.budgetBook.view.MainView;
+import timkodiert.budgetbook.properties.PropertiesService;
+import timkodiert.budgetbook.view.MainView;
 import timkodiert.budgetbook.properties.PropertiesServiceImpl;
 import timkodiert.budgetbook.view.BbFxmlLoader;
 import timkodiert.budgetbook.view.MainViewImpl;

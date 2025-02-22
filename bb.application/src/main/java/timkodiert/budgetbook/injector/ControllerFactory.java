@@ -5,20 +5,20 @@ import java.util.Map;
 import java.util.function.Supplier;
 import javax.inject.Inject;
 
-import timkodiert.budgetBook.view.AnnualOverviewView;
-import timkodiert.budgetBook.view.MonthlyOverview;
-import timkodiert.budgetBook.view.View;
-import timkodiert.budgetBook.view.category.CategoriesManageView;
-import timkodiert.budgetBook.view.category.CategoryDetailView;
-import timkodiert.budgetBook.view.category_group.CategoryGroupDetailView;
-import timkodiert.budgetBook.view.category_group.CategoryGroupManageView;
-import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverDetailView;
-import timkodiert.budgetBook.view.fixed_turnover.FixedTurnoverManageView;
-import timkodiert.budgetBook.view.importer.FixedTurnoverWizardView;
-import timkodiert.budgetBook.view.importer.ImportView;
-import timkodiert.budgetBook.view.unique_expense.UniqueExpenseDetailView;
-import timkodiert.budgetBook.view.unique_expense.UniqueExpensesManageView;
-import timkodiert.budgetBook.view.widget.BudgetWidget;
+import timkodiert.budgetbook.view.AnnualOverviewView;
+import timkodiert.budgetbook.view.MonthlyOverview;
+import timkodiert.budgetbook.view.View;
+import timkodiert.budgetbook.view.category.CategoriesManageView;
+import timkodiert.budgetbook.view.category.CategoryDetailView;
+import timkodiert.budgetbook.view.category_group.CategoryGroupDetailView;
+import timkodiert.budgetbook.view.category_group.CategoryGroupManageView;
+import timkodiert.budgetbook.view.fixed_turnover.FixedTurnoverDetailView;
+import timkodiert.budgetbook.view.fixed_turnover.FixedTurnoverManageView;
+import timkodiert.budgetbook.view.importer.FixedTurnoverWizardView;
+import timkodiert.budgetbook.view.importer.ImportView;
+import timkodiert.budgetbook.view.unique_expense.UniqueExpenseDetailView;
+import timkodiert.budgetbook.view.unique_expense.UniqueExpensesManageView;
+import timkodiert.budgetbook.view.widget.BudgetWidget;
 import timkodiert.budgetbook.db.MigrationView;
 
 public class ControllerFactory {
