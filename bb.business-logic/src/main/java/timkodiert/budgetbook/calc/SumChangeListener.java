@@ -8,7 +8,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-public class SumChangeListener<T extends Number> extends AbstractSumChangeListener<T> implements ChangeListener<T> {
+public class SumChangeListener<T extends Number> extends AbstractSumChangeListener implements ChangeListener<T> {
 
     private final List<DoubleProperty> propsToSum;
     

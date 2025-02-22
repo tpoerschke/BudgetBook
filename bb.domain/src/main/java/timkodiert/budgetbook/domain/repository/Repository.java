@@ -12,7 +12,7 @@ public abstract class Repository<T> {
     protected EntityManager entityManager;
     protected final Class<T> entityType;
 
-    public Repository(Class<T> entityType) {
+    protected Repository(Class<T> entityType) {
         this.entityType = entityType;
     }
 

@@ -26,7 +26,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
@@ -249,36 +248,5 @@ public class MonthlyOverview implements Initializable, View {
     private <T> void initDataGroup(List<T> expenses, Function<T, TableData> expToData, ToDoubleFunction<T> expToTotalValue, String groupName, RowType groupRowType) {
         data.add(new TableData(null, groupName, expenses.stream().mapToDouble(expToTotalValue).sum(), null, null, false, groupRowType));
         data.addAll(expenses.stream().map(expToData).toList());
-    }
-
-    private class BudgetListCell extends ListCell<Category> {
-
-        private BudgetWidget budgetWidget;
-
-        BudgetListCell() {
-            super();
-            FXMLLoader loader = fxmlLoader.get();
-            loader.setLocation(getClass().getResource(FxmlResource.BUDGET_WIDGET.getPath()));
-            try {
-                loader.load();
-                budgetWidget = loader.getController();
-                budgetWidget.getSelectedMonthYearProperty().bind(monthFilter);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected void updateItem(Category item, boolean empty) {
-
-            if (empty || item == null || budgetWidget == null) {
-                setGraphic(null);
-                return;
-            }
-
-            budgetWidget.getCategoryProperty().set(item);
-            setGraphic(budgetWidget.getRoot());
-            //setHeight(budgetWidget.getRoot().getHeight());
-        }
     }
 }

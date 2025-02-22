@@ -10,6 +10,10 @@ import timkodiert.budgetbook.table.RowType;
 
 public class ToTableDataMapper {
 
+    private ToTableDataMapper() {
+        // Statische Klasse
+    }
+
     public static TableData mapUniqueExpense(UniqueTurnover expense) {
         String categories = String.join(", ",
                                         expense.getPaymentInformations().stream().flatMap(info -> info.getCategories().stream()).map(Category::getName).collect(toSet()));

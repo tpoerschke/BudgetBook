@@ -19,11 +19,8 @@ import timkodiert.budgetbook.i18n.LanguageManager;
 
 public class MonthFilter implements ObservableValue<MonthYear> {
 
-    private final LanguageManager languageManager;
-
     private final ComboBox<String> selectedMonthBox;
     private final ComboBox<Integer> selectedYearBox;
-    private Button nextBtn, prevBtn;
 
     private final Set<ChangeListener<? super MonthYear>> listeners = new HashSet<>();
     private final Set<InvalidationListener> invalidationListeners = new HashSet<>();
@@ -35,12 +32,8 @@ public class MonthFilter implements ObservableValue<MonthYear> {
                        @Assisted("selectedYearBox") ComboBox<Integer> selectedYearBox,
                        @Assisted("nextBtn") Button nextBtn,
                        @Assisted("prevBtn") Button prevBtn) {
-        this.languageManager = languageManager;
         this.selectedMonthBox = selectedMonthBox;
         this.selectedYearBox = selectedYearBox;
-
-        this.nextBtn = nextBtn;
-        this.prevBtn = prevBtn;
 
         nextBtn.setGraphic(new FontIcon(BootstrapIcons.CHEVRON_RIGHT));
         nextBtn.setText("");
@@ -54,12 +47,8 @@ public class MonthFilter implements ObservableValue<MonthYear> {
         selectedYearBox.getSelectionModel().selectedItemProperty().addListener(this::yearBoxListener);
         setSelection(value);
 
-        nextBtn.setOnAction(event -> {
-            setSelection(value.plusMonths(1));
-        });
-        prevBtn.setOnAction(event -> {
-            setSelection(value.plusMonths(-1));
-        });
+        nextBtn.setOnAction(event -> setSelection(value.plusMonths(1)));
+        prevBtn.setOnAction(event -> setSelection(value.plusMonths(-1)));
     }
 
     private void monthBoxListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {

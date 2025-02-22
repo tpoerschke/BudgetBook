@@ -7,7 +7,7 @@ import java.util.Locale;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 
-public class AbstractSumChangeListener<T> {
+public class AbstractSumChangeListener {
 
     protected final DoubleProperty sumProp;
     protected final StringProperty sumTextProp;

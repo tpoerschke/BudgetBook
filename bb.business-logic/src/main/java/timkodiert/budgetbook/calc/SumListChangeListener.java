@@ -10,7 +10,7 @@ import javafx.collections.ObservableList;
 import timkodiert.budgetbook.domain.adapter.FixedTurnoverAdapter;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 
-public class SumListChangeListener<T extends FixedTurnoverAdapter> extends AbstractSumChangeListener<T> implements ListChangeListener<T> {
+public class SumListChangeListener<T extends FixedTurnoverAdapter> extends AbstractSumChangeListener implements ListChangeListener<T> {
 
     protected final ObservableList<T> observableList;
     private final ToDoubleFunction<FixedTurnover> doubleMapper;
