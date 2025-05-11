@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.StackPane?>
-<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="timkodiert.budgetbook.view.analysis.AnalysisView">
-    <Label text="Analyse" />
-</StackPane>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="timkodiert.budgetbook.view.analysis.AnalysisView">
+    <top>
+        <VBox spacing="10.0" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </BorderPane.margin>
+            <Label styleClass="text-bold" text="Analyse"/>
+            <GridPane>
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES"/>
+                    <ColumnConstraints hgrow="SOMETIMES"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                </rowConstraints>
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label text="Zeitraum"/>
+                    <ComboBox fx:id="periodComboBox"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1">
+                    <Label text="Kategorie"/>
+                    <ComboBox fx:id="categoryComboBox"/>
+                </HBox>
+            </GridPane>
+        </VBox>
+    </top>
+</BorderPane>

@@ -11,6 +11,9 @@ public interface ContentEquals {
     static boolean listsContentEquals(List<? extends ContentEquals> l1, List<? extends ContentEquals> l2) {
         Set<ContentEquals> matched = new HashSet<>();
         return l1.stream().allMatch(i -> {
+            if (i == null) {
+                return false;
+            }
             for (ContentEquals e : l2) {
                 if (i.contentEquals(e) && !matched.contains(e)) {
                     matched.add(e);

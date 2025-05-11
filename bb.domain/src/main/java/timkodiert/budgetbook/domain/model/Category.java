@@ -78,12 +78,12 @@ public class Category extends BaseEntity implements Adaptable<CategoryAdapter> {
 
     public double sumTurnovers(MonthYear monthYear) {
         return switch (budgetType) {
-            case MONTHLY -> sumMonthlyBudget(monthYear);
+            case MONTHLY -> sumTurnoversForMonth(monthYear);
             case ANNUAL -> sumAnnualBudget(monthYear.getYear());
         };
     }
 
-    private double sumMonthlyBudget(MonthYear monthYear) {
+    public double sumTurnoversForMonth(MonthYear monthYear) {
         double sum = 0;
         sum += fixedExpenses.stream().mapToDouble(ft -> ft.getValueFor(monthYear)).sum();
         sum += uniqueExpenseInformation.stream()
