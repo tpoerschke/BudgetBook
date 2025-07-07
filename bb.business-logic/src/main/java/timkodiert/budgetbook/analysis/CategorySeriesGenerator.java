@@ -23,7 +23,7 @@ public class CategorySeriesGenerator {
         AtomicReference<Double> lastValue = new AtomicReference<>(0.0);
         IntStream.range(0, monthYearList.size()).forEach(i -> {
             double categoryVal = category.sumTurnoversForMonth(monthYearList.get(i));
-            items.add(lastValue.updateAndGet(v -> v + categoryVal));
+            items.add(lastValue.updateAndGet(v -> v + Math.min(categoryVal, 0)));
         });
         return items.stream().map(this::round).map(Math::abs).toList();
     }
@@ -35,7 +35,7 @@ public class CategorySeriesGenerator {
             double categoryVal = category.sumTurnoversForMonth(monthYearList.get(i));
             items.add(categoryVal);
         });
-        return items.stream().map(this::round).map(Math::abs).toList();
+        return items.stream().map(item -> Math.min(item, 0)).map(this::round).map(Math::abs).toList();
     }
 
     private double round(Number value) {
