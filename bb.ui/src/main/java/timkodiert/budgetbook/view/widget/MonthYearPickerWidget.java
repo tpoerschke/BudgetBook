@@ -22,6 +22,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -32,19 +33,25 @@ import static timkodiert.budgetbook.view.FxmlResource.MONTH_YEAR_PICKER_WIDGET;
 
 public class MonthYearPickerWidget implements Initializable {
 
+    public enum ViewMode {
+        DEFAULT, INLINE
+    }
+
     @FXML
     private ChoiceBox<String> monthChoiceBox;
     @FXML
     private TextField yearTextField;
     @FXML
-    private Label label;
+    private VBox widgetContainer;
     @FXML
     private HBox widgetInnerContainer;
+    private final Label label = new Label();
     private final Button resetBtn = new Button("", new FontIcon(BootstrapIcons.TRASH));
 
     private final LanguageManager languageManager;
     private final String labelStr;
     private final boolean showResetBtn;
+    private final ViewMode viewMode;
     private MonthYear value;
 
     @AssistedInject
@@ -52,11 +59,13 @@ public class MonthYearPickerWidget implements Initializable {
                                  @Assisted Pane parent,
                                  @Assisted String labelStr,
                                  @Assisted MonthYear initialValue,
-                                 @Assisted boolean showResetBtn) {
+                                 @Assisted boolean showResetBtn,
+                                 @Assisted ViewMode viewMode) {
         this.languageManager = languageManager;
         this.value = initialValue;
         this.labelStr = labelStr;
         this.showResetBtn = showResetBtn;
+        this.viewMode = viewMode;
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(MONTH_YEAR_PICKER_WIDGET.toString()));
@@ -116,7 +125,15 @@ public class MonthYearPickerWidget implements Initializable {
         }
 
         // Styling setzen
-        monthChoiceBox.getStyleClass().add(Styles.LEFT_PILL);
+        if (viewMode == ViewMode.INLINE) {
+            widgetInnerContainer.getChildren().addFirst(label);
+            label.getStyleClass().add(Styles.LEFT_PILL);
+            monthChoiceBox.getStyleClass().add(Styles.CENTER_PILL);
+        } else {
+            widgetContainer.getChildren().addFirst(label);
+            monthChoiceBox.getStyleClass().add(Styles.LEFT_PILL);
+        }
+
         if (showResetBtn) {
             resetBtn.getStyleClass().add(Styles.RIGHT_PILL);
             yearTextField.getStyleClass().add(Styles.CENTER_PILL);
