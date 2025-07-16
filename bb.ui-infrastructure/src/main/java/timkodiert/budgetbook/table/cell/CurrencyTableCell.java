@@ -9,8 +9,8 @@ import javafx.scene.text.Font;
 
 import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
 import timkodiert.budgetbook.domain.model.PaymentType;
-import timkodiert.budgetbook.table.RowType;
-import timkodiert.budgetbook.util.HasType;
+import timkodiert.budgetbook.domain.table.RowType;
+import timkodiert.budgetbook.domain.util.HasType;
 
 import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 

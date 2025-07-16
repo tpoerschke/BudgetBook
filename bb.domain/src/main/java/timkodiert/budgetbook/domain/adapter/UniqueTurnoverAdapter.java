@@ -9,8 +9,8 @@ import javafx.beans.property.adapter.ReadOnlyJavaBeanStringPropertyBuilder;
 import lombok.Getter;
 
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
-import timkodiert.budgetbook.table.RowType;
-import timkodiert.budgetbook.util.HasType;
+import timkodiert.budgetbook.domain.table.RowType;
+import timkodiert.budgetbook.domain.util.HasType;
 
 public class UniqueTurnoverAdapter implements Adapter<UniqueTurnover>, HasType<RowType> {
 

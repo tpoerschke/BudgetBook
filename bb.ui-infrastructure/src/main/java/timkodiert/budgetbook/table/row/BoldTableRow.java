@@ -2,7 +2,7 @@ package timkodiert.budgetbook.table.row;
 
 import javafx.scene.control.TableRow;
 
-import timkodiert.budgetbook.util.HasType;
+import timkodiert.budgetbook.domain.util.HasType;
 
 public class BoldTableRow<I extends HasType<T>, T> extends TableRow<I> {
 

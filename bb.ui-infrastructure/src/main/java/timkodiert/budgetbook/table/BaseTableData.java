@@ -2,7 +2,8 @@ package timkodiert.budgetbook.table;
 
 import lombok.Getter;
 
-import timkodiert.budgetbook.util.HasType;
+import timkodiert.budgetbook.domain.table.RowType;
+import timkodiert.budgetbook.domain.util.HasType;
 
 @Getter
 public abstract class BaseTableData implements HasType<RowType> {

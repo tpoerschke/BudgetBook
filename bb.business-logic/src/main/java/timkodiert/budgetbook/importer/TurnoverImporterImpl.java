@@ -21,7 +21,7 @@ import timkodiert.budgetbook.domain.repository.ImportRulesRepository;
 import static timkodiert.budgetbook.domain.model.AccountTurnover.SKIP_LINES;
 import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 
-public class TurnoverImporter {
+public class TurnoverImporterImpl implements TurnoverImporter {
 
     private final ImportRulesRepository importRulesRepository;
     private final AccountTurnoverRepository accountTurnoverRepository;
@@ -30,11 +30,12 @@ public class TurnoverImporter {
     private final ObservableList<ImportInformation> importInformationList = FXCollections.observableArrayList();
 
     @Inject
-    public TurnoverImporter(ImportRulesRepository importRulesRepository, AccountTurnoverRepository accountTurnoverRepository) {
+    public TurnoverImporterImpl(ImportRulesRepository importRulesRepository, AccountTurnoverRepository accountTurnoverRepository) {
         this.importRulesRepository = importRulesRepository;
         this.accountTurnoverRepository = accountTurnoverRepository;
     }
 
+    @Override
     public TurnoverImporter parse(File file) throws IOException, IllegalStateException {
         var builder = new CsvToBeanBuilder<AccountTurnover>(new FileReader(file, StandardCharsets.UTF_8));
         List<AccountTurnover> imports = builder.withSkipLines(SKIP_LINES).withSeparator(';').withType(AccountTurnover.class).build().parse();
@@ -42,6 +43,7 @@ public class TurnoverImporter {
         return this;
     }
 
+    @Override
     public TurnoverImporter linkWithExpenses() {
         List<ImportRule> rules = importRulesRepository.findAll().stream().filter(ImportRule::isActive).toList();
         importInformationList.forEach(info -> rules.stream()
@@ -51,6 +53,7 @@ public class TurnoverImporter {
         return this;
     }
 
+    @Override
     public TurnoverImporter filterDuplicates() {
         List<AccountTurnover> allImports = accountTurnoverRepository.findAll();
 
@@ -64,6 +67,7 @@ public class TurnoverImporter {
         return this;
     }
 
+    @Override
     public void doImport() {
         List<AccountTurnover> importsWithFixedExpense = importInformationList.stream()
                                                                              .filter(ImportInformation::isSelectedForImport)

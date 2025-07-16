@@ -20,11 +20,6 @@
       <artifactId>bb.ui-infrastructure</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>timkodiert.budgetbook</groupId>
-      <artifactId>bb.business-logic</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
 
 </project>

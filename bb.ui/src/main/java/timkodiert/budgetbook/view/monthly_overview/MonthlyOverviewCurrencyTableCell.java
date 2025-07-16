@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javafx.beans.property.BooleanProperty;
 
-import timkodiert.budgetbook.table.RowType;
+import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 
 public class MonthlyOverviewCurrencyTableCell extends CurrencyTableCell<TableData, Number, RowType> {

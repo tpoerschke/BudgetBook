@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import jakarta.inject.Named;
 import jakarta.persistence.criteria.CriteriaQuery;
 import lombok.Getter;
 import org.hibernate.Session;
@@ -13,8 +14,6 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-import timkodiert.budgetbook.properties.PropertiesService;
-
 @Singleton
 public class EntityManager {
 
@@ -22,10 +21,10 @@ public class EntityManager {
     private final Session session;
 
     @Inject
-    public EntityManager(PropertiesService propertiesService) {
+    public EntityManager(@Named("dbPath") String dbPath) {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure() // configures settings from hibernate.cfg.xml
-                .applySetting("hibernate.connection.url", propertiesService.getDbPath())
+                .applySetting("hibernate.connection.url", dbPath)
                 .build();
 
         SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();

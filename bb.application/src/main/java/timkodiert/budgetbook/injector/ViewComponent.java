@@ -26,7 +26,7 @@ import timkodiert.budgetbook.view.unique_expense.UniqueExpensesManageView;
 import timkodiert.budgetbook.view.widget.BudgetWidget;
 
 @Singleton
-@Component(modules = {RepositoryModule.class, ServiceModule.class})
+@Component(modules = {RepositoryModule.class, ServiceModule.class, DbPathModule.class})
 public interface ViewComponent {
     MainViewImpl getMainView();
 
