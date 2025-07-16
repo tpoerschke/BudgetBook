@@ -17,7 +17,7 @@ import timkodiert.budgetbook.domain.model.AccountTurnover;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
-import timkodiert.budgetbook.util.HasType;
+import timkodiert.budgetbook.domain.util.HasType;
 
 
 // Aus den Werten der Properties wird u.a. eine einzigartige Ausgabe

@@ -1,4 +1,4 @@
-package timkodiert.budgetbook.table;
+package timkodiert.budgetbook.domain.table;
 
 import java.util.List;
 

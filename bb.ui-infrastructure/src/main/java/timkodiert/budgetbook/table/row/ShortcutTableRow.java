@@ -6,9 +6,9 @@ import javafx.scene.control.TableRow;
 import javafx.scene.input.MouseEvent;
 import org.jetbrains.annotations.Nullable;
 
+import timkodiert.budgetbook.domain.table.RowType;
+import timkodiert.budgetbook.domain.util.HasType;
 import timkodiert.budgetbook.table.BaseTableData;
-import timkodiert.budgetbook.table.RowType;
-import timkodiert.budgetbook.util.HasType;
 import timkodiert.budgetbook.view.FxmlResource;
 import timkodiert.budgetbook.view.ShortcutFunction;
 

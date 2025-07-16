@@ -10,10 +10,10 @@ import jakarta.inject.Inject;
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.MonthYear;
 
-public class CategorySeriesGenerator {
+public class CategorySeriesGeneratorImpl implements CategorySeriesGenerator {
 
     @Inject
-    public CategorySeriesGenerator() {
+    public CategorySeriesGeneratorImpl() {
         // noop
     }
 

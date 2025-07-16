@@ -3,6 +3,7 @@ package timkodiert.budgetbook.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,8 +20,6 @@ import lombok.Setter;
 
 import timkodiert.budgetbook.domain.adapter.Adaptable;
 import timkodiert.budgetbook.domain.adapter.CategoryAdapter;
-
-import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 
 @Getter
 @RequiredArgsConstructor
@@ -112,11 +111,12 @@ public class Category extends BaseEntity implements Adaptable<CategoryAdapter> {
     public boolean contentEquals(Object other) {
 
         if (other instanceof Category cat) {
+            Integer optGroupId = Optional.ofNullable(this.getGroup()).map(CategoryGroup::getId).orElse(null);
+            Integer optOtherGroupId = Optional.ofNullable(cat.getGroup()).map(CategoryGroup::getId).orElse(null);
             return Objects.equals(this.getName(), cat.getName())
                     && Objects.equals(this.getDescription(), cat.getDescription())
-                    && Objects.equals(nvl(this.getGroup(), CategoryGroup::getId), nvl(cat.getGroup(), CategoryGroup::getId));
+                    && Objects.equals(optGroupId, optOtherGroupId);
         }
-
         return false;
     }
 }

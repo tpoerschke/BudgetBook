@@ -9,8 +9,8 @@ import javafx.scene.control.TableCell;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.table.BaseTableData;
-import timkodiert.budgetbook.table.RowType;
 
 public class GroupTableCell<S extends BaseTableData, T extends BaseTableData> extends TableCell<S, T> {
 

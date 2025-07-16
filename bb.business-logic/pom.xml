@@ -17,7 +17,7 @@
   <dependencies>
     <dependency>
       <groupId>timkodiert.budgetbook</groupId>
-      <artifactId>bb.domain</artifactId>
+      <artifactId>bb.contract</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

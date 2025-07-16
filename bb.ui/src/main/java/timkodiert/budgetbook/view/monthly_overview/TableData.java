@@ -3,8 +3,8 @@ package timkodiert.budgetbook.view.monthly_overview;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.table.BaseTableData;
-import timkodiert.budgetbook.table.RowType;
 
 public final class TableData extends BaseTableData {
 

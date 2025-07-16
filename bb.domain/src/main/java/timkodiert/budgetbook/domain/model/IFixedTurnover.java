@@ -1,6 +1,6 @@
 package timkodiert.budgetbook.domain.model;
 
-import timkodiert.budgetbook.util.HasType;
+import timkodiert.budgetbook.domain.util.HasType;
 
 public interface IFixedTurnover extends HasType<PaymentType> {
 

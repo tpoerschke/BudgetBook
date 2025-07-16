@@ -6,7 +6,7 @@ import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
-import timkodiert.budgetbook.table.RowType;
+import timkodiert.budgetbook.domain.table.RowType;
 
 public class ToTableDataMapper {
 
