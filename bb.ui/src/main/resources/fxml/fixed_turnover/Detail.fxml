@@ -32,7 +32,8 @@
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints/>
-                  <RowConstraints vgrow="ALWAYS"/>
+                  <RowConstraints/>
+                  <RowConstraints/>
                   <RowConstraints vgrow="ALWAYS"/>
                </rowConstraints>
                <padding>
@@ -50,7 +51,10 @@
                   <Label text="%editExpense.label.direction"/>
                   <ComboBox fx:id="directionComboBox" prefWidth="200.0"/>
                </VBox>
-               <VBox GridPane.columnIndex="1" GridPane.rowSpan="3">
+               <VBox GridPane.rowIndex="3">
+                  <CheckBox fx:id="payInfoFutureOnlyCheckBox" text="Zahlungen nur für die Zukunft (und den aktuellen Monat) verwenden"/>
+               </VBox>
+               <VBox GridPane.columnIndex="1" GridPane.rowSpan="4">
                   <Label text="%editExpense.label.categories"/>
                   <CheckListView fx:id="categoriesListView"/>
                </VBox>

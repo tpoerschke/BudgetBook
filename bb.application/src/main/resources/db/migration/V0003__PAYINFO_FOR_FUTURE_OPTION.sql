@@ -1,0 +1,1 @@
+ALTER TABLE "FixedTurnover" ADD COLUMN "usePaymentInfoForFutureOnly" BOOLEAN NOT NULL DEFAULT false;

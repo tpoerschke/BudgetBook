@@ -65,6 +65,8 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
     private TextArea noteTextArea;
     @FXML
     private ComboBox<TurnoverDirection> directionComboBox;
+    @FXML
+    private CheckBox payInfoFutureOnlyCheckBox;
 
     @FXML
     private CheckListView<Category> categoriesListView;
@@ -179,6 +181,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         entity.setPosition(positionTextField.getText());
         entity.setNote(noteTextArea.getText());
         entity.setDirection(directionComboBox.getSelectionModel().getSelectedItem());
+        entity.setUsePaymentInfoForFutureOnly(payInfoFutureOnlyCheckBox.isSelected());
         entity.getCategories().clear();
         entity.getCategories().addAll(categoryCheckListHelper.getCheckedCategories());
         entity.getPaymentInformations().clear();
@@ -206,6 +209,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         positionTextField.setText(entity.getPosition());
         noteTextArea.setText(entity.getNote());
         directionComboBox.getSelectionModel().select(entity.getDirection());
+        payInfoFutureOnlyCheckBox.setSelected(entity.isUsePaymentInfoForFutureOnly());
         // Kategorien der Ausgabe abhacken
         categoryCheckListHelper.checkCategories(entity);
         paymentInfoList.setAll(entity.getPaymentInformations());

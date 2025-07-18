@@ -1,14 +1,18 @@
 package timkodiert.budgetbook.domain.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class FixedExpenseTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class FixedExpenseTest {
 
     @Test
     @DisplayName("Monatliche Ausgabe: Konfigurierte PaymentInformation")
@@ -36,5 +40,35 @@ public class FixedExpenseTest {
         assertEquals(2 * -5, expense.getValueFor(MonthYear.of(3, 2023)));
         assertEquals(0.0, expense.getValueForYear(2022));
         assertEquals(-9.5 * 10 + 1 * -20 + 2 * -5, expense.getValueForYear(2023));
+    }
+
+    @Test
+    @DisplayName("Monatliche Ausgabe: Konfigurierte PaymentInformation, werden nicht für die Vergangenheit angewendet")
+    void monthlyFixedExpenseNotForPast() {
+        // Arrange
+        YearMonth current = YearMonth.now();
+        YearMonth start = current.minusMonths(1);
+        YearMonth end = current.plusMonths(1);
+        FixedTurnover turnover = createTurnover(9.99, MonthYear.of(start), MonthYear.of(end));
+        turnover.setUsePaymentInfoForFutureOnly(true);
+
+        // Act & Assert
+        assertEquals(0, turnover.getValueFor(MonthYear.of(start)));
+        assertEquals(-9.99, turnover.getValueFor(MonthYear.of(current)));
+        assertEquals(-9.99, turnover.getValueFor(MonthYear.of(end)));
+    }
+
+    private FixedTurnover createTurnover(double value, MonthYear start, @Nullable MonthYear end) {
+        PaymentInformation info = new PaymentInformation();
+        info.setType(PaymentType.MONTHLY);
+        info.setMonthsOfPayment(Arrays.stream(Month.values()).map(Month::getValue).toList());
+        info.setValue(value);
+        info.setStart(start);
+        info.setEnd(end);
+        FixedTurnover turnover = new FixedTurnover();
+        turnover.setPosition("Test-Ausgabe");
+        turnover.setDirection(TurnoverDirection.OUT);
+        turnover.getPaymentInformations().add(info);
+        return turnover;
     }
 }
