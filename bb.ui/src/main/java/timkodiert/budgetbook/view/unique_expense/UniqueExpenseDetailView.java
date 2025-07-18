@@ -34,6 +34,7 @@ import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
+import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
@@ -124,13 +125,12 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
                                     .withFXMLResource(IMAGE_VIEW.toString())
                                     .withModality(Modality.APPLICATION_MODAL)
                                     .withTitle("Beleg / Kassenbon")
-                                    .withView(new ImageModalView(path))
+                                    .withView(new ImageModalView(languageManager, path))
                                     .build()
                                     .stage()
                                     .showAndWait();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                StackTraceAlert.of("ImageModal konnte nicht geöffnet werden", e).showAndWait();
             }
         });
 

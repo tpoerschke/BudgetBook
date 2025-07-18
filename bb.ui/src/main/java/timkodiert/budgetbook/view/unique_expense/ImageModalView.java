@@ -3,7 +3,6 @@ package timkodiert.budgetbook.view.unique_expense;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javax.inject.Inject;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,10 +25,10 @@ public class ImageModalView implements View, Initializable {
 
     private final String path;
 
-    @Inject
-    LanguageManager languageManager;
+    private final LanguageManager languageManager;
 
-    public ImageModalView(String path) {
+    public ImageModalView(LanguageManager languageManager, String path) {
+        this.languageManager = languageManager;
         this.path = path;
     }
 
