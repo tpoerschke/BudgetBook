@@ -2,17 +2,16 @@ package timkodiert.budgetbook.domain.repository;
 
 import java.util.Collection;
 import java.util.List;
-import javax.inject.Inject;
 
 import timkodiert.budgetbook.domain.util.EntityManager;
 
 public abstract class Repository<T> {
 
-    @Inject
-    protected EntityManager entityManager;
+    protected final EntityManager entityManager;
     protected final Class<T> entityType;
 
-    protected Repository(Class<T> entityType) {
+    protected Repository(EntityManager entityManager, Class<T> entityType) {
+        this.entityManager = entityManager;
         this.entityType = entityType;
     }
 

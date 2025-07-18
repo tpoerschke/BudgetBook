@@ -46,6 +46,7 @@ public class ThemeOption {
                 return PrimerLight.class;
             }
         } catch (IOException | InterruptedException e) {
+            Thread.currentThread().interrupt();
             return PrimerLight.class;
         }
     }
@@ -61,6 +62,7 @@ public class ThemeOption {
                 return PrimerLight.class;
             }
         } catch (IOException | InterruptedException e) {
+            Thread.currentThread().interrupt();
             return PrimerLight.class;
         }
     }
@@ -81,17 +83,12 @@ public class ThemeOption {
 
     private static String detectDesktopEnvironment() {
         String desktopEnv = System.getenv("XDG_CURRENT_DESKTOP");
-        if (desktopEnv != null) {
-            switch (desktopEnv) {
-                case "KDE":
-                    return "KDE Plasma";
-                case "GNOME":
-                    return "GNOME";
-                case "XFCE":
-                    return "Xfce";
-            }
-        }
-        return null;
+        return switch (desktopEnv) {
+            case "KDE" -> "KDE Plasma";
+            case "GNOME" -> "GNOME";
+            case "XFCE" -> "Xfce";
+            case null, default -> null;
+        };
     }
 
     /*
@@ -125,6 +122,7 @@ public class ThemeOption {
             String theme = new String(process.getInputStream().readAllBytes()).trim();
             return theme.contains("dark");
         } catch (IOException | InterruptedException e) {
+            Thread.currentThread().interrupt();
             return false;
         }
     }

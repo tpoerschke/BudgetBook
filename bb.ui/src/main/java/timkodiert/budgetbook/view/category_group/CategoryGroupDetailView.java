@@ -14,7 +14,6 @@ import javafx.scene.layout.BorderPane;
 import timkodiert.budgetbook.domain.model.CategoryGroup;
 import timkodiert.budgetbook.domain.repository.Repository;
 import timkodiert.budgetbook.domain.util.EntityManager;
-import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 
 public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroup> implements Initializable {
@@ -26,12 +25,9 @@ public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroup>
     @FXML
     private TextArea descriptionTextArea;
 
-    private final LanguageManager languageManager;
-
     @Inject
-    protected CategoryGroupDetailView(Repository<CategoryGroup> repository, EntityManager entityManager, LanguageManager languageManager) {
+    protected CategoryGroupDetailView(Repository<CategoryGroup> repository, EntityManager entityManager) {
         super(CategoryGroup::new, repository, entityManager);
-        this.languageManager = languageManager;
     }
 
     @Override

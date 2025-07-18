@@ -5,12 +5,13 @@ import javax.inject.Inject;
 
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.CategoryGroup;
+import timkodiert.budgetbook.domain.util.EntityManager;
 
 public class CategoriesRepository extends Repository<Category> {
 
     @Inject
-    public CategoriesRepository() {
-        super(Category.class);
+    public CategoriesRepository(EntityManager entityManager) {
+        super(entityManager, Category.class);
     }
 
     @Override

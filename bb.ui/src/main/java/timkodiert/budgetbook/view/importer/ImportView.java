@@ -47,7 +47,6 @@ import lombok.Setter;
 
 import timkodiert.budgetbook.converter.FixedExpenseStringConverter;
 import timkodiert.budgetbook.dialog.DialogFactory;
-import timkodiert.budgetbook.domain.model.AccountTurnover;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.repository.Repository;
 import timkodiert.budgetbook.i18n.LanguageManager;
@@ -67,7 +66,6 @@ public class ImportView implements View, Initializable {
 
     private final LanguageManager languageManager;
     private final Repository<FixedTurnover> fixedExpenseRepository;
-    private final Repository<AccountTurnover> accountTurnoverRepository;
     private final TurnoverImporter importer;
     private final DialogFactory dialogFactory;
     private final Provider<StageBuilder> stageBuilderProvider;
@@ -105,13 +103,11 @@ public class ImportView implements View, Initializable {
     @Inject
     public ImportView(LanguageManager languageManager,
                       Repository<FixedTurnover> fixedExpenseRepository,
-                      Repository<AccountTurnover> accountTurnoverRepository,
                       TurnoverImporter importer,
                       DialogFactory dialogFactory,
                       Provider<StageBuilder> stageBuilderProvider) {
         this.languageManager = languageManager;
         this.fixedExpenseRepository = fixedExpenseRepository;
-        this.accountTurnoverRepository = accountTurnoverRepository;
         this.importer = importer;
         this.dialogFactory = dialogFactory;
         this.stageBuilderProvider = stageBuilderProvider;

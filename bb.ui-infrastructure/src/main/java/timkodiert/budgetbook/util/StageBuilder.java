@@ -10,12 +10,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.view.View;
 
 public class StageBuilder {
 
-    private final LanguageManager languageManager;
     private final FXMLLoader fxmlLoader;
 
     private Window owner;
@@ -25,8 +23,7 @@ public class StageBuilder {
     private String title;
 
     @Inject
-    public StageBuilder(LanguageManager languageManager, FXMLLoader fxmlLoader) {
-        this.languageManager = languageManager;
+    public StageBuilder(FXMLLoader fxmlLoader) {
         this.fxmlLoader = fxmlLoader;
     }
 
