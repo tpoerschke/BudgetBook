@@ -1,6 +1,7 @@
 package timkodiert.budgetbook.domain.model;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,6 +55,10 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     @OneToOne(mappedBy = "linkedFixedExpense", cascade = {CascadeType.ALL})
     private ImportRule importRule;
 
+    // Future bedeutet hier: der aktuelle Monat und alle zukünftigen Monate
+    @Setter
+    private boolean usePaymentInfoForFutureOnly;
+
     @Transient
     private transient FixedTurnoverAdapter adapter;
 
@@ -91,7 +96,7 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     @Override
     public PaymentType getType() {
         // TODO: Sinnvolle Ausgabe
-        if (this.paymentInformations.size() == 0) {
+        if (this.paymentInformations.isEmpty()) {
             return PaymentType.MONTHLY;
         }
         return this.paymentInformations.get(0).getType();
@@ -108,9 +113,9 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     }
 
     public @Nullable LocalDate getImportDate(MonthYear monthYear) {
-        List<AccountTurnover> accountTurnover = findImports(monthYear);
-        if (!accountTurnover.isEmpty()) {
-            return accountTurnover.get(0).getDate();
+        List<AccountTurnover> accountTurnoverForMonth = findImports(monthYear);
+        if (!accountTurnoverForMonth.isEmpty()) {
+            return accountTurnoverForMonth.getFirst().getDate();
         }
         return null;
     }
@@ -121,11 +126,14 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
 
     private double getValueFor(int year, int month) {
         // Importe auswerten
-        List<AccountTurnover> accountTurnover = findImports(MonthYear.of(month, year));
-        if(!accountTurnover.isEmpty()) {
-            return accountTurnover.stream().mapToDouble(AccountTurnover::getAmount).sum();
+        List<AccountTurnover> accountTurnoverForMonth = findImports(MonthYear.of(month, year));
+        if (!accountTurnoverForMonth.isEmpty()) {
+            return accountTurnoverForMonth.stream().mapToDouble(AccountTurnover::getAmount).sum();
         }
         // Konfigurierten Rhythmus auswerten
+        if (YearMonth.of(year, month).isBefore(YearMonth.now()) && isUsePaymentInfoForFutureOnly()) {
+            return 0;
+        }
         PaymentInformation payInfo = findPaymentInformation(MonthYear.of(month, year));
         if (payInfo != null) {
             return direction.getSign() * payInfo.getValueFor(MonthYear.of(month, year));
@@ -150,8 +158,9 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     public boolean contentEquals(Object other) {
 
         if (other instanceof FixedTurnover expense) {
-            boolean equals = Objects.equals(this.getPosition(), expense.getPosition())
-                    && Objects.equals(this.getNote(), expense.getNote());
+            boolean equals = Objects.equals(this.getPosition(), expense.getPosition()) &&
+                    Objects.equals(this.getNote(), expense.getNote()) &&
+                    this.isUsePaymentInfoForFutureOnly() == expense.isUsePaymentInfoForFutureOnly();
 
             boolean importRuleEquals = this.getImportRule() == null
                     ? expense.getImportRule() == null
