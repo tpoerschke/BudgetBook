@@ -18,7 +18,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -35,11 +34,11 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
 import timkodiert.budgetbook.dialog.StackTraceAlert;
+import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetbook.domain.repository.Repository;
-import timkodiert.budgetbook.domain.util.EntityManager;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.ui.control.AutoCompleteTextField;
 import timkodiert.budgetbook.util.StageBuilder;
@@ -48,7 +47,7 @@ import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 import static timkodiert.budgetbook.view.FxmlResource.IMAGE_VIEW;
 import static timkodiert.budgetbook.view.FxmlResource.UNIQUE_TURNOVER_INFORMATION_VIEW;
 
-public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover> implements Initializable {
+public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnoverDTO> implements Initializable {
 
     @FXML
     private Pane root;
@@ -85,12 +84,10 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
     private final Provider<StageBuilder> stageBuilderProvider;
 
     @Inject
-    public UniqueExpenseDetailView(Repository<UniqueTurnover> repository,
-                                   EntityManager entityManager,
-                                   Repository<UniqueTurnoverInformation> expInfoRepository,
+    public UniqueExpenseDetailView(Repository<UniqueTurnoverInformation> expInfoRepository,
                                    LanguageManager languageManager,
                                    Provider<StageBuilder> stageBuilderProvider) {
-        super(UniqueTurnover::new, repository, entityManager);
+        super();
         this.expInfoRepository = expInfoRepository;
         this.languageManager = languageManager;
         this.stageBuilderProvider = stageBuilderProvider;
@@ -106,7 +103,7 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
         deleteUniqueExpenseInformationButton.disableProperty()
                 .bind(expenseInfoTable.getSelectionModel().selectedItemProperty().isNull());
 
-        root.disableProperty().bind(entity.isNull());
+        //root.disableProperty().bind(entity.isNull());
 
         receiptTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.isBlank()) {
@@ -144,8 +141,8 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
                 String.join(", ", cellData.getValue().getCategories().stream().map(Category::getName).toList())));
         expenseInfoTable.setItems(paymentInfoList);
 
-        billerTextField.getAvailableEntries()
-                .addAll(repository.findAll().stream().map(UniqueTurnover::getBiller).toList());
+        //        billerTextField.getAvailableEntries()
+        //                .addAll(repository.findAll().stream().map(UniqueTurnover::getBiller).toList());
 
         validationMap.put("biller", billerTextField);
         validationMap.put("date", datePicker);
@@ -153,11 +150,10 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
     }
 
     private void addNewExpenseInformation(UniqueTurnoverInformation newInfo) {
-        newInfo.setExpense(entity.get());
+        //newInfo.setExpense(entity.get());
         paymentInfoList.add(newInfo);
     }
 
-    @Override
     protected UniqueTurnover patchEntity(UniqueTurnover entity, boolean isSaving) {
         entity.setBiller(billerTextField.getText());
         entity.setNote(noteTextArea.getText());
@@ -167,7 +163,6 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
         return entity;
     }
 
-    @Override
     protected void patchUi(UniqueTurnover entity) {
         billerTextField.setText(entity.getBiller());
         noteTextArea.setText(entity.getNote());
@@ -178,25 +173,31 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
 
     @Override
     public boolean save() {
-        boolean saved = super.save();
-        if (saved) {
-            entity.get().getPaymentInformations().stream().map(UniqueTurnoverInformation::getCategories).flatMap(List::stream).forEach(entityManager::refresh);
-        }
-        return saved;
+        //boolean saved = super.save();
+        //if (saved) {
+        //entity.get().getPaymentInformations().stream().map(UniqueTurnoverInformation::getCategories).flatMap(List::stream).forEach(entityManager::refresh);
+        //}
+        //return saved;
+        return false;
+    }
+
+    @Override
+    protected UniqueTurnoverDTO discardChanges() {
+        return null;
     }
 
     @FXML
     private void delete(ActionEvent event) {
-        Alert confirmationAlert = new Alert(AlertType.CONFIRMATION,
-                String.format("Die Ausgabe \"%s\" vom %s wirklich löschen?", this.entity.get().getBiller(),
-                        this.entity.get().getDate()),
-                ButtonType.YES, ButtonType.NO);
-        Optional<ButtonType> result = confirmationAlert.showAndWait();
-        if (result.filter(ButtonType.YES::equals).isPresent()) {
-            repository.remove(this.entity.get());
-            setEntity(null);
-            onUpdate.accept(null);
-        }
+        //        Alert confirmationAlert = new Alert(AlertType.CONFIRMATION,
+        //                String.format("Die Ausgabe \"%s\" vom %s wirklich löschen?", this.entity.get().getBiller(),
+        //                        this.entity.get().getDate()),
+        //                ButtonType.YES, ButtonType.NO);
+        //        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        //        if (result.filter(ButtonType.YES::equals).isPresent()) {
+        //            repository.remove(this.entity.get());
+        //            setEntity(null);
+        //            onUpdate.accept(null);
+        //        }
     }
 
     @FXML
@@ -218,8 +219,9 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
     }
 
     private List<String> getUniqueExpenseInformationSuggestions() {
-        return repository.findAll().stream().flatMap(exp -> exp.getPaymentInformations().stream())
-                         .map(UniqueTurnoverInformation::getLabel).distinct().toList();
+        //        return repository.findAll().stream().flatMap(exp -> exp.getPaymentInformations().stream())
+        //                         .map(UniqueTurnoverInformation::getLabel).distinct().toList();
+        return List.of();
     }
 
     private void openUniqueExpenseInformationDetailView(Optional<UniqueTurnoverInformation> optionalEntity) {
@@ -231,7 +233,7 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
                                 .withView(new UniqueExpenseInformationDetailView(optionalEntity,
                                                                                  this::addNewExpenseInformation,
                                                                                  this.getUniqueExpenseInformationSuggestions(),
-                                                                                 entityManager))
+                                                                                 null))
                                 .build()
                                 .stage()
                                 .show();
@@ -240,5 +242,10 @@ public class UniqueExpenseDetailView extends EntityBaseDetailView<UniqueTurnover
             alert.showAndWait();
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected UniqueTurnoverDTO createEmptyEntity() {
+        return new UniqueTurnoverDTO();
     }
 }

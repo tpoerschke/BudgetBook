@@ -19,12 +19,24 @@ public abstract class Repository<T> {
         return this.entityManager.findAll(entityType);
     }
 
+    public T findById(int id) {
+        return this.entityManager.findById(entityType, id);
+    }
+
     public void persist(T entity) {
         this.persist(List.of(entity));
     }
 
     public void persist(Collection<T> entities) {
         entities.forEach(this.entityManager::persist);
+    }
+
+    public void merge(T entity) {
+        this.merge(List.of(entity));
+    }
+
+    public void merge(Collection<T> entities) {
+        entities.forEach(this.entityManager::merge);
     }
 
     public void remove(T entity) {

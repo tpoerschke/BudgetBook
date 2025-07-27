@@ -27,6 +27,7 @@
     <version.dagger>2.55</version.dagger>
     <version.lombok>1.18.36</version.lombok>
     <version.commons-lang>3.18.0</version.commons-lang>
+    <version.mapstruct>1.6.3</version.mapstruct>
     <!-- UI -->
     <version.ikonli>12.3.1</version.ikonli>
     <version.atlantafx>2.0.1</version.atlantafx>
@@ -189,6 +190,16 @@
       </build>
     </profile>
   </profiles>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${version.mapstruct}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>

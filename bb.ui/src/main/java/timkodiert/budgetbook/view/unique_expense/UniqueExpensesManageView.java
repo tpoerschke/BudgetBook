@@ -9,11 +9,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetbook.dialog.DialogFactory;
+import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
+import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
 import timkodiert.budgetbook.domain.adapter.UniqueTurnoverAdapter;
-import timkodiert.budgetbook.domain.model.UniqueTurnover;
-import timkodiert.budgetbook.domain.repository.Repository;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 import timkodiert.budgetbook.table.cell.DateTableCell;
@@ -21,7 +22,7 @@ import timkodiert.budgetbook.view.mdv_base.BaseListManageView;
 
 import static timkodiert.budgetbook.view.FxmlResource.UNIQUE_TURNOVER_DETAIL_VIEW;
 
-public class UniqueExpensesManageView extends BaseListManageView<UniqueTurnover, UniqueTurnoverAdapter> {
+public class UniqueExpensesManageView extends BaseListManageView<UniqueTurnoverDTO> {
 
     @FXML
     private TableColumn<UniqueTurnoverAdapter, String> billerCol;
@@ -30,9 +31,18 @@ public class UniqueExpensesManageView extends BaseListManageView<UniqueTurnover,
     @FXML
     private TableColumn<UniqueTurnoverAdapter, Number> valueCol;
 
+    private final UniqueTurnoverCrudService crudService;
+
+
     @Inject
-    public UniqueExpensesManageView(Repository<UniqueTurnover> repository, DialogFactory dialogFactory, FXMLLoader fxmlLoader, LanguageManager languageManager) {
-        super(UniqueTurnover::new, repository, fxmlLoader, dialogFactory, languageManager);
+    public UniqueExpensesManageView(DialogFactory dialogFactory, FXMLLoader fxmlLoader, LanguageManager languageManager, UniqueTurnoverCrudService crudService) {
+        super(fxmlLoader, dialogFactory, languageManager);
+        this.crudService = crudService;
+    }
+
+    @Override
+    public void displayEntityById(int id) {
+        detailView.setBean(crudService.readById(id));
     }
 
     @Override
@@ -43,7 +53,17 @@ public class UniqueExpensesManageView extends BaseListManageView<UniqueTurnover,
         valueCol.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getBean().getTotalValue()));
         valueCol.setCellFactory(col -> new CurrencyTableCell<>());
 
-        entityTable.getSortOrder().add(dateCol);
+        //entityTable.getSortOrder().add(dateCol);
+    }
+
+    @Override
+    protected UniqueTurnoverDTO createEmptyEntity() {
+        return new UniqueTurnoverDTO();
+    }
+
+    @Override
+    protected void reloadTable(@Nullable UniqueTurnoverDTO updatedBean) {
+        entityTable.getItems().setAll(crudService.readAll());
     }
 
     @Override
@@ -54,5 +74,10 @@ public class UniqueExpensesManageView extends BaseListManageView<UniqueTurnover,
     @FXML
     private void newUniqueExpense(ActionEvent event) {
         displayNewEntity();
+    }
+
+    @Override
+    protected UniqueTurnoverDTO discardChanges(UniqueTurnoverDTO beanToDiscard) {
+        return null;
     }
 }

@@ -15,7 +15,7 @@ public class ShortcutFunction {
 
     public void openDetailView(FxmlResource resource, int id) {
         View openedView = mainView.loadViewPartial(resource);
-        if (openedView instanceof BaseManageView<?, ?> manageView) {
+        if (openedView instanceof BaseManageView<?> manageView) {
             manageView.displayEntityById(id);
         }
     }

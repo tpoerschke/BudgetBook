@@ -47,9 +47,19 @@ public class EntityManager {
         return this.session.createQuery(criteriaQuery).list();
     }
 
+    public <T> T findById(Class<T> entityClass, int id) {
+        return this.session.get(entityClass, id);
+    }
+
     public void persist(Object... objects) {
         this.session.beginTransaction();
         Arrays.stream(objects).forEach(this.session::persist);
+        this.session.getTransaction().commit();
+    }
+
+    public void merge(Object... objects) {
+        this.session.beginTransaction();
+        Arrays.stream(objects).forEach(this.session::merge);
         this.session.getTransaction().commit();
     }
 

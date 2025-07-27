@@ -24,6 +24,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import timkodiert.budgetbook.converter.Converters;
+import timkodiert.budgetbook.domain.FixedTurnoverInformationDTO;
 import timkodiert.budgetbook.domain.model.PaymentInformation;
 import timkodiert.budgetbook.domain.model.PaymentType;
 import timkodiert.budgetbook.i18n.LanguageManager;
@@ -31,7 +32,7 @@ import timkodiert.budgetbook.view.mdv_base.BaseDetailView;
 import timkodiert.budgetbook.view.widget.MonthYearPickerWidget;
 import timkodiert.budgetbook.view.widget.MonthYearPickerWidgetFactory;
 
-public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentInformation> implements Initializable {
+public class FixedTurnoverInformationDetailView extends BaseDetailView<FixedTurnoverInformationDTO> implements Initializable {
 
     @FXML
     private TextField valueTextField;
@@ -55,7 +56,7 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
                                               MonthYearPickerWidgetFactory monthYearPickerWidgetFactory,
                                               @Assisted Supplier<PaymentInformation> emptyEntityProducer,
                                               @Assisted Consumer<PaymentInformation> onSaveCallback) {
-        super(emptyEntityProducer);
+        super();
         this.languageManager = languageManager;
         this.monthYearPickerWidgetFactory = monthYearPickerWidgetFactory;
         this.onSaveCallback = onSaveCallback;
@@ -85,18 +86,17 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
             return;
         }
 
-        var expenseInfo = patchEntity(entity.get(), true);
-        onSaveCallback.accept(expenseInfo);
+        //        var expenseInfo = patchEntity(entity.get(), true);
+        //        onSaveCallback.accept(expenseInfo);
         // Das macht mich traurig ._.
         ((Stage) ((Node) e.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
     private void onRevert(ActionEvent e) {
-        patchUi(entity.get());
+        //patchUi(entity.get());
     }
 
-    @Override
     protected PaymentInformation patchEntity(PaymentInformation entity, boolean isSaving) {
         entity.setValue(Double.parseDouble(valueTextField.getText()));
         entity.setStart(startMonthWidget.getValue());
@@ -115,7 +115,6 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
         return entity;
     }
 
-    @Override
     protected void patchUi(PaymentInformation entity) {
         valueTextField.setText(entity.getValue() + "");
         startMonthWidget.setValue(entity.getStart());
@@ -164,5 +163,10 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
     private void manageChoiceBoxes(List<Control> elementsToShow, List<Control> elementsToHide) {
         elementsToHide.forEach(el -> el.setVisible(false));
         elementsToShow.forEach(el -> el.setVisible(true));
+    }
+
+    @Override
+    protected FixedTurnoverInformationDTO createEmptyEntity() {
+        return new FixedTurnoverInformationDTO();
     }
 }

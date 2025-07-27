@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -19,7 +20,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
@@ -36,16 +36,16 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetbook.converter.Converters;
 import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
+import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
+import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.model.AccountTurnover;
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
-import timkodiert.budgetbook.domain.model.ImportRule;
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.PaymentInformation;
 import timkodiert.budgetbook.domain.model.PaymentType;
 import timkodiert.budgetbook.domain.model.TurnoverDirection;
 import timkodiert.budgetbook.domain.repository.Repository;
-import timkodiert.budgetbook.domain.util.EntityManager;
 import timkodiert.budgetbook.table.cell.DateTableCell;
 import timkodiert.budgetbook.table.cell.MonthYearTableCell;
 import timkodiert.budgetbook.ui.helper.CategoryCheckListHelper;
@@ -54,7 +54,7 @@ import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 
 import static timkodiert.budgetbook.view.FxmlResource.FIXED_TURNOVER_INFORMATION_VIEW;
 
-public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover> implements Initializable {
+public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverDTO> implements Initializable {
 
     @FXML
     private Pane root;
@@ -80,17 +80,15 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
     @FXML
     private TableView<PaymentInformation> expenseInfoTable;
     @FXML
-    private TableColumn<PaymentInformation, String> expenseInfoValueCol, expenseInfoTypeCol;
+    private TableColumn<PaymentInformation, String> expenseInfoValueCol;
     @FXML
-    private TableColumn<PaymentInformation, MonthYear> expenseInfoStartCol, expenseInfoEndCol;
+    private TableColumn<PaymentInformation, String> expenseInfoTypeCol;
+    @FXML
+    private TableColumn<PaymentInformation, MonthYear> expenseInfoStartCol;
+    @FXML
+    private TableColumn<PaymentInformation, MonthYear> expenseInfoEndCol;
 
     // Importe
-    @FXML
-    private CheckBox importActiveCheckbox;
-    @FXML
-    private TextField importReceiverTextField;
-    @FXML
-    private TextField importReferenceTextField;
     @FXML
     private TableView<AccountTurnover> importsTable;
     @FXML
@@ -102,19 +100,19 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
     private final Repository<PaymentInformation> expInfoRepository;
     private final FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory;
     private final Provider<StageBuilder> stageBuilderProvider;
+    private final FixedTurnoverCrudService crudService;
 
     private CategoryCheckListHelper categoryCheckListHelper;
 
     @Inject
-    public FixedTurnoverDetailView(Repository<FixedTurnover> repository,
-                                   Repository<PaymentInformation> expInfoRepository,
-                                   EntityManager entityManager,
+    public FixedTurnoverDetailView(Repository<PaymentInformation> expInfoRepository,
                                    FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory,
-                                   Provider<StageBuilder> stageBuilderProvider) {
-        super(FixedTurnover::new, repository, entityManager);
+                                   Provider<StageBuilder> stageBuilderProvider,
+                                   FixedTurnoverCrudService crudService) {
         this.expInfoRepository = expInfoRepository;
         this.fixedTurnoverInformationDetailViewFactory = fixedTurnoverInformationDetailViewFactory;
         this.stageBuilderProvider = stageBuilderProvider;
+        this.crudService = crudService;
     }
 
     @Override
@@ -126,8 +124,8 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
                 .bind(expenseInfoTable.getSelectionModel().selectedItemProperty().isNull());
         deleteFixedExpenseInformationButton.disableProperty()
                 .bind(expenseInfoTable.getSelectionModel().selectedItemProperty().isNull());
-        root.disableProperty().bind(entity.isNull());
-        List<Category> categories = entityManager.findAll(Category.class);
+        //root.disableProperty().bind(entity.isNull());
+        List<Category> categories = List.of(); //entityManager.findAll(Category.class);
         categoryCheckListHelper = new CategoryCheckListHelper(categoriesListView, categories);
         directionComboBox.getItems().setAll(TurnoverDirection.values());
         directionComboBox.setConverter(Converters.get(TurnoverDirection.class));
@@ -139,17 +137,14 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
             DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
             return new ReadOnlyStringWrapper(converter.format(cellData.getValue().getValue()));
         });
-        expenseInfoStartCol.setCellValueFactory(cellData -> new SimpleObjectProperty<MonthYear>(cellData.getValue().getStart()));
-        expenseInfoEndCol.setCellValueFactory(cellData -> new SimpleObjectProperty<MonthYear>(cellData.getValue().getEnd()));
+        expenseInfoStartCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStart()));
+        expenseInfoEndCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getEnd()));
         expenseInfoStartCol.setCellFactory(col -> new MonthYearTableCell<>());
         expenseInfoEndCol.setCellFactory(col -> new MonthYearTableCell<>());
 
         expenseInfoTable.setItems(paymentInfoList);
 
         // Importe
-        importReceiverTextField.disableProperty().bind(importActiveCheckbox.selectedProperty().not());
-        importReferenceTextField.disableProperty().bind(importActiveCheckbox.selectedProperty().not());
-
         importsDateCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getDate()));
         importsDateCol.setCellFactory(col -> new DateTableCell<>());
         importsReceiverCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReceiver()));
@@ -163,20 +158,29 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         validationMap.put("position", positionTextField);
     }
 
-    @FXML
-    private void deleteExpense(ActionEvent event) {
-        Alert confirmationAlert = new Alert(AlertType.CONFIRMATION, "Die Ausgabe \"" + this.entity.get().getPosition() + "\" wirklich löschen?",
-                ButtonType.YES,
-                ButtonType.NO);
-        Optional<ButtonType> result = confirmationAlert.showAndWait();
-        if (result.filter(ButtonType.YES::equals).isPresent()) {
-            entityManager.remove(this.entity.get());
-            setEntity(null);
-            onUpdate.accept(null);
-        }
+    @Override
+    public boolean save() {
+        Function<FixedTurnoverDTO, Boolean> crudMethod = getBean().getId() <= 0 ? crudService::create : crudService::update;
+        return validate() && crudMethod.apply(getBean());
     }
 
     @Override
+    protected FixedTurnoverDTO discardChanges() {
+        return crudService.readById(getBean().getId());
+    }
+
+    @FXML
+    private void deleteExpense(ActionEvent event) {
+        //        String confirmationText = "Die Ausgabe \"" + this.getDto().positionProperty().get() + "\" wirklich löschen?";
+        //        Alert confirmationAlert = new Alert(AlertType.CONFIRMATION, confirmationText, ButtonType.YES, ButtonType.NO);
+        //        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        //        if (result.filter(ButtonType.YES::equals).isPresent()) {
+        //            crudService.delete(entity.getDto());
+        //            setEntity(null);
+        //            onUpdate.accept(null);
+        //        }
+    }
+
     protected FixedTurnover patchEntity(FixedTurnover entity, boolean isSaving) {
         entity.setPosition(positionTextField.getText());
         entity.setNote(noteTextArea.getText());
@@ -186,10 +190,10 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         entity.getCategories().addAll(categoryCheckListHelper.getCheckedCategories());
         entity.getPaymentInformations().clear();
         entity.getPaymentInformations().addAll(paymentInfoList);
-        createImportRuleIfNotExists(entity);
-        entity.getImportRule().setActive(importActiveCheckbox.isSelected());
-        entity.getImportRule().setReceiverContains(importReceiverTextField.getText());
-        entity.getImportRule().setReferenceContains(importReferenceTextField.getText());
+
+        //        entity.getImportRules().setActive(importActiveCheckbox.isSelected());
+        //        entity.getImportRules().setReceiverContains(importReceiverTextField.getText());
+        //        entity.getImportRules().setReferenceContains(importReferenceTextField.getText());
 
         if (!isSaving) {
             return entity;
@@ -204,7 +208,6 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         return entity;
     }
 
-    @Override
     protected void patchUi(FixedTurnover entity) {
         positionTextField.setText(entity.getPosition());
         noteTextArea.setText(entity.getNote());
@@ -214,29 +217,21 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
         categoryCheckListHelper.checkCategories(entity);
         paymentInfoList.setAll(entity.getPaymentInformations());
         // Importe
-        createImportRuleIfNotExists(entity);
-        importActiveCheckbox.setSelected(entity.getImportRule().isActive());
-        importReceiverTextField.setText(entity.getImportRule().getReceiverContains());
-        importReferenceTextField.setText(entity.getImportRule().getReferenceContains());
+        //        importActiveCheckbox.setSelected(entity.getImportRules().isActive());
+        //        importReceiverTextField.setText(entity.getImportRules().getReceiverContains());
+        //        importReferenceTextField.setText(entity.getImportRules().getReferenceContains());
         importsTable.getItems().setAll(entity.getAccountTurnover());
-    }
-
-    // TODO 01.11.23: Ausbauen, wenn sichergestellt ist, dass ImportRules nicht null sein können
-    private void createImportRuleIfNotExists(FixedTurnover expense) {
-        if (expense.getImportRule() == null) {
-            expense.setImportRule(new ImportRule(expense));
-        }
     }
 
     @FXML
     private void newExpenseInformation(ActionEvent event) {
-        openUniqueExpenseInformationDetailView(Optional.empty());
+        openTurnoverInformationDetailView(Optional.empty());
     }
 
     @FXML
     private void editExpenseInformation(ActionEvent event) {
         Optional<PaymentInformation> optionalEntity = Optional.of(expenseInfoTable.getSelectionModel().getSelectedItem());
-        openUniqueExpenseInformationDetailView(optionalEntity);
+        openTurnoverInformationDetailView(optionalEntity);
     }
 
     @FXML
@@ -249,27 +244,32 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnover>
     private void updateExpenseInformation(PaymentInformation expInfo) {
         if (!paymentInfoList.contains(expInfo)) {
             paymentInfoList.add(expInfo);
-            expInfo.setExpense(entity.get());
+            //expInfo.setExpense(entity.get());
         }
         expenseInfoTable.refresh();
     }
 
-    private void openUniqueExpenseInformationDetailView(Optional<PaymentInformation> optionalEntity) {
+    private void openTurnoverInformationDetailView(Optional<PaymentInformation> optionalEntity) {
         try {
             var subDetailView = fixedTurnoverInformationDetailViewFactory.create(PaymentInformation::new, this::updateExpenseInformation);
             stageBuilderProvider.get()
                                 .withModality(Modality.APPLICATION_MODAL)
-                                .withOwner(Window.getWindows().get(0))
+                                .withOwner(Window.getWindows().getFirst())
                                 .withFXMLResource(FIXED_TURNOVER_INFORMATION_VIEW.toString())
                                 .withView(subDetailView)
                                 .build()
                                 .stage()
                                 .show();
-            subDetailView.setEntity(optionalEntity.orElse(new PaymentInformation()));
+            //subDetailView.setEntity(optionalEntity.orElse(new PaymentInformation()));
         } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR, "Ansicht konnte nicht geöffnet werden!");
             alert.showAndWait();
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected FixedTurnoverDTO createEmptyEntity() {
+        return new FixedTurnoverDTO();
     }
 }

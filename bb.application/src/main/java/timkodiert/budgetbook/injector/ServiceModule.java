@@ -8,6 +8,14 @@ import javafx.fxml.FXMLLoader;
 
 import timkodiert.budgetbook.analysis.CategorySeriesGenerator;
 import timkodiert.budgetbook.analysis.CategorySeriesGeneratorImpl;
+import timkodiert.budgetbook.crud.CategoryCrudServiceImpl;
+import timkodiert.budgetbook.crud.CategoryGroupCrudServiceImpl;
+import timkodiert.budgetbook.crud.FixedTurnoverCrudServiceImpl;
+import timkodiert.budgetbook.crud.UniqueTurnoverCrudServiceImpl;
+import timkodiert.budgetbook.domain.CategoryCrudService;
+import timkodiert.budgetbook.domain.CategoryGroupCrudService;
+import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
+import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.importer.TurnoverImporter;
 import timkodiert.budgetbook.importer.TurnoverImporterImpl;
 import timkodiert.budgetbook.properties.PropertiesService;
@@ -26,7 +34,12 @@ public interface ServiceModule {
     @Binds FXMLLoader bindFXMLLoader(BbFxmlLoader impl);
 
     // Business Logic (ggf. in eigenes Injector-Modul auslagern)
-    @Binds CategorySeriesGenerator bindCategorySeriesGenerator(CategorySeriesGeneratorImpl imol);
+    @Binds CategorySeriesGenerator bindCategorySeriesGenerator(CategorySeriesGeneratorImpl impl);
     @Binds TurnoverImporter bindTurnoverImporter(TurnoverImporterImpl impl);
+
+    @Binds FixedTurnoverCrudService bindFixedTurnoverCrudService(FixedTurnoverCrudServiceImpl impl);
+    @Binds UniqueTurnoverCrudService bindUniqueTurnoverCrudService(UniqueTurnoverCrudServiceImpl impl);
+    @Binds CategoryCrudService bindCategoryCrudService(CategoryCrudServiceImpl impl);
+    @Binds CategoryGroupCrudService bindCategoryGroupCrudService(CategoryGroupCrudServiceImpl impl);
 }
 // @formatter:on

@@ -6,18 +6,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetbook.dialog.DialogFactory;
+import timkodiert.budgetbook.domain.CategoryDTO;
 import timkodiert.budgetbook.domain.adapter.CategoryAdapter;
-import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.CategoryGroup;
-import timkodiert.budgetbook.domain.repository.Repository;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.StringConverterTableCell;
 import timkodiert.budgetbook.view.FxmlResource;
 import timkodiert.budgetbook.view.mdv_base.BaseListManageView;
 
-public class CategoriesManageView extends BaseListManageView<Category, CategoryAdapter> {
+public class CategoriesManageView extends BaseListManageView<CategoryDTO> {
 
     @FXML
     private TableColumn<CategoryAdapter, String> nameColumn;
@@ -25,8 +25,13 @@ public class CategoriesManageView extends BaseListManageView<Category, CategoryA
     private TableColumn<CategoryAdapter, CategoryGroup> groupColumn;
 
     @Inject
-    public CategoriesManageView(FXMLLoader fxmlLoader, Repository<Category> repository, LanguageManager languageManager, DialogFactory dialogFactory) {
-        super(Category::new, repository, fxmlLoader, dialogFactory, languageManager);
+    public CategoriesManageView(FXMLLoader fxmlLoader, LanguageManager languageManager, DialogFactory dialogFactory) {
+        super(fxmlLoader, dialogFactory, languageManager);
+    }
+
+    @Override
+    public void displayEntityById(int id) {
+
     }
 
     @Override
@@ -37,6 +42,16 @@ public class CategoriesManageView extends BaseListManageView<Category, CategoryA
     }
 
     @Override
+    protected CategoryDTO createEmptyEntity() {
+        return null;
+    }
+
+    @Override
+    protected void reloadTable(@Nullable CategoryDTO updatedBean) {
+
+    }
+
+    @Override
     protected String getDetailViewFxmlLocation() {
         return FxmlResource.CATEGORY_DETAIL_VIEW.getPath();
     }
@@ -44,5 +59,10 @@ public class CategoriesManageView extends BaseListManageView<Category, CategoryA
     @FXML
     private void openNewCategory() {
         displayNewEntity();
+    }
+
+    @Override
+    protected CategoryDTO discardChanges(CategoryDTO beanToDiscard) {
+        return null;
     }
 }
