@@ -2,20 +2,20 @@ package timkodiert.budgetbook.converter;
 
 import javafx.util.StringConverter;
 
-import timkodiert.budgetbook.domain.model.CategoryGroup;
+import timkodiert.budgetbook.domain.CategoryGroupDTO;
 
 import static timkodiert.budgetbook.converter.Converters.NULL_STRING;
 import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 
-public class CategoryGroupStringConverter extends StringConverter<CategoryGroup> {
+public class CategoryGroupStringConverter extends StringConverter<CategoryGroupDTO> {
 
     @Override
-    public String toString(CategoryGroup categoryGroup) {
-        return nvl(categoryGroup, CategoryGroup::getName, NULL_STRING);
+    public String toString(CategoryGroupDTO categoryGroup) {
+        return nvl(categoryGroup, CategoryGroupDTO::getName, NULL_STRING);
     }
 
     @Override
-    public CategoryGroup fromString(String s) {
+    public CategoryGroupDTO fromString(String s) {
         throw new UnsupportedOperationException();
     }
 }

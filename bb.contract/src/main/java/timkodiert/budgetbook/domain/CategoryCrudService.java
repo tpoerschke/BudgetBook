@@ -4,10 +4,10 @@ import java.util.List;
 
 public interface CategoryCrudService {
 
-    List<CategoryGroupDTO> readAll();
-    CategoryGroupDTO readById(int id);
+    List<CategoryDTO> readAll();
+    CategoryDTO readById(int id);
 
     boolean create(CategoryDTO categoryDTO);
     boolean update(CategoryDTO categoryDTO);
-    boolean delete(CategoryDTO categoryDTO);
+    boolean delete(int id);
 }

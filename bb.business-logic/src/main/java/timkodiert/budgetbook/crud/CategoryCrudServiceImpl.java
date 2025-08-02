@@ -3,38 +3,61 @@ package timkodiert.budgetbook.crud;
 import java.util.List;
 
 import jakarta.inject.Inject;
+import org.mapstruct.factory.Mappers;
 
 import timkodiert.budgetbook.domain.CategoryCrudService;
 import timkodiert.budgetbook.domain.CategoryDTO;
-import timkodiert.budgetbook.domain.CategoryGroupDTO;
+import timkodiert.budgetbook.domain.model.Category;
+import timkodiert.budgetbook.domain.repository.CategoriesRepository;
 
 public class CategoryCrudServiceImpl implements CategoryCrudService {
 
-    @Inject
-    public CategoryCrudServiceImpl() {}
+    private final CategoriesRepository categoriesRepository;
+    private final ReferenceResolver referenceResolver;
 
-    @Override
-    public List<CategoryGroupDTO> readAll() {
-        return null;
+    @Inject
+    public CategoryCrudServiceImpl(CategoriesRepository categoriesRepository, ReferenceResolver referenceResolver) {
+        this.categoriesRepository = categoriesRepository;
+        this.referenceResolver = referenceResolver;
     }
 
     @Override
-    public CategoryGroupDTO readById(int id) {
-        return null;
+    public List<CategoryDTO> readAll() {
+        CategoryMapper categoryMapper = Mappers.getMapper(CategoryMapper.class);
+        return categoriesRepository.findAll().stream().map(categoryMapper::categoryToDto).toList();
+    }
+
+    @Override
+    public CategoryDTO readById(int id) {
+        CategoryMapper categoryMapper = Mappers.getMapper(CategoryMapper.class);
+        return categoryMapper.categoryToDto(categoriesRepository.findById(id));
     }
 
     @Override
     public boolean create(CategoryDTO categoryDTO) {
-        return false;
+        Category newCategory = new Category();
+        CategoryMapper categoryMapper = Mappers.getMapper(CategoryMapper.class);
+        categoryMapper.updateCategory(categoryDTO, newCategory, referenceResolver);
+        categoriesRepository.persist(newCategory);
+        return true;
     }
 
     @Override
     public boolean update(CategoryDTO categoryDTO) {
-        return false;
+        Category category = categoriesRepository.findById(categoryDTO.getId());
+        CategoryMapper categoryMapper = Mappers.getMapper(CategoryMapper.class);
+        categoryMapper.updateCategory(categoryDTO, category, referenceResolver);
+        categoriesRepository.persist(category);
+        return true;
     }
 
     @Override
-    public boolean delete(CategoryDTO categoryDTO) {
-        return false;
+    public boolean delete(int id) {
+        Category category = categoriesRepository.findById(id);
+        if (category == null) {
+            return false;
+        }
+        categoriesRepository.remove(category);
+        return true;
     }
 }

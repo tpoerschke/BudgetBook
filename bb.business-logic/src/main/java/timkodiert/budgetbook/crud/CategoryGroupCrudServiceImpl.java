@@ -52,7 +52,7 @@ public class CategoryGroupCrudServiceImpl implements CategoryGroupCrudService {
     @Override
     public boolean delete(int id) {
         CategoryGroup categoryGroup = categoryGroupsRepository.findById(id);
-        if(categoryGroup == null) {
+        if (categoryGroup == null) {
             return false;
         }
         categoryGroupsRepository.remove(categoryGroup);

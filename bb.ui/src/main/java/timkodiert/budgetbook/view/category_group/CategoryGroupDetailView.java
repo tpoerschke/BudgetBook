@@ -42,17 +42,6 @@ public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroupD
         validationMap.put("name", nameTextField);
     }
 
-    @FXML
-    private void delete(ActionEvent event) {
-        CategoryGroupDTO category = this.getBean();
-
-        // TODO: Hier prüfen, ob es Kategorien zu dieser Gruppe gibt
-
-        crudService.delete(category.getId());
-        beanAdapter.setBean(null);
-        onUpdate.accept(null);
-    }
-
     @Override
     protected CategoryGroupDTO createEmptyEntity() {
         return new CategoryGroupDTO();
@@ -72,5 +61,16 @@ public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroupD
     @Override
     protected CategoryGroupDTO discardChanges() {
         return crudService.readById(getBean().getId());
+    }
+
+    @FXML
+    private void delete(ActionEvent event) {
+        CategoryGroupDTO category = this.getBean();
+
+        // TODO: Hier prüfen, ob es Kategorien zu dieser Gruppe gibt
+
+        crudService.delete(category.getId());
+        beanAdapter.setBean(null);
+        onUpdate.accept(null);
     }
 }

@@ -7,8 +7,9 @@ import javax.inject.Singleton;
 
 import javafx.util.StringConverter;
 
+import timkodiert.budgetbook.domain.CategoryGroupDTO;
+import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.model.BudgetType;
-import timkodiert.budgetbook.domain.model.CategoryGroup;
 import timkodiert.budgetbook.domain.model.PaymentType;
 import timkodiert.budgetbook.domain.model.TurnoverDirection;
 import timkodiert.budgetbook.i18n.LanguageManager;
@@ -29,12 +30,12 @@ public class Converters {
     public void register() {
         CONVERTER_MAP.put(TurnoverDirection.class, new EnumStringConverter<>(languageManager));
         CONVERTER_MAP.put(PaymentType.class, new EnumStringConverter<>(languageManager));
-        CONVERTER_MAP.put(CategoryGroup.class, new CategoryGroupStringConverter());
+        CONVERTER_MAP.put(CategoryGroupDTO.class, new CategoryGroupStringConverter());
         CONVERTER_MAP.put(BudgetType.class, new EnumStringConverter<BudgetType>(languageManager));
+        CONVERTER_MAP.put(Reference.class, new ReferenceStringConverter());
     }
 
     public static <T> StringConverter<T> get(Class<T> type) {
         return (StringConverter<T>) CONVERTER_MAP.get(type);
     }
-
 }

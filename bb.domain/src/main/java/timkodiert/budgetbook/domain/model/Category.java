@@ -5,30 +5,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Transient;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import timkodiert.budgetbook.domain.adapter.Adaptable;
-import timkodiert.budgetbook.domain.adapter.CategoryAdapter;
-
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
-public class Category extends BaseEntity implements Adaptable<CategoryAdapter> {
+public class Category extends BaseEntity {
 
     @Setter
-    @NonNull
-    @NotBlank(message = "Die Kategorie muss benannt werden.")
+    @Column(nullable = false)
     private String name;
 
     @Setter
@@ -36,13 +30,14 @@ public class Category extends BaseEntity implements Adaptable<CategoryAdapter> {
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", nullable = false)
     private CategoryGroup group;
 
     @Setter
     private Double budgetValue;
 
     @Setter
+    @Column(nullable = false)
     private boolean budgetActive = true;
 
     @Setter
@@ -54,22 +49,6 @@ public class Category extends BaseEntity implements Adaptable<CategoryAdapter> {
 
     @ManyToMany(mappedBy = "categories")
     private List<UniqueTurnoverInformation> uniqueExpenseInformation = new ArrayList<>();
-
-    @Transient
-    private transient CategoryAdapter adapter;
-
-    public Category() {
-        initAdapter();
-    }
-
-    @Override
-    public void initAdapter() {
-        try {
-            this.adapter = new CategoryAdapter(this);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public boolean hasActiveBudget() {
         return budgetActive && budgetValue != null;
