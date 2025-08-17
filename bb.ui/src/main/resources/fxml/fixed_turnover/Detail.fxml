@@ -61,7 +61,7 @@
          </Tab>
          <Tab text="%editExpense.tab.payments">
             <HBox>
-               <TableView fx:id="expenseInfoTable" HBox.hgrow="ALWAYS">
+               <TableView fx:id="paymentInformationTableView" HBox.hgrow="ALWAYS">
                   <columns>
                      <TableColumn fx:id="expenseInfoValueCol" minWidth="100.0" prefWidth="100.0" text="%editExpense.column.amount"/>
                      <TableColumn fx:id="expenseInfoTypeCol" minWidth="120.0" prefWidth="120.0" text="%editExpense.column.type"/>

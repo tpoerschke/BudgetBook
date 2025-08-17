@@ -9,6 +9,8 @@ import java.util.function.UnaryOperator;
 import atlantafx.base.theme.Styles;
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedInject;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -52,7 +54,9 @@ public class MonthYearPickerWidget implements Initializable {
     private final String labelStr;
     private final boolean showResetBtn;
     private final ViewMode viewMode;
-    private MonthYear value;
+    private final ObjectProperty<MonthYear> value = new SimpleObjectProperty<>();
+
+    private boolean muteListener = false;
 
     @AssistedInject
     public MonthYearPickerWidget(LanguageManager languageManager,
@@ -62,7 +66,7 @@ public class MonthYearPickerWidget implements Initializable {
                                  @Assisted boolean showResetBtn,
                                  @Assisted ViewMode viewMode) {
         this.languageManager = languageManager;
-        this.value = initialValue;
+        this.value.setValue(initialValue);
         this.labelStr = labelStr;
         this.showResetBtn = showResetBtn;
         this.viewMode = viewMode;
@@ -79,21 +83,30 @@ public class MonthYearPickerWidget implements Initializable {
         }
     }
 
-    public MonthYear getValue() {
-        if (monthChoiceBox.getSelectionModel().isEmpty() || yearTextField.getText().isEmpty()) {
-            return null;
+    private void updateValue() {
+        if (muteListener) {
+            return;
         }
-        return MonthYear.of(monthChoiceBox.getSelectionModel().getSelectedIndex() + 1, Integer.valueOf(yearTextField.getText()));
+        if (monthChoiceBox.getSelectionModel().isEmpty() || yearTextField.getText().isEmpty()) {
+            value.set(null);
+        }
+        value.set(MonthYear.of(monthChoiceBox.getSelectionModel().getSelectedIndex() + 1, Integer.valueOf(yearTextField.getText())));
     }
 
-    public void setValue(MonthYear value) {
-        this.value = value;
-        if (this.value != null) {
-            monthChoiceBox.getSelectionModel().select(this.value.getMonth() - 1);
-            yearTextField.setText("" + this.value.getYear());
+    private void updateUi() {
+        muteListener = true;
+        if (this.value.get() != null) {
+            monthChoiceBox.getSelectionModel().select(this.value.get().getMonth() - 1);
+            yearTextField.setText("" + this.value.get().getYear());
         } else {
+            monthChoiceBox.getSelectionModel().clearSelection();
             yearTextField.setText("");
         }
+        muteListener = false;
+    }
+
+    public ObjectProperty<MonthYear> valueProperty() {
+        return value;
     }
 
     @Override
@@ -105,7 +118,7 @@ public class MonthYearPickerWidget implements Initializable {
 
         UnaryOperator<Change> integerFilter = change -> {
             String newText = change.getControlNewText();
-            if (newText.matches("([1-9][0-9]*)?")) {
+            if (newText.matches("([1-9]\\d*)?")) {
                 return change;
             }
             return null;
@@ -117,12 +130,22 @@ public class MonthYearPickerWidget implements Initializable {
 
         monthChoiceBox.getItems().setAll(Arrays.asList(languageManager.getMonths()));
 
-        if (this.value != null) {
-            monthChoiceBox.getSelectionModel().select(this.value.getMonth() - 1);
-            yearTextField.setText("" + this.value.getYear());
+        if (this.value.get() != null) {
+            monthChoiceBox.getSelectionModel().select(this.value.get().getMonth() - 1);
+            yearTextField.setText("" + this.value.get().getYear());
         } else {
             yearTextField.setText("");
         }
+
+        valueProperty().addListener((observable, oldValue, newValue) -> {
+            updateUi();
+        });
+        monthChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            updateValue();
+        });
+        yearTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            updateValue();
+        });
 
         // Styling setzen
         if (viewMode == ViewMode.INLINE) {

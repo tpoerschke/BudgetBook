@@ -2,8 +2,9 @@
 <project version="4">
   <component name="EntryPointsManager">
     <writeAnnotations>
-      <writeAnnotation name="jakarta.persistence.OneToMany" />
       <writeAnnotation name="jakarta.persistence.ManyToMany" />
+      <writeAnnotation name="jakarta.persistence.OneToMany" />
+      <writeAnnotation name="javafx.fxml.FXML" />
     </writeAnnotations>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

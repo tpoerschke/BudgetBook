@@ -2,8 +2,6 @@ package timkodiert.budgetbook.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -86,16 +84,4 @@ public class Category extends BaseEntity {
         return this.name;
     }
 
-    @Override
-    public boolean contentEquals(Object other) {
-
-        if (other instanceof Category cat) {
-            Integer optGroupId = Optional.ofNullable(this.getGroup()).map(CategoryGroup::getId).orElse(null);
-            Integer optOtherGroupId = Optional.ofNullable(cat.getGroup()).map(CategoryGroup::getId).orElse(null);
-            return Objects.equals(this.getName(), cat.getName())
-                    && Objects.equals(this.getDescription(), cat.getDescription())
-                    && Objects.equals(optGroupId, optOtherGroupId);
-        }
-        return false;
-    }
 }

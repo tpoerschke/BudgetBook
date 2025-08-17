@@ -20,8 +20,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import static timkodiert.budgetbook.domain.model.ContentEquals.listsContentEquals;
-
 @Getter
 @Entity
 @NoArgsConstructor
@@ -74,7 +72,7 @@ public class UniqueTurnoverInformation implements Categorizable, ContentEquals {
                     && this.getValue() == info.getValue()
                     && this.getExpense().getId() == info.getExpense().getId();
 
-            return equals && listsContentEquals(this.getCategories(), info.getCategories());
+            //            return equals && listsContentEquals(this.getCategories(), info.getCategories());
         }
 
         return false;

@@ -8,7 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @MappedSuperclass
 @Getter
-public abstract class BaseEntity implements ContentEquals {
+public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(generator = "increment")

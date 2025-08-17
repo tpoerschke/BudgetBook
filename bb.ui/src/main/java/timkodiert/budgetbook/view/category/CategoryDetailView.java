@@ -92,13 +92,13 @@ public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implem
 
     @Override
     public boolean save() {
-        CategoryDTO dto = getBean();
-        if (dto == null) {
+        CategoryDTO bean = getBean();
+        if (bean == null) {
             return false;
         }
 
-        Predicate<CategoryDTO> servicePersistMethod = dto.isNew() ? categoryCrudService::create : categoryCrudService::update;
-        return validate() && servicePersistMethod.test(dto);
+        Predicate<CategoryDTO> servicePersistMethod = bean.isNew() ? categoryCrudService::create : categoryCrudService::update;
+        boolean success = validate() && servicePersistMethod.test(bean);
         //        boolean saved = super.save();
         //        CategoryGroup catGroup = entity.get().getGroup();
         //        if (saved && catGroup != null) {
@@ -106,6 +106,12 @@ public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implem
         //            entityManager.refresh(catGroup);
         //            return true;
         //        }
+        if (success) {
+            beanAdapter.setDirty(false);
+            onUpdate.accept(bean);
+            return true;
+        }
+        return false;
     }
 
     @Override

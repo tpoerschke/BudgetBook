@@ -23,7 +23,7 @@ import static timkodiert.budgetbook.domain.model.ContentEquals.listsContentEqual
 
 @Getter
 @Entity
-public class UniqueTurnover extends BaseEntity implements Adaptable<UniqueTurnoverAdapter> {
+public class UniqueTurnover extends BaseEntity implements Adaptable<UniqueTurnoverAdapter>, ContentEquals {
 
     @Setter
     @NotBlank(message = "Es muss ein Rechnungsteller angegeben werden.")

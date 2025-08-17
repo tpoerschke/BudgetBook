@@ -44,7 +44,7 @@ public class ExpenseDetailWidget implements View, Initializable {
     }
 
     private void initProperties() {
-        positionLabel.textProperty().bind(expense.getAdapter().positionProperty());
+        positionLabel.setText(expense.getPosition());
         noteTextFlow.getChildren().setAll(new Text(expense.getNote()));
 
         categoriesFlow.getChildren().clear();

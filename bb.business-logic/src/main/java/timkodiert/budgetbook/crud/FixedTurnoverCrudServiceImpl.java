@@ -7,42 +7,81 @@ import org.mapstruct.factory.Mappers;
 
 import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
 import timkodiert.budgetbook.domain.FixedTurnoverDTO;
+import timkodiert.budgetbook.domain.PaymentInformationDTO;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
+import timkodiert.budgetbook.domain.model.PaymentInformation;
 import timkodiert.budgetbook.domain.repository.Repository;
 
 public class FixedTurnoverCrudServiceImpl implements FixedTurnoverCrudService {
 
-    private final Repository<FixedTurnover> repository;
+    private final ReferenceResolver referenceResolver;
+    private final Repository<FixedTurnover> fixedTurnoverRepository;
+    private final Repository<PaymentInformation> paymentInformationRepository;
 
     @Inject
-    public FixedTurnoverCrudServiceImpl(Repository<FixedTurnover> repository) {
-        this.repository = repository;
+    public FixedTurnoverCrudServiceImpl(ReferenceResolver referenceResolver,
+                                        Repository<FixedTurnover> fixedTurnoverRepository,
+                                        Repository<PaymentInformation> paymentInformationRepository) {
+        this.referenceResolver = referenceResolver;
+        this.fixedTurnoverRepository = fixedTurnoverRepository;
+        this.paymentInformationRepository = paymentInformationRepository;
     }
 
     @Override
     public List<FixedTurnoverDTO> readAll() {
         FixedTurnoverMapper mapper = Mappers.getMapper(FixedTurnoverMapper.class);
-        return repository.findAll().stream().map(mapper::fixedTurnoverToFixedTurnoverDto).toList();
+        return fixedTurnoverRepository.findAll().stream().map(mapper::fixedTurnoverToFixedTurnoverDto).toList();
     }
 
     @Override
     public FixedTurnoverDTO readById(int id) {
         FixedTurnoverMapper mapper = Mappers.getMapper(FixedTurnoverMapper.class);
-        return repository.findAll().stream().filter(t -> t.getId() == id).findAny().map(mapper::fixedTurnoverToFixedTurnoverDto).orElse(null);
+        return fixedTurnoverRepository.findAll().stream().filter(t -> t.getId() == id).findAny().map(mapper::fixedTurnoverToFixedTurnoverDto).orElse(null);
+    }
+
+    @Override
+    public PaymentInformationDTO readPaymentInformationById(int id) {
+        FixedTurnoverMapper mapper = Mappers.getMapper(FixedTurnoverMapper.class);
+        PaymentInformation payInfo = paymentInformationRepository.findById(id);
+        return mapper.paymentInformationToPaymentInformationDto(payInfo);
     }
 
     @Override
     public boolean create(FixedTurnoverDTO fixedTurnoverDTO) {
-        return false;
+        FixedTurnover fixedTurnover = new FixedTurnover();
+        FixedTurnoverMapper fixedTurnoverMapper = Mappers.getMapper(FixedTurnoverMapper.class);
+        fixedTurnoverMapper.updateFixedTurnover(fixedTurnoverDTO, fixedTurnover, referenceResolver);
+        linkPaymentInformation(fixedTurnover);
+        fixedTurnoverRepository.merge(fixedTurnover);
+        return true;
     }
 
     @Override
     public boolean update(FixedTurnoverDTO fixedTurnoverDTO) {
-        return false;
+        FixedTurnover fixedTurnover = fixedTurnoverRepository.findById(fixedTurnoverDTO.getId());
+        FixedTurnoverMapper fixedTurnoverMapper = Mappers.getMapper(FixedTurnoverMapper.class);
+        fixedTurnoverMapper.updateFixedTurnover(fixedTurnoverDTO, fixedTurnover, referenceResolver);
+        linkPaymentInformation(fixedTurnover);
+        fixedTurnoverRepository.merge(fixedTurnover);
+        return true;
     }
 
     @Override
-    public boolean delete(FixedTurnoverDTO fixedTurnoverDTO) {
-        return false;
+    public boolean delete(int id) {
+        FixedTurnover fixedTurnover = fixedTurnoverRepository.findById(id);
+        if (fixedTurnover == null) {
+            return false;
+        }
+        fixedTurnoverRepository.remove(fixedTurnover);
+        return true;
+    }
+
+    private void linkPaymentInformation(FixedTurnover fixedTurnover) {
+        fixedTurnover.getPaymentInformations().forEach(payInfo -> {
+            payInfo.setExpense(fixedTurnover);
+            if (payInfo.getId() < 0) {
+                payInfo.setId(0);
+            }
+        });
     }
 }

@@ -49,13 +49,18 @@ public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroupD
 
     @Override
     public boolean save() {
-        CategoryGroupDTO dto = getBean();
-        if (dto == null) {
+        CategoryGroupDTO bean = getBean();
+        if (bean == null) {
             return false;
         }
-
-        Predicate<CategoryGroupDTO> servicePersistMethod = dto.isNew() ? crudService::create : crudService::update;
-        return validate() && servicePersistMethod.test(dto);
+        Predicate<CategoryGroupDTO> servicePersistMethod = bean.isNew() ? crudService::create : crudService::update;
+        boolean success = validate() && servicePersistMethod.test(bean);
+        if (success) {
+            beanAdapter.setDirty(false);
+            onUpdate.accept(bean);
+            return true;
+        }
+        return false;
     }
 
     @Override

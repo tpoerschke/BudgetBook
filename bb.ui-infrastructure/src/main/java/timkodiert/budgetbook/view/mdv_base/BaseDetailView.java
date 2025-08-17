@@ -23,6 +23,11 @@ public abstract class BaseDetailView<B> implements View {
 
     public void setBean(B bean) {
         beanAdapter.setBean(bean);
+        beanSet();
+    }
+
+    protected void beanSet() {
+        // Kann als Callback verwendet werden
     }
 
     protected abstract B createEmptyEntity();

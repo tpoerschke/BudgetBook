@@ -63,7 +63,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         List<Category> categories = entityManager.findAll(Category.class);
-        categoryCheckListHelper = new CategoryCheckListHelper(categoriesListView, categories);
+        //categoryCheckListHelper = new CategoryCheckListHelper(categoriesListView, categories);
 
         positionTextField.getAvailableEntries().addAll(labelSuggestions);
         directionComboBox.getItems().setAll(TurnoverDirection.values());
@@ -77,7 +77,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
         valueTextField.setText(String.valueOf(expenseInfo.getValue()));
         directionComboBox.getSelectionModel().select(entity.getDirection());
         // Kategorien anzeigen
-        categoryCheckListHelper.checkCategories(entity);
+        //categoryCheckListHelper.checkCategories(entity);
     }
 
     public boolean validate() {
@@ -96,7 +96,7 @@ public class UniqueExpenseInformationDetailView implements View, Initializable {
         entity.setValue(Double.valueOf(valueTextField.getText()));
         entity.setDirection(directionComboBox.getSelectionModel().getSelectedItem());
         entity.getCategories().clear();
-        entity.getCategories().addAll(categoryCheckListHelper.getCheckedCategories());
+        //entity.getCategories().addAll(categoryCheckListHelper.getCheckedCategories());
 
         if (!isSaving) {
             return entity;
