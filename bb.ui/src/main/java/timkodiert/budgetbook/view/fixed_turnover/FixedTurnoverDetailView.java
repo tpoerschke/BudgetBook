@@ -30,6 +30,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Window;
@@ -41,6 +42,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetbook.converter.Converters;
 import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
+import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.AccountTurnoverDTO;
 import timkodiert.budgetbook.domain.CategoryCrudService;
@@ -55,7 +57,6 @@ import timkodiert.budgetbook.domain.model.TurnoverDirection;
 import timkodiert.budgetbook.table.cell.DateTableCell;
 import timkodiert.budgetbook.table.cell.MonthYearTableCell;
 import timkodiert.budgetbook.ui.helper.Bind;
-import timkodiert.budgetbook.ui.helper.CategoryCheckListHelper;
 import timkodiert.budgetbook.util.StageBuilder;
 import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 
@@ -109,20 +110,18 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
 
     private final FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory;
     private final Provider<StageBuilder> stageBuilderProvider;
-    private final FixedTurnoverCrudService crudService;
     private final CategoryCrudService categoryCrudService;
-
-    private CategoryCheckListHelper categoryCheckListHelper;
+    private final FixedTurnoverCrudService crudService;
 
     @Inject
     public FixedTurnoverDetailView(FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory,
                                    Provider<StageBuilder> stageBuilderProvider,
-                                   FixedTurnoverCrudService crudService,
-                                   CategoryCrudService categoryCrudService) {
+                                   CategoryCrudService categoryCrudService,
+                                   FixedTurnoverCrudService crudService) {
         this.fixedTurnoverInformationDetailViewFactory = fixedTurnoverInformationDetailViewFactory;
         this.stageBuilderProvider = stageBuilderProvider;
-        this.crudService = crudService;
         this.categoryCrudService = categoryCrudService;
+        this.crudService = crudService;
     }
 
     @Override
@@ -135,10 +134,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         deleteFixedExpenseInformationButton.disableProperty()
                                            .bind(paymentInformationTableView.getSelectionModel().selectedItemProperty().isNull());
 
-
         root.disableProperty().bind(beanAdapter.isEmpty());
-        List<Reference<CategoryDTO>> categories = categoryCrudService.readAll().stream().map(c -> new Reference<>(CategoryDTO.class, c.getId(), c.getName())).toList();
-        categoryCheckListHelper = new CategoryCheckListHelper(categoriesListView, categories);
 
         // Tabelle der Unterelemente
         StringConverter<PaymentType> paymentTypeConverter = Converters.get(PaymentType.class);
@@ -164,6 +160,11 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         importsDateCol.setSortType(TableColumn.SortType.DESCENDING);
         importsTable.getSortOrder().add(importsDateCol);
 
+        // Kategorien
+        categoriesListView.setCellFactory(lv -> new CheckBoxListCell<>(item -> categoriesListView.getItemBooleanProperty(item), new ReferenceStringConverter<>()));
+        List<Reference<CategoryDTO>> categories = categoryCrudService.readAll().stream().map(c -> new Reference<>(CategoryDTO.class, c.getId(), c.getName())).toList();
+        categoriesListView.getItems().setAll(categories);
+
         // Bindings
         positionTextField.textProperty().bindBidirectional(beanAdapter.getProperty(FixedTurnoverDTO::getPosition, FixedTurnoverDTO::setPosition));
         noteTextArea.textProperty().bindBidirectional(beanAdapter.getProperty(FixedTurnoverDTO::getNote, FixedTurnoverDTO::setNote));
@@ -184,11 +185,19 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     }
 
     @Override
+    protected void beanSet() {
+        categoriesListView.getCheckModel().clearChecks();
+        FixedTurnoverDTO bean = beanAdapter.getBean();
+        bean.getCategories().forEach(cat -> categoriesListView.getCheckModel().check(cat));
+    }
+
+    @Override
     public boolean save() {
         FixedTurnoverDTO bean = getBean();
         if (bean == null) {
             return false;
         }
+        beanAdapter.getBean().setCategories(categoriesListView.getCheckModel().getCheckedItems());
         Predicate<FixedTurnoverDTO> crudMethod = bean.getId() <= 0 ? crudService::create : crudService::update;
         boolean success = validate() && crudMethod.test(getBean());
         if (success) {

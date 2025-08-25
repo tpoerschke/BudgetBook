@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <SplitPane dividerPositions="0.5" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="timkodiert.budgetbook.view.unique_expense.UniqueExpensesManageView">
+           fx:controller="timkodiert.budgetbook.view.unique_turnover.UniqueTurnoverManageView">
    <items>
       <BorderPane prefHeight="200.0" prefWidth="200.0">
          <center>

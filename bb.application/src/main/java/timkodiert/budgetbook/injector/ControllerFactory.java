@@ -18,8 +18,8 @@ import timkodiert.budgetbook.view.fixed_turnover.FixedTurnoverDetailView;
 import timkodiert.budgetbook.view.fixed_turnover.FixedTurnoverManageView;
 import timkodiert.budgetbook.view.importer.FixedTurnoverWizardView;
 import timkodiert.budgetbook.view.importer.ImportView;
-import timkodiert.budgetbook.view.unique_expense.UniqueExpenseDetailView;
-import timkodiert.budgetbook.view.unique_expense.UniqueExpensesManageView;
+import timkodiert.budgetbook.view.unique_turnover.UniqueTurnoverDetailView;
+import timkodiert.budgetbook.view.unique_turnover.UniqueTurnoverManageView;
 import timkodiert.budgetbook.view.widget.BudgetWidget;
 
 public class ControllerFactory {
@@ -45,8 +45,8 @@ public class ControllerFactory {
         // MDV / Stammdaten
         viewControllerMap.put(FixedTurnoverManageView.class, viewComponent::getFixedTurnoverManageView);
         viewControllerMap.put(FixedTurnoverDetailView.class, viewComponent::getFixedTurnoverDetailView);
-        viewControllerMap.put(UniqueExpensesManageView.class, viewComponent::getUniqueExpensesManageView);
-        viewControllerMap.put(UniqueExpenseDetailView.class, viewComponent::getUniqueExpenseDetailView);
+        viewControllerMap.put(UniqueTurnoverManageView.class, viewComponent::getUniqueExpensesManageView);
+        viewControllerMap.put(UniqueTurnoverDetailView.class, viewComponent::getUniqueExpenseDetailView);
         viewControllerMap.put(CategoriesManageView.class, viewComponent::getManageCategoriesView);
         viewControllerMap.put(CategoryDetailView.class, viewComponent::getCategoryDetailView);
         viewControllerMap.put(CategoryGroupManageView.class, viewComponent::getCategoryGroupManageView);

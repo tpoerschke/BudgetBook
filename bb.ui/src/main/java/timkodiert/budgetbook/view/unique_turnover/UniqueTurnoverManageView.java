@@ -1,4 +1,4 @@
-package timkodiert.budgetbook.view.unique_expense;
+package timkodiert.budgetbook.view.unique_turnover;
 
 import java.time.LocalDate;
 import javax.inject.Inject;
@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import timkodiert.budgetbook.dialog.DialogFactory;
 import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
-import timkodiert.budgetbook.domain.adapter.UniqueTurnoverAdapter;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 import timkodiert.budgetbook.table.cell.DateTableCell;
@@ -22,20 +21,20 @@ import timkodiert.budgetbook.view.mdv_base.BaseListManageView;
 
 import static timkodiert.budgetbook.view.FxmlResource.UNIQUE_TURNOVER_DETAIL_VIEW;
 
-public class UniqueExpensesManageView extends BaseListManageView<UniqueTurnoverDTO> {
+public class UniqueTurnoverManageView extends BaseListManageView<UniqueTurnoverDTO> {
 
     @FXML
-    private TableColumn<UniqueTurnoverAdapter, String> billerCol;
+    private TableColumn<UniqueTurnoverDTO, String> billerCol;
     @FXML
-    private TableColumn<UniqueTurnoverAdapter, LocalDate> dateCol;
+    private TableColumn<UniqueTurnoverDTO, LocalDate> dateCol;
     @FXML
-    private TableColumn<UniqueTurnoverAdapter, Number> valueCol;
+    private TableColumn<UniqueTurnoverDTO, Number> valueCol;
 
     private final UniqueTurnoverCrudService crudService;
 
 
     @Inject
-    public UniqueExpensesManageView(DialogFactory dialogFactory, FXMLLoader fxmlLoader, LanguageManager languageManager, UniqueTurnoverCrudService crudService) {
+    public UniqueTurnoverManageView(DialogFactory dialogFactory, FXMLLoader fxmlLoader, LanguageManager languageManager, UniqueTurnoverCrudService crudService) {
         super(fxmlLoader, dialogFactory, languageManager);
         this.crudService = crudService;
     }
@@ -50,10 +49,10 @@ public class UniqueExpensesManageView extends BaseListManageView<UniqueTurnoverD
         billerCol.setCellValueFactory(new PropertyValueFactory<>("biller"));
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         dateCol.setCellFactory(col -> new DateTableCell<>());
-        valueCol.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getBean().getTotalValue()));
+        valueCol.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getTotalValue()));
         valueCol.setCellFactory(col -> new CurrencyTableCell<>());
 
-        //entityTable.getSortOrder().add(dateCol);
+        entityTable.getSortOrder().add(dateCol);
     }
 
     @Override

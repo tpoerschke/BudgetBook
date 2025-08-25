@@ -1,4 +1,4 @@
-package timkodiert.budgetbook.view.unique_expense;
+package timkodiert.budgetbook.view.unique_turnover;
 
 import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
 import timkodiert.budgetbook.view.mdv_base.DtoAdapterBase;

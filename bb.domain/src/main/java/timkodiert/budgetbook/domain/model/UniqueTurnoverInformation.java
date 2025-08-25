@@ -2,15 +2,12 @@ package timkodiert.budgetbook.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -18,17 +15,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 @Getter
-@Entity
 @NoArgsConstructor
-public class UniqueTurnoverInformation implements Categorizable, ContentEquals {
-
-    @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
-    private int id;
+@Entity
+public class UniqueTurnoverInformation extends BaseEntity implements Categorizable {
 
     @Setter
     @NotBlank(message = "Die Position muss benannt werden.")
@@ -60,21 +51,12 @@ public class UniqueTurnoverInformation implements Categorizable, ContentEquals {
         return info;
     }
 
+    public void setId(int id) {
+        super.id = id;
+    }
+
     public double getValueSigned() {
         return this.value * this.getDirection().getSign();
     }
 
-    @Override
-    public boolean contentEquals(Object other) {
-
-        if (other instanceof UniqueTurnoverInformation info) {
-            boolean equals = Objects.equals(this.getLabel(), info.getLabel())
-                    && this.getValue() == info.getValue()
-                    && this.getExpense().getId() == info.getExpense().getId();
-
-            //            return equals && listsContentEquals(this.getCategories(), info.getCategories());
-        }
-
-        return false;
-    }
 }

@@ -6,8 +6,12 @@ public interface UniqueTurnoverCrudService {
 
     List<UniqueTurnoverDTO> readAll();
     UniqueTurnoverDTO readById(int id);
+    UniqueTurnoverInformationDTO readUniqueTurnoverInformationById(int id);
 
-    boolean create(UniqueTurnoverDTO fixedTurnoverDTO);
-    boolean update(UniqueTurnoverDTO fixedTurnoverDTO);
-    boolean delete(UniqueTurnoverDTO fixedTurnoverDTO);
+    boolean create(UniqueTurnoverDTO uniqueTurnoverDTO);
+    boolean update(UniqueTurnoverDTO uniqueTurnoverDTO);
+    boolean delete(int id);
+
+    List<String> getUniqueTurnoverLabels();
+    List<String> getUniqueTurnoverInformationLabels();
 }
