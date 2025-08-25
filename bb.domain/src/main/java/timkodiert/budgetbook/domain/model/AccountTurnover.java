@@ -61,22 +61,7 @@ public class AccountTurnover extends BaseEntity implements Comparable<AccountTur
         this.amount = amount;
     }
 
-    @Override
-    public boolean contentEquals(Object other) {
-        if (other instanceof AccountTurnover accountTurnover) {
-            return date.equals(accountTurnover.getDate())
-                    && receiver.equals(accountTurnover.getReceiver())
-                    && reference.equals(accountTurnover.getReference())
-                    && amount == accountTurnover.getAmount();
-        }
-        return false;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return contentEquals(obj);
-    }
-
+    @SuppressWarnings("java:S1210")
     @Override
     public int compareTo(@NotNull AccountTurnover o) {
         return date.compareTo(o.getDate());

@@ -2,45 +2,38 @@ package timkodiert.budgetbook.view.mdv_base;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetbook.validation.ValidationWrapper;
 import timkodiert.budgetbook.view.View;
 
-@RequiredArgsConstructor
-public abstract class BaseDetailView<T> implements View {
+public abstract class BaseDetailView<B> implements View {
 
     protected final Map<String, Control> validationMap = new HashMap<>();
 
-    protected final Supplier<T> emptyEntityProducer;
-
     @Getter
-    protected final ObjectProperty<T> entity = new SimpleObjectProperty<>();
+    protected BeanAdapter<B> beanAdapter = new BeanAdapter<>();
 
-    public void setEntity(T entity) {
-        this.entity.set(entity);
-
-        if (entity == null) {
-            return;
-        }
-
-        patchUi(entity);
+    public @Nullable B getBean() {
+        return beanAdapter.getBean();
     }
+
+    public void setBean(B bean) {
+        beanAdapter.setBean(bean);
+        beanSet();
+    }
+
+    protected void beanSet() {
+        // Kann als Callback verwendet werden
+    }
+
+    protected abstract B createEmptyEntity();
 
     protected boolean validate() {
-        T entityToValidate = patchEntity(emptyEntityProducer.get(), false);
-
-        ValidationWrapper<T> validation = new ValidationWrapper<>(validationMap);
-        return validation.validate(entityToValidate);
+        ValidationWrapper<B> validation = new ValidationWrapper<>(validationMap);
+        return validation.validate(beanAdapter.getBean());
     }
-
-    protected abstract T patchEntity(T entity, boolean isSaving);
-
-    protected abstract void patchUi(T entity);
 }

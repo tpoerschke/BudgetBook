@@ -21,8 +21,8 @@ import timkodiert.budgetbook.view.fixed_turnover.FixedTurnoverDetailView;
 import timkodiert.budgetbook.view.fixed_turnover.FixedTurnoverManageView;
 import timkodiert.budgetbook.view.importer.FixedTurnoverWizardView;
 import timkodiert.budgetbook.view.importer.ImportView;
-import timkodiert.budgetbook.view.unique_expense.UniqueExpenseDetailView;
-import timkodiert.budgetbook.view.unique_expense.UniqueExpensesManageView;
+import timkodiert.budgetbook.view.unique_turnover.UniqueTurnoverDetailView;
+import timkodiert.budgetbook.view.unique_turnover.UniqueTurnoverManageView;
 import timkodiert.budgetbook.view.widget.BudgetWidget;
 
 @Singleton
@@ -63,8 +63,8 @@ public interface ViewComponent {
     // -----------------------------------
     // Einzigartige Ausgaben
     // -----------------------------------
-    UniqueExpensesManageView getUniqueExpensesManageView();
-    UniqueExpenseDetailView getUniqueExpenseDetailView();
+    UniqueTurnoverManageView getUniqueExpensesManageView();
+    UniqueTurnoverDetailView getUniqueExpenseDetailView();
 
     // -----------------------------------
     // Umsätze importieren

@@ -2,7 +2,6 @@ package timkodiert.budgetbook.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,6 +45,10 @@ public class PaymentInformation extends BaseEntity {
         this.end = end;
     }
 
+    public void setId(int id) {
+        super.id = id;
+    }
+
     public double getValueFor(MonthYear monthYear) {
         return this.validFor(monthYear) && this.monthsOfPayment.contains(monthYear.getMonth()) ? this.value : 0.0;
     }
@@ -60,23 +63,5 @@ public class PaymentInformation extends BaseEntity {
     public void setMonthsOfPayment(List<Integer> monthsOfPayment) {
         this.monthsOfPayment.clear();
         this.monthsOfPayment.addAll(monthsOfPayment);
-    }
-
-    @Override
-    public boolean contentEquals(Object other) {
-
-        if (other instanceof PaymentInformation info) {
-            boolean equals = Objects.equals(this.getStart(), info.getStart())
-                    && Objects.equals(this.getEnd(), info.getEnd())
-                    && this.getType() == info.getType()
-                    && this.getValue() == info.getValue()
-                    && this.getExpense().getId() == info.getExpense().getId();
-
-            return equals
-                    && this.getMonthsOfPayment().containsAll(info.getMonthsOfPayment())
-                    && info.getMonthsOfPayment().containsAll(this.getMonthsOfPayment());
-        }
-
-        return false;
     }
 }

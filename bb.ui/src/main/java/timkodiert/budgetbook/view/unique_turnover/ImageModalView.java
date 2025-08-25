@@ -1,4 +1,4 @@
-package timkodiert.budgetbook.view.unique_expense;
+package timkodiert.budgetbook.view.unique_turnover;
 
 import java.io.File;
 import java.net.URL;

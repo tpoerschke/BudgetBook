@@ -9,13 +9,13 @@ public class StringConverterTableCell<S, T> extends TableCell<S, T> {
 
     private final StringConverter<T> converter;
 
-    public StringConverterTableCell(Class<T> converterClass) {
-        converter = Converters.get(converterClass);
+    public StringConverterTableCell(Class<T> typeToConvert) {
+        converter = Converters.get(typeToConvert);
     }
 
     @Override
     protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
-        setText(empty ? "" : converter.toString(item));
+        setText(converter.toString(item));
     }
 }

@@ -1,13 +1,18 @@
 package timkodiert.budgetbook.converter;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Currency;
 import java.util.Locale;
 import javax.inject.Inject;
 
-public class DoubleCurrencyStringConverter {
+import javafx.util.StringConverter;
 
-    private NumberFormat format;
+import static timkodiert.budgetbook.util.ObjectUtils.nvl;
+
+public class DoubleCurrencyStringConverter extends StringConverter<Double> {
+
+    private final NumberFormat format;
 
     @Inject
     public DoubleCurrencyStringConverter() {
@@ -15,6 +20,24 @@ public class DoubleCurrencyStringConverter {
         format.setCurrency(Currency.getInstance("EUR"));
     }
 
+    @Override
+    public String toString(Double obj) {
+        return nvl(obj, format::format, "");
+    }
+
+    @Override
+    public Double fromString(String str) {
+        try {
+            return str.isEmpty() ? null : format.parse(str).doubleValue();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @deprecated Stattdessen sollte die Methode toString verwendet werden
+     */
+    @Deprecated(forRemoval = true)
     public String format(double value) {
         return format.format(value);
     }

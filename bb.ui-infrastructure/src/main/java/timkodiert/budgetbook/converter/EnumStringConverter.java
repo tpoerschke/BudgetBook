@@ -17,8 +17,8 @@ public class EnumStringConverter<T extends Enum<T>> extends StringConverter<T> {
 
     @Override
     public String toString(T t) {
-        if(t == null) {
-            return "---";
+        if (t == null) {
+            return Converters.NULL_STRING;
         }
         return languageManager.get(t.getClass().getSimpleName() + "." + t.name());
     }

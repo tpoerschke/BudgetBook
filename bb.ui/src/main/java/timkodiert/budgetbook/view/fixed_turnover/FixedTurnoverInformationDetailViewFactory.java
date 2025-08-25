@@ -1,14 +1,13 @@
 package timkodiert.budgetbook.view.fixed_turnover;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.BiConsumer;
 
 import dagger.assisted.AssistedFactory;
 
-import timkodiert.budgetbook.domain.model.PaymentInformation;
+import timkodiert.budgetbook.domain.PaymentInformationDTO;
 
 @AssistedFactory
 public interface FixedTurnoverInformationDetailViewFactory {
 
-    FixedTurnoverInformationDetailView create(Supplier<PaymentInformation> emptyEntityProducer, Consumer<PaymentInformation> onSaveCallback);
+    FixedTurnoverInformationDetailView create(BiConsumer<PaymentInformationDTO, PaymentInformationDTO> updateCallback);
 }
