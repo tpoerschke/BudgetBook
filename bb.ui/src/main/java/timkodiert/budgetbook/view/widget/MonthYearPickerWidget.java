@@ -137,15 +137,9 @@ public class MonthYearPickerWidget implements Initializable {
             yearTextField.setText("");
         }
 
-        valueProperty().addListener((observable, oldValue, newValue) -> {
-            updateUi();
-        });
-        monthChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            updateValue();
-        });
-        yearTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            updateValue();
-        });
+        valueProperty().addListener((observable, oldValue, newValue) -> updateUi());
+        monthChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> updateValue());
+        yearTextField.textProperty().addListener((observable, oldValue, newValue) -> updateValue());
 
         // Styling setzen
         if (viewMode == ViewMode.INLINE) {

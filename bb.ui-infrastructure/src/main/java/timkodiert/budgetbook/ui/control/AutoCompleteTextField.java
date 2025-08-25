@@ -26,7 +26,7 @@ public class AutoCompleteTextField extends TextField {
         super();
 
         textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && newValue.length() > 0 && focusedProperty().get()) {
+            if (newValue != null && !newValue.isEmpty() && focusedProperty().get()) {
                 List<String> suitableList = findSuitableEntries(newValue);
                 if (!suitableList.isEmpty()) {
                     generateContextMenuItems(suitableList);
@@ -37,7 +37,7 @@ public class AutoCompleteTextField extends TextField {
             }
         });
         focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue && textProperty().get() != null) {
+            if (Boolean.TRUE.equals(newValue) && textProperty().get() != null) {
                 List<String> suitableList = findSuitableEntries(textProperty().get());
                 if (!suitableList.isEmpty()) {
                     generateContextMenuItems(suitableList);
@@ -57,9 +57,7 @@ public class AutoCompleteTextField extends TextField {
         contextMenu.getItems().clear();
         suitableEntries.forEach(str -> {
             MenuItem item = new MenuItem(str);
-            item.setOnAction(event -> {
-                setText(str);
-            });
+            item.setOnAction(event -> setText(str));
             contextMenu.getItems().add(item);
         });
     }
