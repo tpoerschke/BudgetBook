@@ -3,7 +3,6 @@ package timkodiert.budgetbook.view.unique_turnover;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -218,12 +217,6 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
     private void deleteUniqueExpenseInformation(ActionEvent event) {
         UniqueTurnoverInformationDTO expInfo = expenseInfoTable.getSelectionModel().getSelectedItem();
         expenseInfoTable.getItems().remove(expInfo);
-    }
-
-    private List<String> getUniqueExpenseInformationSuggestions() {
-        //        return repository.findAll().stream().flatMap(exp -> exp.getPaymentInformations().stream())
-        //                         .map(UniqueTurnoverInformation::getLabel).distinct().toList();
-        return List.of();
     }
 
     private void updateTurnoverInformation(@Nullable UniqueTurnoverInformationDTO oldVal, UniqueTurnoverInformationDTO newVal) {

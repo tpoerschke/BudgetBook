@@ -17,7 +17,6 @@ import timkodiert.budgetbook.i18n.LanguageManager;
 public class Converters {
 
     private static final Map<Class<?>, StringConverter<?>> CONVERTER_MAP = new HashMap<>();
-    public static final String NULL_STRING = "---";
 
     private final LanguageManager languageManager;
 

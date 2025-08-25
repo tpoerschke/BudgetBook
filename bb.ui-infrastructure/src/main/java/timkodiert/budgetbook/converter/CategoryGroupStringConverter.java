@@ -4,14 +4,13 @@ import javafx.util.StringConverter;
 
 import timkodiert.budgetbook.domain.CategoryGroupDTO;
 
-import static timkodiert.budgetbook.converter.Converters.NULL_STRING;
 import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 
 public class CategoryGroupStringConverter extends StringConverter<CategoryGroupDTO> {
 
     @Override
     public String toString(CategoryGroupDTO categoryGroup) {
-        return nvl(categoryGroup, CategoryGroupDTO::getName, NULL_STRING);
+        return nvl(categoryGroup, CategoryGroupDTO::getName, ConverterConstants.NULL_STRING);
     }
 
     @Override

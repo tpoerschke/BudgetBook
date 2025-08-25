@@ -8,7 +8,7 @@ public class ReferenceStringConverter<T> extends StringConverter<Reference<T>> {
 
     @Override
     public String toString(Reference<T> object) {
-        return object != null ? object.name() : "---";
+        return object != null ? object.name() : ConverterConstants.NULL_STRING;
     }
 
     @Override

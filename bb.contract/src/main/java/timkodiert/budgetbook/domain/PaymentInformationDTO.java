@@ -22,6 +22,6 @@ public class PaymentInformationDTO {
     private List<Integer> monthsOfPayment = new ArrayList<>();
 
     public PaymentInformationDTO() {
-        id = -(new Random().nextInt());
+        id = new Random().nextInt(Integer.MIN_VALUE, 0);
     }
 }
