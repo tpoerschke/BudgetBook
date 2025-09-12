@@ -51,7 +51,7 @@ public class FixedTurnoverCrudServiceImpl implements FixedTurnoverCrudService {
         FixedTurnover fixedTurnover = new FixedTurnover();
         FixedTurnoverMapper fixedTurnoverMapper = Mappers.getMapper(FixedTurnoverMapper.class);
         fixedTurnoverMapper.updateFixedTurnover(fixedTurnoverDTO, fixedTurnover, referenceResolver);
-        linkPaymentInformation(fixedTurnover);
+        linkSubEntities(fixedTurnover);
         fixedTurnoverRepository.merge(fixedTurnover);
         return true;
     }
@@ -61,7 +61,7 @@ public class FixedTurnoverCrudServiceImpl implements FixedTurnoverCrudService {
         FixedTurnover fixedTurnover = fixedTurnoverRepository.findById(fixedTurnoverDTO.getId());
         FixedTurnoverMapper fixedTurnoverMapper = Mappers.getMapper(FixedTurnoverMapper.class);
         fixedTurnoverMapper.updateFixedTurnover(fixedTurnoverDTO, fixedTurnover, referenceResolver);
-        linkPaymentInformation(fixedTurnover);
+        linkSubEntities(fixedTurnover);
         fixedTurnoverRepository.merge(fixedTurnover);
         return true;
     }
@@ -76,12 +76,18 @@ public class FixedTurnoverCrudServiceImpl implements FixedTurnoverCrudService {
         return true;
     }
 
-    private void linkPaymentInformation(FixedTurnover fixedTurnover) {
+    private void linkSubEntities(FixedTurnover fixedTurnover) {
         fixedTurnover.getPaymentInformations().forEach(payInfo -> {
             payInfo.setExpense(fixedTurnover);
             if (payInfo.getId() < 0) {
                 payInfo.setId(0);
             }
+        });
+        fixedTurnover.getImportRules().forEach(importRule -> {
+            if (importRule.getId() < 0) {
+                importRule.setId(0);
+            }
+            importRule.setLinkedFixedExpense(fixedTurnover);
         });
     }
 }

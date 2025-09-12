@@ -21,6 +21,7 @@ public class FixedTurnoverDTO {
     private TurnoverDirection direction;
     private boolean usePaymentInfoForFutureOnly;
     private List<PaymentInformationDTO> paymentInformations = new ArrayList<>();
+    private List<ImportRuleDTO> importRules = new ArrayList<>();
     private List<AccountTurnoverDTO> accountTurnover = new ArrayList<>();
 
     public void setPaymentInformations(List<PaymentInformationDTO> paymentInformations) {

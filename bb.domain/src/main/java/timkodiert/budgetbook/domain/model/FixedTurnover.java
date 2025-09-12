@@ -13,7 +13,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,29 +45,26 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     @OneToMany(mappedBy = "fixedExpense", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private final List<AccountTurnover> accountTurnover = new ArrayList<>();
 
-    @Setter
-    @OneToOne(mappedBy = "linkedFixedExpense", cascade = {CascadeType.ALL})
-    private ImportRule importRule;
+    @OneToMany(mappedBy = "linkedFixedExpense", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<ImportRule> importRules = new ArrayList<>();
 
     // Future bedeutet hier: der aktuelle Monat und alle zukünftigen Monate
     @Setter
     private boolean usePaymentInfoForFutureOnly;
 
     public FixedTurnover() {
-        importRule = new ImportRule(this);
     }
 
     @Deprecated(forRemoval = true)
     public FixedTurnover(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start, MonthYear end) {
         this.paymentInformations.add(new PaymentInformation(this, value, datesOfPayment, type, start, end));
-        importRule = new ImportRule(this);
     }
 
     public static FixedTurnover create(String position, TurnoverDirection direction, ImportRule importRule) {
         FixedTurnover turnover = new FixedTurnover();
         turnover.setPosition(position);
         turnover.setDirection(direction);
-        turnover.setImportRule(importRule);
+        turnover.getImportRules().add(importRule);
         importRule.setLinkedFixedExpense(turnover);
         return turnover;
     }

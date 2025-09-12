@@ -84,21 +84,21 @@
          </Tab>
          <Tab text="%editExpense.tab.import">
             <VBox>
-               <GridPane hgap="10.0" vgap="10.0">
-                  <TableView GridPane.columnSpan="2">
-                     <columns>
-                        <TableColumn fx:id="importRuleActiveCol" text="Aktiv"/>
-                        <TableColumn fx:id="importRuleReceiverContainsCol" text="Empfänger enthält"/>
-                        <TableColumn fx:id="importRuleReferenceContainsCol" text="Verwendungszweck enthält"/>
-                     </columns>
-                  </TableView>
+              <GridPane hgap="10.0" vgap="10.0" prefHeight="350">
+                <TableView fx:id="importRuleTable" GridPane.columnSpan="2" editable="true">
+                  <columns>
+                    <TableColumn fx:id="importRuleActiveCol" text="%label.active"/>
+                    <TableColumn fx:id="importRuleReceiverContainsCol" minWidth="200" text="%editExpense.label.recepientIncludes"/>
+                    <TableColumn fx:id="importRuleReferenceContainsCol" minWidth="200" text="%editExpense.label.referenceIncludes"/>
+                  </columns>
+                </TableView>
 
-                  <Button text="Hinzufügen" GridPane.rowIndex="1"/>
-                  <Button text="Entfernen" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Button text="%button.add" onAction="#addImportRule" GridPane.rowIndex="1"/>
+                <Button text="%button.remove" onAction="#removeImportRule" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                   <columnConstraints>
-                     <ColumnConstraints/>
-                     <ColumnConstraints/>
+                    <ColumnConstraints/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
                   </columnConstraints>
                   <rowConstraints>
                      <RowConstraints/>

@@ -1,7 +1,7 @@
 package timkodiert.budgetbook.domain.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,19 +17,19 @@ public class ImportRule extends BaseEntity {
 
     private String referenceContains;
 
-    @OneToOne
+    @ManyToOne
     private FixedTurnover linkedFixedExpense;
 
     public ImportRule() {}
-
-    public ImportRule(FixedTurnover expense) {
-        this.linkedFixedExpense = expense;
-    }
 
     public ImportRule(boolean isActive, String receiverContains, String referenceContains) {
         this.isActive = isActive;
         this.receiverContains = receiverContains;
         this.referenceContains = referenceContains;
+    }
+
+    public void setId(int id) {
+        super.id = id;
     }
 
     public boolean isEmpty() {

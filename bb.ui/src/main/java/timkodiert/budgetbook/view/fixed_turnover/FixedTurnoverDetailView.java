@@ -3,7 +3,6 @@ package timkodiert.budgetbook.view.fixed_turnover;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,7 +15,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -49,6 +47,7 @@ import timkodiert.budgetbook.domain.CategoryCrudService;
 import timkodiert.budgetbook.domain.CategoryDTO;
 import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
 import timkodiert.budgetbook.domain.FixedTurnoverDTO;
+import timkodiert.budgetbook.domain.ImportRuleDTO;
 import timkodiert.budgetbook.domain.PaymentInformationDTO;
 import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.model.MonthYear;
@@ -98,6 +97,14 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
 
     // Importe
     @FXML
+    private TableView<ImportRuleDTO> importRuleTable;
+    @FXML
+    private TableColumn<ImportRuleDTO, Boolean> importRuleActiveCol;
+    @FXML
+    private TableColumn<ImportRuleDTO, String> importRuleReceiverContainsCol;
+    @FXML
+    private TableColumn<ImportRuleDTO, String> importRuleReferenceContainsCol;
+    @FXML
     private TableView<AccountTurnoverDTO> importsTable;
     @FXML
     private TableColumn<AccountTurnoverDTO, LocalDate> importsDateCol;
@@ -126,6 +133,8 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Bind bind = new Bind(beanAdapter);
+
         addFixedExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.PLUS));
         editFixedExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.PENCIL));
         deleteFixedExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.TRASH));
@@ -149,6 +158,9 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         expenseInfoEndCol.setCellFactory(col -> new MonthYearTableCell<>());
 
         // Importe
+        bind.editableTableColumn(importRuleActiveCol, ImportRuleDTO::isActive, ImportRuleDTO::setActive);
+        bind.editableTableColumn(importRuleReceiverContainsCol, ImportRuleDTO::getReceiverContains, ImportRuleDTO::setReceiverContains);
+        bind.editableTableColumn(importRuleReferenceContainsCol, ImportRuleDTO::getReferenceContains, ImportRuleDTO::setReferenceContains);
         importsDateCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getDate()));
         importsDateCol.setCellFactory(col -> new DateTableCell<>());
         importsReceiverCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReceiver()));
@@ -172,13 +184,15 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
                       beanAdapter.getProperty(FixedTurnoverDTO::getDirection, FixedTurnoverDTO::setDirection),
                       Arrays.asList(TurnoverDirection.values()),
                       TurnoverDirection.class);
-        Bindings.bindContentBidirectional(paymentInformationTableView.getItems(),
-                                          beanAdapter.getListProperty(FixedTurnoverDTO::getPaymentInformations, FixedTurnoverDTO::setPaymentInformations));
-        Bindings.bindContent(importsTable.getItems(),
-                             new SortedList<>(beanAdapter.getListProperty(FixedTurnoverDTO::getAccountTurnover, FixedTurnoverDTO::setAccountTurnover),
-                                              Comparator.comparing(AccountTurnoverDTO::getDate).reversed()));
         payInfoFutureOnlyCheckBox.selectedProperty().bindBidirectional(beanAdapter.getProperty(FixedTurnoverDTO::isUsePaymentInfoForFutureOnly,
                                                                                                FixedTurnoverDTO::setUsePaymentInfoForFutureOnly));
+        Bindings.bindContentBidirectional(paymentInformationTableView.getItems(),
+                                          beanAdapter.getListProperty(FixedTurnoverDTO::getPaymentInformations, FixedTurnoverDTO::setPaymentInformations));
+        Bindings.bindContentBidirectional(importRuleTable.getItems(), beanAdapter.getListProperty(FixedTurnoverDTO::getImportRules, FixedTurnoverDTO::setImportRules));
+        //        Bindings.bindContent(importsTable.getItems(),
+        //                             new SortedList<>(beanAdapter.getListProperty(FixedTurnoverDTO::getAccountTurnover, FixedTurnoverDTO::setAccountTurnover),
+        //                                              Comparator.comparing(AccountTurnoverDTO::getDate).reversed()));
+        Bindings.bindContent(importsTable.getItems(), beanAdapter.getListProperty(FixedTurnoverDTO::getAccountTurnover, FixedTurnoverDTO::setAccountTurnover));
 
         // Validierung initialisieren
         validationMap.put("position", positionTextField);
@@ -224,6 +238,21 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
             crudService.delete(bean.getId());
             setBean(null);
             onUpdate.accept(null);
+        }
+    }
+
+    @FXML
+    private void addImportRule() {
+        importRuleTable.getItems().add(new ImportRuleDTO());
+        beanAdapter.setDirty(true);
+    }
+
+    @FXML
+    private void removeImportRule() {
+        ImportRuleDTO selectedImportRule = importRuleTable.getSelectionModel().getSelectedItem();
+        if (selectedImportRule != null) {
+            importRuleTable.getItems().remove(selectedImportRule);
+            beanAdapter.setDirty(true);
         }
     }
 
