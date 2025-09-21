@@ -52,14 +52,6 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     @Setter
     private boolean usePaymentInfoForFutureOnly;
 
-    public FixedTurnover() {
-    }
-
-    @Deprecated(forRemoval = true)
-    public FixedTurnover(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start, MonthYear end) {
-        this.paymentInformations.add(new PaymentInformation(this, value, datesOfPayment, type, start, end));
-    }
-
     public static FixedTurnover create(String position, TurnoverDirection direction, ImportRule importRule) {
         FixedTurnover turnover = new FixedTurnover();
         turnover.setPosition(position);
