@@ -40,12 +40,6 @@ public class Bind {
     public <T> void editableTableColumn(TableColumn<T, String> col, Function<T, String> valueGetter, BiConsumer<T, String> valueSetter) {
         col.setCellValueFactory(cellData -> new SimpleStringProperty(valueGetter.apply(cellData.getValue())));
         col.setCellFactory(c -> new TextFieldTableCell<>(editHandler(valueSetter)));
-        //        col.setOnEditCommit(event -> {
-        //            T rowItem = event.getRowValue();
-        //            String newVal = event.getNewValue();
-        //            valueSetter.accept(rowItem, newVal);
-        //            beanAdapter.setDirty(true);
-        //        });
     }
 
     private <T> BiConsumer<String, T> editHandler(BiConsumer<T, String> valueSetter) {

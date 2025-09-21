@@ -3,6 +3,7 @@ package timkodiert.budgetbook.view.fixed_turnover;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -120,6 +122,9 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     private final CategoryCrudService categoryCrudService;
     private final FixedTurnoverCrudService crudService;
 
+    @SuppressWarnings("java:S1450") // Liegt nur hier, damit sie nicht garbage-collected wird
+    private SortedList<AccountTurnoverDTO> sortedAccountTurnoverList;
+
     @Inject
     public FixedTurnoverDetailView(FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory,
                                    Provider<StageBuilder> stageBuilderProvider,
@@ -189,10 +194,9 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         Bindings.bindContentBidirectional(paymentInformationTableView.getItems(),
                                           beanAdapter.getListProperty(FixedTurnoverDTO::getPaymentInformations, FixedTurnoverDTO::setPaymentInformations));
         Bindings.bindContentBidirectional(importRuleTable.getItems(), beanAdapter.getListProperty(FixedTurnoverDTO::getImportRules, FixedTurnoverDTO::setImportRules));
-        //        Bindings.bindContent(importsTable.getItems(),
-        //                             new SortedList<>(beanAdapter.getListProperty(FixedTurnoverDTO::getAccountTurnover, FixedTurnoverDTO::setAccountTurnover),
-        //                                              Comparator.comparing(AccountTurnoverDTO::getDate).reversed()));
-        Bindings.bindContent(importsTable.getItems(), beanAdapter.getListProperty(FixedTurnoverDTO::getAccountTurnover, FixedTurnoverDTO::setAccountTurnover));
+        sortedAccountTurnoverList = new SortedList<>(beanAdapter.getListProperty(FixedTurnoverDTO::getAccountTurnover, FixedTurnoverDTO::setAccountTurnover),
+                                                     Comparator.comparing(AccountTurnoverDTO::getDate).reversed());
+        Bindings.bindContent(importsTable.getItems(), sortedAccountTurnoverList);
 
         // Validierung initialisieren
         validationMap.put("position", positionTextField);
