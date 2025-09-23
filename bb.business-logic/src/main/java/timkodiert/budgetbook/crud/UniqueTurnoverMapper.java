@@ -30,6 +30,7 @@ public interface UniqueTurnoverMapper {
     }
 
 
+    @Mapping(target = "accountTurnover", ignore = true)
     void updateUniqueTurnover(UniqueTurnoverDTO dto, @MappingTarget UniqueTurnover uniqueTurnover, @Context ReferenceResolver referenceResolver);
 
     @Mapping(target = "categories", expression = "java(referenceResolver.resolve(uniqueTurnoverInformationDTO.getCategories()))")
