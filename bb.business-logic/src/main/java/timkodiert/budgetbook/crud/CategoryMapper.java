@@ -25,7 +25,7 @@ public abstract class CategoryMapper {
     }
 
     protected boolean mapHasLinkedTurnover(Category category) {
-        return !category.getFixedExpenses().isEmpty() || !category.getUniqueExpenseInformation().isEmpty();
+        return !category.getFixedExpenses().isEmpty() || !category.getUniqueTurnoverInformation().isEmpty();
     }
 
     @Mapping(target = "group", expression = "java(referenceResolver.resolve(dto.getGroup()))")

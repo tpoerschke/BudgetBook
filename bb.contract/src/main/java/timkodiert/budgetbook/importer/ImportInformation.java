@@ -80,18 +80,25 @@ public class ImportInformation implements HasType<ImportInformation> { // Bissch
     }
 
     public AccountTurnover accountTurnoverWithFixedExpense() {
-        accountTurnover.setFixedExpense(fixedExpense.get());
-        accountTurnover.getFixedExpense().getAccountTurnover().add(accountTurnover);
+        UniqueTurnover ut = createUniqueTurnover();
+        ut.setFixedTurnover(fixedExpense.get());
+        fixedExpense.get().getUniqueTurnovers().add(ut);
         return accountTurnover;
     }
 
     public AccountTurnover accountTurnoverWithUniqueExpense() {
-        UniqueTurnover exp = new UniqueTurnover();
-        exp.setBiller(receiver.get());
-        exp.setDate(accountTurnover.getDate());
-        exp.setPaymentInformations(List.of(UniqueTurnoverInformation.total(exp, accountTurnover.getAmount())));
-        accountTurnover.setUniqueExpense(exp);
+        createUniqueTurnover();
         return accountTurnover;
+    }
+
+    private UniqueTurnover createUniqueTurnover() {
+        UniqueTurnover ut = new UniqueTurnover();
+        ut.setBiller(receiver.get());
+        ut.setDate(accountTurnover.getDate());
+        ut.setPaymentInformations(List.of(UniqueTurnoverInformation.total(ut, accountTurnover.getAmount())));
+        accountTurnover.setUniqueExpense(ut);
+        ut.setAccountTurnover(accountTurnover);
+        return ut;
     }
 
     public boolean isSelectedForImport() {

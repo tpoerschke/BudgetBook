@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface FixedTurnoverCrudService {
 
+    List<Reference<FixedTurnoverDTO>> findAllAsReference();
     List<FixedTurnoverDTO> readAll();
     FixedTurnoverDTO readById(int id);
     PaymentInformationDTO readPaymentInformationById(int id);

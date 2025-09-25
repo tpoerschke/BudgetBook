@@ -20,6 +20,7 @@ public class UniqueTurnoverDTO implements HasType<RowType> {
     private String note;
     private String receiptImagePath;
     private List<UniqueTurnoverInformationDTO> paymentInformations = new ArrayList<>();
+    private Reference<FixedTurnoverDTO> fixedTurnover;
     private AccountTurnoverDTO accountTurnover;
 
     public double getTotalValue() {

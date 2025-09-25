@@ -212,9 +212,8 @@ public class AnalysisView implements View, Initializable {
                                             .map(turnover -> ToTableDataMapper.mapFixedExpense(turnover, monthYear))
                                             .filter(tableData -> tableData.value() != 0.0)
                                             .toList();
-        List<TableData> uniqueData = category.getUniqueExpenseInformation()
+        List<TableData> uniqueData = category.getUniqueTurnoverInformation(monthYear)
                                              .stream()
-                                             .filter(info -> monthYear.containsDate(info.getExpense().getDate()))
                                              .map(info -> ToTableDataMapper.mapUniqueExpense(info.getExpense()))
                                              .toList();
         turnoverTable.getItems().clear();

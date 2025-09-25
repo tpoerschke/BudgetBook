@@ -52,6 +52,17 @@ public class Category extends BaseEntity {
         return budgetActive && budgetValue != null;
     }
 
+    public List<UniqueTurnoverInformation> getUniqueTurnoverInformation() {
+        return uniqueExpenseInformation;
+    }
+
+    public List<UniqueTurnoverInformation> getUniqueTurnoverInformation(MonthYear monthYear) {
+        return uniqueExpenseInformation.stream()
+                                       .filter(uti -> uti.getExpense().getFixedTurnover() == null)
+                                       .filter(uti -> monthYear.containsDate(uti.getExpense().getDate()))
+                                       .toList();
+    }
+
     public double sumTurnovers(MonthYear monthYear) {
         return switch (budgetType) {
             case MONTHLY -> sumTurnoversForMonth(monthYear);
@@ -62,10 +73,7 @@ public class Category extends BaseEntity {
     public double sumTurnoversForMonth(MonthYear monthYear) {
         double sum = 0;
         sum += fixedExpenses.stream().mapToDouble(ft -> ft.getValueFor(monthYear)).sum();
-        sum += uniqueExpenseInformation.stream()
-                                       .filter(uti -> monthYear.containsDate(uti.getExpense().getDate()))
-                                       .mapToDouble(UniqueTurnoverInformation::getValueSigned)
-                                       .sum();
+        sum += getUniqueTurnoverInformation(monthYear).stream().mapToDouble(UniqueTurnoverInformation::getValueSigned).sum();
         return sum;
     }
 
@@ -73,6 +81,7 @@ public class Category extends BaseEntity {
         double sum = 0;
         sum += fixedExpenses.stream().mapToDouble(ft -> ft.getValueForYear(year)).sum();
         sum += uniqueExpenseInformation.stream()
+                                       .filter(uti -> uti.getExpense().getFixedTurnover() == null)
                                        .filter(uti -> uti.getExpense().getDate().getYear() == year)
                                        .mapToDouble(UniqueTurnoverInformation::getValueSigned)
                                        .sum();

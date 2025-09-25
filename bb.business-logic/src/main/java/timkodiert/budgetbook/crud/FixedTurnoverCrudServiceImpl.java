@@ -8,6 +8,7 @@ import org.mapstruct.factory.Mappers;
 import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
 import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.PaymentInformationDTO;
+import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.model.PaymentInformation;
 import timkodiert.budgetbook.domain.repository.Repository;
@@ -25,6 +26,11 @@ public class FixedTurnoverCrudServiceImpl implements FixedTurnoverCrudService {
         this.referenceResolver = referenceResolver;
         this.fixedTurnoverRepository = fixedTurnoverRepository;
         this.paymentInformationRepository = paymentInformationRepository;
+    }
+
+    @Override
+    public List<Reference<FixedTurnoverDTO>> findAllAsReference() {
+        return fixedTurnoverRepository.findAll().stream().map(t -> new Reference<>(FixedTurnoverDTO.class, t.getId(), t.getPosition())).toList();
     }
 
     @Override

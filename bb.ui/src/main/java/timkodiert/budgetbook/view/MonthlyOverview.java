@@ -3,7 +3,7 @@ package timkodiert.budgetbook.view;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -35,6 +35,7 @@ import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.repository.Repository;
+import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
 import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
@@ -52,7 +53,9 @@ public class MonthlyOverview implements Initializable, View {
 
     // FILTER
     @FXML
-    private Button nextMonthBtn, prevMonthBtn;
+    private Button nextMonthBtn;
+    @FXML
+    private Button prevMonthBtn;
     @FXML
     private ComboBox<String> selectedMonthBox;
     @FXML
@@ -62,11 +65,21 @@ public class MonthlyOverview implements Initializable, View {
 
     // TABELLEN
     @FXML
-    private TableView<TableData> dataTable, sumTable;
+    private TableView<TableData> dataTable;
     @FXML
-    private TableColumn<TableData, String> positionCol, categoriesCol, sumTableCol0, sumTableCol1;
+    private TableView<TableData> sumTable;
     @FXML
-    private TableColumn<TableData, Number> valueCol, sumTableCol2;
+    private TableColumn<TableData, String> positionCol;
+    @FXML
+    private TableColumn<TableData, String> categoriesCol;
+    @FXML
+    private TableColumn<TableData, String> sumTableCol0;
+    @FXML
+    private TableColumn<TableData, String> sumTableCol1;
+    @FXML
+    private TableColumn<TableData, Number> valueCol;
+    @FXML
+    private TableColumn<TableData, Number> sumTableCol2;
     @FXML
     private TableColumn<TableData, LocalDate> dateCol;
     @FXML
@@ -83,7 +96,7 @@ public class MonthlyOverview implements Initializable, View {
 
     private final Provider<FXMLLoader> fxmlLoader;
     private final LanguageManager languageManager;
-    private final Repository<UniqueTurnover> uniqueExpenseRepository;
+    private final UniqueExpensesRepository uniqueExpenseRepository;
     private final Repository<FixedTurnover> fixedExpenseRepository;
     private final Repository<Category> categoryRepository;
     private final Provider<ShortcutTableRow<TableData>> shortcutTableRowProvider;
@@ -92,7 +105,7 @@ public class MonthlyOverview implements Initializable, View {
     @Inject
     public MonthlyOverview(Provider<FXMLLoader> fxmlLoader,
                            LanguageManager languageManager,
-                           Repository<UniqueTurnover> uniqueExpenseRepository,
+                           UniqueExpensesRepository uniqueExpenseRepository,
                            Repository<FixedTurnover> fixedExpenseRepository,
                            Repository<Category> categoryRepository,
                            Provider<ShortcutTableRow<TableData>> shortcutTableRowProvider,
@@ -139,9 +152,8 @@ public class MonthlyOverview implements Initializable, View {
                                                      .filter(t -> t.getValueFor(monthFilter.getValue()) > 0)
                                                      .mapToDouble(t -> t.getValueFor(monthFilter.getValue()))
                                                      .sum();
-            incomeSum += uniqueExpenseRepository.findAll()
+            incomeSum += uniqueExpenseRepository.findAllWithoutFixedExpense(monthFilter.getValue())
                                                 .stream()
-                                                .filter(t -> monthFilter.getValue().containsDate(t.getDate()))
                                                 .filter(t -> t.getTotalValue() > 0)
                                                 .mapToDouble(UniqueTurnover::getTotalValue)
                                                 .sum();
@@ -155,7 +167,7 @@ public class MonthlyOverview implements Initializable, View {
 
         SimpleBooleanProperty isUniqueCollapsedProperty = new SimpleBooleanProperty(false);
         SimpleBooleanProperty isFixedCollapsedProperty = new SimpleBooleanProperty(true);
-        Map<RowType, BooleanProperty> dataGroupProperties = new HashMap<>();
+        Map<RowType, BooleanProperty> dataGroupProperties = new EnumMap<>(RowType.class);
         dataGroupProperties.put(RowType.FIXED_EXPENSE_GROUP, isFixedCollapsedProperty);
         dataGroupProperties.put(RowType.UNIQUE_EXPENSE_GROUP, isUniqueCollapsedProperty);
         Runnable predicator = () -> {
@@ -171,12 +183,8 @@ public class MonthlyOverview implements Initializable, View {
 
         buttonCol.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue()));
         buttonCol.setCellFactory(col -> new GroupTableCell<>(dataGroupProperties));
-        isUniqueCollapsedProperty.addListener((observable, oldValue, newValue) -> {
-            predicator.run();
-        });
-        isFixedCollapsedProperty.addListener((observable, oldValue, newValue) -> {
-            predicator.run();
-        });
+        isUniqueCollapsedProperty.addListener((observable, oldValue, newValue) -> predicator.run());
+        isFixedCollapsedProperty.addListener((observable, oldValue, newValue) -> predicator.run());
         predicator.run();
 
         positionCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().position()));
@@ -217,6 +225,8 @@ public class MonthlyOverview implements Initializable, View {
     }
 
     private void initDataGroups(MonthYear monthYear) {
+        // TODO: Sollte auch auf DTOs umgebaut werden, dann kann auch die entsprechende Service-Methode
+        // für die UniqueTurnovers verwendet (statt der Repositorys) werden, die bereits die Filterung auf die FixedTurnovers durchführt
         data.clear();
         List<FixedTurnover> fixedExpensesForMonth = fixedExpenseRepository.findAll()
                                                                           .stream()
@@ -224,9 +234,8 @@ public class MonthlyOverview implements Initializable, View {
                                                                           .toList();
         initFixedExpenseGroup(fixedExpensesForMonth);
 
-        List<UniqueTurnover> uniqueExpensesForMonth = uniqueExpenseRepository.findAll()
+        List<UniqueTurnover> uniqueExpensesForMonth = uniqueExpenseRepository.findAllWithoutFixedExpense(monthYear)
                                                                              .stream()
-                                                                             .filter(exp -> monthYear.containsDate(exp.getDate()))
                                                                              .filter(exp -> exp.getTotalValue() < 0)
                                                                              .toList();
         initUniqueExpenseGroup(uniqueExpensesForMonth);
