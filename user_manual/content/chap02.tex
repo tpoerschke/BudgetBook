@@ -1,12 +1,14 @@
-\chapter{Umsätze importieren}
+\chapter{Umsätze importieren} \label{chap:import}
 
 Über die Ansicht "`Umsätze importieren"' können Kontoauszüge im CSV-Format importiert werden. Aktuell werden ausschließlich Dateien im Exportformat der ING verarbeitet. Die Ansicht ist im Menü unter "`Daten $\rightarrow$ Importieren"' zu finden.
 
 \section{Ablauf: Umsätze importieren}
 
-Eine CSV-Datei kann über den Button "`Datei auswählen"' oder per Drag \& Drop (in jeder Ansicht) importiert werden. Dann werden die gefundenen Umsätze in einer Tabelle angezeigt (s. Abbildung \ref{fig:ImportView}). Sobald eine Importdatei geöffnet wird, findet eine Zuordnung der gefunden Umsätze zu den \textit{regelmäßigen Ausgaben} im System statt. Umsätze, die bereits importiert wurden, werden standardmäßig nicht importiert und mit einer entsprechenden Anmerkung versehen. Zurzeit werden Einnahmen nicht importiert.
+Eine CSV-Datei kann über den Button "`Datei auswählen"' oder per Drag \& Drop (in jeder Ansicht) importiert werden. Dann werden die gefundenen Umsätze in einer Tabelle angezeigt (s. Abbildung \ref{fig:ImportView}). Sobald eine Importdatei geöffnet wird, findet eine Zuordnung der gefunden Umsätze zu den \textit{regelmäßigen Ausgaben} im System statt. Umsätze, die bereits importiert wurden, werden standardmäßig nicht importiert und mit einer entsprechenden Anmerkung versehen.
 
-\begin{figure}[h!]
+Sollte eine Umsatz nicht automatisch einem wiederkehrenden Umsatz zugeordnet werden -- da die Importregeln nicht greifen oder keine konfiguriert wurden --, kann eine manuelle Zuordnung über die Zellen der Spalte "Wiederkehrende Umsätze" vorgenommen werden. Per Doppelklick auf die Zelle öffnet sich ein Dropdown-Menü mit allen wiederkehrenden Umsätzen im System.
+
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{img/Screenshot-ImportView}
 	\vspace{-2em}
