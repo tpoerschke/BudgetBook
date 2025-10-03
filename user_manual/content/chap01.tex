@@ -1,6 +1,6 @@
-\chapter{Grundlegende Konzepte}
+\chapter{Stamm- \& Bewegungsdaten}
 
-Die Software unterscheidet zwischen zwei Typen von Ausgaben:
+Die Software unterscheidet zwischen zwei Typen von Umsätzen:
 
 \begin{itemize}[nosep]
 	\item Wiederkehrende Umsätze
@@ -15,7 +15,7 @@ Wiederkehrende Umsätze treten in einem bestimmten Rhythmus auf (bspw. viertelj�
 	\centering
 	\includegraphics[width=\textwidth]{img/Screenshot-FixedExpenses-MDV}
 	\vspace{-2em}
-	\caption{Listen- \& Detailansicht der regelmäßigen Ausgaben}
+	\caption{Listen- \& Detailansicht der wiederkehrenden Umsätze}
 	\label{fig:mdvFixedExpenses}
 \end{figure}
 
@@ -94,9 +94,68 @@ Die Ausgabe "`Tanken"' soll als wiederkehrender Umsatz (Richtung "`Ausgabe`"') i
 Sollte das Import-Feature nicht genutzt werden, kann ein "`realer Umsatz"' auch manuell als (einzigartiger) Umsatz (bzw. Ausgabe) konfiguriert und mit der wiederkehrenden Ausgabe "`Tanken"' verknüpft werden. Dann wird für den entsprechenden Monat ebenfalls der gesamte Betrag dieser Ausgabe verwendet, statt der geplanten Zahlung der wiederkehrenden Ausgabe.
 
 
-\section{Einzigartige Ausgaben}
+\section{(Einzigartige) Umsätze}
 
-Einzigartige Ausgaben bzw. einmalige Ausgaben treten einmalig oder selten auf, sodass es keinen Mehrwert bietet, diese als regelmäßige Ausgaben zu gruppieren (da bspw. keine wiederkehrende Importe zu Ausgaben dieser Art erwartet werden).
+Einzigartige Umsätze treten einmalig oder selten auf, sodass es keinen Mehrwert bietet, diese als regelmäßige Umsätze zu gruppieren (da bspw. keine wiederkehrenden Importe zu Ausgaben dieser Art erwartet werden). Beispiele wären hier der Besuch eines Restaurants oder Ausgaben für Geschenke.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=\textwidth]{img/Screenshot-UniqueExpenses-MDV}
+	\vspace{-2em}
+	\caption{Listen- \& Detailansicht der (einzigartigen) Umsätze}
+	\label{fig:mdvFixedExpenses}
+\end{figure}
+
+In der Listenansicht werden standardmäßig nur die Umsätze angezeigt, die keinem wiederkehrenden Umsatz zugeordnet sind. Sollen Umsätze angezeigt werden, die wiederkehrenden Umsätzen zugeordnet sind -- und somit den wiederkehrenden Umsatz für den Monat überschreiben --, kann dies über das Dropdown-Menü oben rechts über der Listenansicht erreicht werden.
+
+Die Konfigurationsmöglichkeiten im Tab "`Informationen"' sind in Tabelle \ref{tab:uniqueTurnoverInfoTab} beschrieben. Der Tab "`Positionen"' ermöglicht das hinterlegen einzelner Positionen des Umsatzes, die für sich kategorisiert werden können und ihre eigene Richtung (Einnahme oder Ausgabe) haben. Die Summe dieser Positionen ergibt den Betrag eines (einzigartigen) Umsatzes.
+
+\renewcommand{\arraystretch}{1.5}
+\begin{table}[!ht]
+\centering
+\begin{tabular}{|p{6cm}|p{8cm}|}
+\hline 
+\textbf{Feld} & \textbf{Beschreibung} \\ 
+\hline 
+\hline 
+\multicolumn{2}{|c|}{Allgemein} \\ 
+\hline 
+Rechnungsteller * & Rechnungsteller (wird in anderen Ansichten als Name des Umsatzes angezeigt)  \\ 
+\hline 
+Datum * & Datum des Umsatzes \\ 
+\hline 
+Bemerkung & Optionaler Kommentar zum Umsatz \\ 
+\hline 
+Pfad zum Beleg / Kassenbon & Optionaler Dateipfad zum Beleg. Wird als Bild in dieser Ansicht angezeigt \\ 
+\hline 
+Wiederkehrender Umsatz & Optionaler wiederkehrender Umsatz. Sollte ein wiederkehrender Umsatz ausgewählt sein, wird der Betrag dieses Umsatzes für den Monat verwendet (und nicht der konfigurierte Betrag am wiederkehrenden Umsatz) \\ 
+\hline 
+\hline 
+\multicolumn{2}{|c|}{Import (readonly)} \\ 
+\hline 
+Empfänger & Empfänger wie er in der Quelle (Konto) des Umsatzes aufgeführt ist \\
+\hline
+Verwendungszweck & Verwendungszweck wie er in der Quelle (Konto) des Umsatzes aufgeführt ist \\
+\hline 
+Buchungstext & Art des Umsatzes (bspw. Lastschrift oder Überweisung) wie er in der Quelle (Konto) des Umsatzes aufgeführt ist \\
+\hline 
+Betrag & Realer Betrag des Umsatzes wie er in der Quelle (Konto) des Umsatzes aufgeführt ist \\
+\hline 
+\end{tabular} 
+\caption{Konfigurationsmöglichkeiten im Tab "`Informationen"'}
+\label{tab:uniqueTurnoverInfoTab}
+\end{table}
+\renewcommand{\arraystretch}{1.0}
+
+\begin{infobox}
+\textbf{Hinweis zu importieren Umsätzen}: Für jeden importierten Umsatz wird ein (einzigartiger) Umsatz angelegt, der eventuell einem wiederkehrenden Umsatz zugeordnet ist und den dort konfigurierten Betrag für den Monat überschreibt. Da die Positionen des importieren Umsatzes im System bearbeitet werden können, kann die Summe der Positionen ungleich dem importierten Betrag sein. In dieser Situation wird eine Warnung unterhalb des importierten Betrags angezeigt, aber der konfigurierte Betrag vom System verwendet. 
+\end{infobox}
+
+\section{Kategorien und Kategoriegruppen}
+
+Zur Kategorisierung von Umsätzen können Kategorien herangezogen werden, die nochmal zu Gruppen zusammengefasst werden können. An Kategorien kann jeweils ein Budget konfiguriert werden, welches in der Monats- uns Analyseansicht angezeigt wird. 
+
+Die Kategoriegruppen sind aktuell nur als Datenmodell implementiert und finden innerhalb des Systems keine Anwendung in den Ansichten zur Auswertung der Umsätze. 
 
 \section{Datenmodell} 
 
@@ -107,3 +166,5 @@ Einzigartige Ausgaben bzw. einmalige Ausgaben treten einmalig oder selten auf, s
 	\caption{Datenmodell}
 	\label{fig:datamodel}
 \end{figure}
+
+Datenmodel des Systems mit Stammdaten (grün und lila) sowie Bewegungsdaten (blau und grau).

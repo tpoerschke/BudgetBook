@@ -35,7 +35,7 @@
     filecolor=.,      
     urlcolor=.,
     pdftitle={\APPNAME\ Handbuch},
-    pdfauthor={Tim Poerschke \& Noah Skrzypczyk}
+    pdfauthor={Tim Poerschke}
 }
 \urlstyle{same}
 
@@ -43,10 +43,12 @@
 % Boxen / Frames
 
 \usepackage{xcolor}
-\usepackage{mdframed}
+\usepackage[%
+	framemethod=tikz
+]{mdframed}
 
 \newmdenv[%
-	roundcorner=5pt,
+	roundcorner=0pt,
 	frametitle={Info},
 	frametitlerule=true,
 	frametitlebackgroundcolor=blue!15!white,
