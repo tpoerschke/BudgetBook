@@ -18,7 +18,7 @@ class CategoryTest {
     @ParameterizedTest
     @DisplayName("Budget aktiv: Jede Mögliche Kombination")
     @CsvSource(value = {"null, false, false", "null, true, false", "100, false, false", "100, true, true"}, nullValues = "null")
-    void testHasActiveBudget(int value, boolean active, boolean expected) {
+    void testHasActiveBudget(Integer value, boolean active, boolean expected) {
         // Arrange
         Category category = new Category();
         category.setBudgetValue(value);
