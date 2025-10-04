@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Function;
-import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -136,7 +136,7 @@ public class MonthlyOverview implements Initializable, View {
         sumTable.setRowFactory(tableView -> new BoldTableRow<>(RowType.TOTAL_SUM));
 
         data.addListener((ListChangeListener.Change<? extends TableData> c) -> {
-            double totalSum = data.stream().filter(d -> !RowType.getGroupTypes().contains(d.getType())).mapToDouble(TableData::value).sum();
+            int totalSum = data.stream().filter(d -> !RowType.getGroupTypes().contains(d.getType())).mapToInt(TableData::value).sum();
             sumTable.getItems().clear();
             sumTable.getItems().add(new TableData(null,
                                                   languageManager.get("monthlyOverview.label.sumExpenses"),
@@ -147,15 +147,15 @@ public class MonthlyOverview implements Initializable, View {
                                                   RowType.SUM));
 
             // Summe der Einnahmen für den Monat
-            double incomeSum = fixedExpenseRepository.findAll()
+            int incomeSum = fixedExpenseRepository.findAll()
                                                      .stream()
-                                                     .filter(t -> t.getValueFor(monthFilter.getValue()) > 0)
-                                                     .mapToDouble(t -> t.getValueFor(monthFilter.getValue()))
+                                                  .mapToInt(t -> t.getValueFor(monthFilter.getValue()))
+                                                  .filter(val -> val > 0)
                                                      .sum();
             incomeSum += uniqueExpenseRepository.findAllWithoutFixedExpense(monthFilter.getValue())
                                                 .stream()
-                                                .filter(t -> t.getTotalValue() > 0)
-                                                .mapToDouble(UniqueTurnover::getTotalValue)
+                                                .mapToInt(UniqueTurnover::getTotalValue)
+                                                .filter(val -> val > 0)
                                                 .sum();
 
             sumTable.getItems().addAll(new TableData(null, languageManager.get("monthlyOverview.label.sumEarnings"), incomeSum, null, null, false, RowType.SUM),
@@ -254,8 +254,8 @@ public class MonthlyOverview implements Initializable, View {
                       languageManager.get("monthlyOverview.label.fixedExpenses"), RowType.FIXED_EXPENSE_GROUP);
     }
 
-    private <T> void initDataGroup(List<T> expenses, Function<T, TableData> expToData, ToDoubleFunction<T> expToTotalValue, String groupName, RowType groupRowType) {
-        data.add(new TableData(null, groupName, expenses.stream().mapToDouble(expToTotalValue).sum(), null, null, false, groupRowType));
+    private <T> void initDataGroup(List<T> expenses, Function<T, TableData> expToData, ToIntFunction<T> expToTotalValue, String groupName, RowType groupRowType) {
+        data.add(new TableData(null, groupName, expenses.stream().mapToInt(expToTotalValue).sum(), null, null, false, groupRowType));
         data.addAll(expenses.stream().map(expToData).toList());
     }
 }

@@ -10,7 +10,7 @@ public class TestDataProvider {
 
     private TestDataProvider() {}
 
-    public static UniqueTurnover createUniqueTurnover(LocalDate date, String receiver, double amount) {
+    public static UniqueTurnover createUniqueTurnover(LocalDate date, String receiver, int amount) {
         UniqueTurnover turnover = new UniqueTurnover();
         turnover.setDate(date);
         turnover.setBiller(receiver);
@@ -19,7 +19,7 @@ public class TestDataProvider {
         return turnover;
     }
 
-    public static UniqueTurnover createUniqueTurnoverWithAccountTurnover(LocalDate date, String receiver, double amount) {
+    public static UniqueTurnover createUniqueTurnoverWithAccountTurnover(LocalDate date, String receiver, int amount) {
         UniqueTurnover turnover = createUniqueTurnover(date, receiver, amount);
         AccountTurnover at = new AccountTurnover(date, receiver, "Test", "Test", amount);
         at.setUniqueExpense(turnover);
@@ -27,7 +27,7 @@ public class TestDataProvider {
         return turnover;
     }
 
-    public static FixedTurnover createFixedTurnover(double value, MonthYear start, @Nullable MonthYear end) {
+    public static FixedTurnover createFixedTurnover(int value, MonthYear start, @Nullable MonthYear end) {
         PaymentInformation info = new PaymentInformation();
         info.setType(PaymentType.MONTHLY);
         info.setMonthsOfPayment(Arrays.stream(Month.values()).map(Month::getValue).toList());

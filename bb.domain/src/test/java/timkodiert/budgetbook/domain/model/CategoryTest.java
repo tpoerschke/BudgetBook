@@ -18,7 +18,7 @@ class CategoryTest {
     @ParameterizedTest
     @DisplayName("Budget aktiv: Jede Mögliche Kombination")
     @CsvSource(value = {"null, false, false", "null, true, false", "100, false, false", "100, true, true"}, nullValues = "null")
-    void testHasActiveBudget(Double value, boolean active, boolean expected) {
+    void testHasActiveBudget(int value, boolean active, boolean expected) {
         // Arrange
         Category category = new Category();
         category.setBudgetValue(value);
@@ -58,7 +58,7 @@ class CategoryTest {
     class MonthlyBudgetTests {
 
         @Test
-        @DisplayName("Kategorie ohne Ausgaben: Summe von 0.0")
+        @DisplayName("Kategorie ohne Ausgaben: Summe von 0")
         void testTurnoverSumWithoutExpenses() {
             // Arrange
             MonthYear monthYear = MonthYear.now();
@@ -67,7 +67,7 @@ class CategoryTest {
             // Act
             double sum = category.sumTurnovers(monthYear);
             // Assert
-            assertEquals(0.0, sum);
+            assertEquals(0, sum);
         }
 
         @Test
@@ -97,12 +97,12 @@ class CategoryTest {
             MonthYear monthYear = MonthYear.now();
             Category category = new Category();
             category.setBudgetType(BudgetType.MONTHLY);
-            category.getFixedExpenses().addAll(generateFixedExpenses(monthYear, 10.0, 10.0));
-            category.getUniqueTurnoverInformation().addAll(generateUniqueTurnoverInformation(monthYear, -15.1, -15.1));
+            category.getFixedExpenses().addAll(generateFixedExpenses(monthYear, 1000, 1000));
+            category.getUniqueTurnoverInformation().addAll(generateUniqueTurnoverInformation(monthYear, -1510, -1510));
             // Act
             double sum = category.sumTurnovers(monthYear);
             // Assert
-            assertEquals(2 * -10 + 2 * -15.1, sum);
+            assertEquals(2 * -1000 + 2 * -1510, sum);
         }
 
         @Test
@@ -112,11 +112,11 @@ class CategoryTest {
             MonthYear monthYear = MonthYear.now();
             Category category = new Category();
             category.setBudgetType(BudgetType.MONTHLY);
-            category.getUniqueTurnoverInformation().addAll(generateUniqueTurnoverInformation(monthYear, -20.0, 30.5));
+            category.getUniqueTurnoverInformation().addAll(generateUniqueTurnoverInformation(monthYear, -2000, 3050));
             // Act
             double sum = category.sumTurnovers(monthYear);
             // Assert
-            assertEquals(10.5, sum);
+            assertEquals(1050, sum);
         }
 
         @Test
@@ -126,12 +126,12 @@ class CategoryTest {
             MonthYear monthYear = MonthYear.now();
             Category category = new Category();
             category.setBudgetType(BudgetType.MONTHLY);
-            category.getUniqueTurnoverInformation().addAll(generateUniqueTurnoverInformation(monthYear, -20.0, 30.5));
-            category.getUniqueTurnoverInformation().add(createUniqueTurnover(monthYear.plusMonths(1), 100.0).getPaymentInformations().get(0));
+            category.getUniqueTurnoverInformation().addAll(generateUniqueTurnoverInformation(monthYear, -2000, 3050));
+            category.getUniqueTurnoverInformation().add(createUniqueTurnover(monthYear.plusMonths(1), 10000).getPaymentInformations().getFirst());
             // Act
             double sum = category.sumTurnovers(monthYear);
             // Assert
-            assertEquals(10.5, sum);
+            assertEquals(1050, sum);
         }
     }
 
@@ -140,7 +140,7 @@ class CategoryTest {
     class AnnualBudgetTests {
 
         @Test
-        @DisplayName("Kategorie ohne Ausgaben: Summe von 0.0")
+        @DisplayName("Kategorie ohne Ausgaben: Summe von 0")
         void testTurnoverSumWithoutExpenses() {
             // Arrange
             MonthYear monthYear = MonthYear.now();
@@ -149,7 +149,7 @@ class CategoryTest {
             // Act
             double sum = category.sumTurnovers(monthYear);
             // Assert
-            assertEquals(0.0, sum);
+            assertEquals(0, sum);
         }
 
         @Test
@@ -179,16 +179,16 @@ class CategoryTest {
             MonthYear monthYear = MonthYear.of(11, 2024);
             Category category = new Category();
             category.setBudgetType(BudgetType.ANNUAL);
-            category.getFixedExpenses().addAll(generateFixedExpenses(monthYear, 10.0, 10.0));
-            category.getFixedExpenses().addAll(generateFixedExpenses(monthYear.plusMonths(1), 10.0, 10.0));
-            category.getFixedExpenses().addAll(generateFixedExpenses(monthYear.plusMonths(12), 100.0));
-            category.getUniqueTurnoverInformation().addAll(generateUniqueTurnoverInformation(monthYear, -15.1, -15.1));
-            category.getUniqueTurnoverInformation().add(createUniqueTurnover(monthYear.plusMonths(12), 100.0).getPaymentInformations().get(0));
+            category.getFixedExpenses().addAll(generateFixedExpenses(monthYear, 1000, 1000));
+            category.getFixedExpenses().addAll(generateFixedExpenses(monthYear.plusMonths(1), 1000, 1000));
+            category.getFixedExpenses().addAll(generateFixedExpenses(monthYear.plusMonths(12), 10000));
+            category.getUniqueTurnoverInformation().addAll(generateUniqueTurnoverInformation(monthYear, -1510, -1510));
+            category.getUniqueTurnoverInformation().add(createUniqueTurnover(monthYear.plusMonths(12), 10000).getPaymentInformations().getFirst());
             // Act
             double sum = category.sumTurnovers(monthYear);
             // Assert
             // Regelmäßige Ausgaben werden innerhalb eines Jahres aufsummiert
-            assertEquals(6 * -10 + 2 * -15.1, sum);
+            assertEquals(6 * -1000 + 2 * -1510, sum);
         }
 
         @Test
@@ -198,15 +198,15 @@ class CategoryTest {
             MonthYear monthYear = MonthYear.now();
             Category category = new Category();
             category.setBudgetType(BudgetType.ANNUAL);
-            category.getUniqueTurnoverInformation().addAll(generateUniqueTurnoverInformation(monthYear, -20.0, 30.5));
+            category.getUniqueTurnoverInformation().addAll(generateUniqueTurnoverInformation(monthYear, -2000, 3050));
             // Act
             double sum = category.sumTurnovers(monthYear);
             // Assert
-            assertEquals(10.5, sum);
+            assertEquals(1050, sum);
         }
     }
 
-    private List<FixedTurnover> generateFixedExpenses(MonthYear monthYear, Double... values) {
+    private List<FixedTurnover> generateFixedExpenses(MonthYear monthYear, Integer... values) {
         return Stream.of(values).map(v -> {
             FixedTurnover t = new FixedTurnover();
             t.setDirection(TurnoverDirection.OUT);
@@ -216,7 +216,7 @@ class CategoryTest {
         }).toList();
     }
 
-    private List<UniqueTurnoverInformation> generateUniqueTurnoverInformation(MonthYear monthYear, Double... values) {
+    private List<UniqueTurnoverInformation> generateUniqueTurnoverInformation(MonthYear monthYear, Integer... values) {
         return Stream.of(values)
                      .map(v -> createUniqueTurnover(monthYear, v))
                      .map(UniqueTurnover::getPaymentInformations)
@@ -224,7 +224,7 @@ class CategoryTest {
                      .toList();
     }
 
-    private UniqueTurnover createUniqueTurnover(MonthYear monthYear, double value) {
+    private UniqueTurnover createUniqueTurnover(MonthYear monthYear, int value) {
         UniqueTurnover turnover = new UniqueTurnover();
         turnover.setDate(LocalDate.of(monthYear.getYear(), monthYear.getMonth(), 1));
         turnover.getPaymentInformations().add(UniqueTurnoverInformation.total(turnover, value));

@@ -15,7 +15,7 @@ public class UniqueTurnoverInformationDTO {
 
     private int id;
     private String label;
-    private double value;
+    private int value;
     private TurnoverDirection direction;
     private List<Reference<CategoryDTO>> categories = new ArrayList<>();
 
@@ -23,7 +23,7 @@ public class UniqueTurnoverInformationDTO {
         id = new Random().nextInt(Integer.MIN_VALUE, 0);
     }
 
-    public double getValueSigned() {
+    public int getValueSigned() {
         return value * direction.getSign();
     }
 }

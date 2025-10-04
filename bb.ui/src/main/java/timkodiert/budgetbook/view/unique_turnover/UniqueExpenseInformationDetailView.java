@@ -17,7 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.stage.Stage;
-import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import org.controlsfx.control.CheckListView;
 
 import timkodiert.budgetbook.converter.Converters;
@@ -68,7 +68,7 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
         // Bindings
         positionTextField.textProperty().bindBidirectional(beanAdapter.getProperty(UniqueTurnoverInformationDTO::getLabel, UniqueTurnoverInformationDTO::setLabel));
 
-        TextFormatter<Double> formatter = new TextFormatter<>(new DoubleStringConverter());
+        TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter());
         formatter.valueProperty().bindBidirectional(beanAdapter.getProperty(UniqueTurnoverInformationDTO::getValue, UniqueTurnoverInformationDTO::setValue));
         valueTextField.setTextFormatter(formatter);
 

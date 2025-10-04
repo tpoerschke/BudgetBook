@@ -8,9 +8,7 @@ import javax.inject.Inject;
 
 import javafx.util.StringConverter;
 
-import static timkodiert.budgetbook.util.ObjectUtils.nvl;
-
-public class DoubleCurrencyStringConverter extends StringConverter<Double> {
+public class DoubleCurrencyStringConverter extends StringConverter<Integer> {
 
     private final NumberFormat format;
 
@@ -21,24 +19,19 @@ public class DoubleCurrencyStringConverter extends StringConverter<Double> {
     }
 
     @Override
-    public String toString(Double obj) {
-        return nvl(obj, format::format, "");
+    public String toString(Integer obj) {
+        if (obj == null) {
+            return "";
+        }
+        return format.format(obj / 100.0);
     }
 
     @Override
-    public Double fromString(String str) {
+    public Integer fromString(String str) {
         try {
-            return str.isEmpty() ? null : format.parse(str).doubleValue();
+            return str.isEmpty() ? null : (int) (format.parse(str).doubleValue() * 100);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * @deprecated Stattdessen sollte die Methode toString verwendet werden
-     */
-    @Deprecated(forRemoval = true)
-    public String format(double value) {
-        return format.format(value);
     }
 }

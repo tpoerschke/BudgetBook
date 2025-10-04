@@ -32,7 +32,7 @@ public class Category extends BaseEntity {
     private CategoryGroup group;
 
     @Setter
-    private Double budgetValue;
+    private Integer budgetValue;
 
     @Setter
     @Column(nullable = false)
@@ -52,6 +52,10 @@ public class Category extends BaseEntity {
         return budgetActive && budgetValue != null;
     }
 
+    public double getBudgetValueInEuro() {
+        return budgetValue / 100.0;
+    }
+
     public List<UniqueTurnoverInformation> getUniqueTurnoverInformation() {
         return uniqueExpenseInformation;
     }
@@ -63,27 +67,27 @@ public class Category extends BaseEntity {
                                        .toList();
     }
 
-    public double sumTurnovers(MonthYear monthYear) {
+    public int sumTurnovers(MonthYear monthYear) {
         return switch (budgetType) {
             case MONTHLY -> sumTurnoversForMonth(monthYear);
             case ANNUAL -> sumAnnualBudget(monthYear.getYear());
         };
     }
 
-    public double sumTurnoversForMonth(MonthYear monthYear) {
-        double sum = 0;
-        sum += fixedExpenses.stream().mapToDouble(ft -> ft.getValueFor(monthYear)).sum();
-        sum += getUniqueTurnoverInformation(monthYear).stream().mapToDouble(UniqueTurnoverInformation::getValueSigned).sum();
+    public int sumTurnoversForMonth(MonthYear monthYear) {
+        int sum = 0;
+        sum += fixedExpenses.stream().mapToInt(ft -> ft.getValueFor(monthYear)).sum();
+        sum += getUniqueTurnoverInformation(monthYear).stream().mapToInt(UniqueTurnoverInformation::getValueSigned).sum();
         return sum;
     }
 
-    private double sumAnnualBudget(int year) {
-        double sum = 0;
-        sum += fixedExpenses.stream().mapToDouble(ft -> ft.getValueForYear(year)).sum();
+    private int sumAnnualBudget(int year) {
+        int sum = 0;
+        sum += fixedExpenses.stream().mapToInt(ft -> ft.getValueForYear(year)).sum();
         sum += uniqueExpenseInformation.stream()
                                        .filter(uti -> uti.getExpense().getFixedTurnover() == null)
                                        .filter(uti -> uti.getExpense().getDate().getYear() == year)
-                                       .mapToDouble(UniqueTurnoverInformation::getValueSigned)
+                                       .mapToInt(UniqueTurnoverInformation::getValueSigned)
                                        .sum();
         return sum;
     }

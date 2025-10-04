@@ -26,7 +26,7 @@ public class UniqueTurnoverInformation extends BaseEntity implements Categorizab
     private String label;
 
     @Setter
-    private double value;
+    private int value;
 
     @Setter
     @Enumerated(value = EnumType.STRING)
@@ -35,14 +35,14 @@ public class UniqueTurnoverInformation extends BaseEntity implements Categorizab
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "expense_id", nullable = false)
+    @JoinColumn(name = "turnover_id", nullable = false)
     private UniqueTurnover expense;
 
     @Setter
     @ManyToMany(cascade = { CascadeType.PERSIST })
     private List<Category> categories = new ArrayList<>();
 
-    public static UniqueTurnoverInformation total(UniqueTurnover exp, double value) {
+    public static UniqueTurnoverInformation total(UniqueTurnover exp, int value) {
         UniqueTurnoverInformation info = new UniqueTurnoverInformation();
         info.setLabel("Gesamt");
         info.setValue(Math.abs(value));
@@ -55,7 +55,7 @@ public class UniqueTurnoverInformation extends BaseEntity implements Categorizab
         super.id = id;
     }
 
-    public double getValueSigned() {
+    public int getValueSigned() {
         return this.value * this.getDirection().getSign();
     }
 

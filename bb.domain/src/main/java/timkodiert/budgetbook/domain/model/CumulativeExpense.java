@@ -7,12 +7,12 @@ import java.util.stream.IntStream;
 
 public class CumulativeExpense implements IFixedTurnover {
 
-    private final Map<MonthYear, Double> valueMap = new HashMap<>();
+    private final Map<MonthYear, Integer> valueMap = new HashMap<>();
 
     public CumulativeExpense(List<? extends IFixedTurnover> turnovers, int startYear, int endYear) {
         IntStream.rangeClosed(startYear, endYear)
                  .boxed()
-                 .forEach(year -> IntStream.rangeClosed(1, 12).forEach(month -> valueMap.put(MonthYear.of(month, year), 0.0)));
+                 .forEach(year -> IntStream.rangeClosed(1, 12).forEach(month -> valueMap.put(MonthYear.of(month, year), 0)));
         turnovers.forEach(t -> valueMap.keySet().forEach(monthYear -> valueMap.put(monthYear, valueMap.get(monthYear) + t.getValueFor(monthYear))));
     }
 
@@ -30,13 +30,13 @@ public class CumulativeExpense implements IFixedTurnover {
     }
 
     @Override
-    public double getValueFor(MonthYear monthYear) {
+    public int getValueFor(MonthYear monthYear) {
         return valueMap.get(monthYear);
     }
 
     @Override
-    public double getValueForYear(int year) {
-        return IntStream.rangeClosed(1, 12).mapToDouble(month -> valueMap.get(MonthYear.of(month, year))).sum();
+    public int getValueForYear(int year) {
+        return IntStream.rangeClosed(1, 12).map(month -> valueMap.get(MonthYear.of(month, year))).sum();
     }
 
 }

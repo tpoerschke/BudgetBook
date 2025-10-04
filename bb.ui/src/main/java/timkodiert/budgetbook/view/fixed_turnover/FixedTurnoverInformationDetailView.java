@@ -22,7 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
 import timkodiert.budgetbook.domain.PaymentInformationDTO;
@@ -90,7 +90,7 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
             .forEach(e -> e.getItems().addAll(FXCollections.observableArrayList(languageManager.getMonths())));
 
         // Bindings
-        TextFormatter<Double> formatter = new TextFormatter<>(new DoubleStringConverter());
+        TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter());
         formatter.valueProperty().bindBidirectional(beanAdapter.getProperty(PaymentInformationDTO::getValue, PaymentInformationDTO::setValue));
         valueTextField.setTextFormatter(formatter);
 

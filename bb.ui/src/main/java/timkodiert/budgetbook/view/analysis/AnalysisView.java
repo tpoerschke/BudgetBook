@@ -34,6 +34,7 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import timkodiert.budgetbook.analysis.AnalysisPeriod;
 import timkodiert.budgetbook.analysis.CategorySeriesGenerator;
+import timkodiert.budgetbook.converter.Converters;
 import timkodiert.budgetbook.domain.model.BudgetType;
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.MonthYear;
@@ -77,6 +78,7 @@ public class AnalysisView implements View, Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        periodComboBox.setConverter(Converters.get(AnalysisPeriod.class));
         periodComboBox.getItems().addAll(AnalysisPeriod.values());
         categoryComboBox.getItems().addAll(categoryRepository.findAll());
         periodComboBox.valueProperty().addListener((observable, oldVal, newVal) -> updateChart());
@@ -146,7 +148,7 @@ public class AnalysisView implements View, Initializable {
         }
 
         BudgetType budgetType = selectedCategory.getBudgetType();
-        double budgetValue = selectedCategory.getBudgetValue();
+        double budgetValue = selectedCategory.getBudgetValueInEuro();
 
         List<MonthYear> monthYearList = selectedPeriod.getMonths();
         List<String> monthNameList = monthYearList.stream().map(monthYear -> languageManager.get(LanguageManager.MONTH_NAMES.get(monthYear.getMonth() - 1))).toList();

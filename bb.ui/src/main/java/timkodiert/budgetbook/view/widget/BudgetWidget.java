@@ -61,9 +61,9 @@ public class BudgetWidget implements Initializable, View {
         if (categoryProperty.get() == null || !categoryProperty.get().hasActiveBudget() || selectedMonthYearProperty.get() == null) {
             return "";
         }
-        double budgetValue = categoryProperty.get().getBudgetValue();
-        double categorySum = Math.abs(categoryProperty.get().sumTurnovers(selectedMonthYearProperty.get()));
-        return String.format("%s / %s", currencyStringConverter.format(categorySum), currencyStringConverter.format(budgetValue));
+        int budgetValue = categoryProperty.get().getBudgetValue();
+        int categorySum = Math.abs(categoryProperty.get().sumTurnovers(selectedMonthYearProperty.get()));
+        return String.format("%s / %s", currencyStringConverter.toString(categorySum), currencyStringConverter.toString(budgetValue));
     }
 
     private double getProgress() {

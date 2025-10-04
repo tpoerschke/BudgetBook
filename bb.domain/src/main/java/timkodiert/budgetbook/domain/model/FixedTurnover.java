@@ -72,12 +72,12 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     }
 
     @Override
-    public double getValueForYear(int year) {
-        return IntStream.rangeClosed(1, 12).mapToDouble(month -> this.getValueFor(year, month)).sum();
+    public int getValueForYear(int year) {
+        return IntStream.rangeClosed(1, 12).map(month -> this.getValueFor(year, month)).sum();
     }
 
     @Override
-    public double getValueFor(MonthYear monthYear) {
+    public int getValueFor(MonthYear monthYear) {
         return getValueFor(monthYear.getYear(), monthYear.getMonth());
     }
 
@@ -93,11 +93,11 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
         return getImportDate(monthYear) != null;
     }
 
-    private double getValueFor(int year, int month) {
+    private int getValueFor(int year, int month) {
         // Importe auswerten
         List<UniqueTurnover> uniqueTurnoverForMonth = findUniqueTurnover(MonthYear.of(month, year));
         if (!uniqueTurnoverForMonth.isEmpty()) {
-            return uniqueTurnoverForMonth.stream().mapToDouble(UniqueTurnover::getTotalValue).sum();
+            return uniqueTurnoverForMonth.stream().mapToInt(UniqueTurnover::getTotalValue).sum();
         }
         // Konfigurierten Rhythmus auswerten
         if (YearMonth.of(year, month).isBefore(YearMonth.now()) && isUsePaymentInfoForFutureOnly()) {
