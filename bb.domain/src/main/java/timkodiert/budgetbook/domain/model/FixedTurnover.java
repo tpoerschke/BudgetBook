@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import jakarta.persistence.CascadeType;
@@ -42,8 +43,8 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentInformation> paymentInformations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "fixedExpense", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private final List<AccountTurnover> accountTurnover = new ArrayList<>();
+    @OneToMany(mappedBy = "fixedTurnover", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private final List<UniqueTurnover> uniqueTurnovers = new ArrayList<>();
 
     @OneToMany(mappedBy = "linkedFixedExpense", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ImportRule> importRules = new ArrayList<>();
@@ -51,14 +52,6 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     // Future bedeutet hier: der aktuelle Monat und alle zukünftigen Monate
     @Setter
     private boolean usePaymentInfoForFutureOnly;
-
-    public FixedTurnover() {
-    }
-
-    @Deprecated(forRemoval = true)
-    public FixedTurnover(String position, double value, PaymentType type, List<Integer> datesOfPayment, MonthYear start, MonthYear end) {
-        this.paymentInformations.add(new PaymentInformation(this, value, datesOfPayment, type, start, end));
-    }
 
     public static FixedTurnover create(String position, TurnoverDirection direction, ImportRule importRule) {
         FixedTurnover turnover = new FixedTurnover();
@@ -89,11 +82,11 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     }
 
     public @Nullable LocalDate getImportDate(MonthYear monthYear) {
-        List<AccountTurnover> accountTurnoverForMonth = findImports(monthYear);
-        if (!accountTurnoverForMonth.isEmpty()) {
-            return accountTurnoverForMonth.getFirst().getDate();
-        }
-        return null;
+        return getImports().stream()
+                           .filter(at -> monthYear.containsDate(at.getDate()))
+                           .findFirst()
+                           .map(AccountTurnover::getDate)
+                           .orElse(null);
     }
 
     public boolean hasImport(MonthYear monthYear) {
@@ -102,9 +95,9 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
 
     private double getValueFor(int year, int month) {
         // Importe auswerten
-        List<AccountTurnover> accountTurnoverForMonth = findImports(MonthYear.of(month, year));
-        if (!accountTurnoverForMonth.isEmpty()) {
-            return accountTurnoverForMonth.stream().mapToDouble(AccountTurnover::getAmount).sum();
+        List<UniqueTurnover> uniqueTurnoverForMonth = findUniqueTurnover(MonthYear.of(month, year));
+        if (!uniqueTurnoverForMonth.isEmpty()) {
+            return uniqueTurnoverForMonth.stream().mapToDouble(UniqueTurnover::getTotalValue).sum();
         }
         // Konfigurierten Rhythmus auswerten
         if (YearMonth.of(year, month).isBefore(YearMonth.now()) && isUsePaymentInfoForFutureOnly()) {
@@ -126,7 +119,14 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
         return null;
     }
 
-    private List<AccountTurnover> findImports(MonthYear monthYear) {
-        return accountTurnover.stream().filter(at -> monthYear.containsDate(at.getDate())).sorted().toList();
+    public List<AccountTurnover> getImports() {
+        return uniqueTurnovers.stream()
+                              .map(UniqueTurnover::getAccountTurnover)
+                              .filter(Objects::nonNull)
+                              .toList();
+    }
+
+    private List<UniqueTurnover> findUniqueTurnover(MonthYear monthYear) {
+        return uniqueTurnovers.stream().filter(uq -> monthYear.containsDate(uq.getDate())).toList();
     }
 }

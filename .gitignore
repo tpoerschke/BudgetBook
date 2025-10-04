@@ -1,7 +1,9 @@
 .DS_Store
 target/
+*.log
 *.db
 *.app
+*.bkp
 dependency-reduced-pom.xml
 JBudgetBook.app.zip
 JBudgetBook.tar.gz

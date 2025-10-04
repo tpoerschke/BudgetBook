@@ -6,6 +6,8 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
@@ -37,8 +39,14 @@ public class UniqueTurnover extends BaseEntity {
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     private List<UniqueTurnoverInformation> paymentInformations = new ArrayList<>();
 
+    @Setter
     @OneToOne(mappedBy = "uniqueExpense", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private AccountTurnover accountTurnover;
+
+    @Setter
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "fixed_turnover_id")
+    private FixedTurnover fixedTurnover;
 
     public double getTotalValue() {
         return paymentInformations.stream().mapToDouble(UniqueTurnoverInformation::getValueSigned).sum();

@@ -23,7 +23,7 @@ public class CategoriesRepository extends Repository<Category> {
                 group.getCategories().remove(entity);
             }
             entity.getFixedExpenses().forEach(expense -> expense.getCategories().remove(entity));
-            entity.getUniqueExpenseInformation().forEach(info -> info.getCategories().remove(entity));
+            entity.getUniqueTurnoverInformation().forEach(info -> info.getCategories().remove(entity));
         });
         super.remove(entities);
     }

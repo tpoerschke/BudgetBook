@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import atlantafx.base.controls.Message;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
@@ -19,6 +20,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -35,16 +37,22 @@ import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
+import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.dialog.StackTraceAlert;
+import timkodiert.budgetbook.domain.AccountTurnoverDTO;
+import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
+import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
 import timkodiert.budgetbook.domain.UniqueTurnoverInformationDTO;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.ui.control.AutoCompleteTextField;
+import timkodiert.budgetbook.ui.helper.Bind;
 import timkodiert.budgetbook.util.StageBuilder;
 import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 
+import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 import static timkodiert.budgetbook.view.FxmlResource.IMAGE_VIEW;
 import static timkodiert.budgetbook.view.FxmlResource.UNIQUE_TURNOVER_INFORMATION_VIEW;
 
@@ -80,20 +88,40 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
     private TableColumn<UniqueTurnoverInformationDTO, String> expenseInfoCategoriesCol;
 
     @FXML
+    private ComboBox<Reference<FixedTurnoverDTO>> fixedTurnoverComboBox;
+
+    @FXML
+    private TextField importReceiverTextField;
+    @FXML
+    private TextField importReferenceTextField;
+    @FXML
+    private TextField importPostingTextTextField;
+    @FXML
+    private TextField importAmountTextField;
+    @FXML
+    private Message amountWarningMessage;
+
+    @FXML
     private ColumnConstraints rightColumn;
 
+    private final DoubleCurrencyStringConverter doubleCurrencyStringConverter;
     private final UniqueTurnoverCrudService crudService;
+    private final FixedTurnoverCrudService fixedTurnoverCrudService;
     private final LanguageManager languageManager;
     private final Provider<StageBuilder> stageBuilderProvider;
     private final UniqueTurnoverInformationDetailViewFactory uniqueTurnoverInformationDetailViewFactory;
 
     @Inject
-    public UniqueTurnoverDetailView(UniqueTurnoverCrudService crudService,
+    public UniqueTurnoverDetailView(DoubleCurrencyStringConverter doubleCurrencyStringConverter,
+                                    UniqueTurnoverCrudService crudService,
+                                    FixedTurnoverCrudService fixedTurnoverCrudService,
                                     LanguageManager languageManager,
                                     Provider<StageBuilder> stageBuilderProvider,
                                     UniqueTurnoverInformationDetailViewFactory uniqueTurnoverInformationDetailViewFactory) {
         super();
+        this.doubleCurrencyStringConverter = doubleCurrencyStringConverter;
         this.crudService = crudService;
+        this.fixedTurnoverCrudService = fixedTurnoverCrudService;
         this.languageManager = languageManager;
         this.stageBuilderProvider = stageBuilderProvider;
         this.uniqueTurnoverInformationDetailViewFactory = uniqueTurnoverInformationDetailViewFactory;
@@ -141,7 +169,7 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
                 .setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getLabel()));
         expenseInfoValueCol.setCellValueFactory(cellData -> {
             DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
-            return new ReadOnlyStringWrapper(converter.format(cellData.getValue().getValueSigned()));
+            return new ReadOnlyStringWrapper(converter.toString(cellData.getValue().getValueSigned()));
         });
         expenseInfoCategoriesCol.setCellValueFactory(cellData ->
                                                              new ReadOnlyStringWrapper(String.join(", ",
@@ -153,6 +181,10 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
 
         billerTextField.getAvailableEntries().addAll(crudService.getUniqueTurnoverLabels());
 
+        fixedTurnoverComboBox.setConverter(new ReferenceStringConverter<>());
+        fixedTurnoverComboBox.getItems().add(null);
+        fixedTurnoverComboBox.getItems().addAll(fixedTurnoverCrudService.findAllAsReference());
+
         // Bindings
         billerTextField.textProperty().bindBidirectional(beanAdapter.getProperty(UniqueTurnoverDTO::getBiller, UniqueTurnoverDTO::setBiller));
         datePicker.valueProperty().bindBidirectional(beanAdapter.getProperty(UniqueTurnoverDTO::getDate, UniqueTurnoverDTO::setDate));
@@ -162,10 +194,38 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
         Bindings.bindContentBidirectional(expenseInfoTable.getItems(), beanAdapter.getListProperty(UniqueTurnoverDTO::getPaymentInformations,
                                                                                                    UniqueTurnoverDTO::setPaymentInformations));
 
+        Bind.comboBox(fixedTurnoverComboBox, beanAdapter.getProperty(UniqueTurnoverDTO::getFixedTurnover, UniqueTurnoverDTO::setFixedTurnover));
+
         // Validierungen
         validationMap.put("biller", billerTextField);
         validationMap.put("date", datePicker);
         validationMap.put("paymentInformations", expenseInfoTable);
+    }
+
+    @Override
+    protected void beanSet() {
+        importReceiverTextField.setText(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getReceiver));
+        importReferenceTextField.setText(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getReference));
+        importPostingTextTextField.setText(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getPostingText));
+        importAmountTextField.setText(doubleCurrencyStringConverter.toString(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getAmount)));
+        updateImportAmountWarning();
+    }
+
+    private void updateImportAmountWarning() {
+        if (beanAdapter.isEmpty().get() || beanAdapter.getBean().getAccountTurnover() == null) {
+            importAmountTextField.setStyle("");
+            amountWarningMessage.setVisible(false);
+            return;
+        }
+        double turnoverValue = beanAdapter.getBean().getTotalValue();
+        double importedValue = beanAdapter.getBean().getAccountTurnover().getAmount();
+        if (turnoverValue == importedValue) {
+            importAmountTextField.setStyle("");
+            amountWarningMessage.setVisible(false);
+        } else {
+            importAmountTextField.setStyle("-fx-border-color: -color-warning-2;");
+            amountWarningMessage.setVisible(true);
+        }
     }
 
     @Override
@@ -217,6 +277,7 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
     private void deleteUniqueExpenseInformation(ActionEvent event) {
         UniqueTurnoverInformationDTO expInfo = expenseInfoTable.getSelectionModel().getSelectedItem();
         expenseInfoTable.getItems().remove(expInfo);
+        updateImportAmountWarning();
     }
 
     private void updateTurnoverInformation(@Nullable UniqueTurnoverInformationDTO oldVal, UniqueTurnoverInformationDTO newVal) {
@@ -230,6 +291,7 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
             expenseInfoTable.getItems().add(newVal);
         }
         expenseInfoTable.refresh();
+        updateImportAmountWarning();
     }
 
     private void openUniqueExpenseInformationDetailView(UniqueTurnoverInformationDTO uniqueTurnover) {

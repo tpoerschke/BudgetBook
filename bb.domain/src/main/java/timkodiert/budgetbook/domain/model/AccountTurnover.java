@@ -8,7 +8,6 @@ import com.opencsv.bean.CsvNumber;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,11 +41,6 @@ public class AccountTurnover extends BaseEntity implements Comparable<AccountTur
     @CsvBindByPosition(position = 7)
     @CsvNumber("#.###,##")
     private double amount;
-
-    @Setter
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "fixed_expense_id")
-    private FixedTurnover fixedExpense;
 
     @Setter
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

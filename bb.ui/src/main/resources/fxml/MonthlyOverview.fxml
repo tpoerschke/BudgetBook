@@ -28,7 +28,7 @@
       </TableView>
    </center>
    <bottom>
-      <TableView fx:id="sumTable" prefHeight="120.0" BorderPane.alignment="CENTER">
+     <TableView fx:id="sumTable" prefHeight="128.0" BorderPane.alignment="CENTER">
          <columns>
             <TableColumn fx:id="sumTableCol0" prefWidth="75.0" text="%monthlyOverview.sumTable.column.columnX" />
             <TableColumn fx:id="sumTableCol1" minWidth="-1.0" prefWidth="-1.0" text="%monthlyOverview.sumTable.column.c1" />

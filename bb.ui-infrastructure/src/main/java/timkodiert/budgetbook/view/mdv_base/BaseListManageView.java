@@ -42,8 +42,6 @@ public abstract class BaseListManageView<B> extends BaseManageView<B> {
             row.setOnMouseClicked(event -> handleMouseClickOnTableRow(event, row));
             return row;
         });
-
-        initControls();
     }
 
     private void handleMouseClickOnTableRow(MouseEvent event, TableRow<B> row) {

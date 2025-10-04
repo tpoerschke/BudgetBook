@@ -4,14 +4,20 @@ import java.time.LocalDate;
 import javax.inject.Inject;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.jetbrains.annotations.Nullable;
 
+import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.dialog.DialogFactory;
+import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
+import timkodiert.budgetbook.domain.FixedTurnoverDTO;
+import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
 import timkodiert.budgetbook.i18n.LanguageManager;
@@ -30,13 +36,23 @@ public class UniqueTurnoverManageView extends BaseListManageView<UniqueTurnoverD
     @FXML
     private TableColumn<UniqueTurnoverDTO, Number> valueCol;
 
-    private final UniqueTurnoverCrudService crudService;
+    @FXML
+    private ComboBox<Reference<FixedTurnoverDTO>> fixedTurnoverComboBox;
 
+    private final UniqueTurnoverCrudService crudService;
+    private final FixedTurnoverCrudService fixedTurnoverCrudService;
+
+    private final SimpleObjectProperty<Reference<FixedTurnoverDTO>> selectedReference = new SimpleObjectProperty<>();
 
     @Inject
-    public UniqueTurnoverManageView(DialogFactory dialogFactory, FXMLLoader fxmlLoader, LanguageManager languageManager, UniqueTurnoverCrudService crudService) {
+    public UniqueTurnoverManageView(DialogFactory dialogFactory,
+                                    FXMLLoader fxmlLoader,
+                                    LanguageManager languageManager,
+                                    UniqueTurnoverCrudService crudService,
+                                    FixedTurnoverCrudService fixedTurnoverCrudService) {
         super(fxmlLoader, dialogFactory, languageManager);
         this.crudService = crudService;
+        this.fixedTurnoverCrudService = fixedTurnoverCrudService;
     }
 
     @Override
@@ -52,6 +68,12 @@ public class UniqueTurnoverManageView extends BaseListManageView<UniqueTurnoverD
         valueCol.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getTotalValue()));
         valueCol.setCellFactory(col -> new CurrencyTableCell<>());
 
+        fixedTurnoverComboBox.getItems().add(null);
+        fixedTurnoverComboBox.getItems().addAll(fixedTurnoverCrudService.findAllAsReference());
+        fixedTurnoverComboBox.setConverter(new ReferenceStringConverter<>());
+        selectedReference.bind(fixedTurnoverComboBox.getSelectionModel().selectedItemProperty());
+        selectedReference.addListener((observable, oldValue, newValue) -> reloadTable(null));
+
         entityTable.getSortOrder().add(dateCol);
     }
 
@@ -62,7 +84,7 @@ public class UniqueTurnoverManageView extends BaseListManageView<UniqueTurnoverD
 
     @Override
     protected void reloadTable(@Nullable UniqueTurnoverDTO updatedBean) {
-        entityTable.getItems().setAll(crudService.readAll());
+        entityTable.getItems().setAll(crudService.readAll(selectedReference.get()));
     }
 
     @Override

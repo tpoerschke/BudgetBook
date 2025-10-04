@@ -8,9 +8,11 @@ import jakarta.inject.Inject;
 
 import timkodiert.budgetbook.domain.CategoryDTO;
 import timkodiert.budgetbook.domain.CategoryGroupDTO;
+import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.repository.CategoriesRepository;
 import timkodiert.budgetbook.domain.repository.CategoryGroupsRepository;
+import timkodiert.budgetbook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetbook.domain.repository.Repository;
 
 public class ReferenceResolver {
@@ -18,9 +20,12 @@ public class ReferenceResolver {
     private final Map<Class<?>, Repository<?>> repositoryMap = new HashMap<>();
 
     @Inject
-    public ReferenceResolver(CategoryGroupsRepository categoryGroupsRepository, CategoriesRepository categoriesRepository) {
+    public ReferenceResolver(CategoryGroupsRepository categoryGroupsRepository,
+                             CategoriesRepository categoriesRepository,
+                             FixedExpensesRepository fixedExpensesRepository) {
         repositoryMap.put(CategoryGroupDTO.class, categoryGroupsRepository);
         repositoryMap.put(CategoryDTO.class, categoriesRepository);
+        repositoryMap.put(FixedTurnoverDTO.class, fixedExpensesRepository);
     }
 
     public <R, T> T resolve(Reference<R> reference) {

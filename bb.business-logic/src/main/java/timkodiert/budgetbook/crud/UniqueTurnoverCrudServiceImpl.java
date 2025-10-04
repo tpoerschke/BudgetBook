@@ -1,17 +1,24 @@
 package timkodiert.budgetbook.crud;
 
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.inject.Inject;
+import org.jetbrains.annotations.Nullable;
 import org.mapstruct.factory.Mappers;
 
+import timkodiert.budgetbook.domain.FixedTurnoverDTO;
+import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
 import timkodiert.budgetbook.domain.UniqueTurnoverInformationDTO;
+import timkodiert.budgetbook.domain.model.BaseEntity;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetbook.domain.repository.UniqueExpenseInformationRepository;
 import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
+
+import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 
 public class UniqueTurnoverCrudServiceImpl implements UniqueTurnoverCrudService {
 
@@ -29,9 +36,13 @@ public class UniqueTurnoverCrudServiceImpl implements UniqueTurnoverCrudService 
     }
 
     @Override
-    public List<UniqueTurnoverDTO> readAll() {
+    public List<UniqueTurnoverDTO> readAll(@Nullable Reference<FixedTurnoverDTO> fixedTurnoverRef) {
         UniqueTurnoverMapper mapper = Mappers.getMapper(UniqueTurnoverMapper.class);
-        return uniqueTurnoverRepository.findAll().stream().map(mapper::uniqueTurnoverToUniqueTurnoverDto).toList();
+        return uniqueTurnoverRepository.findAll()
+                                       .stream()
+                                       .filter(uq -> Objects.equals(nvl(uq.getFixedTurnover(), BaseEntity::getId), nvl(fixedTurnoverRef, Reference::id)))
+                                       .map(mapper::uniqueTurnoverToUniqueTurnoverDto)
+                                       .toList();
     }
 
     @Override

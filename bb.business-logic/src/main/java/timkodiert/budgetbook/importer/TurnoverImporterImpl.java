@@ -87,7 +87,7 @@ public class TurnoverImporterImpl implements TurnoverImporter {
 
     private Predicate<ImportRule> filterRule(ImportInformation importInformation) {
         return rule -> {
-            if (rule.isEmpty()) {
+            if (!rule.isActive() || rule.isEmpty()) {
                 return false;
             }
 
