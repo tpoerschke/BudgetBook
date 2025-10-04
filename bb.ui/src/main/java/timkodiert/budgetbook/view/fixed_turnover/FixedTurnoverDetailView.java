@@ -155,7 +155,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         expenseInfoTypeCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(paymentTypeConverter.toString(cellData.getValue().getType())));
         expenseInfoValueCol.setCellValueFactory(cellData -> {
             DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
-            return new ReadOnlyStringWrapper(converter.format(cellData.getValue().getValue()));
+            return new ReadOnlyStringWrapper(converter.toString(cellData.getValue().getValue()));
         });
         expenseInfoStartCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStart()));
         expenseInfoEndCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getEnd()));
@@ -172,7 +172,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         importsReferenceCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReference()));
         importsAmountCol.setCellValueFactory(cellData -> {
             DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
-            return new ReadOnlyStringWrapper(converter.format(cellData.getValue().getAmount()));
+            return new ReadOnlyStringWrapper(converter.toString(cellData.getValue().getAmount()));
         });
         importsDateCol.setSortType(TableColumn.SortType.DESCENDING);
         importsTable.getSortOrder().add(importsDateCol);

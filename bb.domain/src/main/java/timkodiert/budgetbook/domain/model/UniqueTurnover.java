@@ -48,8 +48,8 @@ public class UniqueTurnover extends BaseEntity {
     @JoinColumn(name = "fixed_turnover_id")
     private FixedTurnover fixedTurnover;
 
-    public double getTotalValue() {
-        return paymentInformations.stream().mapToDouble(UniqueTurnoverInformation::getValueSigned).sum();
+    public int getTotalValue() {
+        return paymentInformations.stream().mapToInt(UniqueTurnoverInformation::getValueSigned).sum();
     }
 
     public boolean hasImport() {

@@ -29,14 +29,14 @@ public class PaymentInformation extends BaseEntity {
     @Column(nullable = false)
     private final List<Integer> monthsOfPayment = new ArrayList<>();
     @Setter
-    private double value;
+    private int value;
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "expense_id", nullable = false)
+    @JoinColumn(name = "turnover_id", nullable = false)
     private FixedTurnover expense;
 
-    public PaymentInformation(FixedTurnover expense, double value, List<Integer> monthsOfPayment, PaymentType type, MonthYear start, MonthYear end) {
+    public PaymentInformation(FixedTurnover expense, int value, List<Integer> monthsOfPayment, PaymentType type, MonthYear start, MonthYear end) {
         this.expense = expense;
         this.type = type;
         this.monthsOfPayment.addAll(monthsOfPayment);
@@ -49,8 +49,8 @@ public class PaymentInformation extends BaseEntity {
         super.id = id;
     }
 
-    public double getValueFor(MonthYear monthYear) {
-        return this.validFor(monthYear) && this.monthsOfPayment.contains(monthYear.getMonth()) ? this.value : 0.0;
+    public int getValueFor(MonthYear monthYear) {
+        return this.validFor(monthYear) && this.monthsOfPayment.contains(monthYear.getMonth()) ? this.value : 0;
     }
 
     public boolean validFor(MonthYear monthYear) {

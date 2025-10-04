@@ -22,10 +22,10 @@ public class CategorySeriesGeneratorImpl implements CategorySeriesGenerator {
         List<Number> items = new ArrayList<>(monthYearList.size());
         AtomicReference<Double> lastValue = new AtomicReference<>(0.0);
         IntStream.range(0, monthYearList.size()).forEach(i -> {
-            double categoryVal = category.sumTurnoversForMonth(monthYearList.get(i));
+            int categoryVal = category.sumTurnoversForMonth(monthYearList.get(i));
             items.add(lastValue.updateAndGet(v -> v + Math.min(categoryVal, 0)));
         });
-        return items.stream().map(this::round).map(Math::abs).toList();
+        return items.stream().map(this::asEuro).map(Math::abs).toList();
     }
 
     public List<Double> generateCategorySeries(AnalysisPeriod period, Category category) {
@@ -35,10 +35,10 @@ public class CategorySeriesGeneratorImpl implements CategorySeriesGenerator {
             double categoryVal = category.sumTurnoversForMonth(monthYearList.get(i));
             items.add(categoryVal);
         });
-        return items.stream().map(item -> Math.min(item, 0)).map(this::round).map(Math::abs).toList();
+        return items.stream().map(item -> Math.min(item, 0)).map(this::asEuro).map(Math::abs).toList();
     }
 
-    private double round(Number value) {
-        return Math.round(value.doubleValue() * 100) / 100.0;
+    private double asEuro(Number value) {
+        return value.intValue() / 100.0;
     }
 }

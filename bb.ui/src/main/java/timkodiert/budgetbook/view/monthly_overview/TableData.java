@@ -9,12 +9,12 @@ import timkodiert.budgetbook.table.BaseTableData;
 public final class TableData extends BaseTableData {
 
     private final String position;
-    private final double value;
+    private final int value;
     private final LocalDate date;
     private final String categories;
     private final boolean hasImport;
 
-    public TableData(Integer id, String position, double value, LocalDate date, String categories, boolean hasImport, RowType type) {
+    public TableData(Integer id, String position, int value, LocalDate date, String categories, boolean hasImport, RowType type) {
         super(id, type);
         this.position = position;
         this.value = value;
@@ -27,7 +27,7 @@ public final class TableData extends BaseTableData {
         return position;
     }
 
-    public double value() {
+    public int value() {
         return value;
     }
 

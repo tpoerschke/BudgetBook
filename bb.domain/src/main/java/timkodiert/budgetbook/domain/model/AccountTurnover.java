@@ -3,9 +3,10 @@ package timkodiert.budgetbook.domain.model;
 import java.time.LocalDate;
 
 import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvCustomBindByPosition;
 import com.opencsv.bean.CsvDate;
-import com.opencsv.bean.CsvNumber;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -13,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+
+import timkodiert.budgetbook.domain.converter.CsvAmountToIntegerConverter;
 
 
 /**
@@ -27,6 +30,7 @@ public class AccountTurnover extends BaseEntity implements Comparable<AccountTur
 
     @CsvBindByPosition(position = 1)
     @CsvDate("dd.MM.yyyy")
+    @Column(nullable = false)
     private LocalDate date;
 
     @CsvBindByPosition(position = 2)
@@ -38,16 +42,16 @@ public class AccountTurnover extends BaseEntity implements Comparable<AccountTur
     @CsvBindByPosition(position = 4)
     private String reference;
 
-    @CsvBindByPosition(position = 7)
-    @CsvNumber("#.###,##")
-    private double amount;
+    @CsvCustomBindByPosition(position = 7, converter = CsvAmountToIntegerConverter.class)
+    @Column(nullable = false)
+    private int amount;
 
     @Setter
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "unique_expense_id")
+    @JoinColumn(name = "unique_turnover_id", nullable = false)
     private UniqueTurnover uniqueExpense;
 
-    public AccountTurnover(LocalDate date, String receiver, String postingText, String reference, double amount) {
+    public AccountTurnover(LocalDate date, String receiver, String postingText, String reference, int amount) {
         this.date = date;
         this.receiver = receiver;
         this.postingText = postingText;

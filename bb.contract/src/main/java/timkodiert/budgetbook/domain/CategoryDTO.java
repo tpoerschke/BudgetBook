@@ -22,7 +22,7 @@ public class CategoryDTO {
     private boolean hasLinkedTurnover;
 
     private boolean budgetActive;
-    private @Nullable Double budgetValue;
+    private @Nullable Integer budgetValue;
     private @Nullable BudgetType budgetType;
 
     public boolean isNew() {

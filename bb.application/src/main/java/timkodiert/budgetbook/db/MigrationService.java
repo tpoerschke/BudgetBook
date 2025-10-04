@@ -22,8 +22,8 @@ import org.flywaydb.core.api.callback.Event;
 
 import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.i18n.LanguageManager;
-import timkodiert.budgetbook.properties.PropertiesService;
 import timkodiert.budgetbook.injector.ControllerFactory;
+import timkodiert.budgetbook.properties.PropertiesService;
 
 @Singleton
 public class MigrationService {
@@ -69,6 +69,7 @@ public class MigrationService {
             Stage stage = new Stage();
             stage.setTitle("Migration – JBudgetBook");
             stage.setScene(new Scene(viewLoader.load()));
+            stage.getScene().getStylesheets().add(getClass().getResource("/css/general-styles.css").toExternalForm());
             stage.setWidth(600);
             stage.setOnHidden(event -> {
                 if (!migrationFinishedProperty().get()) {

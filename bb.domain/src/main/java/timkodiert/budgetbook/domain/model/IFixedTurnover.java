@@ -6,7 +6,7 @@ public interface IFixedTurnover extends HasType<PaymentType> {
 
     String getPosition();
 
-    double getValueFor(MonthYear monthYear);
+    int getValueFor(MonthYear monthYear);
 
-    double getValueForYear(int year);
+    int getValueForYear(int year);
 }

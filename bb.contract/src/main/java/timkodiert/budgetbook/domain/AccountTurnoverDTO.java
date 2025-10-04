@@ -12,5 +12,5 @@ public class AccountTurnoverDTO {
     private String receiver;
     private String postingText;
     private String reference;
-    private double amount;
+    private int amount;
 }

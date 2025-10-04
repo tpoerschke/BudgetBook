@@ -49,7 +49,7 @@ public class CurrencyTableCell<S extends HasType<U>, T extends Number, U> extend
         if (empty) {
             setText("");
         } else {
-            setText(item.doubleValue() == 0 ? "-" : converter.format(item.doubleValue()));
+            setText(item.intValue() == 0 ? "-" : converter.toString(item.intValue()));
         }
     }
 

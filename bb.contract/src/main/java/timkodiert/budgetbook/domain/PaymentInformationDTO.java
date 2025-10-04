@@ -18,7 +18,7 @@ public class PaymentInformationDTO {
     private MonthYear start;
     private MonthYear end;
     private PaymentType type;
-    private double value;
+    private int value;
     private List<Integer> monthsOfPayment = new ArrayList<>();
 
     public PaymentInformationDTO() {
