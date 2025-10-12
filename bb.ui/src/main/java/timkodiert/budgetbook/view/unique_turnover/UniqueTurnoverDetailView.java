@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
+import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
 import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.AccountTurnoverDTO;
@@ -50,6 +50,7 @@ import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.ui.control.AutoCompleteTextField;
 import timkodiert.budgetbook.ui.helper.Bind;
 import timkodiert.budgetbook.util.StageBuilder;
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 
 import static timkodiert.budgetbook.util.ObjectUtils.nvl;
@@ -104,7 +105,7 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
     @FXML
     private ColumnConstraints rightColumn;
 
-    private final DoubleCurrencyStringConverter doubleCurrencyStringConverter;
+    private final BbCurrencyStringConverter bbCurrencyStringConverter;
     private final UniqueTurnoverCrudService crudService;
     private final FixedTurnoverCrudService fixedTurnoverCrudService;
     private final LanguageManager languageManager;
@@ -112,14 +113,15 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
     private final UniqueTurnoverInformationDetailViewFactory uniqueTurnoverInformationDetailViewFactory;
 
     @Inject
-    public UniqueTurnoverDetailView(DoubleCurrencyStringConverter doubleCurrencyStringConverter,
+    public UniqueTurnoverDetailView(ValidationWrapperFactory<UniqueTurnoverDTO> validationWrapperFactory,
+                                    BbCurrencyStringConverter bbCurrencyStringConverter,
                                     UniqueTurnoverCrudService crudService,
                                     FixedTurnoverCrudService fixedTurnoverCrudService,
                                     LanguageManager languageManager,
                                     Provider<StageBuilder> stageBuilderProvider,
                                     UniqueTurnoverInformationDetailViewFactory uniqueTurnoverInformationDetailViewFactory) {
-        super();
-        this.doubleCurrencyStringConverter = doubleCurrencyStringConverter;
+        super(validationWrapperFactory);
+        this.bbCurrencyStringConverter = bbCurrencyStringConverter;
         this.crudService = crudService;
         this.fixedTurnoverCrudService = fixedTurnoverCrudService;
         this.languageManager = languageManager;
@@ -168,7 +170,7 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
         expenseInfoPositionCol
                 .setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getLabel()));
         expenseInfoValueCol.setCellValueFactory(cellData -> {
-            DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
+            BbCurrencyStringConverter converter = new BbCurrencyStringConverter();
             return new ReadOnlyStringWrapper(converter.toString(cellData.getValue().getValueSigned()));
         });
         expenseInfoCategoriesCol.setCellValueFactory(cellData ->
@@ -207,7 +209,7 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
         importReceiverTextField.setText(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getReceiver));
         importReferenceTextField.setText(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getReference));
         importPostingTextTextField.setText(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getPostingText));
-        importAmountTextField.setText(doubleCurrencyStringConverter.toString(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getAmount)));
+        importAmountTextField.setText(bbCurrencyStringConverter.toString(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getAmount)));
         updateImportAmountWarning();
     }
 

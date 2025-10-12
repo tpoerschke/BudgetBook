@@ -30,6 +30,7 @@ import timkodiert.budgetbook.domain.UniqueTurnoverInformationDTO;
 import timkodiert.budgetbook.domain.model.TurnoverDirection;
 import timkodiert.budgetbook.ui.control.AutoCompleteTextField;
 import timkodiert.budgetbook.ui.helper.Bind;
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.BaseDetailView;
 
 public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTurnoverInformationDTO> implements Initializable {
@@ -48,9 +49,11 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
     private final BiConsumer<UniqueTurnoverInformationDTO, UniqueTurnoverInformationDTO> updateCallback;
 
     @AssistedInject
-    public UniqueExpenseInformationDetailView(UniqueTurnoverCrudService uniqueTurnoverCrudService,
+    public UniqueExpenseInformationDetailView(ValidationWrapperFactory<UniqueTurnoverInformationDTO> validationWrapperFactory,
+                                              UniqueTurnoverCrudService uniqueTurnoverCrudService,
                                               CategoryCrudService categoryCrudService,
                                               @Assisted BiConsumer<UniqueTurnoverInformationDTO, UniqueTurnoverInformationDTO> updateCallback) {
+        super(validationWrapperFactory);
         this.uniqueTurnoverCrudService = uniqueTurnoverCrudService;
         this.categoryCrudService = categoryCrudService;
         this.updateCallback = updateCallback;

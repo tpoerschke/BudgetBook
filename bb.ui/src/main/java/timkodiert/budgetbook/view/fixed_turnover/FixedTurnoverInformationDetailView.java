@@ -18,17 +18,17 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.converter.IntegerStringConverter;
 
 import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
 import timkodiert.budgetbook.domain.PaymentInformationDTO;
 import timkodiert.budgetbook.domain.model.PaymentType;
 import timkodiert.budgetbook.i18n.LanguageManager;
+import timkodiert.budgetbook.ui.control.MoneyTextField;
 import timkodiert.budgetbook.ui.helper.Bind;
+import timkodiert.budgetbook.validation.ValidationResult;
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.BaseDetailView;
 import timkodiert.budgetbook.view.widget.MonthYearPickerWidget;
 import timkodiert.budgetbook.view.widget.MonthYearPickerWidgetFactory;
@@ -36,7 +36,7 @@ import timkodiert.budgetbook.view.widget.MonthYearPickerWidgetFactory;
 public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentInformationDTO> implements Initializable {
 
     @FXML
-    private TextField valueTextField;
+    private MoneyTextField valueTextField;
     @FXML
     private Label month1Label;
     @FXML
@@ -67,11 +67,12 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
     private final BiConsumer<PaymentInformationDTO, PaymentInformationDTO> onSaveCallback;
 
     @AssistedInject
-    public FixedTurnoverInformationDetailView(LanguageManager languageManager,
+    public FixedTurnoverInformationDetailView(ValidationWrapperFactory<PaymentInformationDTO> validationWrapperFactory,
+                                              LanguageManager languageManager,
                                               FixedTurnoverCrudService fixedTurnoverCrudService,
                                               MonthYearPickerWidgetFactory monthYearPickerWidgetFactory,
                                               @Assisted BiConsumer<PaymentInformationDTO, PaymentInformationDTO> updateCallback) {
-        super();
+        super(validationWrapperFactory);
         this.languageManager = languageManager;
         this.fixedTurnoverCrudService = fixedTurnoverCrudService;
         this.monthYearPickerWidgetFactory = monthYearPickerWidgetFactory;
@@ -90,14 +91,9 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
             .forEach(e -> e.getItems().addAll(FXCollections.observableArrayList(languageManager.getMonths())));
 
         // Bindings
-        TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter());
-        formatter.valueProperty().bindBidirectional(beanAdapter.getProperty(PaymentInformationDTO::getValue, PaymentInformationDTO::setValue));
-        valueTextField.setTextFormatter(formatter);
+        valueTextField.integerValueProperty().bindBidirectional(beanAdapter.getProperty(PaymentInformationDTO::getValue, PaymentInformationDTO::setValue));
 
-        List<PaymentType> typeList = List.of(PaymentType.MONTHLY,
-                                             PaymentType.ANNUAL,
-                                             PaymentType.SEMIANNUAL,
-                                             PaymentType.QUARTERLY);
+        List<PaymentType> typeList = List.of(PaymentType.MONTHLY, PaymentType.ANNUAL, PaymentType.SEMIANNUAL, PaymentType.QUARTERLY);
         Bind.comboBox(typeChoiceBox,
                       beanAdapter.getProperty(PaymentInformationDTO::getType, PaymentInformationDTO::setType),
                       typeList,
@@ -105,6 +101,21 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
 
         startMonthWidget.valueProperty().bindBidirectional(beanAdapter.getProperty(PaymentInformationDTO::getStart, PaymentInformationDTO::setStart));
         endMonthWidget.valueProperty().bindBidirectional(beanAdapter.getProperty(PaymentInformationDTO::getEnd, PaymentInformationDTO::setEnd));
+
+        // Validierungen
+        validationWrapper.register(startMonthWidget.valueProperty(), endMonthWidget.valueProperty());
+        validationWrapper.registerCustomValidation("valueValid",
+                                                   valueTextField.getTextField(),
+                                                   () -> valueTextField.isStringFormatValid()
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error("{fixedTurnover.position.notBlank}"),
+                                                   beanAdapter.getProperty(PaymentInformationDTO::getValue, PaymentInformationDTO::setValue));
+        validationWrapper.registerCustomValidation("valueValid1",
+                                                   valueTextField.getTextField(),
+                                                   () -> valueTextField.isStringFormatValid()
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error("{fixedTurnover.position.notBlank1}"),
+                                                   beanAdapter.getProperty(PaymentInformationDTO::getValue, PaymentInformationDTO::setValue));
     }
 
     @Override

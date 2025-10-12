@@ -7,7 +7,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
 import javafx.scene.text.Font;
 
-import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
+import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
 import timkodiert.budgetbook.domain.model.PaymentType;
 import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.domain.util.HasType;
@@ -18,7 +18,7 @@ public class CurrencyTableCell<S extends HasType<U>, T extends Number, U> extend
 
     private static final String STYLE_CLASS = "value-col";
 
-    private final DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
+    private final BbCurrencyStringConverter converter = new BbCurrencyStringConverter();
 
     private final boolean forceBold;
 

@@ -14,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 
 import timkodiert.budgetbook.domain.CategoryGroupCrudService;
 import timkodiert.budgetbook.domain.CategoryGroupDTO;
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 
 public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroupDTO> implements Initializable {
@@ -28,7 +29,8 @@ public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroupD
     private final CategoryGroupCrudService crudService;
 
     @Inject
-    public CategoryGroupDetailView(CategoryGroupCrudService crudService) {
+    public CategoryGroupDetailView(ValidationWrapperFactory<CategoryGroupDTO> validationWrapperFactory, CategoryGroupCrudService crudService) {
+        super(validationWrapperFactory);
         this.crudService = crudService;
     }
 

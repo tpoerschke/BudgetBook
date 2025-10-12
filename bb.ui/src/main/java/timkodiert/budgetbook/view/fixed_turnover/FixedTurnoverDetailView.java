@@ -40,8 +40,8 @@ import org.jetbrains.annotations.Nullable;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
 import timkodiert.budgetbook.converter.Converters;
-import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
 import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.AccountTurnoverDTO;
@@ -59,6 +59,7 @@ import timkodiert.budgetbook.table.cell.DateTableCell;
 import timkodiert.budgetbook.table.cell.MonthYearTableCell;
 import timkodiert.budgetbook.ui.helper.Bind;
 import timkodiert.budgetbook.util.StageBuilder;
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 
 import static timkodiert.budgetbook.view.FxmlResource.FIXED_TURNOVER_INFORMATION_VIEW;
@@ -122,14 +123,16 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     private final CategoryCrudService categoryCrudService;
     private final FixedTurnoverCrudService crudService;
 
-    @SuppressWarnings("java:S1450") // Liegt nur hier, damit sie nicht garbage-collected wird
+    @SuppressWarnings({"java:S1450", "FieldCanBeLocal"}) // Liegt nur hier, damit sie nicht garbage-collected wird
     private SortedList<AccountTurnoverDTO> sortedAccountTurnoverList;
 
     @Inject
-    public FixedTurnoverDetailView(FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory,
+    public FixedTurnoverDetailView(ValidationWrapperFactory<FixedTurnoverDTO> validationWrapperFactory,
+                                   FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory,
                                    Provider<StageBuilder> stageBuilderProvider,
                                    CategoryCrudService categoryCrudService,
                                    FixedTurnoverCrudService crudService) {
+        super(validationWrapperFactory);
         this.fixedTurnoverInformationDetailViewFactory = fixedTurnoverInformationDetailViewFactory;
         this.stageBuilderProvider = stageBuilderProvider;
         this.categoryCrudService = categoryCrudService;
@@ -154,7 +157,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         StringConverter<PaymentType> paymentTypeConverter = Converters.get(PaymentType.class);
         expenseInfoTypeCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(paymentTypeConverter.toString(cellData.getValue().getType())));
         expenseInfoValueCol.setCellValueFactory(cellData -> {
-            DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
+            BbCurrencyStringConverter converter = new BbCurrencyStringConverter();
             return new ReadOnlyStringWrapper(converter.toString(cellData.getValue().getValue()));
         });
         expenseInfoStartCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStart()));
@@ -171,7 +174,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         importsReceiverCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReceiver()));
         importsReferenceCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReference()));
         importsAmountCol.setCellValueFactory(cellData -> {
-            DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
+            BbCurrencyStringConverter converter = new BbCurrencyStringConverter();
             return new ReadOnlyStringWrapper(converter.toString(cellData.getValue().getAmount()));
         });
         importsDateCol.setSortType(TableColumn.SortType.DESCENDING);

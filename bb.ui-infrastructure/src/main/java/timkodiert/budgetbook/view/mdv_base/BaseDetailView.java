@@ -8,14 +8,20 @@ import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetbook.validation.ValidationWrapper;
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.View;
 
 public abstract class BaseDetailView<B> implements View {
 
+    protected final ValidationWrapper<B> validationWrapper;
     protected final Map<String, Control> validationMap = new HashMap<>();
 
     @Getter
     protected BeanAdapter<B> beanAdapter = new BeanAdapter<>();
+
+    protected BaseDetailView(ValidationWrapperFactory<B> validationWrapperFactory) {
+        this.validationWrapper = validationWrapperFactory.create(validationMap, beanAdapter);
+    }
 
     public @Nullable B getBean() {
         return beanAdapter.getBean();
@@ -33,7 +39,6 @@ public abstract class BaseDetailView<B> implements View {
     protected abstract B createEmptyEntity();
 
     protected boolean validate() {
-        ValidationWrapper<B> validation = new ValidationWrapper<>(validationMap);
-        return validation.validate(beanAdapter.getBean());
+        return validationWrapper.validate();
     }
 }

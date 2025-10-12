@@ -17,8 +17,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
+import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
 import timkodiert.budgetbook.converter.Converters;
-import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
 import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.domain.CategoryCrudService;
 import timkodiert.budgetbook.domain.CategoryDTO;
@@ -28,6 +28,7 @@ import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.model.BudgetType;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.ui.helper.Bind;
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 
 public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implements Initializable {
@@ -52,9 +53,11 @@ public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implem
     private final CategoryGroupCrudService categoryGroupCrudService;
 
     @Inject
-    protected CategoryDetailView(LanguageManager languageManager,
+    protected CategoryDetailView(ValidationWrapperFactory<CategoryDTO> validationWrapperFactory,
+                                 LanguageManager languageManager,
                                  CategoryCrudService categoryCrudService,
                                  CategoryGroupCrudService categoryGroupCrudService) {
+        super(validationWrapperFactory);
         this.languageManager = languageManager;
         this.categoryCrudService = categoryCrudService;
         this.categoryGroupCrudService = categoryGroupCrudService;
@@ -81,7 +84,7 @@ public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implem
         // Budget
         budgetActiveCheckBox.selectedProperty().bindBidirectional(beanAdapter.getProperty(CategoryDTO::isBudgetActive, CategoryDTO::setBudgetActive));
         budgetValueTextField.textProperty().bindBidirectional(beanAdapter.getProperty(CategoryDTO::getBudgetValue, CategoryDTO::setBudgetValue),
-                                                              new DoubleCurrencyStringConverter());
+                                                              new BbCurrencyStringConverter());
         Bind.comboBox(budgetTypeComboBox, beanAdapter.getProperty(CategoryDTO::getBudgetType, CategoryDTO::setBudgetType));
     }
 

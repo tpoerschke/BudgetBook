@@ -15,7 +15,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 
-import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
+import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.view.View;
@@ -39,10 +39,10 @@ public class BudgetWidget implements Initializable, View {
     @Getter
     private final ObjectProperty<MonthYear> selectedMonthYearProperty = new SimpleObjectProperty<>();
 
-    private final DoubleCurrencyStringConverter currencyStringConverter;
+    private final BbCurrencyStringConverter currencyStringConverter;
 
     @Inject
-    public BudgetWidget(DoubleCurrencyStringConverter currencyStringConverter) {
+    public BudgetWidget(BbCurrencyStringConverter currencyStringConverter) {
         this.currencyStringConverter = currencyStringConverter;
     }
 

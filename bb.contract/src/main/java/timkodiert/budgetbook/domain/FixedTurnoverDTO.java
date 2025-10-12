@@ -3,6 +3,7 @@ package timkodiert.budgetbook.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import timkodiert.budgetbook.domain.model.TurnoverDirection;
 public class FixedTurnoverDTO {
 
     private int id;
+    @NotBlank(message = "{fixedTurnover.position.notBlank}")
     private String position;
     private String note;
     private List<Reference<CategoryDTO>> categories = new ArrayList<>();
