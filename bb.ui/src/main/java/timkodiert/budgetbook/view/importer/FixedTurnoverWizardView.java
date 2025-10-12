@@ -69,7 +69,7 @@ public class FixedTurnoverWizardView implements View, Initializable {
         importInformation.addListener((observable, oldVal, newVal) -> {
             positionTextField.setText(newVal.receiverProperty().get());
             directionComboBox.getSelectionModel().select(TurnoverDirection.valueOf(newVal.amountProperty().getValue()));
-            valueTextField.setValue(Math.abs(newVal.amountProperty().getValue()));
+            valueTextField.setValue(Math.abs(newVal.amountProperty().getValue()) / 100.0);
             importActiveCheckbox.setSelected(true);
             importReceiverTextField.setText(newVal.receiverProperty().get());
             importReferenceTextField.setText(newVal.referenceProperty().get());
