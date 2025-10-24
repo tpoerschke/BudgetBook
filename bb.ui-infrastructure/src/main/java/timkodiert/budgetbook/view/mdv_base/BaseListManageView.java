@@ -11,6 +11,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
+import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetbook.dialog.DialogFactory;
 import timkodiert.budgetbook.i18n.LanguageManager;
@@ -22,7 +23,7 @@ public abstract class BaseListManageView<B> extends BaseManageView<B> {
 
     private final DialogFactory dialogFactory;
 
-    private TableRow<B> lastSelectedRow;
+    protected @Nullable TableRow<B> lastSelectedRow;
 
     protected BaseListManageView(FXMLLoader fxmlLoader,
                                  DialogFactory dialogFactory,
@@ -64,7 +65,7 @@ public abstract class BaseListManageView<B> extends BaseManageView<B> {
             entityTable.getSelectionModel().select(detailView.getBean());
             return;
         }
-        if (result.orElseThrow().equals(DialogFactory.DISCARD_CHANGES)) {
+        if (result.orElseThrow().equals(DialogFactory.DISCARD_CHANGES) && lastSelectedRow != null) {
             B discardedBean = discardChanges(detailView.getBean());
             entityTable.getItems().set(lastSelectedRow.getIndex(), discardedBean);
         }

@@ -15,14 +15,18 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.MessageInterpolator;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.scene.control.Control;
+import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 
 import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.view.mdv_base.BeanAdapter;
 
 public class ValidationWrapper<T> {
+
+    private static final String STYLE_CLASS_ERROR = "validation-error"; // Für Controls, für die die PseudoClass (s.u.) nicht funktioniert
 
     private final MessageInterpolator messageInterpolator;
     private final CustomValidationFactory customValidationFactory;
@@ -43,10 +47,12 @@ public class ValidationWrapper<T> {
 
     public boolean validate() {
         propertyNodeMap.values().forEach(control -> {
+            control.getStyleClass().remove(STYLE_CLASS_ERROR);
             control.pseudoClassStateChanged(Styles.STATE_DANGER, false);
             control.setTooltip(null);
         });
         customValidationMap.values().forEach(customValidation -> {
+            customValidation.getControl().getStyleClass().remove(STYLE_CLASS_ERROR);
             customValidation.getControl().pseudoClassStateChanged(Styles.STATE_DANGER, false);
             customValidation.getControl().setTooltip(null);
         });
@@ -75,13 +81,17 @@ public class ValidationWrapper<T> {
         });
         controlsWithMessages.forEach((control, messages) -> {
             control.setTooltip(new Tooltip(String.join("\n", messages)));
-            control.pseudoClassStateChanged(Styles.STATE_DANGER, true);
+            if (control instanceof TableView<?> tv) {
+                tv.getStyleClass().add(STYLE_CLASS_ERROR);
+            } else {
+                control.pseudoClassStateChanged(Styles.STATE_DANGER, true);
+            }
         });
         return controlsWithMessages.isEmpty();
     }
 
     public void register(Observable... observables) {
-        Arrays.stream(observables).forEach(observable -> observable.addListener(o -> validate()));
+        Arrays.stream(observables).forEach(observable -> observable.addListener(o -> Platform.runLater(this::validate)));
     }
 
     public void registerCustomValidation(String name, Control control, Callable<ValidationResult> validationSupplier, Observable... observables) {

@@ -1,6 +1,7 @@
 package timkodiert.budgetbook.view.unique_turnover;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import javax.inject.Inject;
 
 import javafx.beans.property.SimpleDoubleProperty;
@@ -94,11 +95,13 @@ public class UniqueTurnoverManageView extends BaseListManageView<UniqueTurnoverD
 
     @FXML
     private void newUniqueExpense(ActionEvent event) {
+        entityTable.getSelectionModel().clearSelection();
+        lastSelectedRow = null;
         displayNewEntity();
     }
 
     @Override
     protected UniqueTurnoverDTO discardChanges(UniqueTurnoverDTO beanToDiscard) {
-        return null;
+        return Optional.ofNullable(crudService.readById(beanToDiscard.getId())).orElseGet(this::createEmptyEntity);
     }
 }

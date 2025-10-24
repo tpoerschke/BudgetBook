@@ -122,8 +122,8 @@
    <bottom>
       <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <buttons>
-            <Button mnemonicParsing="false" onAction="#discardChanges" text="%button.discard" />
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#save" text="%button.save" />
+           <Button fx:id="discardButton" mnemonicParsing="false" onAction="#discardChanges" text="%button.discard"/>
+           <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" onAction="#save" text="%button.save"/>
             <Button mnemonicParsing="false" onAction="#delete" styleClass="danger" text="%button.delete" />
          </buttons>
          <padding>

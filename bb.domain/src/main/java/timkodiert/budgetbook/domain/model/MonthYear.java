@@ -42,6 +42,9 @@ public class MonthYear implements Comparable<MonthYear> {
     }
 
     public boolean isAfter(MonthYear other) {
+        if (other == null) {
+            return true;
+        }
         return this.compareTo(other) > 0;
     }
 

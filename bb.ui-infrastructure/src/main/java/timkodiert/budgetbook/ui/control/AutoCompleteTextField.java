@@ -55,7 +55,7 @@ public class AutoCompleteTextField extends TextField {
 
     private void generateContextMenuItems(List<String> suitableEntries) {
         contextMenu.getItems().clear();
-        suitableEntries.forEach(str -> {
+        suitableEntries.subList(0, Math.min(maxEntries, suitableEntries.size())).forEach(str -> {
             MenuItem item = new MenuItem(str);
             item.setOnAction(event -> setText(str));
             contextMenu.getItems().add(item);

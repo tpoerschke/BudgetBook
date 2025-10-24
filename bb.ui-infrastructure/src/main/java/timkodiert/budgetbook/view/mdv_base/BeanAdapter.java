@@ -16,8 +16,8 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import lombok.Getter;
-import lombok.Setter;
 
+import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.util.ReflectionUtils;
 
 public class BeanAdapter<B> {
@@ -32,9 +32,7 @@ public class BeanAdapter<B> {
     @Getter
     private B bean;
 
-    @Getter
-    @Setter
-    private boolean isDirty = false;
+    private ReadOnlyBooleanWrapper dirtyProperty = new ReadOnlyBooleanWrapper(false);
 
     public void setBean(B bean) {
         settingNewBean = true;
@@ -45,8 +43,20 @@ public class BeanAdapter<B> {
             propertyMap.values().forEach(propContainer -> propContainer.setValue(bean));
             listPropertyMap.values().forEach(propContainer -> propContainer.setValue(bean));
         }
-        isDirty = false;
+        dirtyProperty.setValue(false);
         settingNewBean = false;
+    }
+
+    public boolean isDirty() {
+        return dirtyProperty.getValue();
+    }
+
+    public void setDirty(boolean dirty) {
+        dirtyProperty.setValue(dirty);
+    }
+
+    public ReadOnlyBooleanProperty dirty() {
+        return dirtyProperty.getReadOnlyProperty();
     }
 
     public ReadOnlyBooleanProperty isEmpty() {
@@ -60,7 +70,7 @@ public class BeanAdapter<B> {
         try {
             getterName = ReflectionUtils.resolveMethodName(getter);
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
+            throw TechnicalException.forProgrammingError(e.getMessage(), e);
         }
 
         return (ObjectProperty<T>) propertyMap.computeIfAbsent(getterName, k -> createProperty(getter, setter)).property();
@@ -73,7 +83,7 @@ public class BeanAdapter<B> {
         try {
             getterName = ReflectionUtils.resolveMethodName(getter);
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
+            throw TechnicalException.forProgrammingError(e.getMessage(), e);
         }
 
         return (ListProperty<T>) listPropertyMap.computeIfAbsent(getterName, k -> createListProperty(getter, setter)).property();
@@ -86,7 +96,7 @@ public class BeanAdapter<B> {
                 return;
             }
             if (!Objects.equals(oldVal, newVal)) {
-                isDirty = true;
+                dirtyProperty.setValue(true);
             }
             setter.accept(bean, newVal);
         });
@@ -104,7 +114,7 @@ public class BeanAdapter<B> {
                 return;
             }
             if (!Objects.equals(oldVal, newVal)) {
-                isDirty = true;
+                dirtyProperty.setValue(true);
             }
             setter.accept(bean, newVal);
         });

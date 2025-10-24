@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +17,9 @@ import timkodiert.budgetbook.domain.util.HasType;
 public class UniqueTurnoverDTO implements HasType<RowType> {
 
     private int id;
+    @NotBlank(message = "{uniqueTurnover.biller.notBlank}")
     private String biller;
+    @NotNull(message = "{attribute.notNull}")
     private LocalDate date;
     private String note;
     private String receiptImagePath;

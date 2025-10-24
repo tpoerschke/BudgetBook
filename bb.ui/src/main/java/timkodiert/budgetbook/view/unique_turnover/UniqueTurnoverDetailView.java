@@ -31,6 +31,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.jetbrains.annotations.Nullable;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
@@ -105,6 +106,11 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
     @FXML
     private ColumnConstraints rightColumn;
 
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button discardButton;
+
     private final BbCurrencyStringConverter bbCurrencyStringConverter;
     private final UniqueTurnoverCrudService crudService;
     private final FixedTurnoverCrudService fixedTurnoverCrudService;
@@ -131,6 +137,8 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        saveButton.disableProperty().bind(beanAdapter.dirty().not());
+        discardButton.disableProperty().bind(beanAdapter.dirty().not());
         addUniqueExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.PLUS));
         editUniqueExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.PENCIL));
         deleteUniqueExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.TRASH));
@@ -201,7 +209,8 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
         // Validierungen
         validationMap.put("biller", billerTextField);
         validationMap.put("date", datePicker);
-        validationMap.put("paymentInformations", expenseInfoTable);
+        validationWrapper.register(beanAdapter.getProperty(UniqueTurnoverDTO::getBiller, UniqueTurnoverDTO::setBiller),
+                                   beanAdapter.getProperty(UniqueTurnoverDTO::getDate, UniqueTurnoverDTO::setDate));
     }
 
     @Override
@@ -248,7 +257,7 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
 
     @Override
     protected UniqueTurnoverDTO discardChanges() {
-        return crudService.readById(Objects.requireNonNull(getBean()).getId());
+        return Optional.ofNullable(crudService.readById(Objects.requireNonNull(getBean()).getId())).orElseGet(this::createEmptyEntity);
     }
 
     @FXML
@@ -280,34 +289,40 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
         UniqueTurnoverInformationDTO expInfo = expenseInfoTable.getSelectionModel().getSelectedItem();
         expenseInfoTable.getItems().remove(expInfo);
         updateImportAmountWarning();
+        beanAdapter.setDirty(true);
     }
 
     private void updateTurnoverInformation(@Nullable UniqueTurnoverInformationDTO oldVal, UniqueTurnoverInformationDTO newVal) {
-        // oldVal nicht null, wenn die Entity in der SubView verworfen wird, da diese per Service neu geladen wird.
+        // oldVal nicht null, wenn die Entity in der SubView verworfen wird, da aus der geklonten Backup-Bean wiederhergestellt wird.
         if (oldVal != null) {
             int replaceIndex = expenseInfoTable.getItems().indexOf(oldVal);
-            expenseInfoTable.getItems().set(replaceIndex, newVal);
-        }
-        int index = expenseInfoTable.getItems().indexOf(newVal);
-        if (index < 0) {
-            expenseInfoTable.getItems().add(newVal);
+            if (replaceIndex != -1) {
+                expenseInfoTable.getItems().set(replaceIndex, newVal);
+            }
+        } else {
+            int index = expenseInfoTable.getItems().indexOf(newVal);
+            if (index < 0) {
+                expenseInfoTable.getItems().add(newVal);
+            }
         }
         expenseInfoTable.refresh();
         updateImportAmountWarning();
+        beanAdapter.setDirty(true);
     }
 
     private void openUniqueExpenseInformationDetailView(UniqueTurnoverInformationDTO uniqueTurnover) {
         try {
             var subEntityDetailView = uniqueTurnoverInformationDetailViewFactory.create(this::updateTurnoverInformation);
-            stageBuilderProvider.get()
-                                .withModality(Modality.APPLICATION_MODAL)
-                                .withOwner(Window.getWindows().getFirst())
-                                .withFXMLResource(UNIQUE_TURNOVER_INFORMATION_VIEW.toString())
-                                .withView(subEntityDetailView)
-                                .build()
-                                .stage()
-                                .show();
+            Stage stage = stageBuilderProvider.get()
+                                              .withModality(Modality.APPLICATION_MODAL)
+                                              .withOwner(Window.getWindows().getFirst())
+                                              .withFXMLResource(UNIQUE_TURNOVER_INFORMATION_VIEW.toString())
+                                              .withView(subEntityDetailView)
+                                              .build()
+                                              .stage();
             subEntityDetailView.setBean(uniqueTurnover);
+            subEntityDetailView.setStage(stage);
+            stage.show();
         } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR, languageManager.get("alert.viewCouldNotBeOpened"));
             alert.showAndWait();
