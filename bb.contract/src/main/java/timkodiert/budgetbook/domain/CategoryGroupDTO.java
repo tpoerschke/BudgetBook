@@ -1,6 +1,9 @@
 package timkodiert.budgetbook.domain;
 
-import jakarta.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,9 +12,11 @@ import lombok.Setter;
 public class CategoryGroupDTO {
 
     private int id = 0;
-    @NotEmpty
+    @NotBlank(message = "{categoryGroup.name.notBlank}")
     private String name;
     private String description;
+
+    private List<Reference<CategoryDTO>> categories = new ArrayList<>();
 
     public boolean isNew() {
         return id <= 0;

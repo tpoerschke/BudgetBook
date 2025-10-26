@@ -39,7 +39,7 @@ public class UniqueTurnoverInformation extends BaseEntity implements Categorizab
     private UniqueTurnover expense;
 
     @Setter
-    @ManyToMany(cascade = { CascadeType.PERSIST })
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Category> categories = new ArrayList<>();
 
     public static UniqueTurnoverInformation total(UniqueTurnover exp, int value) {

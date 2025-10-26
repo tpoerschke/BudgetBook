@@ -1,6 +1,7 @@
 package timkodiert.budgetbook.view.category;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -10,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -48,6 +50,11 @@ public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implem
     @FXML
     private ComboBox<BudgetType> budgetTypeComboBox;
 
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button discardButton;
+
     private final LanguageManager languageManager;
     private final CategoryCrudService categoryCrudService;
     private final CategoryGroupCrudService categoryGroupCrudService;
@@ -66,6 +73,9 @@ public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implem
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         root.disableProperty().bind(beanAdapter.isEmpty());
+        saveButton.disableProperty().bind(beanAdapter.dirty().not());
+        discardButton.disableProperty().bind(beanAdapter.dirty().not());
+
         groupComboBox.setConverter(new ReferenceStringConverter<>());
         groupComboBox.getItems().add(null);
         groupComboBox.getItems().addAll(categoryGroupCrudService.readAll()
@@ -86,6 +96,10 @@ public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implem
         budgetValueTextField.textProperty().bindBidirectional(beanAdapter.getProperty(CategoryDTO::getBudgetValue, CategoryDTO::setBudgetValue),
                                                               new BbCurrencyStringConverter());
         Bind.comboBox(budgetTypeComboBox, beanAdapter.getProperty(CategoryDTO::getBudgetType, CategoryDTO::setBudgetType));
+
+        // Validierungen
+        validationMap.put("name", nameTextField);
+        validationWrapper.register(beanAdapter.getProperty(CategoryDTO::getName, CategoryDTO::setName));
     }
 
     @Override
@@ -119,7 +133,7 @@ public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implem
 
     @Override
     protected CategoryDTO discardChanges() {
-        return categoryCrudService.readById(getBean().getId());
+        return Optional.ofNullable(categoryCrudService.readById(Objects.requireNonNull(getBean()).getId())).orElseGet(this::createEmptyEntity);
     }
 
     @FXML

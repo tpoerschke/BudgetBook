@@ -20,10 +20,17 @@ public class CategoriesRepository extends Repository<Category> {
         entities.forEach(entity -> {
             CategoryGroup group = entity.getGroup();
             if (group != null) {
-                group.getCategories().remove(entity);
+                group.getCategories().removeIf(c -> c.getId() == entity.getId());
+                entityManager.merge(group);
             }
-            entity.getFixedExpenses().forEach(expense -> expense.getCategories().remove(entity));
-            entity.getUniqueTurnoverInformation().forEach(info -> info.getCategories().remove(entity));
+            entity.getFixedExpenses().forEach(turnover -> {
+                turnover.getCategories().removeIf(c -> c.getId() == entity.getId());
+                entityManager.merge(turnover);
+            });
+            entity.getUniqueTurnoverInformation().forEach(info -> {
+                info.getCategories().removeIf(c -> c.getId() == entity.getId());
+                entityManager.merge(info);
+            });
         });
         super.remove(entities);
     }

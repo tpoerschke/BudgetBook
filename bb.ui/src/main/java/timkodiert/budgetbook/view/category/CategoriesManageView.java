@@ -1,5 +1,6 @@
 package timkodiert.budgetbook.view.category;
 
+import java.util.Optional;
 import javax.inject.Inject;
 
 import javafx.fxml.FXML;
@@ -62,11 +63,13 @@ public class CategoriesManageView extends BaseListManageView<CategoryDTO> {
 
     @FXML
     private void openNewCategory() {
+        entityTable.getSelectionModel().clearSelection();
+        lastSelectedRow = null;
         displayNewEntity();
     }
 
     @Override
     protected CategoryDTO discardChanges(CategoryDTO beanToDiscard) {
-        return crudService.readById(beanToDiscard.getId());
+        return Optional.ofNullable(crudService.readById(beanToDiscard.getId())).orElseGet(this::createEmptyEntity);
     }
 }

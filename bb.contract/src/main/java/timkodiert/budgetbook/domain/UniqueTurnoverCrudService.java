@@ -8,7 +8,6 @@ public interface UniqueTurnoverCrudService {
 
     List<UniqueTurnoverDTO> readAll(@Nullable Reference<FixedTurnoverDTO> fixedTurnoverRef);
     UniqueTurnoverDTO readById(int id);
-    UniqueTurnoverInformationDTO readUniqueTurnoverInformationById(int id);
 
     boolean create(UniqueTurnoverDTO uniqueTurnoverDTO);
     boolean update(UniqueTurnoverDTO uniqueTurnoverDTO);

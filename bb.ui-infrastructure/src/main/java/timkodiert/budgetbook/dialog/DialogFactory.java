@@ -28,7 +28,7 @@ public class DialogFactory {
         return alert;
     }
 
-    public Alert buildInformationDialog(String information) {
+    public static Alert buildInformationDialog(String information) {
         return new Alert(AlertType.INFORMATION, information);
     }
 

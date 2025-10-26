@@ -36,7 +36,7 @@ public class UniqueTurnover extends BaseEntity {
 
     @Setter
     @Size(min = 1)
-    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UniqueTurnoverInformation> paymentInformations = new ArrayList<>();
 
     @Setter

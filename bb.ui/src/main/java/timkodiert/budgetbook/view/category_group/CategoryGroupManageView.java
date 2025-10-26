@@ -1,5 +1,6 @@
 package timkodiert.budgetbook.view.category_group;
 
+import java.util.Optional;
 import javax.inject.Inject;
 
 import javafx.event.ActionEvent;
@@ -51,6 +52,8 @@ public class CategoryGroupManageView extends BaseListManageView<CategoryGroupDTO
 
     @FXML
     private void openNewCategoryGroup(ActionEvent actionEvent) {
+        entityTable.getSelectionModel().clearSelection();
+        lastSelectedRow = null;
         displayNewEntity();
     }
 
@@ -61,6 +64,6 @@ public class CategoryGroupManageView extends BaseListManageView<CategoryGroupDTO
 
     @Override
     protected CategoryGroupDTO discardChanges(CategoryGroupDTO beanToDiscard) {
-        return crudService.readById(beanToDiscard.getId());
+        return Optional.ofNullable(crudService.readById(beanToDiscard.getId())).orElseGet(this::createEmptyEntity);
     }
 }

@@ -1,6 +1,8 @@
 package timkodiert.budgetbook.view.category_group;
 
 import java.net.URL;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
@@ -8,6 +10,7 @@ import jakarta.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -26,6 +29,11 @@ public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroupD
     @FXML
     private TextArea descriptionTextArea;
 
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button discardButton;
+
     private final CategoryGroupCrudService crudService;
 
     @Inject
@@ -37,11 +45,15 @@ public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroupD
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         root.disableProperty().bind(beanAdapter.isEmpty());
+        saveButton.disableProperty().bind(beanAdapter.dirty().not());
+        discardButton.disableProperty().bind(beanAdapter.dirty().not());
 
         nameTextField.textProperty().bindBidirectional(beanAdapter.getProperty(CategoryGroupDTO::getName, CategoryGroupDTO::setName));
         descriptionTextArea.textProperty().bindBidirectional(beanAdapter.getProperty(CategoryGroupDTO::getDescription, CategoryGroupDTO::setDescription));
 
+        // Validierungen
         validationMap.put("name", nameTextField);
+        validationWrapper.register(beanAdapter.getProperty(CategoryGroupDTO::getName, CategoryGroupDTO::setName));
     }
 
     @Override
@@ -67,16 +79,13 @@ public class CategoryGroupDetailView extends EntityBaseDetailView<CategoryGroupD
 
     @Override
     protected CategoryGroupDTO discardChanges() {
-        return crudService.readById(getBean().getId());
+        return Optional.ofNullable(crudService.readById(Objects.requireNonNull(getBean()).getId())).orElseGet(this::createEmptyEntity);
     }
 
     @FXML
     private void delete(ActionEvent event) {
-        CategoryGroupDTO category = this.getBean();
-
-        // TODO: Hier prüfen, ob es Kategorien zu dieser Gruppe gibt
-
-        crudService.delete(category.getId());
+        CategoryGroupDTO categoryGroupDTO = this.getBean();
+        crudService.delete(categoryGroupDTO.getId());
         beanAdapter.setBean(null);
         onUpdate.accept(null);
     }

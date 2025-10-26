@@ -45,6 +45,5 @@ public interface FixedTurnoverMapper {
     AccountTurnoverDTO accountTurnoverToDto(AccountTurnover accountTurnover);
     
     @Mapping(target = "categories", expression = "java(referenceResolver.resolve(dto.getCategories()))")
-        //@Mapping(target = "accountTurnover", ignore = true)
     void updateFixedTurnover(FixedTurnoverDTO dto, @MappingTarget FixedTurnover fixedTurnover, @Context ReferenceResolver referenceResolver);
 }
