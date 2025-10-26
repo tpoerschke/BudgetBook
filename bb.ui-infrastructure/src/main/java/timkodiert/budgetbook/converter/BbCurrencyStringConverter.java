@@ -8,12 +8,12 @@ import javax.inject.Inject;
 
 import javafx.util.StringConverter;
 
-public class DoubleCurrencyStringConverter extends StringConverter<Integer> {
+public class BbCurrencyStringConverter extends StringConverter<Integer> {
 
     private final NumberFormat format;
 
     @Inject
-    public DoubleCurrencyStringConverter() {
+    public BbCurrencyStringConverter() {
         format = NumberFormat.getCurrencyInstance(Locale.GERMAN);
         format.setCurrency(Currency.getInstance("EUR"));
     }

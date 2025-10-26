@@ -1,5 +1,6 @@
 package timkodiert.budgetbook.domain.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -17,7 +18,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(staticName = "of")
 @EqualsAndHashCode
 @Getter
-public class MonthYear implements Comparable<MonthYear> {
+// TODO: Es gibt noch kein MonthYearTO, sollte aber eingeführt werden, damit "Client" und "Server" besser getrennt werden.
+// Dann kann hier auch das Serializable entfernt werden.
+public class MonthYear implements Comparable<MonthYear>, Serializable {
 
     @Column(nullable = true)
     private int month;
@@ -42,6 +45,9 @@ public class MonthYear implements Comparable<MonthYear> {
     }
 
     public boolean isAfter(MonthYear other) {
+        if (other == null) {
+            return true;
+        }
         return this.compareTo(other) > 0;
     }
 

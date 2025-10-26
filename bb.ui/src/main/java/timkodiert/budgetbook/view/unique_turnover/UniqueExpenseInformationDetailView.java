@@ -1,6 +1,7 @@
 package timkodiert.budgetbook.view.unique_turnover;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -11,13 +12,10 @@ import dagger.assisted.AssistedInject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.stage.Stage;
-import javafx.util.converter.IntegerStringConverter;
+import org.apache.commons.lang3.SerializationUtils;
 import org.controlsfx.control.CheckListView;
 
 import timkodiert.budgetbook.converter.Converters;
@@ -29,7 +27,10 @@ import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.domain.UniqueTurnoverInformationDTO;
 import timkodiert.budgetbook.domain.model.TurnoverDirection;
 import timkodiert.budgetbook.ui.control.AutoCompleteTextField;
+import timkodiert.budgetbook.ui.control.MoneyTextField;
 import timkodiert.budgetbook.ui.helper.Bind;
+import timkodiert.budgetbook.validation.ValidationResult;
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.BaseDetailView;
 
 public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTurnoverInformationDTO> implements Initializable {
@@ -37,20 +38,25 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
     @FXML
     private AutoCompleteTextField positionTextField;
     @FXML
-    private TextField valueTextField;
+    private MoneyTextField valueTextField;
     @FXML
     private ComboBox<TurnoverDirection> directionComboBox;
     @FXML
     private CheckListView<Reference<CategoryDTO>> categoriesListView;
+
+    private Stage stage;
+    private UniqueTurnoverInformationDTO backupBean;
 
     private final UniqueTurnoverCrudService uniqueTurnoverCrudService;
     private final CategoryCrudService categoryCrudService;
     private final BiConsumer<UniqueTurnoverInformationDTO, UniqueTurnoverInformationDTO> updateCallback;
 
     @AssistedInject
-    public UniqueExpenseInformationDetailView(UniqueTurnoverCrudService uniqueTurnoverCrudService,
+    public UniqueExpenseInformationDetailView(ValidationWrapperFactory<UniqueTurnoverInformationDTO> validationWrapperFactory,
+                                              UniqueTurnoverCrudService uniqueTurnoverCrudService,
                                               CategoryCrudService categoryCrudService,
                                               @Assisted BiConsumer<UniqueTurnoverInformationDTO, UniqueTurnoverInformationDTO> updateCallback) {
+        super(validationWrapperFactory);
         this.uniqueTurnoverCrudService = uniqueTurnoverCrudService;
         this.categoryCrudService = categoryCrudService;
         this.updateCallback = updateCallback;
@@ -67,11 +73,7 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
 
         // Bindings
         positionTextField.textProperty().bindBidirectional(beanAdapter.getProperty(UniqueTurnoverInformationDTO::getLabel, UniqueTurnoverInformationDTO::setLabel));
-
-        TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter());
-        formatter.valueProperty().bindBidirectional(beanAdapter.getProperty(UniqueTurnoverInformationDTO::getValue, UniqueTurnoverInformationDTO::setValue));
-        valueTextField.setTextFormatter(formatter);
-
+        valueTextField.integerValueProperty().bindBidirectional(beanAdapter.getProperty(UniqueTurnoverInformationDTO::getValue, UniqueTurnoverInformationDTO::setValue));
         Bind.comboBox(directionComboBox,
                       beanAdapter.getProperty(UniqueTurnoverInformationDTO::getDirection, UniqueTurnoverInformationDTO::setDirection),
                       Arrays.asList(TurnoverDirection.values()),
@@ -79,12 +81,21 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
 
         // Validierungen
         validationMap.put("label", positionTextField);
+        validationMap.put("direction", directionComboBox);
+        validationWrapper.register(positionTextField.textProperty(), directionComboBox.getSelectionModel().selectedItemProperty());
+        validationWrapper.registerCustomValidation("amountValid",
+                                                   valueTextField.getTextField(),
+                                                   () -> valueTextField.isStringFormatValid()
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error("{amount.format.valid}"),
+                                                   beanAdapter.getProperty(UniqueTurnoverInformationDTO::getValue, UniqueTurnoverInformationDTO::setValue));
     }
 
     @Override
     protected void beanSet() {
-        categoriesListView.getCheckModel().clearChecks();
+        backupBean = SerializationUtils.clone(beanAdapter.getBean());
         UniqueTurnoverInformationDTO bean = beanAdapter.getBean();
+        categoriesListView.getCheckModel().clearChecks();
         bean.getCategories().forEach(cat -> categoriesListView.getCheckModel().check(cat));
     }
 
@@ -98,19 +109,20 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
         if (!validate()) {
             return;
         }
-        beanAdapter.getBean().setCategories(categoriesListView.getCheckModel().getCheckedItems());
+        beanAdapter.getBean().setCategories(new ArrayList<>(categoriesListView.getCheckModel().getCheckedItems()));
         updateCallback.accept(null, beanAdapter.getBean());
-
-        // Das macht mich traurig ._.
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+        stage.close();
     }
 
     @FXML
     private void onRevert() {
         UniqueTurnoverInformationDTO modified = beanAdapter.getBean();
-        UniqueTurnoverInformationDTO unmodified = uniqueTurnoverCrudService.readUniqueTurnoverInformationById(modified.getId());
-        beanAdapter.setBean(unmodified);
-        updateCallback.accept(modified, unmodified);
+        setBean(SerializationUtils.clone(backupBean));
+        updateCallback.accept(modified, beanAdapter.getBean());
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        stage.setOnCloseRequest(event -> onRevert());
+    }
 }

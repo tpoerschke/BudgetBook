@@ -11,7 +11,6 @@ import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
-import timkodiert.budgetbook.domain.UniqueTurnoverInformationDTO;
 import timkodiert.budgetbook.domain.model.BaseEntity;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
@@ -52,12 +51,6 @@ public class UniqueTurnoverCrudServiceImpl implements UniqueTurnoverCrudService 
     }
 
     @Override
-    public UniqueTurnoverInformationDTO readUniqueTurnoverInformationById(int id) {
-        UniqueTurnoverMapper mapper = Mappers.getMapper(UniqueTurnoverMapper.class);
-        return mapper.uniqueTurnoverInformationToUniqueTurnoverInformationDto(uniqueTurnoverInformationRepository.findById(id));
-    }
-
-    @Override
     public boolean create(UniqueTurnoverDTO uniqueTurnoverDTO) {
         UniqueTurnover uniqueTurnover = new UniqueTurnover();
         UniqueTurnoverMapper uniqueTurnoverMapper = Mappers.getMapper(UniqueTurnoverMapper.class);
@@ -94,6 +87,12 @@ public class UniqueTurnoverCrudServiceImpl implements UniqueTurnoverCrudService 
                 info.setId(0);
             }
         });
+        uniqueTurnover.getPaymentInformations().forEach(info -> info.getCategories().forEach(category -> {
+            boolean notYetLinked = category.getUniqueExpenseInformation().stream().noneMatch(i -> i.getId() == info.getId());
+            if (notYetLinked) {
+                category.getUniqueExpenseInformation().add(info);
+            }
+        }));
     }
 
     @Override

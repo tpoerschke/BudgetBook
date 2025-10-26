@@ -14,7 +14,7 @@ public class CategoryDTO {
 
     private int id;
     @NonNull
-    @NotBlank(message = "Die Kategorie muss benannt werden.")
+    @NotBlank(message = "{category.name.notBlank}")
     private String name;
     private String description;
     private @Nullable Reference<CategoryGroupDTO> group;

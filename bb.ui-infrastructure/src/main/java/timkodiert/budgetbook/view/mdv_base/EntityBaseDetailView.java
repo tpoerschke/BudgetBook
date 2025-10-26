@@ -6,10 +6,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import lombok.Setter;
 
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
+
 public abstract class EntityBaseDetailView<D> extends BaseDetailView<D> {
 
     @Setter
     protected Consumer<D> onUpdate;
+
+    protected EntityBaseDetailView(ValidationWrapperFactory<D> validationWrapperFactory) {
+        super(validationWrapperFactory);
+    }
 
     public boolean isDirty() {
         return beanAdapter.isDirty();

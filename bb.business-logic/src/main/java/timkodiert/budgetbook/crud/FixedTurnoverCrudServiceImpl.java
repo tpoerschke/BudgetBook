@@ -7,7 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
 import timkodiert.budgetbook.domain.FixedTurnoverDTO;
-import timkodiert.budgetbook.domain.PaymentInformationDTO;
 import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.model.PaymentInformation;
@@ -43,13 +42,6 @@ public class FixedTurnoverCrudServiceImpl implements FixedTurnoverCrudService {
     public FixedTurnoverDTO readById(int id) {
         FixedTurnoverMapper mapper = Mappers.getMapper(FixedTurnoverMapper.class);
         return fixedTurnoverRepository.findAll().stream().filter(t -> t.getId() == id).findAny().map(mapper::fixedTurnoverToFixedTurnoverDto).orElse(null);
-    }
-
-    @Override
-    public PaymentInformationDTO readPaymentInformationById(int id) {
-        FixedTurnoverMapper mapper = Mappers.getMapper(FixedTurnoverMapper.class);
-        PaymentInformation payInfo = paymentInformationRepository.findById(id);
-        return mapper.paymentInformationToPaymentInformationDto(payInfo);
     }
 
     @Override
@@ -94,6 +86,12 @@ public class FixedTurnoverCrudServiceImpl implements FixedTurnoverCrudService {
                 importRule.setId(0);
             }
             importRule.setLinkedFixedExpense(fixedTurnover);
+        });
+        fixedTurnover.getCategories().forEach(category -> {
+            boolean notYetLinked = category.getFixedExpenses().stream().noneMatch(ft -> ft.getId() == fixedTurnover.getId());
+            if (notYetLinked) {
+                category.getFixedExpenses().add(fixedTurnover);
+            }
         });
     }
 }

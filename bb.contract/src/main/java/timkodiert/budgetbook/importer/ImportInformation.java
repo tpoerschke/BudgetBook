@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -33,7 +33,7 @@ public class ImportInformation implements HasType<ImportInformation> { // Bissch
     private final StringProperty receiver = new SimpleStringProperty();
     private final StringProperty postingText = new SimpleStringProperty();
     private final StringProperty reference = new SimpleStringProperty();
-    private final DoubleProperty amount = new SimpleDoubleProperty();
+    private final IntegerProperty amount = new SimpleIntegerProperty();
     private final ObjectProperty<FixedTurnover> fixedExpense = new SimpleObjectProperty<>();
     private final StringProperty annotation = new SimpleStringProperty();
     private final BooleanProperty alreadyImported = new SimpleBooleanProperty();
@@ -129,7 +129,7 @@ public class ImportInformation implements HasType<ImportInformation> { // Bissch
         return reference;
     }
 
-    public DoubleProperty amountProperty() {
+    public IntegerProperty amountProperty() {
         return amount;
     }
 

@@ -25,6 +25,8 @@ import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -40,6 +42,7 @@ public class MonthYearPickerWidget implements Initializable {
     }
 
     @FXML
+    @Getter
     private ChoiceBox<String> monthChoiceBox;
     @FXML
     private TextField yearTextField;
@@ -87,9 +90,10 @@ public class MonthYearPickerWidget implements Initializable {
         if (muteListener) {
             return;
         }
-        if (monthChoiceBox.getSelectionModel().isEmpty() || yearTextField.getText().isEmpty()) {
+        if (monthChoiceBox.getSelectionModel().isEmpty() || StringUtils.isEmpty(yearTextField.getText())) {
             value.set(null);
         }
+        // FIXME: Hier fliegen NFEs, besseres Handling einbauen. Dabei am MoneyTextField orientieren
         value.set(MonthYear.of(monthChoiceBox.getSelectionModel().getSelectedIndex() + 1, Integer.valueOf(yearTextField.getText())));
     }
 

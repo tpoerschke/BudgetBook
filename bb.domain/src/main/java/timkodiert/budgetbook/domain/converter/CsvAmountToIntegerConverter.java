@@ -23,7 +23,7 @@ public class CsvAmountToIntegerConverter extends AbstractBeanField<Integer, Stri
         try {
             double number = NUMBER_FORMAT.parse(value.trim()).doubleValue();
             return (int)(number * 100);
-        } catch (ParseException e) {
+        } catch (ParseException | NumberFormatException e) {
             throw new CsvDataTypeMismatchException(e.getMessage());
         }
     }

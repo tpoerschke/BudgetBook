@@ -37,7 +37,7 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
     @Column(nullable = false)
     private TurnoverDirection direction = TurnoverDirection.OUT;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST })
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)

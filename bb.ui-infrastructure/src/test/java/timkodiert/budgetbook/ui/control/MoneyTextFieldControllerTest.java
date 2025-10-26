@@ -13,14 +13,59 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MoneyTextFieldControllerTest {
 
-    @DisplayName("Set Value: Null")
+    @DisplayName("Set Value: Null (null values allowed)")
     @Test
-    void testNullValue() {
+    void testNullValueAllowed() {
         MoneyTextFieldController controller = new MoneyTextFieldController();
+        controller.setNullable(true);
         controller.setValue(null);
 
         assertNull(controller.getValue());
         assertNull(controller.stringValueProperty().get());
+        assertNull(controller.integerValueProperty().get());
+        assertTrue(controller.isStringFormatValid());
+    }
+
+    @DisplayName("Set Value: Null (null values not allowed)")
+    @Test
+    void testNullValueNotAllowed() {
+        MoneyTextFieldController controller = new MoneyTextFieldController();
+        controller.setNullable(false);
+        controller.setValue(null);
+
+        assertEquals(0.0, controller.getValue());
+        assertNull(controller.stringValueProperty().get());
+        assertEquals(0, controller.integerValueProperty().get());
+        assertFalse(controller.isStringFormatValid());
+    }
+
+    @DisplayName("Set Value via IntegerProperty: Null (null values allowed)")
+    @Test
+    void testNullValueAllowedViaIntegerProperty() {
+        MoneyTextFieldController controller = new MoneyTextFieldController();
+        controller.setNullable(true);
+        controller.integerValueProperty().set(null);
+
+        assertNull(controller.getValue());
+        assertNull(controller.stringValueProperty().get());
+        assertNull(controller.integerValueProperty().get());
+        assertTrue(controller.isStringFormatValid());
+    }
+
+    @DisplayName("Set Value via IntegerProperty: Null (null values not allowed)")
+    @Test
+    void testNullValueNotAllowedViaIntegerProperty() {
+        // Deckt einen Fall ab, der nicht vorkommen sollte, da die über die IntegerProperty
+        // keine Nullwerte gesetzt werden sollten, wenn null nicht zulässig ist, daher
+        // wird hier ein tewas inkonsistentes Verhalten hingenommen...
+        MoneyTextFieldController controller = new MoneyTextFieldController();
+        controller.setNullable(false);
+        controller.integerValueProperty().set(null);
+
+        assertEquals(0.0, controller.getValue());
+        assertEquals("0,00", controller.stringValueProperty().get());
+        assertNull(controller.integerValueProperty().get());
+        assertTrue(controller.isStringFormatValid());
     }
 
     @DisplayName("Set Value: 0,00")
@@ -31,6 +76,8 @@ class MoneyTextFieldControllerTest {
 
         assertEquals(0.0, controller.getValue());
         assertEquals("0,00", controller.stringValueProperty().get());
+        assertEquals(0, controller.integerValueProperty().get());
+        assertTrue(controller.isStringFormatValid());
     }
 
     @DisplayName("Set Value: With Decimals")
@@ -42,15 +89,38 @@ class MoneyTextFieldControllerTest {
 
         assertEquals(value, controller.getValue());
         assertEquals(expectedStr, controller.stringValueProperty().get());
+        assertEquals((int) (value * 100), controller.integerValueProperty().get());
     }
 
-    @DisplayName("Format: Null-Value")
+    @DisplayName("Set Value: Via IntegerProperty")
+    @ParameterizedTest
+    @CsvSource({"0,'0,00'", "149,'1,49'", "190,'1,90'", "1099,'10,99'", "10000,'100,00'", "100000,'1000,00'"})
+    void testDecimalsValueViaIntegerProperty(int value, String expectedStr) {
+        MoneyTextFieldController controller = new MoneyTextFieldController();
+        controller.integerValueProperty().set(value);
+
+        assertEquals(value / 100.0, controller.getValue());
+        assertEquals(expectedStr, controller.stringValueProperty().get());
+    }
+
+    @DisplayName("Format: Null-Value (null allowed)")
     @ParameterizedTest
     @NullAndEmptySource
-    void testFormatNullValue(String value) {
+    void testFormatNullValueNullAllowed(String value) {
         MoneyTextFieldController controller = new MoneyTextFieldController();
+        controller.setNullable(true);
         controller.stringValueProperty().set(value);
         assertTrue(controller.isStringFormatValid());
+    }
+
+    @DisplayName("Format: Null-Value (null not allowed)")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void testFormatNullValueNullNotAllowed(String value) {
+        MoneyTextFieldController controller = new MoneyTextFieldController();
+        controller.setNullable(false);
+        controller.stringValueProperty().set(value);
+        assertFalse(controller.isStringFormatValid());
     }
 
     @DisplayName("Format: Different Values")

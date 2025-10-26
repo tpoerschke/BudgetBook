@@ -8,11 +8,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import atlantafx.base.layout.InputGroup;
-import atlantafx.base.theme.Styles;
+import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 public class MoneyTextField extends InputGroup implements Initializable {
@@ -22,9 +24,12 @@ public class MoneyTextField extends InputGroup implements Initializable {
     private final DecimalFormat format = new DecimalFormat("0.00");
     private final MoneyTextFieldController controller = new MoneyTextFieldController();
 
+    @Getter
     @FXML
     private TextField textField;
 
+    @Getter
+    private boolean nullable = false;
 
     public MoneyTextField() {
         format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.GERMAN));
@@ -43,8 +48,10 @@ public class MoneyTextField extends InputGroup implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         textField.textProperty().bindBidirectional(controller.stringValueProperty());
-        controller.stringValueProperty().addListener((observable, oldVal, newVal) -> {
-            textField.pseudoClassStateChanged(Styles.STATE_DANGER, !controller.isStringFormatValid());
+        textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (Boolean.FALSE.equals(isNowFocused) && StringUtils.isEmpty(textField.getText()) && !nullable) {
+                controller.stringValueProperty().setValue("0,00");
+            }
         });
     }
 
@@ -54,5 +61,18 @@ public class MoneyTextField extends InputGroup implements Initializable {
 
     public @Nullable Double getValue() {
         return controller.getValue();
+    }
+
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
+        this.controller.setNullable(nullable);
+    }
+
+    public ObjectProperty<Integer> integerValueProperty() {
+        return controller.integerValueProperty();
+    }
+
+    public boolean isStringFormatValid() {
+        return controller.isStringFormatValid();
     }
 }

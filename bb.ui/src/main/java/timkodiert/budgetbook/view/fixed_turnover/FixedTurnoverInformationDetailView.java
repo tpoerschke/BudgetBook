@@ -13,30 +13,31 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.converter.IntegerStringConverter;
+import org.apache.commons.lang3.SerializationUtils;
 
-import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
 import timkodiert.budgetbook.domain.PaymentInformationDTO;
 import timkodiert.budgetbook.domain.model.PaymentType;
 import timkodiert.budgetbook.i18n.LanguageManager;
+import timkodiert.budgetbook.ui.control.MoneyTextField;
 import timkodiert.budgetbook.ui.helper.Bind;
+import timkodiert.budgetbook.validation.ValidationResult;
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.BaseDetailView;
 import timkodiert.budgetbook.view.widget.MonthYearPickerWidget;
 import timkodiert.budgetbook.view.widget.MonthYearPickerWidgetFactory;
 
 public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentInformationDTO> implements Initializable {
 
+    private static final String MONTH_SELECTED_VALIDATION_KEY = "{fixedTurnover.month.selected}";
+
     @FXML
-    private TextField valueTextField;
+    private MoneyTextField valueTextField;
     @FXML
     private Label month1Label;
     @FXML
@@ -61,19 +62,20 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
     private MonthYearPickerWidget startMonthWidget;
     private MonthYearPickerWidget endMonthWidget;
 
+    private Stage stage;
+    private PaymentInformationDTO backupBean;
+
     private final LanguageManager languageManager;
-    private final FixedTurnoverCrudService fixedTurnoverCrudService;
     private final MonthYearPickerWidgetFactory monthYearPickerWidgetFactory;
     private final BiConsumer<PaymentInformationDTO, PaymentInformationDTO> onSaveCallback;
 
     @AssistedInject
-    public FixedTurnoverInformationDetailView(LanguageManager languageManager,
-                                              FixedTurnoverCrudService fixedTurnoverCrudService,
+    public FixedTurnoverInformationDetailView(ValidationWrapperFactory<PaymentInformationDTO> validationWrapperFactory,
+                                              LanguageManager languageManager,
                                               MonthYearPickerWidgetFactory monthYearPickerWidgetFactory,
                                               @Assisted BiConsumer<PaymentInformationDTO, PaymentInformationDTO> updateCallback) {
-        super();
+        super(validationWrapperFactory);
         this.languageManager = languageManager;
-        this.fixedTurnoverCrudService = fixedTurnoverCrudService;
         this.monthYearPickerWidgetFactory = monthYearPickerWidgetFactory;
         this.onSaveCallback = updateCallback;
     }
@@ -90,14 +92,9 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
             .forEach(e -> e.getItems().addAll(FXCollections.observableArrayList(languageManager.getMonths())));
 
         // Bindings
-        TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter());
-        formatter.valueProperty().bindBidirectional(beanAdapter.getProperty(PaymentInformationDTO::getValue, PaymentInformationDTO::setValue));
-        valueTextField.setTextFormatter(formatter);
+        valueTextField.integerValueProperty().bindBidirectional(beanAdapter.getProperty(PaymentInformationDTO::getValue, PaymentInformationDTO::setValue));
 
-        List<PaymentType> typeList = List.of(PaymentType.MONTHLY,
-                                             PaymentType.ANNUAL,
-                                             PaymentType.SEMIANNUAL,
-                                             PaymentType.QUARTERLY);
+        List<PaymentType> typeList = List.of(PaymentType.MONTHLY, PaymentType.ANNUAL, PaymentType.SEMIANNUAL, PaymentType.QUARTERLY);
         Bind.comboBox(typeChoiceBox,
                       beanAdapter.getProperty(PaymentInformationDTO::getType, PaymentInformationDTO::setType),
                       typeList,
@@ -105,10 +102,60 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
 
         startMonthWidget.valueProperty().bindBidirectional(beanAdapter.getProperty(PaymentInformationDTO::getStart, PaymentInformationDTO::setStart));
         endMonthWidget.valueProperty().bindBidirectional(beanAdapter.getProperty(PaymentInformationDTO::getEnd, PaymentInformationDTO::setEnd));
+
+        // Validierungen
+        validationMap.put("start", startMonthWidget.getMonthChoiceBox());
+        validationMap.put("type", typeChoiceBox);
+        validationWrapper.register(typeChoiceBox.getSelectionModel().selectedItemProperty(),
+                                   startMonthWidget.valueProperty(),
+                                   endMonthWidget.valueProperty());
+        validationWrapper.registerCustomValidation("valueValid",
+                                                   valueTextField.getTextField(),
+                                                   () -> valueTextField.isStringFormatValid()
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error("{amount.format.valid}"),
+                                                   beanAdapter.getProperty(PaymentInformationDTO::getValue, PaymentInformationDTO::setValue));
+        validationWrapper.registerCustomValidation("month1Valid",
+                                                   month1ChoiceBox,
+                                                   () -> !month1ChoiceBox.isVisible() || month1ChoiceBox.getSelectionModel().getSelectedItem() != null
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error(MONTH_SELECTED_VALIDATION_KEY),
+                                                   month1ChoiceBox.getSelectionModel().selectedItemProperty(),
+                                                   typeChoiceBox.getSelectionModel().selectedItemProperty());
+        validationWrapper.registerCustomValidation("month2Valid",
+                                                   month2ChoiceBox,
+                                                   () -> !month2ChoiceBox.isVisible() || month2ChoiceBox.getSelectionModel().getSelectedItem() != null
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error(MONTH_SELECTED_VALIDATION_KEY),
+                                                   month2ChoiceBox.getSelectionModel().selectedItemProperty(),
+                                                   typeChoiceBox.getSelectionModel().selectedItemProperty());
+        validationWrapper.registerCustomValidation("month3Valid",
+                                                   month3ChoiceBox,
+                                                   () -> !month3ChoiceBox.isVisible() || month3ChoiceBox.getSelectionModel().getSelectedItem() != null
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error(MONTH_SELECTED_VALIDATION_KEY),
+                                                   month3ChoiceBox.getSelectionModel().selectedItemProperty(),
+                                                   typeChoiceBox.getSelectionModel().selectedItemProperty());
+        validationWrapper.registerCustomValidation("month4Valid",
+                                                   month4ChoiceBox,
+                                                   () -> !month4ChoiceBox.isVisible() || month4ChoiceBox.getSelectionModel().getSelectedItem() != null
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error(MONTH_SELECTED_VALIDATION_KEY),
+                                                   month4ChoiceBox.getSelectionModel().selectedItemProperty(),
+                                                   typeChoiceBox.getSelectionModel().selectedItemProperty());
+        validationWrapper.registerCustomValidation("endBeforeStart",
+                                                   endMonthWidget.getMonthChoiceBox(),
+                                                   () -> endMonthWidget.valueProperty().get() == null ||
+                                                           endMonthWidget.valueProperty().get().isAfter(startMonthWidget.valueProperty().get())
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error("{fixedTurnover.end.afterStart}"),
+                                                   month4ChoiceBox.getSelectionModel().selectedItemProperty(),
+                                                   typeChoiceBox.getSelectionModel().selectedItemProperty());
     }
 
     @Override
     protected void beanSet() {
+        backupBean = SerializationUtils.clone(beanAdapter.getBean());
         PaymentInformationDTO payInfo = beanAdapter.getBean();
         if (PaymentType.MONTHLY != payInfo.getType()) {
             List<ChoiceBox<String>> choiceBoxes = List.of(month1ChoiceBox, month2ChoiceBox, month3ChoiceBox, month4ChoiceBox);
@@ -125,16 +172,14 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
         }
         setMonthsOfPayment(beanAdapter.getBean());
         onSaveCallback.accept(null, beanAdapter.getBean());
-        // Das macht mich traurig ._.
-        ((Stage) ((Node) e.getSource()).getScene().getWindow()).close();
+        stage.close();
     }
 
     @FXML
-    private void onRevert(ActionEvent e) {
+    private void onRevert() {
         PaymentInformationDTO modified = beanAdapter.getBean();
-        PaymentInformationDTO unmodified = fixedTurnoverCrudService.readPaymentInformationById(modified.getId());
-        beanAdapter.setBean(unmodified);
-        onSaveCallback.accept(modified, unmodified);
+        setBean(SerializationUtils.clone(backupBean));
+        onSaveCallback.accept(modified, beanAdapter.getBean());
     }
 
     private void setMonthsOfPayment(PaymentInformationDTO paymentInformationDTO) {
@@ -151,42 +196,45 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
 
     private void typeChoiceBoxListener(PaymentType newValue) {
         switch (newValue) {
-            case ANNUAL:
-                manageChoiceBoxes(List.of(month1Label, month1ChoiceBox),
-                                  List.of(month2Label, month2ChoiceBox,
-                                          month3Label, month3ChoiceBox,
-                                          month4Label, month4ChoiceBox));
-                break;
-            case SEMIANNUAL:
-                manageChoiceBoxes(List.of(month1Label, month1ChoiceBox,
-                                          month2Label, month2ChoiceBox),
-                                  List.of(month3Label, month3ChoiceBox,
-                                          month4Label, month4ChoiceBox));
-                break;
-            case MONTHLY:
-                manageChoiceBoxes(List.of(),
-                                  List.of(month1Label, month1ChoiceBox,
-                                          month2Label, month2ChoiceBox,
-                                          month3Label, month3ChoiceBox,
-                                          month4Label, month4ChoiceBox));
-                break;
-            default:
-                // Alles anzeigen
-                manageChoiceBoxes(List.of(month1Label, month1ChoiceBox,
-                                          month2Label, month2ChoiceBox,
-                                          month3Label, month3ChoiceBox,
-                                          month4Label, month4ChoiceBox),
-                                  List.of());
+            case ANNUAL -> manageChoiceBoxes(List.of(month1Label, month1ChoiceBox),
+                                             List.of(month2Label, month2ChoiceBox,
+                                                     month3Label, month3ChoiceBox,
+                                                     month4Label, month4ChoiceBox));
+            case SEMIANNUAL -> manageChoiceBoxes(List.of(month1Label, month1ChoiceBox,
+                                                         month2Label, month2ChoiceBox),
+                                                 List.of(month3Label, month3ChoiceBox,
+                                                         month4Label, month4ChoiceBox));
+            case MONTHLY -> manageChoiceBoxes(List.of(),
+                                              List.of(month1Label, month1ChoiceBox,
+                                                      month2Label, month2ChoiceBox,
+                                                      month3Label, month3ChoiceBox,
+                                                      month4Label, month4ChoiceBox));
+            // Alles anzeigen
+            case null, default -> manageChoiceBoxes(List.of(month1Label, month1ChoiceBox,
+                                                            month2Label, month2ChoiceBox,
+                                                            month3Label, month3ChoiceBox,
+                                                            month4Label, month4ChoiceBox),
+                                                    List.of());
         }
     }
 
     private void manageChoiceBoxes(List<Control> elementsToShow, List<Control> elementsToHide) {
         elementsToHide.forEach(el -> el.setVisible(false));
-        elementsToShow.forEach(el -> el.setVisible(true));
+        elementsToShow.forEach(el -> {
+            el.setVisible(true);
+            if (el instanceof ChoiceBox<?> cb) {
+                cb.getSelectionModel().clearSelection();
+            }
+        });
     }
 
     @Override
     protected PaymentInformationDTO createEmptyEntity() {
         return new PaymentInformationDTO();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        stage.setOnCloseRequest(event -> onRevert());
     }
 }

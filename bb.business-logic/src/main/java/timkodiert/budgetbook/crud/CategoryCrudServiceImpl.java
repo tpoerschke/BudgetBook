@@ -38,6 +38,7 @@ public class CategoryCrudServiceImpl implements CategoryCrudService {
         Category newCategory = new Category();
         CategoryMapper categoryMapper = Mappers.getMapper(CategoryMapper.class);
         categoryMapper.updateCategory(categoryDTO, newCategory, referenceResolver);
+        linkEntities(newCategory);
         categoriesRepository.persist(newCategory);
         return true;
     }
@@ -47,6 +48,7 @@ public class CategoryCrudServiceImpl implements CategoryCrudService {
         Category category = categoriesRepository.findById(categoryDTO.getId());
         CategoryMapper categoryMapper = Mappers.getMapper(CategoryMapper.class);
         categoryMapper.updateCategory(categoryDTO, category, referenceResolver);
+        linkEntities(category);
         categoriesRepository.persist(category);
         return true;
     }
@@ -59,5 +61,12 @@ public class CategoryCrudServiceImpl implements CategoryCrudService {
         }
         categoriesRepository.remove(category);
         return true;
+    }
+
+    private void linkEntities(Category category) {
+        boolean notYetLinked = category.getGroup().getCategories().stream().noneMatch(c -> c.getId() == category.getId());
+        if (notYetLinked) {
+            category.getGroup().getCategories().add(category);
+        }
     }
 }

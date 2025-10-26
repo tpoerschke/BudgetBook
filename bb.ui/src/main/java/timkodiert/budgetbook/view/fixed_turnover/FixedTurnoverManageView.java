@@ -1,5 +1,6 @@
 package timkodiert.budgetbook.view.fixed_turnover;
 
+import java.util.Optional;
 import javax.inject.Inject;
 
 import javafx.event.ActionEvent;
@@ -53,6 +54,8 @@ public class FixedTurnoverManageView extends BaseListManageView<FixedTurnoverDTO
 
     @FXML
     private void openNewExpense(ActionEvent event) {
+        entityTable.getSelectionModel().clearSelection();
+        lastSelectedRow = null;
         displayNewEntity();
     }
 
@@ -74,6 +77,6 @@ public class FixedTurnoverManageView extends BaseListManageView<FixedTurnoverDTO
 
     @Override
     protected FixedTurnoverDTO discardChanges(FixedTurnoverDTO beanToDiscard) {
-        return crudService.readById(beanToDiscard.getId());
+        return Optional.ofNullable(crudService.readById(beanToDiscard.getId())).orElseGet(this::createEmptyEntity);
     }
 }

@@ -21,7 +21,7 @@ public class CategoryGroup extends BaseEntity {
     @Setter
     private String description;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private final Set<Category> categories = new HashSet<>();
 
 }

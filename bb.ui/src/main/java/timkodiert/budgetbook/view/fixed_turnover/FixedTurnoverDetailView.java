@@ -33,6 +33,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
 import org.controlsfx.control.CheckListView;
@@ -40,8 +41,8 @@ import org.jetbrains.annotations.Nullable;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
 import timkodiert.budgetbook.converter.Converters;
-import timkodiert.budgetbook.converter.DoubleCurrencyStringConverter;
 import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.AccountTurnoverDTO;
@@ -59,6 +60,8 @@ import timkodiert.budgetbook.table.cell.DateTableCell;
 import timkodiert.budgetbook.table.cell.MonthYearTableCell;
 import timkodiert.budgetbook.ui.helper.Bind;
 import timkodiert.budgetbook.util.StageBuilder;
+import timkodiert.budgetbook.validation.ValidationResult;
+import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 
 import static timkodiert.budgetbook.view.FxmlResource.FIXED_TURNOVER_INFORMATION_VIEW;
@@ -117,19 +120,26 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     @FXML
     private TableColumn<AccountTurnoverDTO, String> importsAmountCol;
 
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button discardButton;
+
     private final FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory;
     private final Provider<StageBuilder> stageBuilderProvider;
     private final CategoryCrudService categoryCrudService;
     private final FixedTurnoverCrudService crudService;
 
-    @SuppressWarnings("java:S1450") // Liegt nur hier, damit sie nicht garbage-collected wird
+    @SuppressWarnings({"java:S1450", "FieldCanBeLocal"}) // Liegt nur hier, damit sie nicht garbage-collected wird
     private SortedList<AccountTurnoverDTO> sortedAccountTurnoverList;
 
     @Inject
-    public FixedTurnoverDetailView(FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory,
+    public FixedTurnoverDetailView(ValidationWrapperFactory<FixedTurnoverDTO> validationWrapperFactory,
+                                   FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory,
                                    Provider<StageBuilder> stageBuilderProvider,
                                    CategoryCrudService categoryCrudService,
                                    FixedTurnoverCrudService crudService) {
+        super(validationWrapperFactory);
         this.fixedTurnoverInformationDetailViewFactory = fixedTurnoverInformationDetailViewFactory;
         this.stageBuilderProvider = stageBuilderProvider;
         this.categoryCrudService = categoryCrudService;
@@ -140,6 +150,8 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     public void initialize(URL location, ResourceBundle resources) {
         Bind bind = new Bind(beanAdapter);
 
+        saveButton.disableProperty().bind(beanAdapter.dirty().not());
+        discardButton.disableProperty().bind(beanAdapter.dirty().not());
         addFixedExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.PLUS));
         editFixedExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.PENCIL));
         deleteFixedExpenseInformationButton.setGraphic(new FontIcon(BootstrapIcons.TRASH));
@@ -154,7 +166,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         StringConverter<PaymentType> paymentTypeConverter = Converters.get(PaymentType.class);
         expenseInfoTypeCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(paymentTypeConverter.toString(cellData.getValue().getType())));
         expenseInfoValueCol.setCellValueFactory(cellData -> {
-            DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
+            BbCurrencyStringConverter converter = new BbCurrencyStringConverter();
             return new ReadOnlyStringWrapper(converter.toString(cellData.getValue().getValue()));
         });
         expenseInfoStartCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStart()));
@@ -171,7 +183,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         importsReceiverCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReceiver()));
         importsReferenceCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReference()));
         importsAmountCol.setCellValueFactory(cellData -> {
-            DoubleCurrencyStringConverter converter = new DoubleCurrencyStringConverter();
+            BbCurrencyStringConverter converter = new BbCurrencyStringConverter();
             return new ReadOnlyStringWrapper(converter.toString(cellData.getValue().getAmount()));
         });
         importsDateCol.setSortType(TableColumn.SortType.DESCENDING);
@@ -200,6 +212,15 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
 
         // Validierung initialisieren
         validationMap.put("position", positionTextField);
+        validationMap.put("direction", directionComboBox);
+        validationWrapper.register(beanAdapter.getProperty(FixedTurnoverDTO::getPosition, FixedTurnoverDTO::setPosition),
+                                   beanAdapter.getProperty(FixedTurnoverDTO::getDirection, FixedTurnoverDTO::setDirection));
+        validationWrapper.registerCustomValidation("paymentsOverlapping",
+                                                   paymentInformationTableView,
+                                                   () -> !beanAdapter.isEmpty().get() && beanAdapter.getBean().hasOverlappingPaymentInformations()
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error("{fixedTurnover.info.notOverlapping}"),
+                                                   beanAdapter.getListProperty(FixedTurnoverDTO::getPaymentInformations, FixedTurnoverDTO::setPaymentInformations));
     }
 
     @Override
@@ -228,7 +249,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
 
     @Override
     protected FixedTurnoverDTO discardChanges() {
-        return crudService.readById(getBean().getId());
+        return Optional.ofNullable(crudService.readById(Objects.requireNonNull(getBean()).getId())).orElseGet(this::createEmptyEntity);
     }
 
     @FXML
@@ -274,33 +295,39 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     private void deleteExpenseInformation(ActionEvent event) {
         PaymentInformationDTO payInfoToRemove = paymentInformationTableView.getSelectionModel().getSelectedItem();
         paymentInformationTableView.getItems().remove(payInfoToRemove);
+        beanAdapter.setDirty(true);
     }
 
     private void updateExpenseInformation(@Nullable PaymentInformationDTO oldVal, PaymentInformationDTO newVal) {
-        // oldVal nicht null, wenn die Entity in der SubView verworfen wird, da diese per Service neu geladen wird.
+        // oldVal nicht null, wenn die Entity in der SubView verworfen wird, da aus der geklonten Backup-Bean wiederhergestellt wird.
         if (oldVal != null) {
             int replaceIndex = paymentInformationTableView.getItems().indexOf(oldVal);
-            paymentInformationTableView.getItems().set(replaceIndex, newVal);
-        }
-        int index = paymentInformationTableView.getItems().indexOf(newVal);
-        if (index < 0) {
-            paymentInformationTableView.getItems().add(newVal);
+            if (replaceIndex != -1) {
+                paymentInformationTableView.getItems().set(replaceIndex, newVal);
+            }
+        } else {
+            int index = paymentInformationTableView.getItems().indexOf(newVal);
+            if (index < 0) {
+                paymentInformationTableView.getItems().add(newVal);
+            }
         }
         paymentInformationTableView.refresh();
+        beanAdapter.setDirty(true);
     }
 
     private void openTurnoverInformationDetailView(PaymentInformationDTO payInfo) {
         try {
             var subDetailView = fixedTurnoverInformationDetailViewFactory.create(this::updateExpenseInformation);
-            stageBuilderProvider.get()
-                                .withModality(Modality.APPLICATION_MODAL)
-                                .withOwner(Window.getWindows().getFirst())
-                                .withFXMLResource(FIXED_TURNOVER_INFORMATION_VIEW.toString())
-                                .withView(subDetailView)
-                                .build()
-                                .stage()
-                                .show();
+            Stage stage = stageBuilderProvider.get()
+                                              .withModality(Modality.APPLICATION_MODAL)
+                                              .withOwner(Window.getWindows().getFirst())
+                                              .withFXMLResource(FIXED_TURNOVER_INFORMATION_VIEW.toString())
+                                              .withView(subDetailView)
+                                              .build()
+                                              .stage();
             subDetailView.setBean(payInfo);
+            subDetailView.setStage(stage);
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
             StackTraceAlert.of("Ansicht konnte nicht geöffnet werden!", e).showAndWait();

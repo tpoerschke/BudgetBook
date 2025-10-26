@@ -4,7 +4,10 @@ import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
+import jakarta.validation.MessageInterpolator;
 import javafx.fxml.FXMLLoader;
+import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
 
 import timkodiert.budgetbook.analysis.CategorySeriesGenerator;
 import timkodiert.budgetbook.analysis.CategorySeriesGeneratorImpl;
@@ -16,6 +19,7 @@ import timkodiert.budgetbook.domain.CategoryCrudService;
 import timkodiert.budgetbook.domain.CategoryGroupCrudService;
 import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
 import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
+import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.importer.TurnoverImporter;
 import timkodiert.budgetbook.importer.TurnoverImporterImpl;
 import timkodiert.budgetbook.properties.PropertiesService;
@@ -32,6 +36,10 @@ public interface ServiceModule {
     @Binds @Singleton PropertiesService bindPropertiesService(PropertiesServiceImpl impl);
 
     @Binds FXMLLoader bindFXMLLoader(BbFxmlLoader impl);
+
+    @Provides @Singleton static MessageInterpolator provideMessageInterpolator(LanguageManager languageManager) {
+        return new ResourceBundleMessageInterpolator(LanguageManager.AVAILABLE_LOCALES, LanguageManager.DEFAULT_LOCALE, languageManager, false);
+    }
 
     // Business Logic (ggf. in eigenes Injector-Modul auslagern)
     @Binds CategorySeriesGenerator bindCategorySeriesGenerator(CategorySeriesGeneratorImpl impl);

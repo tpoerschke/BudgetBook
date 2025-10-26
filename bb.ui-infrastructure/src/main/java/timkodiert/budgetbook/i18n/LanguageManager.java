@@ -3,18 +3,24 @@ package timkodiert.budgetbook.i18n;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import static java.util.Locale.ENGLISH;
 import static java.util.Locale.GERMAN;
 
 import lombok.Getter;
+import org.hibernate.validator.spi.messageinterpolation.LocaleResolver;
+import org.hibernate.validator.spi.messageinterpolation.LocaleResolverContext;
 
 import timkodiert.budgetbook.properties.PropertiesService;
 
 @Getter
 @Singleton
-public class LanguageManager {
+public class LanguageManager implements LocaleResolver {
+
+    public static final Set<Locale> AVAILABLE_LOCALES = Set.of(GERMAN, ENGLISH);
+    public static final Locale DEFAULT_LOCALE = ENGLISH;
 
     public static final List<String> MONTH_NAMES = List.of(
         "month.january",
@@ -38,15 +44,16 @@ public class LanguageManager {
 
     Locale locale;
 
-    private void initialize(Locale locale) {
-        this.resourceBundle = ResourceBundle.getBundle(I_18_N_PACKAGE, locale);
-        this.fallbackRB = ResourceBundle.getBundle(I_18_N_PACKAGE, ENGLISH);
-    }
-
     @Inject
     public LanguageManager(PropertiesService propertiesService) {
         // Map String to Locale
         this.initialize(mapToLocale(propertiesService.getLanguage()));
+    }
+
+    private void initialize(Locale locale) {
+        this.locale = locale;
+        this.resourceBundle = ResourceBundle.getBundle(I_18_N_PACKAGE, locale);
+        this.fallbackRB = ResourceBundle.getBundle(I_18_N_PACKAGE, ENGLISH);
     }
 
     /**
@@ -76,19 +83,29 @@ public class LanguageManager {
     // Intermediate solution until we have a dropdown menu for languages
     public static Locale mapToLocale(String language) {
         if (language == null) {
-            return ENGLISH;
+            return DEFAULT_LOCALE;
         }
         if (language.equalsIgnoreCase("Deutsch")) {
             return GERMAN;
         } else if (language.equalsIgnoreCase("English")) {
             return ENGLISH;
         } else {
-            // Default to Locale.ENGLISH if the language is not recognized
-            return ENGLISH;
+            // Default if the language is not recognized
+            return DEFAULT_LOCALE;
         }
     }
 
     private boolean resourceBundleContainsKey(String key) {
         return this.resourceBundle.containsKey(key);
+    }
+
+    /**
+     * Verwendet von der Validierung (s. {@link timkodiert.budgetbook.validation.ValidationWrapper}).
+     *
+     * @return Gibt das Kkonfigurierte Locale zurück.
+     */
+    @Override
+    public Locale resolve(LocaleResolverContext context) {
+        return locale;
     }
 }
