@@ -7,6 +7,7 @@ import org.mapstruct.factory.Mappers;
 
 import timkodiert.budgetbook.domain.CategoryCrudService;
 import timkodiert.budgetbook.domain.CategoryDTO;
+import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.repository.CategoriesRepository;
 
@@ -19,6 +20,11 @@ public class CategoryCrudServiceImpl implements CategoryCrudService {
     public CategoryCrudServiceImpl(CategoriesRepository categoriesRepository, ReferenceResolver referenceResolver) {
         this.categoriesRepository = categoriesRepository;
         this.referenceResolver = referenceResolver;
+    }
+
+    @Override
+    public List<Reference<CategoryDTO>> readAllAsReference() {
+        return categoriesRepository.findAll().stream().map(category -> new Reference<>(CategoryDTO.class, category.getId(), category.getName())).toList();
     }
 
     @Override

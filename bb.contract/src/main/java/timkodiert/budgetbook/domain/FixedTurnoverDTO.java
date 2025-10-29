@@ -20,7 +20,7 @@ public class FixedTurnoverDTO {
     @NotBlank(message = "{fixedTurnover.position.notBlank}")
     private String position;
     private String note;
-    private List<Reference<CategoryDTO>> categories = new ArrayList<>();
+    private Reference<CategoryDTO> category;
     private PaymentType paymentType;
     @NotNull(message = "{attribute.notNull}")
     private TurnoverDirection direction;

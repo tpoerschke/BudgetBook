@@ -21,11 +21,11 @@ import lombok.Setter;
 public class UniqueTurnover extends BaseEntity {
 
     @Setter
-    @NotBlank(message = "Es muss ein Rechnungsteller angegeben werden.")
+    @NotBlank
     private String biller;
 
     @Setter
-    @NotNull(message = "Es muss ein Datum angegeben werden.")
+    @NotNull
     private LocalDate date;
 
     @Setter

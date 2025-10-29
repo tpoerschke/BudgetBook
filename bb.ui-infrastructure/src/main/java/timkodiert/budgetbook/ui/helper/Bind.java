@@ -1,6 +1,7 @@
 package timkodiert.budgetbook.ui.helper;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -12,6 +13,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 
 import timkodiert.budgetbook.converter.Converters;
+import timkodiert.budgetbook.converter.ReferenceStringConverter;
+import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.table.cell.EditableCheckBoxCell;
 import timkodiert.budgetbook.table.cell.TextFieldTableCell;
 import timkodiert.budgetbook.view.mdv_base.BeanAdapter;
@@ -24,10 +27,14 @@ public class Bind {
         this.beanAdapter = beanAdapter;
     }
 
+    public static <T> void comboBoxNullable(ComboBox<Reference<T>> comboBox, ObjectProperty<Reference<T>> property, List<Reference<T>> items) {
+        comboBox.setConverter(new ReferenceStringConverter<>());
+        comboBox.getItems().add(null);
+        comboBox.getItems().addAll(items);
+        comboBox.valueProperty().bindBidirectional(property);
+    }
+
     public static <T> void comboBox(ComboBox<T> comboBox, ObjectProperty<T> property) {
-        //        ReadOnlyObjectProperty<T> selectedItemProperty = comboBox.getSelectionModel().selectedItemProperty();
-        //        property.bind(selectedItemProperty);
-        //        property.addListener((obs, oldVal, newVal) -> comboBox.getSelectionModel().select(newVal));
         comboBox.valueProperty().bindBidirectional(property);
     }
 

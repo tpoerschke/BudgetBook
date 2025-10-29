@@ -8,23 +8,19 @@ import org.mapstruct.factory.Mappers;
 import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
 import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.Reference;
+import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
-import timkodiert.budgetbook.domain.model.PaymentInformation;
 import timkodiert.budgetbook.domain.repository.Repository;
 
 public class FixedTurnoverCrudServiceImpl implements FixedTurnoverCrudService {
 
     private final ReferenceResolver referenceResolver;
     private final Repository<FixedTurnover> fixedTurnoverRepository;
-    private final Repository<PaymentInformation> paymentInformationRepository;
 
     @Inject
-    public FixedTurnoverCrudServiceImpl(ReferenceResolver referenceResolver,
-                                        Repository<FixedTurnover> fixedTurnoverRepository,
-                                        Repository<PaymentInformation> paymentInformationRepository) {
+    public FixedTurnoverCrudServiceImpl(ReferenceResolver referenceResolver, Repository<FixedTurnover> fixedTurnoverRepository) {
         this.referenceResolver = referenceResolver;
         this.fixedTurnoverRepository = fixedTurnoverRepository;
-        this.paymentInformationRepository = paymentInformationRepository;
     }
 
     @Override
@@ -87,11 +83,10 @@ public class FixedTurnoverCrudServiceImpl implements FixedTurnoverCrudService {
             }
             importRule.setLinkedFixedExpense(fixedTurnover);
         });
-        fixedTurnover.getCategories().forEach(category -> {
-            boolean notYetLinked = category.getFixedExpenses().stream().noneMatch(ft -> ft.getId() == fixedTurnover.getId());
-            if (notYetLinked) {
-                category.getFixedExpenses().add(fixedTurnover);
-            }
-        });
+        Category category = fixedTurnover.getCategory();
+        boolean notYetLinked = category != null && category.getFixedExpenses().stream().noneMatch(ft -> ft.getId() == fixedTurnover.getId());
+        if (notYetLinked) {
+            category.getFixedExpenses().add(fixedTurnover);
+        }
     }
 }

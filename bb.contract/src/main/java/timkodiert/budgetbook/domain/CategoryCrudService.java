@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface CategoryCrudService {
 
+    List<Reference<CategoryDTO>> readAllAsReference();
     List<CategoryDTO> readAll();
     CategoryDTO readById(int id);
 

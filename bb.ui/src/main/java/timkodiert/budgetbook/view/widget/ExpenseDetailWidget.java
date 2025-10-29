@@ -12,6 +12,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.view.View;
 
@@ -48,11 +49,12 @@ public class ExpenseDetailWidget implements View, Initializable {
         noteTextFlow.getChildren().setAll(new Text(expense.getNote()));
 
         categoriesFlow.getChildren().clear();
-        expense.getCategories().forEach(cat -> {
+        Category cat = expense.getCategory();
+        if (cat != null) {
             Label label = new Label(cat.getName());
             label.getStyleClass().add("tag");
             categoriesFlow.getChildren().add(label);
-        });
+        }
     }
 
     private void initStyles() {

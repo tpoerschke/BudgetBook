@@ -1,8 +1,8 @@
 package timkodiert.budgetbook.crud;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.jetbrains.annotations.Nullable;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,6 +13,7 @@ import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
 import timkodiert.budgetbook.domain.UniqueTurnoverInformationDTO;
+import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 
@@ -28,21 +29,21 @@ public interface UniqueTurnoverMapper {
                        .orElse(null);
     }
 
-    @Mapping(target = "categories", source = "uniqueTurnoverInformation")
+    @Mapping(target = "category", source = "uniqueTurnoverInformation")
     UniqueTurnoverInformationDTO uniqueTurnoverInformationToUniqueTurnoverInformationDto(UniqueTurnoverInformation uniqueTurnoverInformation);
 
-    default List<Reference<CategoryDTO>> mapCategories(UniqueTurnoverInformation uniqueTurnoverInformation) {
-        return uniqueTurnoverInformation.getCategories()
-                                        .stream()
-                                        .map(c -> new Reference<>(CategoryDTO.class, c.getId(), c.getName()))
-                                        .toList();
+    default @Nullable Reference<CategoryDTO> mapCategory(UniqueTurnoverInformation uniqueTurnoverInformation) {
+        Category category = uniqueTurnoverInformation.getCategory();
+        if (category == null) {
+            return null;
+        }
+        return new Reference<>(CategoryDTO.class, category.getId(), category.getName());
     }
-
 
     @Mapping(target = "accountTurnover", ignore = true)
     @Mapping(target = "fixedTurnover", expression = "java(referenceResolver.resolve(dto.getFixedTurnover()))")
     void updateUniqueTurnover(UniqueTurnoverDTO dto, @MappingTarget UniqueTurnover uniqueTurnover, @Context ReferenceResolver referenceResolver);
 
-    @Mapping(target = "categories", expression = "java(referenceResolver.resolve(uniqueTurnoverInformationDTO.getCategories()))")
+    @Mapping(target = "category", expression = "java(referenceResolver.resolve(uniqueTurnoverInformationDTO.getCategory()))")
     UniqueTurnoverInformation uniqueTurnoverDTOToUniqueTurnover(UniqueTurnoverInformationDTO uniqueTurnoverInformationDTO, @Context ReferenceResolver referenceResolver);
 }

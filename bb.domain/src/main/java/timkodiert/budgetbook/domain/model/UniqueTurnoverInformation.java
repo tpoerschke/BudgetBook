@@ -1,15 +1,11 @@
 package timkodiert.budgetbook.domain.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -22,7 +18,7 @@ import lombok.Setter;
 public class UniqueTurnoverInformation extends BaseEntity implements Categorizable {
 
     @Setter
-    @NotBlank(message = "Die Position muss benannt werden.")
+    @NotBlank
     private String label;
 
     @Setter
@@ -39,8 +35,9 @@ public class UniqueTurnoverInformation extends BaseEntity implements Categorizab
     private UniqueTurnover expense;
 
     @Setter
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Category> categories = new ArrayList<>();
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public static UniqueTurnoverInformation total(UniqueTurnover exp, int value) {
         UniqueTurnoverInformation info = new UniqueTurnoverInformation();
