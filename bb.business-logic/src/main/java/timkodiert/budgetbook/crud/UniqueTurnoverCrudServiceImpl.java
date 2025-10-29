@@ -12,6 +12,7 @@ import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
 import timkodiert.budgetbook.domain.model.BaseEntity;
+import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetbook.domain.repository.UniqueExpenseInformationRepository;
@@ -87,12 +88,16 @@ public class UniqueTurnoverCrudServiceImpl implements UniqueTurnoverCrudService 
                 info.setId(0);
             }
         });
-        uniqueTurnover.getPaymentInformations().forEach(info -> info.getCategories().forEach(category -> {
+        uniqueTurnover.getPaymentInformations().forEach(info -> {
+            Category category = info.getCategory();
+            if (category == null) {
+                return;
+            }
             boolean notYetLinked = category.getUniqueExpenseInformation().stream().noneMatch(i -> i.getId() == info.getId());
             if (notYetLinked) {
                 category.getUniqueExpenseInformation().add(info);
             }
-        }));
+        });
     }
 
     @Override

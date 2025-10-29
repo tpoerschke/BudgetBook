@@ -20,12 +20,6 @@
       <artifactId>bb.contract</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.controlsfx</groupId>
-      <artifactId>controlsfx</artifactId>
-      <version>${version.controlsfx}</version>
-    </dependency>
-
   </dependencies>
 
 </project>

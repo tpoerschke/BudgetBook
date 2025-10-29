@@ -30,20 +30,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
-import org.controlsfx.control.CheckListView;
 import org.jetbrains.annotations.Nullable;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
 import timkodiert.budgetbook.converter.Converters;
-import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.AccountTurnoverDTO;
 import timkodiert.budgetbook.domain.CategoryCrudService;
@@ -79,9 +76,8 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     private ComboBox<TurnoverDirection> directionComboBox;
     @FXML
     private CheckBox payInfoFutureOnlyCheckBox;
-
     @FXML
-    private CheckListView<Reference<CategoryDTO>> categoriesListView;
+    private ComboBox<Reference<CategoryDTO>> categoryComboBox;
 
     @FXML
     private Button addFixedExpenseInformationButton;
@@ -190,9 +186,8 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         importsTable.getSortOrder().add(importsDateCol);
 
         // Kategorien
-        categoriesListView.setCellFactory(lv -> new CheckBoxListCell<>(item -> categoriesListView.getItemBooleanProperty(item), new ReferenceStringConverter<>()));
-        List<Reference<CategoryDTO>> categories = categoryCrudService.readAll().stream().map(c -> new Reference<>(CategoryDTO.class, c.getId(), c.getName())).toList();
-        categoriesListView.getItems().setAll(categories);
+        List<Reference<CategoryDTO>> categories = categoryCrudService.readAllAsReference();
+        Bind.comboBoxNullable(categoryComboBox, beanAdapter.getProperty(FixedTurnoverDTO::getCategory, FixedTurnoverDTO::setCategory), categories);
 
         // Bindings
         positionTextField.textProperty().bindBidirectional(beanAdapter.getProperty(FixedTurnoverDTO::getPosition, FixedTurnoverDTO::setPosition));
@@ -224,19 +219,11 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     }
 
     @Override
-    protected void beanSet() {
-        categoriesListView.getCheckModel().clearChecks();
-        FixedTurnoverDTO bean = beanAdapter.getBean();
-        bean.getCategories().forEach(cat -> categoriesListView.getCheckModel().check(cat));
-    }
-
-    @Override
     public boolean save() {
         FixedTurnoverDTO bean = getBean();
         if (bean == null) {
             return false;
         }
-        beanAdapter.getBean().setCategories(categoriesListView.getCheckModel().getCheckedItems());
         Predicate<FixedTurnoverDTO> crudMethod = bean.getId() <= 0 ? crudService::create : crudService::update;
         boolean success = validate() && crudMethod.test(getBean());
         if (success) {

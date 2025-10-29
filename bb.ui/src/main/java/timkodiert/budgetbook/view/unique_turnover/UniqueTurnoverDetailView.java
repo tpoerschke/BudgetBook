@@ -182,12 +182,7 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
             return new ReadOnlyStringWrapper(converter.toString(cellData.getValue().getValueSigned()));
         });
         expenseInfoCategoriesCol.setCellValueFactory(cellData ->
-                                                             new ReadOnlyStringWrapper(String.join(", ",
-                                                                                                   cellData.getValue()
-                                                                                                           .getCategories()
-                                                                                                           .stream()
-                                                                                                           .map(Reference::name)
-                                                                                                           .toList())));
+                                                             new ReadOnlyStringWrapper(nvl(cellData.getValue().getCategory(), Reference::name)));
 
         billerTextField.getAvailableEntries().addAll(crudService.getUniqueTurnoverLabels());
 

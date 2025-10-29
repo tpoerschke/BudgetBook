@@ -1,12 +1,16 @@
 package timkodiert.budgetbook.view.monthly_overview;
 
+import java.util.Objects;
 import static java.util.stream.Collectors.toSet;
 
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
+import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetbook.domain.table.RowType;
+
+import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 
 public class ToTableDataMapper {
 
@@ -15,9 +19,13 @@ public class ToTableDataMapper {
     }
 
     public static TableData mapUniqueExpense(UniqueTurnover expense) {
-        String categories = String.join(", ",
-                                        expense.getPaymentInformations().stream().flatMap(info -> info.getCategories().stream()).map(Category::getName).collect(toSet()));
-        return new TableData(expense.getId(), expense.getBiller(), expense.getTotalValue(), expense.getDate(), categories, expense.hasImport(), RowType.UNIQUE_EXPENSE);
+        String category = String.join(", ", expense.getPaymentInformations()
+                                                   .stream()
+                                                   .map(UniqueTurnoverInformation::getCategory)
+                                                   .filter(Objects::nonNull)
+                                                   .map(Category::getName)
+                                                   .collect(toSet()));
+        return new TableData(expense.getId(), expense.getBiller(), expense.getTotalValue(), expense.getDate(), category, expense.hasImport(), RowType.UNIQUE_EXPENSE);
     }
 
     public static TableData mapFixedExpense(FixedTurnover expense, MonthYear monthYear) {
@@ -25,7 +33,7 @@ public class ToTableDataMapper {
                              expense.getPosition(),
                              expense.getValueFor(monthYear),
                              expense.getImportDate(monthYear),
-                             String.join(", ", expense.getCategories().stream().map(Category::getName).collect(toSet())),
+                             nvl(expense.getCategory(), Category::getName),
                              expense.hasImport(monthYear),
                              RowType.FIXED_EXPENSE);
     }

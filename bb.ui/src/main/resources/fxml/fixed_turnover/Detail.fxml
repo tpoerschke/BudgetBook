@@ -18,7 +18,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import org.controlsfx.control.CheckListView?>
 <BorderPane fx:id="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="timkodiert.budgetbook.view.fixed_turnover.FixedTurnoverDetailView">
    <center>
@@ -55,7 +54,7 @@
                </VBox>
                <VBox GridPane.columnIndex="1" GridPane.rowSpan="4">
                   <Label text="%editExpense.label.categories"/>
-                  <CheckListView fx:id="categoriesListView"/>
+                 <ComboBox fx:id="categoryComboBox"/>
                </VBox>
             </GridPane>
          </Tab>

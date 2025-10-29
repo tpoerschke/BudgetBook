@@ -12,8 +12,6 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 // Converter hier verschoben werden
 public class CsvAmountToIntegerConverter extends AbstractBeanField<Integer, String> {
 
-    private static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance(Locale.GERMANY);
-
     @Override
     protected Integer convert(String value) throws CsvDataTypeMismatchException {
         if (value == null || value.trim().isEmpty()) {
@@ -21,7 +19,8 @@ public class CsvAmountToIntegerConverter extends AbstractBeanField<Integer, Stri
         }
 
         try {
-            double number = NUMBER_FORMAT.parse(value.trim()).doubleValue();
+            // NumberFormat nicht als Konstante, da Probleme mit Multi-Threading
+            double number = NumberFormat.getInstance(Locale.GERMANY).parse(value.trim()).doubleValue();
             return (int)(number * 100);
         } catch (ParseException | NumberFormatException e) {
             throw new CsvDataTypeMismatchException(e.getMessage());

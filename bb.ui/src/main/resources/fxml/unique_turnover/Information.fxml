@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import org.controlsfx.control.CheckListView?>
 <?import timkodiert.budgetbook.ui.control.AutoCompleteTextField?>
 <?import timkodiert.budgetbook.ui.control.MoneyTextField?>
 <BorderPane stylesheets="@../../../../../../src/main/resources/css/general-styles.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/">
@@ -30,10 +29,7 @@
                <ComboBox fx:id="directionComboBox" prefWidth="200.0"/>
             </VBox>
             <VBox>
-               <children>
-                  <Label text="%uniqueExpensesInfoDV.label.categories" />
-                  <CheckListView fx:id="categoriesListView" prefHeight="300.0"/>
-               </children>
+              <ComboBox fx:id="categoryComboBox" prefWidth="200.0"/>
             </VBox>
          </children>
          <BorderPane.margin>

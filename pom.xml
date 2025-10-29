@@ -23,6 +23,7 @@
 
     <maven.exec.skip>false</maven.exec.skip>
 
+    <!-- Infrastructure -->
     <version.jfx>21.0.6</version.jfx>
     <version.dagger>2.55</version.dagger>
     <version.lombok>1.18.36</version.lombok>
@@ -31,12 +32,13 @@
     <!-- UI -->
     <version.ikonli>12.3.1</version.ikonli>
     <version.atlantafx>2.1.0</version.atlantafx>
-    <version.controlsfx>11.2.1</version.controlsfx>
     <version.xchart>3.8.8</version.xchart>
     <!-- Database -->
     <version.sqlite-jdbc>3.49.0.0</version.sqlite-jdbc>
     <version.hibernate>6.6.6.Final</version.hibernate>
     <version.flyway>11.3.1</version.flyway>
+    <!-- Data Handling -->
+    <version.opencsv>5.12.0</version.opencsv>
     <!-- Validation -->
     <version.validation-api>2.0.1.Final</version.validation-api>
     <version.hibernate-validator>7.0.5.Final</version.hibernate-validator>
@@ -216,7 +218,7 @@
     <dependency>
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
-      <version>5.9</version>
+      <version>${version.opencsv}</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains</groupId>

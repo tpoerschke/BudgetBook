@@ -1,6 +1,7 @@
 package timkodiert.budgetbook.domain.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvCustomBindByPosition;
@@ -63,5 +64,26 @@ public class AccountTurnover extends BaseEntity implements Comparable<AccountTur
     @Override
     public int compareTo(@NotNull AccountTurnover o) {
         return date.compareTo(o.getDate());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+
+        AccountTurnover that = (AccountTurnover) other;
+        return date.equals(that.getDate())
+                && receiver.equals(that.getReceiver())
+                && reference.equals(that.getReference())
+                && amount == that.getAmount();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, date, receiver, reference, amount);
     }
 }

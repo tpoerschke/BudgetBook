@@ -24,11 +24,11 @@ public class CategoriesRepository extends Repository<Category> {
                 entityManager.merge(group);
             }
             entity.getFixedExpenses().forEach(turnover -> {
-                turnover.getCategories().removeIf(c -> c.getId() == entity.getId());
+                turnover.setCategory(null);
                 entityManager.merge(turnover);
             });
             entity.getUniqueTurnoverInformation().forEach(info -> {
-                info.getCategories().removeIf(c -> c.getId() == entity.getId());
+                info.setCategory(null);
                 entityManager.merge(info);
             });
         });

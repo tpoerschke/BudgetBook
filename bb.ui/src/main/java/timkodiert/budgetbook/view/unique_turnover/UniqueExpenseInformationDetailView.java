@@ -1,7 +1,6 @@
 package timkodiert.budgetbook.view.unique_turnover;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -13,13 +12,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.SerializationUtils;
-import org.controlsfx.control.CheckListView;
 
 import timkodiert.budgetbook.converter.Converters;
-import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.domain.CategoryCrudService;
 import timkodiert.budgetbook.domain.CategoryDTO;
 import timkodiert.budgetbook.domain.Reference;
@@ -42,7 +38,7 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
     @FXML
     private ComboBox<TurnoverDirection> directionComboBox;
     @FXML
-    private CheckListView<Reference<CategoryDTO>> categoriesListView;
+    private ComboBox<Reference<CategoryDTO>> categoryComboBox;
 
     private Stage stage;
     private UniqueTurnoverInformationDTO backupBean;
@@ -64,9 +60,7 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        categoriesListView.setCellFactory(lv -> new CheckBoxListCell<>(item -> categoriesListView.getItemBooleanProperty(item), new ReferenceStringConverter<>()));
         List<Reference<CategoryDTO>> categories = categoryCrudService.readAll().stream().map(c -> new Reference<>(CategoryDTO.class, c.getId(), c.getName())).toList();
-        categoriesListView.getItems().setAll(categories);
         positionTextField.getAvailableEntries().addAll(uniqueTurnoverCrudService.getUniqueTurnoverInformationLabels());
         directionComboBox.getItems().setAll(TurnoverDirection.values());
         directionComboBox.setConverter(Converters.get(TurnoverDirection.class));
@@ -78,6 +72,9 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
                       beanAdapter.getProperty(UniqueTurnoverInformationDTO::getDirection, UniqueTurnoverInformationDTO::setDirection),
                       Arrays.asList(TurnoverDirection.values()),
                       TurnoverDirection.class);
+        Bind.comboBoxNullable(categoryComboBox,
+                              beanAdapter.getProperty(UniqueTurnoverInformationDTO::getCategory, UniqueTurnoverInformationDTO::setCategory),
+                              categories);
 
         // Validierungen
         validationMap.put("label", positionTextField);
@@ -94,9 +91,6 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
     @Override
     protected void beanSet() {
         backupBean = SerializationUtils.clone(beanAdapter.getBean());
-        UniqueTurnoverInformationDTO bean = beanAdapter.getBean();
-        categoriesListView.getCheckModel().clearChecks();
-        bean.getCategories().forEach(cat -> categoriesListView.getCheckModel().check(cat));
     }
 
     @Override
@@ -109,7 +103,6 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
         if (!validate()) {
             return;
         }
-        beanAdapter.getBean().setCategories(new ArrayList<>(categoriesListView.getCheckModel().getCheckedItems()));
         updateCallback.accept(null, beanAdapter.getBean());
         stage.close();
     }

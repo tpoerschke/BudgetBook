@@ -1,8 +1,6 @@
 package timkodiert.budgetbook.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +20,7 @@ public class UniqueTurnoverInformationDTO implements Serializable {
     private int value;
     @NotNull(message = "{attribute.notNull}")
     private TurnoverDirection direction;
-    private List<Reference<CategoryDTO>> categories = new ArrayList<>();
+    private Reference<CategoryDTO> category;
 
     public UniqueTurnoverInformationDTO() {
         id = new Random().nextInt(Integer.MIN_VALUE, 0);

@@ -8,8 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,10 +42,10 @@ public class Category extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private BudgetType budgetType;
 
-    @ManyToMany(mappedBy = "categories")
+    @OneToMany(mappedBy = "category")
     private List<FixedTurnover> fixedExpenses = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "categories")
+    @OneToMany(mappedBy = "category")
     private List<UniqueTurnoverInformation> uniqueExpenseInformation = new ArrayList<>();
 
     public boolean hasActiveBudget() {
