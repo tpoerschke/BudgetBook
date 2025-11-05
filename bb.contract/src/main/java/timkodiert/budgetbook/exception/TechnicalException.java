@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 public class TechnicalException extends RuntimeException {
 
     public enum Reason {
-        PROGRAMMING_ERROR
+        PROGRAMMING_ERROR, FXML_NOT_FOUND
     }
 
     private final Reason reason;
@@ -19,5 +19,13 @@ public class TechnicalException extends RuntimeException {
 
     public static TechnicalException forProgrammingError(String message, Throwable cause) {
         return new TechnicalException(Reason.PROGRAMMING_ERROR, message, cause);
+    }
+
+    public static TechnicalException forProgrammingError(Throwable cause) {
+        return new TechnicalException(Reason.PROGRAMMING_ERROR, cause.getMessage(), cause);
+    }
+
+    public static TechnicalException forFxmlNotFound(Throwable cause) {
+        return new TechnicalException(Reason.FXML_NOT_FOUND, cause.getMessage(), cause);
     }
 }

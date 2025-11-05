@@ -19,6 +19,8 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.callback.Callback;
 import org.flywaydb.core.api.callback.Context;
 import org.flywaydb.core.api.callback.Event;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.i18n.LanguageManager;
@@ -27,6 +29,8 @@ import timkodiert.budgetbook.properties.PropertiesService;
 
 @Singleton
 public class MigrationService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MigrationService.class);
 
     private final LanguageManager languageManager;
     private final ControllerFactory controllerFactory;
@@ -79,7 +83,7 @@ public class MigrationService {
             });
             stage.showAndWait();
         } catch (Exception e) {
-            StackTraceAlert.of(languageManager.get("alert.viewCouldNotBeOpened"), e).showAndWait();
+            StackTraceAlert.createAndLog(languageManager.get("alert.viewCouldNotBeOpened"), e).showAndWait();
         }
     }
 
@@ -114,9 +118,15 @@ public class MigrationService {
         @Override
         public void handle(Event event, Context context) {
             switch (event) {
-                case BEFORE_EACH_MIGRATE -> currentScript.set(context.getMigrationInfo().getScript());
+                case BEFORE_EACH_MIGRATE -> {
+                    LOG.info("Migrate with {}", context.getMigrationInfo().getScript());
+                    currentScript.set(context.getMigrationInfo().getScript());
+                }
                 case AFTER_EACH_MIGRATE -> numMigrated.set(numMigrated.get() + 1);
-                case AFTER_MIGRATE_ERROR -> migrationError.set(true);
+                case AFTER_MIGRATE_ERROR -> {
+                    LOG.error("Migrate with {} failed", context.getMigrationInfo().getScript());
+                    migrationError.set(true);
+                }
                 case AFTER_MIGRATE_OPERATION_FINISH -> migrationFinished.set(true);
                 default -> {
                     // Andere Events sind nicht relevant

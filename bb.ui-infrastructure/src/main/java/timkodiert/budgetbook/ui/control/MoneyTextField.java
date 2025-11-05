@@ -17,6 +17,8 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
+import timkodiert.budgetbook.exception.TechnicalException;
+
 public class MoneyTextField extends InputGroup implements Initializable {
 
     private static final String RESOURCE_LOCATION = "/fxml/MoneyTextField.fxml";
@@ -41,7 +43,7 @@ public class MoneyTextField extends InputGroup implements Initializable {
         try {
             fxmlLoader.load();
         } catch (IOException exception) {
-            throw new RuntimeException(exception);
+            throw TechnicalException.forFxmlNotFound(exception);
         }
     }
 

@@ -49,6 +49,7 @@ import timkodiert.budgetbook.converter.FixedExpenseStringConverter;
 import timkodiert.budgetbook.dialog.DialogFactory;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.repository.Repository;
+import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.importer.ImportInformation;
 import timkodiert.budgetbook.importer.TurnoverImporter;
@@ -200,8 +201,6 @@ public class ImportView implements View, Initializable {
                 displayNotification(Styles.WARNING, languageManager.get("alert.noTurnOversFoundInFile_maybeNotCompatible"));
             }
         } catch (Exception e) {
-            //            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-            //            alert.showAndWait();
             displayNotification(Styles.DANGER, e.getMessage());
         }
     }
@@ -210,14 +209,14 @@ public class ImportView implements View, Initializable {
         try {
             StageTuple wizardTuple = stageBuilderProvider.get()
                                                          .withModality(Modality.APPLICATION_MODAL)
-                                                         .withFXMLResource(FxmlResource.FIXED_TURNOVER_WIZARD_VIEW.getPath())
+                                                         .withFXMLResource(FxmlResource.FIXED_TURNOVER_WIZARD_VIEW.getPath() + "test")
                                                          .build();
             FixedTurnoverWizardView wizardView = (FixedTurnoverWizardView) wizardTuple.view();
             wizardView.setOnSaveCallback(this::selectCreatedFixedTurnover);
             wizardView.importInformationProperty().set(importTable.getSelectionModel().getSelectedItem());
             wizardTuple.stage().showAndWait();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | IllegalStateException e) {
+            throw TechnicalException.forFxmlNotFound(e);
         }
     }
 

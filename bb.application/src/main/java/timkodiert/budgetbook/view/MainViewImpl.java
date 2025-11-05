@@ -12,13 +12,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.RadioMenuItem;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.util.EntityManager;
@@ -39,15 +40,14 @@ import static timkodiert.budgetbook.view.FxmlResource.MONTHLY_OVERVIEW;
 @Singleton
 public class MainViewImpl implements Initializable, MainView {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MainViewImpl.class);
+
     private Stage primaryStage;
 
     @FXML
     private BorderPane root;
     @FXML
     private MenuBar menuBar;
-
-    @FXML
-    private RadioMenuItem viewMenuItem1, viewMenuItem2;
 
     private final ControllerFactory controllerFactory;
     private final EntityManager entityManager;
@@ -64,7 +64,10 @@ public class MainViewImpl implements Initializable, MainView {
 
     public void setAndShowPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.primaryStage.setOnCloseRequest(windowEvent -> entityManager.closeSession());
+        this.primaryStage.setOnCloseRequest(windowEvent -> {
+            entityManager.closeSession();
+            LOG.info("Stopping Application");
+        });
 
         try {
             FXMLLoader templateLoader = new FXMLLoader();
@@ -77,7 +80,7 @@ public class MainViewImpl implements Initializable, MainView {
             this.primaryStage.setScene(scene);
             this.primaryStage.show();
         } catch (Exception e) {
-            StackTraceAlert.of(languageManager.get("alert.mainViewCouldNotBeOpened"), e).showAndWait();
+            StackTraceAlert.createAndLog(languageManager.get("alert.mainViewCouldNotBeOpened"), e).showAndWait();
         }
     }
 
@@ -105,8 +108,8 @@ public class MainViewImpl implements Initializable, MainView {
             this.primaryStage.setTitle(String.format("%s – JBudgetBook – %s", languageManager.get(resource.getStageTitle()), getVersion()));
             return templateLoader.getController();
         } catch (Exception e) {
-            e.printStackTrace();
-            StackTraceAlert.of(languageManager.get("alert.viewCouldNotBeOpened"), e).showAndWait();
+            // Könnte in den UncaughtExceptionHandler verlagert werden
+            StackTraceAlert.createAndLog(languageManager.get("alert.viewCouldNotBeOpened"), e).showAndWait();
         }
         return null;
     }
