@@ -8,23 +8,32 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StackTraceAlert extends Alert {
 
-    private final Exception exception;
+    private static final Logger LOG = LoggerFactory.getLogger(StackTraceAlert.class.getName());
 
-    private StackTraceAlert(String description, Exception exception) {
+    private final Throwable throwable;
+
+    private StackTraceAlert(String description, Throwable throwable) {
         super(AlertType.ERROR, description);
-        this.exception = exception;
+        this.throwable = throwable;
         init();
     }
 
-    public static StackTraceAlert of(String description, Exception exception) {
+    public static StackTraceAlert create(String description, Throwable exception) {
+        return new StackTraceAlert(description, exception);
+    }
+
+    public static StackTraceAlert createAndLog(String description, Throwable exception) {
+        LOG.error(description, exception);
         return new StackTraceAlert(description, exception);
     }
 
     private void init() {
-        TextArea stackTraceArea = new TextArea(getStackTrace(exception));
+        TextArea stackTraceArea = new TextArea(getStackTrace(throwable));
         stackTraceArea.setEditable(false);
         stackTraceArea.setWrapText(false);
         stackTraceArea.setMaxWidth(Double.MAX_VALUE);
@@ -37,7 +46,7 @@ public class StackTraceAlert extends Alert {
         getDialogPane().setExpandableContent(content);
     }
 
-    private static String getStackTrace(Exception e) {
+    private static String getStackTrace(Throwable e) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         e.printStackTrace(printWriter);

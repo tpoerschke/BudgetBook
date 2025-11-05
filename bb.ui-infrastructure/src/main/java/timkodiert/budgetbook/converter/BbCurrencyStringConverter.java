@@ -8,6 +8,8 @@ import javax.inject.Inject;
 
 import javafx.util.StringConverter;
 
+import timkodiert.budgetbook.exception.TechnicalException;
+
 public class BbCurrencyStringConverter extends StringConverter<Integer> {
 
     private final NumberFormat format;
@@ -31,7 +33,7 @@ public class BbCurrencyStringConverter extends StringConverter<Integer> {
         try {
             return str.isEmpty() ? null : (int) (format.parse(str).doubleValue() * 100);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw TechnicalException.forProgrammingError(e);
         }
     }
 }

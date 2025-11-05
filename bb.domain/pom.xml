@@ -15,6 +15,12 @@
   </properties>
 
   <dependencies>
+    <!-- wenn das Domain-Modul irgendwann eine Abhängigkeit auf contract hat und contract keine
+         Abhängigkeiten mehr besitzt, Logback dahin verschieben -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
   </dependencies>
 
 </project>

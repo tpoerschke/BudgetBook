@@ -171,7 +171,7 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
                                     .stage()
                                     .showAndWait();
             } catch (IOException e) {
-                StackTraceAlert.of("ImageModal konnte nicht geöffnet werden", e).showAndWait();
+                StackTraceAlert.createAndLog("ImageModal konnte nicht geöffnet werden", e).showAndWait();
             }
         });
 

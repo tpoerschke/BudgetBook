@@ -8,6 +8,7 @@ import timkodiert.budgetbook.converter.Converters;
 import timkodiert.budgetbook.db.MigrationService;
 import timkodiert.budgetbook.db.MigrationView;
 import timkodiert.budgetbook.domain.repository.RepositoryModule;
+import timkodiert.budgetbook.exception.BbUncaughtExceptionHandler;
 import timkodiert.budgetbook.properties.PropertiesServiceImpl;
 import timkodiert.budgetbook.view.AnnualOverviewView;
 import timkodiert.budgetbook.view.MainViewImpl;
@@ -84,4 +85,5 @@ public interface ViewComponent {
     // Sonstiges
     // -----------------------------------
     Converters getConverters();
+    BbUncaughtExceptionHandler getUncaughtExceptionHandler();
 }

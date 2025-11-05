@@ -317,7 +317,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            StackTraceAlert.of("Ansicht konnte nicht geöffnet werden!", e).showAndWait();
+            StackTraceAlert.createAndLog("Ansicht konnte nicht geöffnet werden!", e).showAndWait();
         }
     }
 

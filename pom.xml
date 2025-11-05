@@ -29,6 +29,7 @@
     <version.lombok>1.18.36</version.lombok>
     <version.commons-lang>3.18.0</version.commons-lang>
     <version.mapstruct>1.6.3</version.mapstruct>
+    <version.logback>1.5.20</version.logback>
     <!-- UI -->
     <version.ikonli>12.3.1</version.ikonli>
     <version.atlantafx>2.1.0</version.atlantafx>
@@ -195,6 +196,11 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${version.logback}</version>
+      </dependency>
       <dependency>
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
