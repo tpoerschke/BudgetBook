@@ -53,6 +53,7 @@ import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.PaymentType;
 import timkodiert.budgetbook.domain.model.TurnoverDirection;
+import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.DateTableCell;
 import timkodiert.budgetbook.table.cell.MonthYearTableCell;
 import timkodiert.budgetbook.ui.helper.Bind;
@@ -125,6 +126,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     private final Provider<StageBuilder> stageBuilderProvider;
     private final CategoryCrudService categoryCrudService;
     private final FixedTurnoverCrudService crudService;
+    private final LanguageManager languageManager;
 
     @SuppressWarnings({"java:S1450", "FieldCanBeLocal"}) // Liegt nur hier, damit sie nicht garbage-collected wird
     private SortedList<AccountTurnoverDTO> sortedAccountTurnoverList;
@@ -134,12 +136,14 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
                                    FixedTurnoverInformationDetailViewFactory fixedTurnoverInformationDetailViewFactory,
                                    Provider<StageBuilder> stageBuilderProvider,
                                    CategoryCrudService categoryCrudService,
-                                   FixedTurnoverCrudService crudService) {
+                                   FixedTurnoverCrudService crudService,
+                                   LanguageManager languageManager) {
         super(validationWrapperFactory);
         this.fixedTurnoverInformationDetailViewFactory = fixedTurnoverInformationDetailViewFactory;
         this.stageBuilderProvider = stageBuilderProvider;
         this.categoryCrudService = categoryCrudService;
         this.crudService = crudService;
+        this.languageManager = languageManager;
     }
 
     @Override
@@ -316,8 +320,7 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
             subDetailView.setStage(stage);
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
-            StackTraceAlert.createAndLog("Ansicht konnte nicht geöffnet werden!", e).showAndWait();
+            StackTraceAlert.createAndLog(languageManager.get("alert.viewCouldNotBeOpened"), e).showAndWait();
         }
     }
 

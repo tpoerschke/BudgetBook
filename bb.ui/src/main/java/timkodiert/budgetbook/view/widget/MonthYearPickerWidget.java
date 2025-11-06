@@ -14,8 +14,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -30,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.i18n.LanguageManager;
 
@@ -80,9 +79,7 @@ public class MonthYearPickerWidget implements Initializable {
             loader.setResources(languageManager.getResourceBundle());
             parent.getChildren().add(loader.load());
         } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR, languageManager.get("alert.widgetCouldNotBeOpened"));
-            alert.showAndWait();
+            StackTraceAlert.createAndLog(languageManager.get("alert.widgetCouldNotBeOpened"), e).showAndWait();
         }
     }
 

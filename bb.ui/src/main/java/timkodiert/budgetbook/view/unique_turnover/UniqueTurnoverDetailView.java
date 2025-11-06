@@ -321,7 +321,7 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
         } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR, languageManager.get("alert.viewCouldNotBeOpened"));
             alert.showAndWait();
-            e.printStackTrace();
+            StackTraceAlert.createAndLog(languageManager.get("alert.viewCouldNotBeOpened"), e).showAndWait();
         }
     }
 

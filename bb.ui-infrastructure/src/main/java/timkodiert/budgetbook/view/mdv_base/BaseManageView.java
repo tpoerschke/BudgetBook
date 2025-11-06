@@ -36,7 +36,6 @@ public abstract class BaseManageView<B> implements View, Initializable {
         try {
             detailViewContainer.getChildren().add(fxmlLoader.load());
         } catch (Exception e) {
-            e.printStackTrace();
             StackTraceAlert.createAndLog(languageManager.get("alert.viewCouldNotBeOpened"), e).showAndWait();
             return;
         }

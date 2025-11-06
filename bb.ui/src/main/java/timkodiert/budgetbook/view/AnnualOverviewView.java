@@ -21,7 +21,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -37,6 +36,7 @@ import timkodiert.budgetbook.domain.model.IFixedTurnover;
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.PaymentType;
 import timkodiert.budgetbook.domain.repository.Repository;
+import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 import timkodiert.budgetbook.table.row.BoldTableRow;
@@ -95,9 +95,7 @@ public class AnnualOverviewView implements Initializable, View {
             loader.setController(expenseDetailWidget);
             turnoverWidgetNode = loader.load();
         } catch (Exception e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Widget konnte nicht geöffnet werden!");
-            alert.showAndWait();
+            throw TechnicalException.forFxmlNotFound(e);
         }
 
         // ModalPane konfigurieren

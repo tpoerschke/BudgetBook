@@ -37,6 +37,7 @@ import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.repository.Repository;
 import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
 import timkodiert.budgetbook.domain.table.RowType;
+import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 import timkodiert.budgetbook.table.cell.DateTableCell;
@@ -219,7 +220,7 @@ public class MonthlyOverview implements Initializable, View {
                 budgetWidget.getSelectedMonthYearProperty().bind(monthFilter);
                 budgetBox.getChildren().add(budgetWidget.getRoot());
             } catch (Exception e) {
-                e.printStackTrace();
+                throw TechnicalException.forFxmlNotFound(e);
             }
         });
     }
