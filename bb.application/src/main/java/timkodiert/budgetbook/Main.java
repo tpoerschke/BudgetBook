@@ -16,6 +16,7 @@ import timkodiert.budgetbook.properties.OperationMode;
 import timkodiert.budgetbook.properties.PropertiesServiceImpl;
 
 import static timkodiert.budgetbook.Constants.OPERATION_MODE_ARGUMENT_NAME;
+import static timkodiert.budgetbook.injector.AppModule.with;
 
 public class Main extends Application {
 
@@ -23,7 +24,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        ViewComponent viewComponent = DaggerViewComponent.create();
+        ViewComponent viewComponent = DaggerViewComponent.builder().appModule(with(getHostServices())).build();
 
         PropertiesServiceImpl propsService = viewComponent.getPropertiesService();
         Parameters params = getParameters();

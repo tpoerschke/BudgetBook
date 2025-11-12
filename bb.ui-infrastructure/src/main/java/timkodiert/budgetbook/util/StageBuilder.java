@@ -21,6 +21,8 @@ public class StageBuilder {
     private String resourcePath;
     private View viewController;    
     private String title;
+    private Integer width;
+    private Integer height;
 
     @Inject
     public StageBuilder(FXMLLoader fxmlLoader) {
@@ -52,11 +54,17 @@ public class StageBuilder {
         return this;
     }
 
+    public StageBuilder minSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+        return this;
+    }
+
     public StageTuple build() throws IOException {
         fxmlLoader.setLocation(getClass().getResource(resourcePath));
         fxmlLoader.setController(viewController);
 
-        Parent parent = (Parent) fxmlLoader.load();
+        Parent parent = fxmlLoader.load();
         Scene scene = new Scene(parent);
         scene.getStylesheets().add(getClass().getResource("/css/general-styles.css").toExternalForm());
 
@@ -65,6 +73,10 @@ public class StageBuilder {
         stage.setScene(scene);
         stage.initModality(modality);
         stage.initOwner(owner);
+        if (width != null && height != null) {
+            stage.setMinWidth(width);
+            stage.setMinHeight(height);
+        }
 
         return new StageTuple(stage, fxmlLoader.getController());
     }

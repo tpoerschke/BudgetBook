@@ -7,7 +7,7 @@
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
 <BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="900.0" prefWidth="1600.0"
-            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/"
             onDragDropped="#onDragDropped" onDragOver="#onDragOver">
    <top>
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
@@ -30,6 +30,8 @@
                 </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem mnemonicParsing="false" onAction="#showAnalysisView" text="Analyse"/>
+              <SeparatorMenuItem/>
+              <MenuItem mnemonicParsing="false" onAction="#openAboutView" text="%menuItem.aboutView"/>
             </Menu>
             <Menu mnemonicParsing="false" text="%menuBar.buttonData">
               <items>

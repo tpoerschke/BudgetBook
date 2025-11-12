@@ -9,6 +9,7 @@ import timkodiert.budgetbook.db.MigrationView;
 import timkodiert.budgetbook.view.AnnualOverviewView;
 import timkodiert.budgetbook.view.MonthlyOverview;
 import timkodiert.budgetbook.view.View;
+import timkodiert.budgetbook.view.about.AboutView;
 import timkodiert.budgetbook.view.analysis.AnalysisView;
 import timkodiert.budgetbook.view.category.CategoriesManageView;
 import timkodiert.budgetbook.view.category.CategoryDetailView;
@@ -53,6 +54,8 @@ public class ControllerFactory {
         viewControllerMap.put(CategoryGroupDetailView.class, viewComponent::getCategoryGroupDetailView);
         // Technische Ansichten
         viewControllerMap.put(MigrationView.class, viewComponent::getMigrationView);
+        // Sonstige Ansichten
+        viewControllerMap.put(AboutView.class, viewComponent::getAboutView);
     }
 
     public View create(Class<?> viewControllerClass) {
