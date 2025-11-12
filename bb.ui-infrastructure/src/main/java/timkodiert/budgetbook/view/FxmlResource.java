@@ -30,6 +30,7 @@ public enum FxmlResource {
     CATEGORY_GROUP_DETAIL_VIEW("/fxml/category_group/Detail.fxml", null),
     BUDGET_WIDGET("/fxml/BudgetWidget.fxml", null),
     ANALYSIS_VIEW("/fxml/analysis/AnalysisView.fxml", "stageTitle.analysisView"),
+    ABOUT_VIEW("/fxml/AboutView.fxml", "stageTitle.aboutView"),
     ;
 
     private final String path;

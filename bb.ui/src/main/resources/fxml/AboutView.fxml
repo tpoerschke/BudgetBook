@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="timkodiert.budgetbook.view.about.AboutView">
+  <padding>
+    <Insets bottom="20.0" left="20.0" right="20.0" top="40.0"/>
+  </padding>
+
+  <ImageView preserveRatio="true" GridPane.halignment="CENTER">
+    <Image url="@/images/logo.png" preserveRatio="true"/>
+    <fitWidth>200</fitWidth>
+  </ImageView>
+  <Label fx:id="versionLabel" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
+  <HBox spacing="10" GridPane.rowIndex="3" GridPane.halignment="CENTER" alignment="CENTER">
+    <Hyperlink text="%aboutView.hyperlink.userManuel" onAction="#openUserManualLink" GridPane.halignment="CENTER"/>
+    <Hyperlink text="Github" onAction="#openGithubLink" GridPane.halignment="CENTER"/>
+  </HBox>
+  <Label text="%aboutView.label.ideaAndDev" GridPane.rowIndex="5" GridPane.halignment="CENTER"/>
+
+  <Label text="%aboutView.label.licenses" GridPane.rowIndex="7"/>
+  <TextArea fx:id="licensesArea" editable="false" maxHeight="Infinity" GridPane.vgrow="ALWAYS" GridPane.rowIndex="8"/>
+
+  <rowConstraints>
+    <RowConstraints/>
+    <RowConstraints/>
+    <RowConstraints minHeight="10" maxHeight="10"/>
+    <RowConstraints/>
+    <RowConstraints minHeight="10" maxHeight="10"/>
+    <RowConstraints/>
+    <RowConstraints minHeight="20" maxHeight="20"/>
+    <RowConstraints/>
+    <RowConstraints vgrow="ALWAYS"/>
+  </rowConstraints>
+  <columnConstraints>
+    <ColumnConstraints hgrow="ALWAYS"/>
+  </columnConstraints>
+</GridPane>

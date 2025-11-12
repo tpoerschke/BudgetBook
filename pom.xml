@@ -163,6 +163,35 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <!-- Generieren und Kopieren (s. Modul bb.ui) der Lizenzen
+             später ggf. nur in einem Release-Profil machen -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>2.7.0</version>
+        <configuration>
+          <thirdPartyFilename>BB-THIRD-PARTY.txt</thirdPartyFilename>
+          <addJavaLicenseAfterPackage>true</addJavaLicenseAfterPackage>
+          <includeTransitiveDependencies>false</includeTransitiveDependencies>
+          <excludedArtifacts>bb\.</excludedArtifacts>
+        </configuration>
+        <executions>
+          <execution>
+            <id>generate-third-party-report</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>add-third-party</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>aggregate-licenses</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>aggregate-add-third-party</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 

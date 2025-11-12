@@ -1,9 +1,11 @@
 package timkodiert.budgetbook.view;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import javafx.event.ActionEvent;
@@ -16,6 +18,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -23,9 +26,11 @@ import org.slf4j.LoggerFactory;
 
 import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.util.EntityManager;
+import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.injector.ControllerFactory;
 import timkodiert.budgetbook.properties.PropertiesService;
+import timkodiert.budgetbook.util.StageBuilder;
 import timkodiert.budgetbook.view.importer.ImportView;
 
 import static timkodiert.budgetbook.properties.PropertiesService.USE_SYSTEM_MENU_BAR;
@@ -53,13 +58,19 @@ public class MainViewImpl implements Initializable, MainView {
     private final EntityManager entityManager;
     private final PropertiesService propertiesService;
     private final LanguageManager languageManager;
+    private final Provider<StageBuilder> stageBuilderProvider;
 
     @Inject
-    public MainViewImpl(ControllerFactory controllerFactory, EntityManager entityManager, PropertiesService propertiesService, LanguageManager languageManager) {
+    public MainViewImpl(ControllerFactory controllerFactory,
+                        EntityManager entityManager,
+                        PropertiesService propertiesService,
+                        LanguageManager languageManager,
+                        Provider<StageBuilder> stageBuilderProvider) {
         this.controllerFactory = controllerFactory;
         this.entityManager = entityManager;
         this.propertiesService = propertiesService;
         this.languageManager = languageManager;
+        this.stageBuilderProvider = stageBuilderProvider;
     }
 
     public void setAndShowPrimaryStage(Stage primaryStage) {
@@ -160,6 +171,23 @@ public class MainViewImpl implements Initializable, MainView {
     @FXML
     private void openSettingsView() {
         propertiesService.buildWindow().showAndWait();
+    }
+
+    @FXML
+    private void openAboutView() {
+        try {
+            stageBuilderProvider.get()
+                                .withFXMLResource(FxmlResource.ABOUT_VIEW.getPath())
+                                .withOwner(primaryStage)
+                                .withModality(Modality.APPLICATION_MODAL)
+                                .withTitle(languageManager.get(FxmlResource.ABOUT_VIEW.getStageTitle()))
+                                .minSize(700, 800)
+                                .build()
+                                .stage()
+                                .showAndWait();
+        } catch (IOException e) {
+            throw TechnicalException.forFxmlNotFound(e);
+        }
     }
 
 

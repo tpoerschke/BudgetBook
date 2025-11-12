@@ -13,6 +13,7 @@ import timkodiert.budgetbook.properties.PropertiesServiceImpl;
 import timkodiert.budgetbook.view.AnnualOverviewView;
 import timkodiert.budgetbook.view.MainViewImpl;
 import timkodiert.budgetbook.view.MonthlyOverview;
+import timkodiert.budgetbook.view.about.AboutView;
 import timkodiert.budgetbook.view.analysis.AnalysisView;
 import timkodiert.budgetbook.view.category.CategoriesManageView;
 import timkodiert.budgetbook.view.category.CategoryDetailView;
@@ -27,9 +28,10 @@ import timkodiert.budgetbook.view.unique_turnover.UniqueTurnoverManageView;
 import timkodiert.budgetbook.view.widget.BudgetWidget;
 
 @Singleton
-@Component(modules = {RepositoryModule.class, ServiceModule.class, DbPathModule.class})
+@Component(modules = {RepositoryModule.class, ServiceModule.class, AppModule.class, DbPathModule.class})
 public interface ViewComponent {
     MainViewImpl getMainView();
+    AboutView getAboutView();
 
     // -----------------------------------
     // Übersichten Ausgaben
