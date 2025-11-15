@@ -9,7 +9,7 @@ public class MoneyEssentials {
     public static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_EVEN;
     private static final int SCALE = 2;
 
-    public static BigDecimal ZERO = BigDecimal.ZERO.setScale(SCALE, ROUNDING_MODE);
+    public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(SCALE, ROUNDING_MODE);
 
     private MoneyEssentials() {
         // Statische Klasse
