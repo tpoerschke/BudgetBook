@@ -86,6 +86,7 @@ public class UniqueTurnoverManageView extends BaseListManageView<UniqueTurnoverD
     @Override
     protected void reloadTable(@Nullable UniqueTurnoverDTO updatedBean) {
         entityTable.getItems().setAll(crudService.readAll(selectedReference.get()));
+        entityTable.sort();
     }
 
     @Override
