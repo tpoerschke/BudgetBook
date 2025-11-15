@@ -1,6 +1,7 @@
 package timkodiert.budgetbook.importer;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.property.BooleanProperty;
@@ -95,7 +96,9 @@ public class ImportInformation implements HasType<ImportInformation> { // Bissch
         UniqueTurnover ut = new UniqueTurnover();
         ut.setBiller(receiver.get());
         ut.setDate(accountTurnover.getDate());
-        ut.setPaymentInformations(List.of(UniqueTurnoverInformation.total(ut, accountTurnover.getAmount())));
+        // List.of() hier gewrappt, da die UnmodifiableList sonst "überlebt" und
+        // der Umsatz nach dem Import nicht bearbeitet werden kann.
+        ut.setPaymentInformations(new ArrayList<>(List.of(UniqueTurnoverInformation.total(ut, accountTurnover.getAmount()))));
         accountTurnover.setUniqueExpense(ut);
         ut.setAccountTurnover(accountTurnover);
         return ut;
