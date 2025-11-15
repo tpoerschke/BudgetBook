@@ -62,14 +62,14 @@ public class FixedTurnoverWizardView implements View, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        valueTextField.setDisable(true);
+        valueTextField.getTextField().setEditable(false);
         directionComboBox.setConverter(Converters.get(TurnoverDirection.class));
         directionComboBox.getItems().setAll(TurnoverDirection.values());
 
         importInformation.addListener((observable, oldVal, newVal) -> {
             positionTextField.setText(newVal.receiverProperty().get());
             directionComboBox.getSelectionModel().select(TurnoverDirection.valueOf(newVal.amountProperty().getValue()));
-            valueTextField.setValue(Math.abs(newVal.amountProperty().getValue()) / 100.0);
+            valueTextField.setValue(Math.abs(newVal.amountProperty().getValue()));
             importActiveCheckbox.setSelected(true);
             importReceiverTextField.setText(newVal.receiverProperty().get());
             importReferenceTextField.setText(newVal.referenceProperty().get());

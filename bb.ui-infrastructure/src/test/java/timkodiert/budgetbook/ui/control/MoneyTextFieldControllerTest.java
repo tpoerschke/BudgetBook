@@ -1,5 +1,7 @@
 package timkodiert.budgetbook.ui.control;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,6 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static timkodiert.budgetbook.ui.control.MoneyTextFieldController.FACTOR_100;
+import static timkodiert.budgetbook.util.MoneyEssentials.ROUNDING_MODE;
+import static timkodiert.budgetbook.util.MoneyEssentials.asBigDecimal;
 
 class MoneyTextFieldControllerTest {
 
@@ -33,7 +39,7 @@ class MoneyTextFieldControllerTest {
         controller.setNullable(false);
         controller.setValue(null);
 
-        assertEquals(0.0, controller.getValue());
+        assertEquals(new BigDecimal("0.00"), controller.getValue());
         assertNull(controller.stringValueProperty().get());
         assertEquals(0, controller.integerValueProperty().get());
         assertFalse(controller.isStringFormatValid());
@@ -62,7 +68,7 @@ class MoneyTextFieldControllerTest {
         controller.setNullable(false);
         controller.integerValueProperty().set(null);
 
-        assertEquals(0.0, controller.getValue());
+        assertEquals(new BigDecimal("0.00"), controller.getValue());
         assertEquals("0,00", controller.stringValueProperty().get());
         assertNull(controller.integerValueProperty().get());
         assertTrue(controller.isStringFormatValid());
@@ -72,9 +78,9 @@ class MoneyTextFieldControllerTest {
     @Test
     void test0Value() {
         MoneyTextFieldController controller = new MoneyTextFieldController();
-        controller.setValue(0.0);
+        controller.setValue(new BigDecimal("0.00"));
 
-        assertEquals(0.0, controller.getValue());
+        assertEquals(new BigDecimal("0.00"), controller.getValue());
         assertEquals("0,00", controller.stringValueProperty().get());
         assertEquals(0, controller.integerValueProperty().get());
         assertTrue(controller.isStringFormatValid());
@@ -82,14 +88,15 @@ class MoneyTextFieldControllerTest {
 
     @DisplayName("Set Value: With Decimals")
     @ParameterizedTest
-    @CsvSource({"0.99,'0,99'", "1.49,'1,49'", "1.9,'1,90'", "10.99,'10,99'", "100,'100,00'", "1000,'1000,00'"})
+    @CsvSource({"0.99,'0,99'", "1.49,'1,49'", "1.9,'1,90'", "10.99,'10,99'", "100,'100,00'", "1000,'1000,00'", "77.10,'77,10'"})
     void testDecimalsValue(double value, String expectedStr) {
         MoneyTextFieldController controller = new MoneyTextFieldController();
-        controller.setValue(value);
+        BigDecimal bigDecimalValue = new BigDecimal(value).setScale(2, ROUNDING_MODE);
+        controller.setValue(bigDecimalValue);
 
-        assertEquals(value, controller.getValue());
+        assertEquals(bigDecimalValue, controller.getValue());
         assertEquals(expectedStr, controller.stringValueProperty().get());
-        assertEquals((int) (value * 100), controller.integerValueProperty().get());
+        assertEquals(bigDecimalValue.multiply(FACTOR_100).intValueExact(), controller.integerValueProperty().get());
     }
 
     @DisplayName("Set Value: Via IntegerProperty")
@@ -99,7 +106,7 @@ class MoneyTextFieldControllerTest {
         MoneyTextFieldController controller = new MoneyTextFieldController();
         controller.integerValueProperty().set(value);
 
-        assertEquals(value / 100.0, controller.getValue());
+        assertEquals(asBigDecimal(value).divide(FACTOR_100, ROUNDING_MODE), controller.getValue());
         assertEquals(expectedStr, controller.stringValueProperty().get());
     }
 
