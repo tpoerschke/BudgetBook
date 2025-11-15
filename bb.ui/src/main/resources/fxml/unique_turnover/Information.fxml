@@ -29,6 +29,7 @@
                <ComboBox fx:id="directionComboBox" prefWidth="200.0"/>
             </VBox>
             <VBox>
+              <Label text="%uniqueExpensesInfoDV.label.category"/>
               <ComboBox fx:id="categoryComboBox" prefWidth="200.0"/>
             </VBox>
          </children>

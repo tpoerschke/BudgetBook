@@ -29,17 +29,14 @@ public class ValidationWrapper<T> {
     private static final String STYLE_CLASS_ERROR = "validation-error"; // Für Controls, für die die PseudoClass (s.u.) nicht funktioniert
 
     private final MessageInterpolator messageInterpolator;
-    private final CustomValidationFactory customValidationFactory;
     private final BeanAdapter<T> beanAdapter;
     private final Map<String, Control> propertyNodeMap;
     private final Map<String, CustomValidation> customValidationMap = new HashMap<>();
 
     @AssistedInject
-    public ValidationWrapper(CustomValidationFactory customValidationFactory,
-                             MessageInterpolator messageInterpolator,
+    public ValidationWrapper(MessageInterpolator messageInterpolator,
                              @Assisted Map<String, Control> propertyNodeMap,
                              @Assisted BeanAdapter<T> beanAdapter) {
-        this.customValidationFactory = customValidationFactory;
         this.messageInterpolator = messageInterpolator;
         this.beanAdapter = beanAdapter;
         this.propertyNodeMap = propertyNodeMap;
@@ -52,9 +49,9 @@ public class ValidationWrapper<T> {
             control.setTooltip(null);
         });
         customValidationMap.values().forEach(customValidation -> {
-            customValidation.getControl().getStyleClass().remove(STYLE_CLASS_ERROR);
-            customValidation.getControl().pseudoClassStateChanged(Styles.STATE_DANGER, false);
-            customValidation.getControl().setTooltip(null);
+            customValidation.control().getStyleClass().remove(STYLE_CLASS_ERROR);
+            customValidation.control().pseudoClassStateChanged(Styles.STATE_DANGER, false);
+            customValidation.control().setTooltip(null);
         });
 
         Validator validator = Validation.byDefaultProvider().configure().messageInterpolator(messageInterpolator).buildValidatorFactory().getValidator();
@@ -70,10 +67,10 @@ public class ValidationWrapper<T> {
 
         customValidationMap.forEach((name, customValidation) -> {
             try {
-                ValidationResult result = customValidation.getValidationSupplier().call();
+                ValidationResult result = customValidation.validationSupplier().call();
                 if (result.getType() != ValidationResult.ResultType.VALID) {
                     String interpolatedMessage = messageInterpolator.interpolate(result.getMessage(), new EmptyInterpolatorContext());
-                    controlsWithMessages.computeIfAbsent(customValidation.getControl(), c -> new ArrayList<>()).add(interpolatedMessage);
+                    controlsWithMessages.computeIfAbsent(customValidation.control(), c -> new ArrayList<>()).add(interpolatedMessage);
                 }
             } catch (Exception e) {
                 throw TechnicalException.forProgrammingError(e.getMessage(), e);
@@ -90,13 +87,15 @@ public class ValidationWrapper<T> {
         return controlsWithMessages.isEmpty();
     }
 
+    // TODO: Ggf. sollte man hier (und im Zusammenspiel mit registerCustomValidation) verhindern, dass
+    // Listener an Observables doppelt registriert werden
     public void register(Observable... observables) {
         Arrays.stream(observables).forEach(observable -> observable.addListener(o -> Platform.runLater(this::validate)));
     }
 
     public void registerCustomValidation(String name, Control control, Callable<ValidationResult> validationSupplier, Observable... observables) {
-        CustomValidation customValidation = customValidationFactory.create(control, validationSupplier, observables);
+        CustomValidation customValidation = new CustomValidation(control, validationSupplier);
         customValidationMap.put(name, customValidation);
-        customValidation.getValidationResultProperty().addListener(observable -> validate());
+        Arrays.stream(observables).forEach(observable -> observable.addListener(o -> Platform.runLater(this::validate)));
     }
 }

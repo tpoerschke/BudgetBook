@@ -114,7 +114,7 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
                                                    () -> valueTextField.isStringFormatValid()
                                                            ? ValidationResult.valid()
                                                            : ValidationResult.error("{amount.format.valid}"),
-                                                   beanAdapter.getProperty(PaymentInformationDTO::getValue, PaymentInformationDTO::setValue));
+                                                   valueTextField.getTextField().textProperty());
         validationWrapper.registerCustomValidation("month1Valid",
                                                    month1ChoiceBox,
                                                    () -> !month1ChoiceBox.isVisible() || month1ChoiceBox.getSelectionModel().getSelectedItem() != null

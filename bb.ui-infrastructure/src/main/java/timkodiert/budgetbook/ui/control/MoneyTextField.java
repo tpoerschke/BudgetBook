@@ -19,6 +19,10 @@ import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetbook.exception.TechnicalException;
 
+import static timkodiert.budgetbook.ui.control.MoneyTextFieldController.FACTOR_100;
+import static timkodiert.budgetbook.util.MoneyEssentials.ROUNDING_MODE;
+import static timkodiert.budgetbook.util.MoneyEssentials.asBigDecimal;
+
 public class MoneyTextField extends InputGroup implements Initializable {
 
     private static final String RESOURCE_LOCATION = "/fxml/MoneyTextField.fxml";
@@ -57,12 +61,8 @@ public class MoneyTextField extends InputGroup implements Initializable {
         });
     }
 
-    public void setValue(@Nullable Double value) {
-        controller.setValue(value);
-    }
-
-    public @Nullable Double getValue() {
-        return controller.getValue();
+    public void setValue(@Nullable Integer value) {
+        controller.setValue(value == null ? null : asBigDecimal(value).divide(FACTOR_100, ROUNDING_MODE));
     }
 
     public void setNullable(boolean nullable) {

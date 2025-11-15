@@ -68,7 +68,6 @@ public class ImportView implements View, Initializable {
     private final LanguageManager languageManager;
     private final Repository<FixedTurnover> fixedExpenseRepository;
     private final TurnoverImporter importer;
-    private final DialogFactory dialogFactory;
     private final Provider<StageBuilder> stageBuilderProvider;
 
     @FXML
@@ -105,12 +104,10 @@ public class ImportView implements View, Initializable {
     public ImportView(LanguageManager languageManager,
                       Repository<FixedTurnover> fixedExpenseRepository,
                       TurnoverImporter importer,
-                      DialogFactory dialogFactory,
                       Provider<StageBuilder> stageBuilderProvider) {
         this.languageManager = languageManager;
         this.fixedExpenseRepository = fixedExpenseRepository;
         this.importer = importer;
-        this.dialogFactory = dialogFactory;
         this.stageBuilderProvider = stageBuilderProvider;
     }
 
@@ -209,7 +206,7 @@ public class ImportView implements View, Initializable {
         try {
             StageTuple wizardTuple = stageBuilderProvider.get()
                                                          .withModality(Modality.APPLICATION_MODAL)
-                                                         .withFXMLResource(FxmlResource.FIXED_TURNOVER_WIZARD_VIEW.getPath() + "test")
+                                                         .withFXMLResource(FxmlResource.FIXED_TURNOVER_WIZARD_VIEW.getPath())
                                                          .build();
             FixedTurnoverWizardView wizardView = (FixedTurnoverWizardView) wizardTuple.view();
             wizardView.setOnSaveCallback(this::selectCreatedFixedTurnover);
@@ -232,9 +229,7 @@ public class ImportView implements View, Initializable {
         notification.setMaxHeight(Region.USE_PREF_SIZE);
         notification.setMaxWidth(Region.USE_PREF_SIZE);
         notification.getStyleClass().add(style);
-        notification.setOnClose(event -> {
-            root.getChildren().remove(notification);
-        });
+        notification.setOnClose(event -> root.getChildren().remove(notification));
         StackPane.setAlignment(notification, Pos.TOP_RIGHT);
         StackPane.setMargin(notification, new Insets(20, 20, 20, 20));
         root.getChildren().add(notification);
@@ -251,7 +246,7 @@ public class ImportView implements View, Initializable {
     @FXML
     private void importSelected(ActionEvent e) {
         importer.doImport();
-        dialogFactory.buildInformationDialog(languageManager.get("importView.dialog.expensesImported")).showAndWait();
+        DialogFactory.buildInformationDialog(languageManager.get("importView.dialog.expensesImported")).showAndWait();
         mainView.loadViewPartial(MONTHLY_OVERVIEW);
     }
 }

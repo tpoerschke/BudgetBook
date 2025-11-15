@@ -85,7 +85,7 @@ public class UniqueExpenseInformationDetailView extends BaseDetailView<UniqueTur
                                                    () -> valueTextField.isStringFormatValid()
                                                            ? ValidationResult.valid()
                                                            : ValidationResult.error("{amount.format.valid}"),
-                                                   beanAdapter.getProperty(UniqueTurnoverInformationDTO::getValue, UniqueTurnoverInformationDTO::setValue));
+                                                   valueTextField.getTextField().textProperty());
     }
 
     @Override
