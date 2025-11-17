@@ -29,7 +29,7 @@
 <h3 align="center">JBudgetBook</h3>
 
   <p align="center">
-    Überblicke & analysiere deine Ausgaben
+    Nachverfolgen, Planen & Analysieren – JBudgetBook verwandelt Zahlen in Klarheit und gibt dir die Kontrolle über deine Finanzen zurück.
     <!--
     <br />
     <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
@@ -51,13 +51,16 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#über-das-projekt">Über das Projekt</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#getting-started-für-nutzer">Getting Started für Benutzer</a>
+    </li>
+    <li>
+      <a href="#getting-started-für-entwickler">Getting Started für Entwickler</a>
       <ul>
         <!--<li><a href="#prerequisites">Prerequisites</a></li>-->
         <li><a href="#installation">Installation</a></li>
@@ -77,13 +80,15 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+
+## Über das Projekt
 
 [![JBudgetBook-MainView][product-screenshot]](https://github.com/tpoerschke/BudgetBook)
 
-Dieses Haushaltsbuch soll Ihnen einen Überblick über Ihre Ausgaben ermöglichen. Zwei Ansichten sind aktuell implementiert: Monatsansicht und Jahresansicht. Zusätzlich sind Ansichten zur Verwaltung der Ausgaben umgesetzt.
+In Zeiten vieler Abonnements und weitverbreiteter Kartenzahlung kann man schnell die Übersicht über seine Ausgaben verlieren.
+Dabei unterstützt dich dieses Haushaltsbuch, indem es die Nachverfolgung -- via Import oder manueller Pflege --, Planung und Analyse deiner Ausgaben ermöglicht.
 
-Das Projekt befindet sich noch in einem frühen Stadium, weswegen Bugs auftreten können. Sollten Sie Bugs finden, können Sie dazu gerne Issues anlegen.
+Das Projekt befindet sich noch in einem frühen Stadium, weswegen Bugs auftreten können. Solltest du Bugs finden, kannst du dazu gerne Issues anlegen.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -105,7 +110,20 @@ Das Projekt befindet sich noch in einem frühen Stadium, weswegen Bugs auftreten
 
 
 <!-- GETTING STARTED -->
-## Getting Started
+
+## Getting Started für Benutzer
+
+Anleitung für Mac:
+
+1. Das aktuelle Release als ZIP herunterladen und entpacken
+2. Die App ins Programme-Verzeichnis verschieben
+3. App starten
+
+Hinweis: Ggf. muss man die Ausführung explizit erlauben, wenn MacOS meldet, dass es die Anwendung (noch) nicht auf Schadsoftware o. ä. überprüfen kann.
+In den Systemeinstelllungen (Systemeinstellungen > Datenschutz & Sicherheit) kann die Ausführung der App erlaubt werden, sobald ein Versuch unternommen wurde, sie
+auszuführen.
+
+## Getting Started für Entwickler
 
 Das Projekt kann lokal wie folgt aufgesetzt werden. Eine Installation als `.exe` (Windows) oder `.app` (Mac) ist aktuell nicht möglich.
 
@@ -153,15 +171,16 @@ WIP
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Ausgabenübersicht
+- [x] Monatsübersicht
 - [x] Jahresübersicht
-- [x] Kategorien für Ausgaben
-- [x] Einzigartige Ausgaben
-- [x] Einnahmen verwalten
+- [x] Verwaltung von Umsätzen
+- [x] Kategoriesystem
 - [x] Import von Umsätzen
-- [ ] Budgets 
-- [ ] Analyseübersicht
-- [ ] (Exportfunktionalität)
+- [x] Budgets
+- [x] Grundlegende Analyse (Balkendiagramm pro Kategorie)
+- [ ] Burn-Up-Diagramm pro Kategorie / Budget
+- [ ] Import digitaler Kassenbons (bspw. Lidl oder Globus)
+- [ ] (Weitere Meilensteine in Planung)
 
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
