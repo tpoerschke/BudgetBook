@@ -57,7 +57,7 @@
       </ul>
     </li>
     <li>
-      <a href="#getting-started-für-nutzer">Getting Started für Benutzer</a>
+      <a href="#getting-started-für-benutzer">Getting Started für Benutzer</a>
     </li>
     <li>
       <a href="#getting-started-für-entwickler">Getting Started für Entwickler</a>
