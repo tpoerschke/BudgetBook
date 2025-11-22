@@ -10,9 +10,9 @@ import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetbook.domain.table.RowType;
-import timkodiert.budgetbook.table.BaseTableData;
+import timkodiert.budgetbook.domain.util.HasType;
 
-public class GroupTableCell<S extends BaseTableData, T extends BaseTableData> extends TableCell<S, T> {
+public class GroupTableCell<S extends HasType<RowType>, T extends HasType<RowType>> extends TableCell<S, T> {
 
     private final Map<RowType, BooleanProperty> dataGroupProperties;
     private final Button btn = new Button();

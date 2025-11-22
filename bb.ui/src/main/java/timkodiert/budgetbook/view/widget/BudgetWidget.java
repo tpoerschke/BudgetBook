@@ -14,15 +14,21 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
+import timkodiert.budgetbook.budget.BudgetService;
+import timkodiert.budgetbook.budget.BudgetState;
 import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
-import timkodiert.budgetbook.domain.model.Category;
+import timkodiert.budgetbook.domain.CategoryDTO;
+import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.view.View;
 
 import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 
 public class BudgetWidget implements Initializable, View {
+
+    private static final double CRITICAL_BUDGET_LIMIT_FACTOR = 0.9;
 
     @FXML
     @Getter
@@ -35,43 +41,55 @@ public class BudgetWidget implements Initializable, View {
     private Label budgetProgressLabel;
 
     @Getter
-    private final ObjectProperty<Category> categoryProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Reference<CategoryDTO>> categoryProperty = new SimpleObjectProperty<>();
     @Getter
     private final ObjectProperty<MonthYear> selectedMonthYearProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<BudgetState> budgetStateProperty = new SimpleObjectProperty<>();
 
     private final BbCurrencyStringConverter currencyStringConverter;
+    private final BudgetService budgetService;
 
     @Inject
-    public BudgetWidget(BbCurrencyStringConverter currencyStringConverter) {
+    public BudgetWidget(BbCurrencyStringConverter currencyStringConverter, BudgetService budgetService) {
         this.currencyStringConverter = currencyStringConverter;
+        this.budgetService = budgetService;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        budgetLabel.textProperty().bind(Bindings.createStringBinding(() -> nvl(categoryProperty.get(), Category::getName), categoryProperty));
+        budgetStateProperty.bind(Bindings.createObjectBinding(this::loadBudgetState, categoryProperty, selectedMonthYearProperty));
+        budgetLabel.textProperty().bind(Bindings.createStringBinding(() -> nvl(categoryProperty.get(), Reference::name), categoryProperty));
         budgetProgressBar.progressProperty().addListener((observable, oldVal, newVal) -> {
-            root.pseudoClassStateChanged(Styles.STATE_DANGER, newVal.doubleValue() >= 0.9);
+            boolean criticalLimitReached = newVal.doubleValue() >= CRITICAL_BUDGET_LIMIT_FACTOR;
+            root.pseudoClassStateChanged(Styles.STATE_DANGER, criticalLimitReached);
         });
-        budgetProgressBar.progressProperty().bind(Bindings.createDoubleBinding(this::getProgress, categoryProperty, selectedMonthYearProperty));
         budgetProgressBar.prefWidthProperty().bind(root.widthProperty());
-        budgetProgressLabel.textProperty().bind(Bindings.createStringBinding(this::getProgressLabel, categoryProperty, selectedMonthYearProperty));
+        budgetProgressBar.progressProperty().bind(Bindings.createDoubleBinding(this::getProgress, budgetStateProperty));
+        budgetProgressLabel.textProperty().bind(Bindings.createStringBinding(this::getProgressLabel, budgetStateProperty));
+    }
+
+    private @Nullable BudgetState loadBudgetState() {
+        if (categoryProperty.get() == null || selectedMonthYearProperty.get() == null) {
+            return null;
+        }
+        return budgetService.getBudgetState(categoryProperty.get(), selectedMonthYearProperty.get().asYearMonth());
     }
 
     private String getProgressLabel() {
-        if (categoryProperty.get() == null || !categoryProperty.get().hasActiveBudget() || selectedMonthYearProperty.get() == null) {
+        if (budgetStateProperty.get() == null) {
             return "";
         }
-        int budgetValue = categoryProperty.get().getBudgetValue();
-        int categorySum = Math.abs(categoryProperty.get().sumTurnovers(selectedMonthYearProperty.get()));
+        int budgetValue = budgetStateProperty.get().budgetValue();
+        int categorySum = budgetStateProperty.get().usedBudgetValue();
         return String.format("%s / %s", currencyStringConverter.toString(categorySum), currencyStringConverter.toString(budgetValue));
     }
 
     private double getProgress() {
-        if(categoryProperty.get() == null || !categoryProperty.get().hasActiveBudget() || selectedMonthYearProperty.get() == null) {
-            return 0;
+        if (budgetStateProperty.get() == null) {
+            return 0.0;
         }
-        double budgetValue = categoryProperty.get().getBudgetValue();
-        double categorySum = categoryProperty.get().sumTurnovers(selectedMonthYearProperty.get());
-        return Math.abs(categorySum) / budgetValue;
+        int budgetValue = budgetStateProperty.get().budgetValue();
+        int categorySum = budgetStateProperty.get().usedBudgetValue();
+        return (double) categorySum / budgetValue;
     }
 }

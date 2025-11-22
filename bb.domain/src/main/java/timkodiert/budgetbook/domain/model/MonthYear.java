@@ -44,6 +44,10 @@ public class MonthYear implements Comparable<MonthYear>, Serializable {
         return monthYearList;
     }
 
+    public YearMonth asYearMonth() {
+        return YearMonth.of(year, month);
+    }
+
     public boolean isAfter(MonthYear other) {
         if (other == null) {
             return true;

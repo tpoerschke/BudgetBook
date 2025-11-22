@@ -2,13 +2,12 @@ package timkodiert.budgetbook.view;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Function;
-import java.util.function.ToIntFunction;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -18,7 +17,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -30,15 +28,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
-import timkodiert.budgetbook.domain.model.Category;
-import timkodiert.budgetbook.domain.model.FixedTurnover;
+import timkodiert.budgetbook.budget.BudgetService;
 import timkodiert.budgetbook.domain.model.MonthYear;
-import timkodiert.budgetbook.domain.model.UniqueTurnover;
-import timkodiert.budgetbook.domain.repository.Repository;
-import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
 import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
+import timkodiert.budgetbook.monthly_overview.MonthlyOverviewDTO;
+import timkodiert.budgetbook.monthly_overview.MonthlyOverviewService;
+import timkodiert.budgetbook.monthly_overview.TableRowData;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 import timkodiert.budgetbook.table.cell.DateTableCell;
 import timkodiert.budgetbook.table.cell.GroupTableCell;
@@ -46,8 +43,6 @@ import timkodiert.budgetbook.table.row.BoldTableRow;
 import timkodiert.budgetbook.table.row.ShortcutTableRow;
 import timkodiert.budgetbook.view.monthly_overview.IconTableCell;
 import timkodiert.budgetbook.view.monthly_overview.MonthlyOverviewCurrencyTableCell;
-import timkodiert.budgetbook.view.monthly_overview.TableData;
-import timkodiert.budgetbook.view.monthly_overview.ToTableDataMapper;
 import timkodiert.budgetbook.view.widget.BudgetWidget;
 
 public class MonthlyOverview implements Initializable, View {
@@ -66,56 +61,52 @@ public class MonthlyOverview implements Initializable, View {
 
     // TABELLEN
     @FXML
-    private TableView<TableData> dataTable;
+    private TableView<TableRowData> dataTable;
     @FXML
-    private TableView<TableData> sumTable;
+    private TableView<TableRowData> sumTable;
     @FXML
-    private TableColumn<TableData, String> positionCol;
+    private TableColumn<TableRowData, String> positionCol;
     @FXML
-    private TableColumn<TableData, String> categoriesCol;
+    private TableColumn<TableRowData, String> categoriesCol;
     @FXML
-    private TableColumn<TableData, String> sumTableCol0;
+    private TableColumn<TableRowData, String> sumTableCol0;
     @FXML
-    private TableColumn<TableData, String> sumTableCol1;
+    private TableColumn<TableRowData, String> sumTableCol1;
     @FXML
-    private TableColumn<TableData, Number> valueCol;
+    private TableColumn<TableRowData, Number> valueCol;
     @FXML
-    private TableColumn<TableData, Number> sumTableCol2;
+    private TableColumn<TableRowData, Number> sumTableCol2;
     @FXML
-    private TableColumn<TableData, LocalDate> dateCol;
+    private TableColumn<TableRowData, LocalDate> dateCol;
     @FXML
-    private TableColumn<TableData, TableData> buttonCol;
+    private TableColumn<TableRowData, TableRowData> buttonCol;
     @FXML
-    private TableColumn<TableData, TableData> iconCol;
+    private TableColumn<TableRowData, TableRowData> iconCol;
 
     // BUDGETS
     @FXML
     private VBox budgetBox;
 
-    private final ObservableList<TableData> data = FXCollections.observableArrayList();
-    private final ObservableList<Category> categories = FXCollections.observableArrayList();
+    private final ObservableList<TableRowData> tableData = FXCollections.observableArrayList();
 
     private final Provider<FXMLLoader> fxmlLoader;
     private final LanguageManager languageManager;
-    private final UniqueExpensesRepository uniqueExpenseRepository;
-    private final Repository<FixedTurnover> fixedExpenseRepository;
-    private final Repository<Category> categoryRepository;
-    private final Provider<ShortcutTableRow<TableData>> shortcutTableRowProvider;
+    private final MonthlyOverviewService monthlyOverviewService;
+    private final BudgetService budgetService;
+    private final Provider<ShortcutTableRow> shortcutTableRowProvider;
     private final MonthFilterFactory monthFilterFactory;
 
     @Inject
     public MonthlyOverview(Provider<FXMLLoader> fxmlLoader,
                            LanguageManager languageManager,
-                           UniqueExpensesRepository uniqueExpenseRepository,
-                           Repository<FixedTurnover> fixedExpenseRepository,
-                           Repository<Category> categoryRepository,
-                           Provider<ShortcutTableRow<TableData>> shortcutTableRowProvider,
+                           MonthlyOverviewService monthlyOverviewService,
+                           BudgetService budgetService,
+                           Provider<ShortcutTableRow> shortcutTableRowProvider,
                            MonthFilterFactory monthFilterFactory) {
         this.fxmlLoader = fxmlLoader;
         this.languageManager = languageManager;
-        this.uniqueExpenseRepository = uniqueExpenseRepository;
-        this.fixedExpenseRepository = fixedExpenseRepository;
-        this.categoryRepository = categoryRepository;
+        this.monthlyOverviewService = monthlyOverviewService;
+        this.budgetService = budgetService;
         this.shortcutTableRowProvider = shortcutTableRowProvider;
         this.monthFilterFactory = monthFilterFactory;
     }
@@ -130,41 +121,14 @@ public class MonthlyOverview implements Initializable, View {
         sumTableCol1.prefWidthProperty().bind(positionCol.widthProperty());
         sumTableCol2.prefWidthProperty().bind(valueCol.widthProperty());
 
-        sumTableCol1.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().position()));
+        sumTableCol1.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().label()));
         sumTableCol2.setCellValueFactory(cell -> new SimpleDoubleProperty(cell.getValue().value()));
         sumTableCol2.setCellFactory(col -> new CurrencyTableCell<>());
 
         sumTable.setRowFactory(tableView -> new BoldTableRow<>(RowType.TOTAL_SUM));
 
-        data.addListener((ListChangeListener.Change<? extends TableData> c) -> {
-            int totalSum = data.stream().filter(d -> !RowType.getGroupTypes().contains(d.getType())).mapToInt(TableData::value).sum();
-            sumTable.getItems().clear();
-            sumTable.getItems().add(new TableData(null,
-                                                  languageManager.get("monthlyOverview.label.sumExpenses"),
-                                                  totalSum,
-                                                  null,
-                                                  null,
-                                                  false,
-                                                  RowType.SUM));
-
-            // Summe der Einnahmen für den Monat
-            int incomeSum = fixedExpenseRepository.findAll()
-                                                     .stream()
-                                                  .mapToInt(t -> t.getValueFor(monthFilter.getValue()))
-                                                  .filter(val -> val > 0)
-                                                     .sum();
-            incomeSum += uniqueExpenseRepository.findAllWithoutFixedExpense(monthFilter.getValue())
-                                                .stream()
-                                                .mapToInt(UniqueTurnover::getTotalValue)
-                                                .filter(val -> val > 0)
-                                                .sum();
-
-            sumTable.getItems().addAll(new TableData(null, languageManager.get("monthlyOverview.label.sumEarnings"), incomeSum, null, null, false, RowType.SUM),
-                                       new TableData(null, languageManager.get("monthlyOverview.label.sum"), incomeSum + totalSum, null, null, false, RowType.TOTAL_SUM));
-        });
-
-        initDataGroups(MonthYear.now());
-        FilteredList<TableData> filteredData = new FilteredList<>(data);
+        loadAndDisplayViewData(MonthYear.now());
+        FilteredList<TableRowData> filteredData = new FilteredList<>(tableData);
 
         SimpleBooleanProperty isUniqueCollapsedProperty = new SimpleBooleanProperty(false);
         SimpleBooleanProperty isFixedCollapsedProperty = new SimpleBooleanProperty(true);
@@ -188,12 +152,12 @@ public class MonthlyOverview implements Initializable, View {
         isFixedCollapsedProperty.addListener((observable, oldValue, newValue) -> predicator.run());
         predicator.run();
 
-        positionCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().position()));
+        positionCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().label()));
         valueCol.setCellValueFactory(cell -> new SimpleDoubleProperty(cell.getValue().value()));
         valueCol.setCellFactory(col -> new MonthlyOverviewCurrencyTableCell(dataGroupProperties));
-        dateCol.setCellValueFactory(cell -> new SimpleObjectProperty<LocalDate>(cell.getValue().date()));
+        dateCol.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().date()));
         dateCol.setCellFactory(col -> new DateTableCell<>());
-        categoriesCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().categories()));
+        categoriesCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().categoriesString()));
         iconCol.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue()));
         iconCol.setCellFactory(col -> new IconTableCell(languageManager));
 
@@ -204,13 +168,13 @@ public class MonthlyOverview implements Initializable, View {
         //
         // INIT FILTER
         //
-        monthFilter.addListener((observable, oldValue, newValue) -> initDataGroups(newValue));
+        monthFilter.addListener((observable, oldValue, newValue) -> loadAndDisplayViewData(newValue));
 
         //
         // INIT BUDGETS
         //
-        categories.setAll(categoryRepository.findAll().stream().filter(Category::hasActiveBudget).toList());
-        categories.forEach(cat -> {
+        var categoriesWithBudget = budgetService.findCategoriesWithActiveBudget();
+        categoriesWithBudget.forEach(cat -> {
             FXMLLoader loader = fxmlLoader.get();
             loader.setLocation(getClass().getResource(FxmlResource.BUDGET_WIDGET.getPath()));
             try {
@@ -225,38 +189,36 @@ public class MonthlyOverview implements Initializable, View {
         });
     }
 
-    private void initDataGroups(MonthYear monthYear) {
-        // TODO: Sollte auch auf DTOs umgebaut werden, dann kann auch die entsprechende Service-Methode
-        // für die UniqueTurnovers verwendet (statt der Repositorys) werden, die bereits die Filterung auf die FixedTurnovers durchführt
-        data.clear();
-        List<FixedTurnover> fixedExpensesForMonth = fixedExpenseRepository.findAll()
-                                                                          .stream()
-                                                                          .filter(exp -> exp.getValueFor(monthYear) < 0)
-                                                                          .toList();
-        initFixedExpenseGroup(fixedExpensesForMonth);
-
-        List<UniqueTurnover> uniqueExpensesForMonth = uniqueExpenseRepository.findAllWithoutFixedExpense(monthYear)
-                                                                             .stream()
-                                                                             .filter(exp -> exp.getTotalValue() < 0)
-                                                                             .toList();
-        initUniqueExpenseGroup(uniqueExpensesForMonth);
+    private void loadAndDisplayViewData(MonthYear monthYear) {
+        MonthlyOverviewDTO data = monthlyOverviewService.generateOverview(YearMonth.of(monthYear.getYear(), monthYear.getMonth()));
+        initDataGroups(data);
+        initFooterTable(data);
     }
 
-    private void initUniqueExpenseGroup(List<UniqueTurnover> expenses) {
-        initDataGroup(expenses, ToTableDataMapper::mapUniqueExpense, UniqueTurnover::getTotalValue,
-                      languageManager.get("monthlyOverview.label.uniqueExpenses"), RowType.UNIQUE_EXPENSE_GROUP);
+    private void initFooterTable(MonthlyOverviewDTO data) {
+        int totalSumExpenses = data.totalSumExpenses();
+        sumTable.getItems().clear();
+        sumTable.getItems().addAll(TableRowData.forSum(languageManager.get("monthlyOverview.label.sumExpenses"), totalSumExpenses),
+                                   TableRowData.forSum(languageManager.get("monthlyOverview.label.sumEarnings"), data.incomeSum()),
+                                   TableRowData.forTotalSum(languageManager.get("monthlyOverview.label.sum"), data.incomeSum() + totalSumExpenses));
     }
 
-    private void initFixedExpenseGroup(List<FixedTurnover> expenses) {
-        MonthYear monthYear = monthFilter.getValue();
-        initDataGroup(expenses,
-                      exp -> ToTableDataMapper.mapFixedExpense(exp, monthYear),
-                      exp -> exp.getValueFor(monthYear),
-                      languageManager.get("monthlyOverview.label.fixedExpenses"), RowType.FIXED_EXPENSE_GROUP);
+    private void initDataGroups(MonthlyOverviewDTO data) {
+        tableData.clear();
+        initFixedExpenseGroup(data.fixedExpenses());
+        initUniqueExpenseGroup(data.uniqueExpenses());
     }
 
-    private <T> void initDataGroup(List<T> expenses, Function<T, TableData> expToData, ToIntFunction<T> expToTotalValue, String groupName, RowType groupRowType) {
-        data.add(new TableData(null, groupName, expenses.stream().mapToInt(expToTotalValue).sum(), null, null, false, groupRowType));
-        data.addAll(expenses.stream().map(expToData).toList());
+    private void initUniqueExpenseGroup(List<TableRowData> tableRowDataList) {
+        initDataGroup(tableRowDataList, languageManager.get("monthlyOverview.label.uniqueExpenses"), RowType.UNIQUE_EXPENSE_GROUP);
+    }
+
+    private void initFixedExpenseGroup(List<TableRowData> expenses) {
+        initDataGroup(expenses, languageManager.get("monthlyOverview.label.fixedExpenses"), RowType.FIXED_EXPENSE_GROUP);
+    }
+
+    private void initDataGroup(List<TableRowData> tableRowDataList, String groupName, RowType groupRowType) {
+        tableData.add(new TableRowData(-1, groupRowType, groupName, null, tableRowDataList.stream().mapToInt(TableRowData::value).sum(), List.of(), false));
+        tableData.addAll(tableRowDataList);
     }
 }

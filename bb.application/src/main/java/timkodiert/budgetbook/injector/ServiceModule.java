@@ -11,6 +11,8 @@ import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpo
 
 import timkodiert.budgetbook.analysis.CategorySeriesGenerator;
 import timkodiert.budgetbook.analysis.CategorySeriesGeneratorImpl;
+import timkodiert.budgetbook.budget.BudgetService;
+import timkodiert.budgetbook.budget.BudgetServiceImpl;
 import timkodiert.budgetbook.crud.CategoryCrudServiceImpl;
 import timkodiert.budgetbook.crud.CategoryGroupCrudServiceImpl;
 import timkodiert.budgetbook.crud.FixedTurnoverCrudServiceImpl;
@@ -22,6 +24,8 @@ import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.importer.TurnoverImporter;
 import timkodiert.budgetbook.importer.TurnoverImporterImpl;
+import timkodiert.budgetbook.monthly_overview.MonthlyOverviewService;
+import timkodiert.budgetbook.monthly_overview.MonthlyOverviewServiceImpl;
 import timkodiert.budgetbook.properties.PropertiesService;
 import timkodiert.budgetbook.properties.PropertiesServiceImpl;
 import timkodiert.budgetbook.view.BbFxmlLoader;
@@ -49,5 +53,8 @@ public interface ServiceModule {
     @Binds UniqueTurnoverCrudService bindUniqueTurnoverCrudService(UniqueTurnoverCrudServiceImpl impl);
     @Binds CategoryCrudService bindCategoryCrudService(CategoryCrudServiceImpl impl);
     @Binds CategoryGroupCrudService bindCategoryGroupCrudService(CategoryGroupCrudServiceImpl impl);
+
+    @Binds MonthlyOverviewService bindMonthlyOverviewService(MonthlyOverviewServiceImpl impl);
+    @Binds BudgetService bindBudgetService(BudgetServiceImpl impl);
 }
 // @formatter:on

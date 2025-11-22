@@ -8,11 +8,11 @@ import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.domain.util.HasType;
-import timkodiert.budgetbook.table.BaseTableData;
+import timkodiert.budgetbook.monthly_overview.TableRowData;
 import timkodiert.budgetbook.view.FxmlResource;
 import timkodiert.budgetbook.view.ShortcutFunction;
 
-public class ShortcutTableRow<T extends BaseTableData> extends TableRow<T> {
+public class ShortcutTableRow extends TableRow<TableRowData> {
 
     private final ShortcutFunction shortcutFunction;
 
@@ -23,13 +23,13 @@ public class ShortcutTableRow<T extends BaseTableData> extends TableRow<T> {
     }
 
     private void handleClick(MouseEvent event) {
-        BaseTableData data = getItem();
+        TableRowData data = getItem();
         if (data == null) {
             return;
         }
         FxmlResource targetFxmlResource = mapRowDataToFxmlResource(data);
         if (event.getClickCount() == 2 && !isEmpty() && targetFxmlResource != null) {
-            shortcutFunction.openDetailView(targetFxmlResource, data.getId());
+            shortcutFunction.openDetailView(targetFxmlResource, data.id());
         }
     }
 
