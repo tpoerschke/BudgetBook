@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import timkodiert.budgetbook.db.MigrationView;
 import timkodiert.budgetbook.view.AnnualOverviewView;
-import timkodiert.budgetbook.view.MonthlyOverview;
+import timkodiert.budgetbook.view.MonthlyOverviewView;
 import timkodiert.budgetbook.view.View;
 import timkodiert.budgetbook.view.about.AboutView;
 import timkodiert.budgetbook.view.analysis.AnalysisView;
@@ -38,7 +38,7 @@ public class ControllerFactory {
     private void registerController() {
         // Daten-/Steuerungsansichten
         viewControllerMap.put(AnnualOverviewView.class, viewComponent::getAnnualOverviewView);
-        viewControllerMap.put(MonthlyOverview.class, viewComponent::getMonthlyOverview);
+        viewControllerMap.put(MonthlyOverviewView.class, viewComponent::getMonthlyOverview);
         viewControllerMap.put(BudgetWidget.class, viewComponent::getBudgetWidget);
         viewControllerMap.put(ImportView.class, viewComponent::getImportView);
         viewControllerMap.put(FixedTurnoverWizardView.class, viewComponent::getFixedTurnoverWizardView);

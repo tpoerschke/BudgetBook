@@ -6,6 +6,7 @@ import java.util.Objects;
 import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.table.BaseTableData;
 
+@Deprecated(since = "BETA-5", forRemoval = true)
 public final class TableData extends BaseTableData {
 
     private final String position;

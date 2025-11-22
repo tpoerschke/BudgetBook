@@ -9,8 +9,9 @@ import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetbook.i18n.LanguageManager;
+import timkodiert.budgetbook.monthly_overview.TableRowData;
 
-public class IconTableCell extends TableCell<TableData, TableData> {
+public class IconTableCell extends TableCell<TableRowData, TableRowData> {
 
     private final HBox box = new HBox(5);
     private final Tooltip tooltip;
@@ -23,7 +24,7 @@ public class IconTableCell extends TableCell<TableData, TableData> {
     }
 
     @Override
-    protected void updateItem(TableData item, boolean empty) {
+    protected void updateItem(TableRowData item, boolean empty) {
         box.getChildren().clear();
         
         if(empty || item == null) {

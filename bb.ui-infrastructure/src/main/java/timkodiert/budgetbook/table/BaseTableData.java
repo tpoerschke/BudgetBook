@@ -5,6 +5,7 @@ import lombok.Getter;
 import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.domain.util.HasType;
 
+@Deprecated(since = "BETA-5", forRemoval = true)
 @Getter
 public abstract class BaseTableData implements HasType<RowType> {
 
