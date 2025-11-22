@@ -57,6 +57,7 @@ public class MonthlyOverviewView implements Initializable, View {
     @FXML
     private ComboBox<Integer> selectedYearBox;
 
+    @SuppressWarnings("java:S1450") // Damit der Filter nicht garbage-collected wird
     private MonthFilter monthFilter;
 
     // TABELLEN
