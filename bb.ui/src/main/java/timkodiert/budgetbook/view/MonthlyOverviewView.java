@@ -45,7 +45,7 @@ import timkodiert.budgetbook.view.monthly_overview.IconTableCell;
 import timkodiert.budgetbook.view.monthly_overview.MonthlyOverviewCurrencyTableCell;
 import timkodiert.budgetbook.view.widget.BudgetWidget;
 
-public class MonthlyOverview implements Initializable, View {
+public class MonthlyOverviewView implements Initializable, View {
 
     // FILTER
     @FXML
@@ -97,12 +97,12 @@ public class MonthlyOverview implements Initializable, View {
     private final MonthFilterFactory monthFilterFactory;
 
     @Inject
-    public MonthlyOverview(Provider<FXMLLoader> fxmlLoader,
-                           LanguageManager languageManager,
-                           MonthlyOverviewService monthlyOverviewService,
-                           BudgetService budgetService,
-                           Provider<ShortcutTableRow> shortcutTableRowProvider,
-                           MonthFilterFactory monthFilterFactory) {
+    public MonthlyOverviewView(Provider<FXMLLoader> fxmlLoader,
+                               LanguageManager languageManager,
+                               MonthlyOverviewService monthlyOverviewService,
+                               BudgetService budgetService,
+                               Provider<ShortcutTableRow> shortcutTableRowProvider,
+                               MonthFilterFactory monthFilterFactory) {
         this.fxmlLoader = fxmlLoader;
         this.languageManager = languageManager;
         this.monthlyOverviewService = monthlyOverviewService;

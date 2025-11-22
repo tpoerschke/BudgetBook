@@ -12,7 +12,7 @@ import timkodiert.budgetbook.exception.BbUncaughtExceptionHandler;
 import timkodiert.budgetbook.properties.PropertiesServiceImpl;
 import timkodiert.budgetbook.view.AnnualOverviewView;
 import timkodiert.budgetbook.view.MainViewImpl;
-import timkodiert.budgetbook.view.MonthlyOverview;
+import timkodiert.budgetbook.view.MonthlyOverviewView;
 import timkodiert.budgetbook.view.about.AboutView;
 import timkodiert.budgetbook.view.analysis.AnalysisView;
 import timkodiert.budgetbook.view.category.CategoriesManageView;
@@ -37,7 +37,7 @@ public interface ViewComponent {
     // Übersichten Ausgaben
     // -----------------------------------
     AnnualOverviewView getAnnualOverviewView();
-    MonthlyOverview getMonthlyOverview();
+    MonthlyOverviewView getMonthlyOverview();
     BudgetWidget getBudgetWidget();
 
     // -----------------------------------
