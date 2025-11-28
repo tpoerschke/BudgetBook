@@ -23,6 +23,8 @@ import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
 @ExtendWith(MockitoExtension.class)
 class AnnualOverviewServiceImplTest {
 
+    private static final String LABEL_OTHERS = "annualOverView.label.others";
+
     private static final int YEAR = 2025;
     private static final YearMonth YEAR_MONTH_1 = YearMonth.of(YEAR, 11);
     private static final YearMonth YEAR_MONTH_2 = YearMonth.of(YEAR, 12);
@@ -53,14 +55,17 @@ class AnnualOverviewServiceImplTest {
         AnnualOverviewDTO result = sut.generateOverview(YEAR);
 
         assertEquals(0, result.expensesRowData().stream().filter(r -> r.label().equals("FT1")).findAny().orElseThrow().monthValueMap().get(11));
-        assertEquals(EXPENSE_VALUE, result.expensesRowData().stream().filter(r -> r.label().equals("Sonstige")).findAny().orElseThrow().monthValueMap().get(11));
+        assertEquals(EXPENSE_VALUE, result.expensesRowData().stream().filter(r -> r.label().equals(LABEL_OTHERS)).findAny().orElseThrow().monthValueMap().get(11));
         assertEquals(EXPENSE_VALUE, result.expensesRowData().stream().filter(r -> r.label().equals("FT1")).findAny().orElseThrow().monthValueMap().get(12));
-        assertEquals(EXPENSE_VALUE * 2, result.expensesRowData().stream().filter(r -> r.label().equals("Sonstige")).findAny().orElseThrow().monthValueMap().get(12));
+        assertEquals(EXPENSE_VALUE * 2, result.expensesRowData().stream().filter(r -> r.label().equals(LABEL_OTHERS)).findAny().orElseThrow().monthValueMap().get(12));
 
-        assertEquals(INCOME_VALUE, result.incomeSum().monthValueMap().get(11));
-        assertEquals(INCOME_VALUE * 2, result.incomeSum().monthValueMap().get(12));
+        assertEquals(INCOME_VALUE, result.earningsSum().monthValueMap().get(11));
+        assertEquals(INCOME_VALUE * 2, result.earningsSum().monthValueMap().get(12));
 
-        assertEquals(EXPENSE_VALUE, result.expenseSum().monthValueMap().get(11));
-        assertEquals(EXPENSE_VALUE * 3, result.expenseSum().monthValueMap().get(12));
+        assertEquals(EXPENSE_VALUE, result.expensesSum().monthValueMap().get(11));
+        assertEquals(EXPENSE_VALUE * 3, result.expensesSum().monthValueMap().get(12));
+
+        assertEquals(0, result.totalSum().monthValueMap().get(11));
+        assertEquals(EXPENSE_VALUE, result.totalSum().monthValueMap().get(12));
     }
 }

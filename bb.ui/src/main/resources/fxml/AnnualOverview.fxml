@@ -11,37 +11,24 @@
 <StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timkodiert.budgetbook.view.AnnualOverviewView">
   <BorderPane>
     <center>
-      <VBox BorderPane.alignment="CENTER">
-        <TableView fx:id="mainTable" prefHeight="400.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
+      <VBox BorderPane.alignment="CENTER" spacing="40">
+        <TableView fx:id="topTable" minHeight="168.0" prefHeight="168.0" prefWidth="500.0">
           <columns>
-            <TableColumn fx:id="positionColumn" minWidth="100.0" prefWidth="150.0" styleClass="annual-overview-tablecolumn" text="%annualOverview.mainTable.column.position"/>
+            <TableColumn fx:id="labelColumn" minWidth="100.0" prefWidth="150.0" styleClass="annual-overview-tablecolumn" text="%annualOverview.topTable.column.overview"/>
           </columns>
         </TableView>
-        <!--
-            <GridPane VBox.vgrow="NEVER">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <TableView prefHeight="200.0" prefWidth="200.0" styleClass="noheader" VBox.vgrow="NEVER">
-              <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
-              </columns>
-            </TableView>
-          -->
+        <TableView fx:id="mainTable" prefHeight="400.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
+          <columns>
+            <TableColumn fx:id="positionColumn" minWidth="100.0" prefWidth="150.0" styleClass="annual-overview-tablecolumn"
+                         text="%annualOverview.mainTable.column.position"/>
+          </columns>
+        </TableView>
       </VBox>
     </center>
     <top>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <items>
-          <Label text="%annualOverview.toolbar.label.year" />
-          <ComboBox fx:id="displayYearComboBox" prefWidth="100.0" />
-        </items>
+        <Label text="%annualOverview.toolbar.label.year"/>
+        <ComboBox fx:id="displayYearComboBox" prefWidth="100.0"/>
       </ToolBar>
     </top>
   </BorderPane>

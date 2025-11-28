@@ -1,6 +1,7 @@
 package timkodiert.budgetbook.annual_overview;
 
 import java.time.Month;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +20,14 @@ import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetbook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
+import timkodiert.budgetbook.domain.table.RowType;
 
 public class AnnualOverviewServiceImpl implements AnnualOverviewService {
+
+    private static final String LABEL_EXPENSES = "annualOverview.label.expenses";
+    private static final String LABEL_EARNINGS = "annualOverview.label.earnings";
+    private static final String LABEL_OTHERS = "annualOverview.label.others";
+    private static final String LABEL_TOTAL = "annualOverview.label.total";
 
     private final FixedExpensesRepository fixedTurnoverRepository;
     private final UniqueExpensesRepository uniqueTurnoverRepository;
@@ -39,15 +46,45 @@ public class AnnualOverviewServiceImpl implements AnnualOverviewService {
         List<TableRowData> ftTableRowDataList = fixedExpenses.stream().map(t -> convertToRowData(t, year)).toList();
         List<TableRowData> utTableRowDataList = convertToRowData(uniqueTurnoverInformationList);
 
-        TableRowData incomeSum = new TableRowData(-1, "Einnahmen", new HashMap<>(), null);
-        sumTurnovers(incomeSum, loadAllRelevantFixedIncomes(), year);
-        sumTurnovers(incomeSum, loadAllRelevantUniqueIncomeInformation(year));
+        TableRowData earningsSum = new TableRowData(-1, LABEL_EARNINGS, new HashMap<>(), null, RowType.SUM);
+        sumTurnovers(earningsSum, loadAllRelevantFixedIncomes(), year);
+        sumTurnovers(earningsSum, loadAllRelevantUniqueIncomeInformation(year));
 
-        TableRowData expenseSum = new TableRowData(-1, "Einnahmen", new HashMap<>(), null);
-        sumTurnovers(expenseSum, fixedExpenses, year);
-        sumTurnovers(expenseSum, uniqueTurnoverInformationList);
+        TableRowData expensesSum = new TableRowData(-1, LABEL_EXPENSES, new HashMap<>(), null, RowType.SUM);
+        sumTurnovers(expensesSum, fixedExpenses, year);
+        sumTurnovers(expensesSum, uniqueTurnoverInformationList);
 
-        return new AnnualOverviewDTO(Stream.concat(ftTableRowDataList.stream(), utTableRowDataList.stream()).toList(), incomeSum, expenseSum);
+        TableRowData totalSum = sumRowData(earningsSum, expensesSum);
+
+        return new AnnualOverviewDTO(Stream.concat(ftTableRowDataList.stream(), utTableRowDataList.stream()).toList(), earningsSum, expensesSum, totalSum);
+    }
+
+    private TableRowData sumRowData(TableRowData... rowData) {
+        Map<Integer, Integer> totalSumMap = new HashMap<>();
+        Arrays.stream(rowData).forEach(rd -> {
+            for (Month month : Month.values()) {
+                Integer value = rd.monthValueMap().get(month.getValue());
+                if (value != null) {
+                    totalSumMap.merge(month.getValue(), value, Integer::sum);
+                }
+            }
+        });
+        return new TableRowData(-1, LABEL_TOTAL, totalSumMap, null, RowType.TOTAL_SUM);
+    }
+
+    private void sumTurnovers(TableRowData target, List<FixedTurnover> turnovers, int year) {
+        turnovers.forEach(turnover -> {
+            for (Month month : Month.values()) {
+                target.monthValueMap().merge(month.getValue(), turnover.getValueFor(MonthYear.of(month.getValue(), year)), Integer::sum);
+            }
+        });
+    }
+
+    private void sumTurnovers(TableRowData target, List<UniqueTurnoverInformation> infoList) {
+        infoList.forEach(info -> {
+            int month = info.getExpense().getDate().getMonthValue();
+            target.monthValueMap().merge(month, info.getValueSigned(), Integer::sum);
+        });
     }
 
     private TableRowData convertToRowData(FixedTurnover turnover, int year) {
@@ -57,23 +94,8 @@ public class AnnualOverviewServiceImpl implements AnnualOverviewService {
         }
         Reference<CategoryDTO> categoryReference = Optional.ofNullable(turnover.getCategory())
                                                            .map(c -> new Reference<>(CategoryDTO.class, c.getId(), c.getName()))
-                                                           .orElseGet(() -> new Reference<>(CategoryDTO.class, -1, "Sonstige"));
-        return new TableRowData(turnover.getId(), turnover.getPosition(), monthValueMap, categoryReference);
-    }
-
-    private void sumTurnovers(TableRowData target, List<FixedTurnover> turnovers, int year) {
-        turnovers.forEach(turnover -> {
-            for (Month month : Month.values()) {
-                target.monthValueMap().merge(month.getValue(), turnover.getValueFor(MonthYear.of(month.getValue(), year)), Math::addExact);
-            }
-        });
-    }
-
-    private void sumTurnovers(TableRowData target, List<UniqueTurnoverInformation> infoList) {
-        infoList.forEach(info -> {
-            int month = info.getExpense().getDate().getMonthValue();
-            target.monthValueMap().merge(month, info.getValueSigned(), Math::addExact);
-        });
+                                                           .orElseGet(() -> new Reference<>(CategoryDTO.class, -1, LABEL_OTHERS));
+        return new TableRowData(turnover.getId(), turnover.getPosition(), monthValueMap, categoryReference, RowType.FIXED_EXPENSE);
     }
 
     private List<TableRowData> convertToRowData(List<UniqueTurnoverInformation> infoList) {
@@ -84,13 +106,16 @@ public class AnnualOverviewServiceImpl implements AnnualOverviewService {
             var monthValueMap = categoryMonthValueMap.computeIfAbsent(category, k -> new HashMap<>());
             monthValueMap.put(month, monthValueMap.getOrDefault(month, 0) + info.getValueSigned());
         });
-        return categoryMonthValueMap.entrySet().stream().map(entry -> new TableRowData(-1, "Sonstige", entry.getValue(), entry.getKey())).toList();
+        return categoryMonthValueMap.entrySet()
+                                    .stream()
+                                    .map(entry -> new TableRowData(-1, LABEL_OTHERS, entry.getValue(), entry.getKey(), RowType.UNIQUE_EXPENSE))
+                                    .toList();
     }
 
     private Reference<CategoryDTO> createCategoryFromTurnoverInformation(UniqueTurnoverInformation info) {
         return Optional.ofNullable(info.getCategory())
                        .map(c -> new Reference<>(CategoryDTO.class, c.getId(), c.getName()))
-                       .orElseGet(() -> new Reference<>(CategoryDTO.class, -1, "Sonstige"));
+                       .orElseGet(() -> new Reference<>(CategoryDTO.class, -1, LABEL_OTHERS));
     }
 
     private List<FixedTurnover> loadAllRelevantFixedExpenses() {

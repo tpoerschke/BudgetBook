@@ -29,6 +29,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.StringConverter;
 
+import timkodiert.budgetbook.annual_overview.AnnualOverviewDTO;
+import timkodiert.budgetbook.annual_overview.AnnualOverviewService;
+import timkodiert.budgetbook.annual_overview.TableRowData;
 import timkodiert.budgetbook.converter.Converters;
 import timkodiert.budgetbook.domain.model.CumulativeExpense;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
@@ -40,6 +43,7 @@ import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 import timkodiert.budgetbook.table.row.BoldTableRow;
+import timkodiert.budgetbook.util.CollectionUtils;
 import timkodiert.budgetbook.view.widget.ExpenseDetailWidget;
 
 import static timkodiert.budgetbook.view.FxmlResource.EXPENSE_DETAIL_WIDGET;
@@ -59,6 +63,11 @@ public class AnnualOverviewView implements Initializable, View {
     @FXML
     private ComboBox<Integer> displayYearComboBox;
 
+    @FXML
+    private TableView<TableRowData> topTable;
+    @FXML
+    private TableColumn<TableRowData, String> labelColumn;
+
     private List<TableColumn<IFixedTurnover, Number>> monthColumns = new ArrayList<>();
     private TableColumn<IFixedTurnover, Number> cumulativeColumn;
 
@@ -71,18 +80,47 @@ public class AnnualOverviewView implements Initializable, View {
     private final LanguageManager languageManager;
     private final Repository<FixedTurnover> fixedTurnoverRepository;
 
+    private final AnnualOverviewService annualOverviewService;
+
     @Inject
-    public AnnualOverviewView(LanguageManager languageManager, Repository<FixedTurnover> fixedTurnoverRepository) {
+    public AnnualOverviewView(LanguageManager languageManager, Repository<FixedTurnover> fixedTurnoverRepository, AnnualOverviewService annualOverviewService) {
         this.languageManager = languageManager;
         this.fixedTurnoverRepository = fixedTurnoverRepository;
+        this.annualOverviewService = annualOverviewService;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fixedTurnovers.setAll(fixedTurnoverRepository.findAll());
 
         displayYearComboBox.getItems().addAll(IntStream.rangeClosed(START_YEAR, END_YEAR).boxed().toList());
         displayYearComboBox.getSelectionModel().select(Integer.valueOf(CURRENT_YEAR));
+
+        labelColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(languageManager.get(cellData.getValue().label())));
+
+        CollectionUtils.enumerate(LanguageManager.MONTH_NAMES).forEach(indexValue -> {
+            int index = indexValue.i() + 1;
+            String month = languageManager.get(indexValue.value());
+
+            TableColumn<TableRowData, Number> tableColumn = new TableColumn<>(month);
+            tableColumn.setPrefWidth(120);
+            tableColumn.setResizable(false);
+            tableColumn.setCellFactory(col -> new CurrencyTableCell<>());
+            tableColumn.setCellValueFactory(cellData -> {
+                TableRowData rowData = cellData.getValue();
+                return new ReadOnlyDoubleWrapper(rowData.monthValueMap().getOrDefault(index, 0));
+            });
+            topTable.getColumns().add(tableColumn);
+        });
+
+        AnnualOverviewDTO viewData = annualOverviewService.generateOverview(displayYearComboBox.getSelectionModel().getSelectedItem());
+        topTable.getItems().add(viewData.earningsSum());
+        topTable.getItems().add(viewData.expensesSum());
+        topTable.getItems().add(viewData.totalSum());
+        topTable.getStyleClass().add(Styles.BORDERED);
+
+        // ------------------------------------------------------
+        fixedTurnovers.setAll(fixedTurnoverRepository.findAll());
+
         displayYearComboBox.getSelectionModel().selectedItemProperty()
                            .addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
                                mainTable.refresh();
