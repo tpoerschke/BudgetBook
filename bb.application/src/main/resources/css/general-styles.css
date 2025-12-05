@@ -35,6 +35,19 @@
     -fx-alignment: center-right;
 }
 
+.col-darker-border-top.table-cell {
+    -fx-border-color: -color-base-6 transparent -color-base-2 transparent;
+    -fx-border-width: 1 0 1 0;
+}
+
+.col-background-gray.table-cell {
+    -fx-background-color: -color-base-0;
+}
+
+.col-bold-text.table-cell {
+    -fx-font-weight: bold;
+}
+
 .progress-indicator-text {
     -fx-background-color: -color-base-0;
     -fx-padding: 3px 3px 3px 3px;

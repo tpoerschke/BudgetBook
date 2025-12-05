@@ -18,7 +18,6 @@ public enum FxmlResource {
     UNIQUE_TURNOVER_DETAIL_VIEW("/fxml/unique_turnover/Detail.fxml", null),
     FIXED_TURNOVER_INFORMATION_VIEW("/fxml/fixed_turnover/FixedExpenseInformationDetailView.fxml", null),
     UNIQUE_TURNOVER_INFORMATION_VIEW("/fxml/unique_turnover/Information.fxml", null),
-    EXPENSE_DETAIL_WIDGET("/fxml/ExpenseDetailWidget.fxml", null),
     IMPORT_VIEW("/fxml/Importer/ImportView.fxml", "stageTitle.importView"),
     FIXED_TURNOVER_WIZARD_VIEW("/fxml/Importer/FixedTurnoverWizardView.fxml", null),
     IMAGE_VIEW("/fxml/ImageView.fxml", null),

@@ -89,6 +89,7 @@ public class MainViewImpl implements Initializable, MainView {
             scene.getStylesheets().add(getClass().getResource("/css/general-styles.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/css/validation.css").toExternalForm());
             this.primaryStage.setScene(scene);
+            this.primaryStage.setMaximized(true);
             this.primaryStage.show();
         } catch (Exception e) {
             StackTraceAlert.createAndLog(languageManager.get("alert.mainViewCouldNotBeOpened"), e).showAndWait();

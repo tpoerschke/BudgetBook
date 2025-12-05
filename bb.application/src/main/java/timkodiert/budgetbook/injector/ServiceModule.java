@@ -11,6 +11,8 @@ import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpo
 
 import timkodiert.budgetbook.analysis.CategorySeriesGenerator;
 import timkodiert.budgetbook.analysis.CategorySeriesGeneratorImpl;
+import timkodiert.budgetbook.annual_overview.AnnualOverviewService;
+import timkodiert.budgetbook.annual_overview.AnnualOverviewServiceImpl;
 import timkodiert.budgetbook.budget.BudgetService;
 import timkodiert.budgetbook.budget.BudgetServiceImpl;
 import timkodiert.budgetbook.crud.CategoryCrudServiceImpl;
@@ -56,5 +58,6 @@ public interface ServiceModule {
 
     @Binds MonthlyOverviewService bindMonthlyOverviewService(MonthlyOverviewServiceImpl impl);
     @Binds BudgetService bindBudgetService(BudgetServiceImpl impl);
+    @Binds AnnualOverviewService bindAnnualOverviewService(AnnualOverviewServiceImpl impl);
 }
 // @formatter:on

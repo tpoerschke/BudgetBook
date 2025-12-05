@@ -20,4 +20,11 @@ public class UniqueExpensesRepository extends Repository<UniqueTurnover> {
                         .filter(exp -> monthYear.containsDate(exp.getDate()))
                         .toList();
     }
+
+    public List<UniqueTurnover> findAllWithoutFixedExpense(int year) {
+        return findAll().stream()
+                        .filter(exp -> exp.getFixedTurnover() == null)
+                        .filter(exp -> exp.getDate().getYear() == year)
+                        .toList();
+    }
 }
