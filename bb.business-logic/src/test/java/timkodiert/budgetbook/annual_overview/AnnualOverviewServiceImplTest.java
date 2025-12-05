@@ -23,7 +23,7 @@ import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
 @ExtendWith(MockitoExtension.class)
 class AnnualOverviewServiceImplTest {
 
-    private static final String LABEL_OTHERS = "annualOverView.label.others";
+    private static final String LABEL_OTHERS = "annualOverview.label.others";
 
     private static final int YEAR = 2025;
     private static final YearMonth YEAR_MONTH_1 = YearMonth.of(YEAR, 11);
