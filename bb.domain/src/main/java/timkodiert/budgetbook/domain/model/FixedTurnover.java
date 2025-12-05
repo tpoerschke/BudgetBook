@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @Entity
 @ToString
-public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categorizable {
+public class FixedTurnover extends BaseEntity implements Categorizable {
 
     @Setter
     @NotBlank(message = "Die Ausgabe muss benannt werden.")
@@ -65,7 +65,6 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
         return turnover;
     }
 
-    @Override
     public PaymentType getType() {
         // TODO: Sinnvolle Ausgabe
         if (this.paymentInformations.isEmpty()) {
@@ -74,12 +73,10 @@ public class FixedTurnover extends BaseEntity implements IFixedTurnover, Categor
         return this.paymentInformations.get(0).getType();
     }
 
-    @Override
     public int getValueForYear(int year) {
         return IntStream.rangeClosed(1, 12).map(month -> this.getValueFor(year, month)).sum();
     }
-
-    @Override
+    
     public int getValueFor(MonthYear monthYear) {
         return getValueFor(monthYear.getYear(), monthYear.getMonth());
     }
