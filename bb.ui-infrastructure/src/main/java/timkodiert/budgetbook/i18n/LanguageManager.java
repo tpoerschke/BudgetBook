@@ -95,7 +95,7 @@ public class LanguageManager implements LocaleResolver {
         }
     }
 
-    private boolean resourceBundleContainsKey(String key) {
+    public boolean resourceBundleContainsKey(String key) {
         return this.resourceBundle.containsKey(key);
     }
 

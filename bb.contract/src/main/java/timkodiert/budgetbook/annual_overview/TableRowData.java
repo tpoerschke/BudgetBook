@@ -9,6 +9,10 @@ import timkodiert.budgetbook.domain.util.HasType;
 
 public record TableRowData(int id, String label, Map<Integer, Integer> monthValueMap, Reference<CategoryDTO> category, RowType type) implements HasType<RowType> {
 
+    public static TableRowData forCategory(Reference<CategoryDTO> category) {
+        return new TableRowData(category.id(), category.name(), Map.of(), category, RowType.CATEGORY_GROUP);
+    }
+
     @Override
     public RowType getType() {
         return type;

@@ -69,7 +69,7 @@ public class AnnualOverviewServiceImpl implements AnnualOverviewService {
                 }
             }
         });
-        return new TableRowData(-1, LABEL_TOTAL, totalSumMap, null, RowType.TOTAL_SUM);
+        return new TableRowData(-1, LABEL_TOTAL, totalSumMap, null, RowType.SUM);
     }
 
     private void sumTurnovers(TableRowData target, List<FixedTurnover> turnovers, int year) {
@@ -94,7 +94,7 @@ public class AnnualOverviewServiceImpl implements AnnualOverviewService {
         }
         Reference<CategoryDTO> categoryReference = Optional.ofNullable(turnover.getCategory())
                                                            .map(c -> new Reference<>(CategoryDTO.class, c.getId(), c.getName()))
-                                                           .orElseGet(() -> new Reference<>(CategoryDTO.class, -1, LABEL_OTHERS));
+                                                           .orElseGet(() -> new Reference<>(CategoryDTO.class, Integer.MAX_VALUE, LABEL_OTHERS));
         return new TableRowData(turnover.getId(), turnover.getPosition(), monthValueMap, categoryReference, RowType.FIXED_EXPENSE);
     }
 
@@ -115,7 +115,7 @@ public class AnnualOverviewServiceImpl implements AnnualOverviewService {
     private Reference<CategoryDTO> createCategoryFromTurnoverInformation(UniqueTurnoverInformation info) {
         return Optional.ofNullable(info.getCategory())
                        .map(c -> new Reference<>(CategoryDTO.class, c.getId(), c.getName()))
-                       .orElseGet(() -> new Reference<>(CategoryDTO.class, -1, LABEL_OTHERS));
+                       .orElseGet(() -> new Reference<>(CategoryDTO.class, Integer.MAX_VALUE, LABEL_OTHERS));
     }
 
     private List<FixedTurnover> loadAllRelevantFixedExpenses() {

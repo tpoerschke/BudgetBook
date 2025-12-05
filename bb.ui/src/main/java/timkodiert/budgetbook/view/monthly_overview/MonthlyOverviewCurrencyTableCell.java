@@ -8,7 +8,7 @@ import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.monthly_overview.TableRowData;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 
-public class MonthlyOverviewCurrencyTableCell extends CurrencyTableCell<TableRowData, Number, RowType> {
+public class MonthlyOverviewCurrencyTableCell extends CurrencyTableCell<TableRowData, Number> {
 
     private final Map<RowType, BooleanProperty> isCollapsedProperties;
 

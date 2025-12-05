@@ -18,11 +18,12 @@ import timkodiert.budgetbook.domain.model.AccountTurnover;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
+import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.domain.util.HasType;
 
 
 // Aus den Werten der Properties wird u.a. eine einzigartige Ausgabe
-public class ImportInformation implements HasType<ImportInformation> { // Bisschen hacky mit dem HasType hier ._.
+public class ImportInformation implements HasType<RowType> { // Bisschen hacky mit dem HasType hier ._.
 
     private static final String ANNOTATION_EMPTY = "";
     public static final String ANNOTATION_UNIQUE_EXPENSE = "Wird zu einzigartiger Ausgabe.";
@@ -149,7 +150,7 @@ public class ImportInformation implements HasType<ImportInformation> { // Bissch
     }
 
     @Override
-    public ImportInformation getType() {
-        return this;
+    public RowType getType() {
+        return RowType.IMPORT;
     }
 }
