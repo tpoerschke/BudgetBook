@@ -25,8 +25,10 @@ cp bb.application/target/$MAIN_JAR target/input/$MAIN_JAR
 jpackage --input target/input \
   --name $APP_NAME \
   --icon $icon \
+  --app-version 1.0.0 \
   --main-jar $MAIN_JAR \
-  --type app-image --verbose
+  --type app-image \
+  --verbose
 
 jpackage_status=$?
 

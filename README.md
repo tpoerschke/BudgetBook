@@ -23,7 +23,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/tpoerschke/BudgetBook">
-    <img src="images/logo.png" alt="Logo" width="140" height="80">
+    <img src="images/JBudgetBook-Logo.png" alt="Logo" width="140" height="140">
   </a>
 
 <h3 align="center">JBudgetBook</h3>
