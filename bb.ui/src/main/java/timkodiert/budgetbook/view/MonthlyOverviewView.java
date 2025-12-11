@@ -29,7 +29,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
 import timkodiert.budgetbook.budget.BudgetService;
-import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
@@ -128,7 +127,7 @@ public class MonthlyOverviewView implements Initializable, View {
 
         sumTable.setRowFactory(tableView -> new BoldTableRow<>(RowType.TOTAL_SUM));
 
-        loadAndDisplayViewData(MonthYear.now());
+        loadAndDisplayViewData(YearMonth.now());
         FilteredList<TableRowData> filteredData = new FilteredList<>(tableData);
 
         SimpleBooleanProperty isUniqueCollapsedProperty = new SimpleBooleanProperty(false);
@@ -182,7 +181,7 @@ public class MonthlyOverviewView implements Initializable, View {
                 loader.load();
                 BudgetWidget budgetWidget = loader.getController();
                 budgetWidget.getCategoryProperty().set(cat);
-                budgetWidget.getSelectedMonthYearProperty().bind(monthFilter);
+                budgetWidget.getSelectedYearMonthProperty().bind(monthFilter);
                 budgetBox.getChildren().add(budgetWidget.getRoot());
             } catch (Exception e) {
                 throw TechnicalException.forFxmlNotFound(e);
@@ -190,8 +189,8 @@ public class MonthlyOverviewView implements Initializable, View {
         });
     }
 
-    private void loadAndDisplayViewData(MonthYear monthYear) {
-        MonthlyOverviewDTO data = monthlyOverviewService.generateOverview(YearMonth.of(monthYear.getYear(), monthYear.getMonth()));
+    private void loadAndDisplayViewData(YearMonth yearMonth) {
+        MonthlyOverviewDTO data = monthlyOverviewService.generateOverview(yearMonth);
         initDataGroups(data);
         initFooterTable(data);
     }

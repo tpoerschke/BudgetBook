@@ -2,6 +2,7 @@ package timkodiert.budgetbook.view.fixed_turnover;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -50,12 +51,11 @@ import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.ImportRuleDTO;
 import timkodiert.budgetbook.domain.PaymentInformationDTO;
 import timkodiert.budgetbook.domain.Reference;
-import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.PaymentType;
 import timkodiert.budgetbook.domain.model.TurnoverDirection;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.DateTableCell;
-import timkodiert.budgetbook.table.cell.MonthYearTableCell;
+import timkodiert.budgetbook.table.cell.YearMonthTableCell;
 import timkodiert.budgetbook.ui.helper.Bind;
 import timkodiert.budgetbook.util.StageBuilder;
 import timkodiert.budgetbook.validation.ValidationResult;
@@ -93,9 +93,9 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     @FXML
     private TableColumn<PaymentInformationDTO, String> expenseInfoTypeCol;
     @FXML
-    private TableColumn<PaymentInformationDTO, MonthYear> expenseInfoStartCol;
+    private TableColumn<PaymentInformationDTO, YearMonth> expenseInfoStartCol;
     @FXML
-    private TableColumn<PaymentInformationDTO, MonthYear> expenseInfoEndCol;
+    private TableColumn<PaymentInformationDTO, YearMonth> expenseInfoEndCol;
 
     // Importe
     @FXML
@@ -171,8 +171,8 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         });
         expenseInfoStartCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStart()));
         expenseInfoEndCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getEnd()));
-        expenseInfoStartCol.setCellFactory(col -> new MonthYearTableCell<>());
-        expenseInfoEndCol.setCellFactory(col -> new MonthYearTableCell<>());
+        expenseInfoStartCol.setCellFactory(col -> new YearMonthTableCell<>());
+        expenseInfoEndCol.setCellFactory(col -> new YearMonthTableCell<>());
 
         // Importe
         bind.editableTableColumn(importRuleActiveCol, ImportRuleDTO::isActive, ImportRuleDTO::setActive);

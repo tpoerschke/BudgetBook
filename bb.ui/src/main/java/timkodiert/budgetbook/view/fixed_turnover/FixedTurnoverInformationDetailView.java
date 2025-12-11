@@ -82,7 +82,6 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         startMonthWidget = monthYearPickerWidgetFactory.create(dateContainer, "Erster Monat", null, false);
         endMonthWidget = monthYearPickerWidgetFactory.create(dateContainer, "Letzter Monat (optional)", null, true);
 

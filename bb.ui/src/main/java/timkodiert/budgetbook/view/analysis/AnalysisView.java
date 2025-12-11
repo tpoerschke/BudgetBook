@@ -33,23 +33,29 @@ import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import timkodiert.budgetbook.analysis.AnalysisPeriod;
+import timkodiert.budgetbook.analysis.AnalysisService;
 import timkodiert.budgetbook.analysis.CategorySeriesGenerator;
+import timkodiert.budgetbook.analysis.TableRowData;
+import timkodiert.budgetbook.budget.BudgetInfo;
+import timkodiert.budgetbook.budget.BudgetService;
 import timkodiert.budgetbook.converter.Converters;
+import timkodiert.budgetbook.converter.ReferenceStringConverter;
+import timkodiert.budgetbook.domain.CategoryCrudService;
+import timkodiert.budgetbook.domain.CategoryDTO;
+import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.model.BudgetType;
-import timkodiert.budgetbook.domain.model.Category;
-import timkodiert.budgetbook.domain.model.MonthYear;
-import timkodiert.budgetbook.domain.repository.Repository;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
+import timkodiert.budgetbook.util.MoneyEssentials;
 import timkodiert.budgetbook.view.View;
-import timkodiert.budgetbook.view.monthly_overview.TableData;
-import timkodiert.budgetbook.view.monthly_overview.ToTableDataMapper;
 
 public class AnalysisView implements View, Initializable {
 
     private final LanguageManager languageManager;
-    private final Repository<Category> categoryRepository;
+    private final AnalysisService analysisService;
+    private final CategoryCrudService categoryCrudService;
     private final CategorySeriesGenerator categorySeriesGenerator;
+    private final BudgetService budgetService;
 
     @FXML
     private BorderPane root;
@@ -58,29 +64,36 @@ public class AnalysisView implements View, Initializable {
     @FXML
     private ComboBox<AnalysisPeriod> periodComboBox;
     @FXML
-    private ComboBox<Category> categoryComboBox;
+    private ComboBox<Reference<CategoryDTO>> categoryComboBox;
 
     @FXML
-    private TableView<TableData> turnoverTable;
+    private TableView<TableRowData> turnoverTable;
     @FXML
-    private TableColumn<TableData, String> turnoverPosition;
+    private TableColumn<TableRowData, String> turnoverPosition;
     @FXML
-    private TableColumn<TableData, Number> turnoverValue;
+    private TableColumn<TableRowData, Number> turnoverValue;
 
     private CategoryChart chart;
 
     @Inject
-    public AnalysisView(LanguageManager languageManager, Repository<Category> categoryRepository, CategorySeriesGenerator categorySeriesGenerator) {
+    public AnalysisView(LanguageManager languageManager,
+                        AnalysisService analysisService,
+                        CategoryCrudService categoryCrudService,
+                        CategorySeriesGenerator categorySeriesGenerator,
+                        BudgetService budgetService) {
         this.languageManager = languageManager;
-        this.categoryRepository = categoryRepository;
+        this.analysisService = analysisService;
+        this.categoryCrudService = categoryCrudService;
         this.categorySeriesGenerator = categorySeriesGenerator;
+        this.budgetService = budgetService;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         periodComboBox.setConverter(Converters.get(AnalysisPeriod.class));
         periodComboBox.getItems().addAll(AnalysisPeriod.values());
-        categoryComboBox.getItems().addAll(categoryRepository.findAll());
+        categoryComboBox.setConverter(new ReferenceStringConverter<>());
+        categoryComboBox.getItems().addAll(categoryCrudService.readAllAsReference());
         periodComboBox.valueProperty().addListener((observable, oldVal, newVal) -> updateChart());
         categoryComboBox.valueProperty().addListener((observable, oldVal, newVal) -> updateChart());
 
@@ -93,7 +106,7 @@ public class AnalysisView implements View, Initializable {
 
     private void updateChart() {
         AnalysisPeriod selectedPeriod = periodComboBox.getSelectionModel().getSelectedItem();
-        Category selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();
+        Reference<CategoryDTO> selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();
 
         if (selectedPeriod == null || selectedCategory == null) {
             return;
@@ -101,15 +114,15 @@ public class AnalysisView implements View, Initializable {
 
         chart = new CategoryChartBuilder().width(800)
                                           .height(600)
-                                          .title(String.format(languageManager.get("analysisView.chart.title"), selectedCategory.getName()))
+                                          .title(String.format(languageManager.get("analysisView.chart.title"), selectedCategory.name()))
                                           .xAxisTitle(languageManager.get("analysisView.chart.xAxis.month"))
                                           .yAxisTitle(languageManager.get("analysisView.chart.yAxis.expenses"))
                                           .theme(Styler.ChartTheme.GGPlot2)
                                           .build();
         styleChart();
 
-        List<MonthYear> monthYearList = selectedPeriod.getMonths();
-        List<String> monthNameList = monthYearList.stream().map(monthYear -> languageManager.get(LanguageManager.MONTH_NAMES.get(monthYear.getMonth() - 1))).toList();
+        List<YearMonth> yearMonths = selectedPeriod.getMonths();
+        List<String> monthNameList = yearMonths.stream().map(yearMonth -> languageManager.get(LanguageManager.MONTH_NAMES.get(yearMonth.getMonthValue() - 1))).toList();
         CategorySeries s1 = chart.addSeries("Categories", monthNameList, categorySeriesGenerator.generateCategorySeries(selectedPeriod, selectedCategory));
         s1.setFillColor(Color.decode("#27476E"));
 
@@ -134,6 +147,8 @@ public class AnalysisView implements View, Initializable {
         swingNode.setOnMouseClicked(this::fillTurnoverTable);
 
         chartContainer.getChildren().setAll(swingNode);
+
+        turnoverTable.getItems().clear();
     }
 
     /**
@@ -142,20 +157,22 @@ public class AnalysisView implements View, Initializable {
      */
     private void addBudgetSeries() {
         AnalysisPeriod selectedPeriod = periodComboBox.getSelectionModel().getSelectedItem();
-        Category selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();
-        if (!selectedCategory.hasActiveBudget()) {
+        Reference<CategoryDTO> selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();
+        BudgetInfo budgetInfo = budgetService.getBudgetInfo(selectedCategory);
+
+        if (budgetInfo == null) {
             return;
         }
 
-        BudgetType budgetType = selectedCategory.getBudgetType();
-        double budgetValue = selectedCategory.getBudgetValueInEuro();
+        BudgetType budgetType = budgetInfo.budgetType();
+        double budgetValue = MoneyEssentials.asBigDecimal(budgetInfo.budgetValue()).divide(MoneyEssentials.FACTOR_100, MoneyEssentials.ROUNDING_MODE).doubleValue();
 
-        List<MonthYear> monthYearList = selectedPeriod.getMonths();
-        List<String> monthNameList = monthYearList.stream().map(monthYear -> languageManager.get(LanguageManager.MONTH_NAMES.get(monthYear.getMonth() - 1))).toList();
+        List<YearMonth> yearMonths = selectedPeriod.getMonths();
+        List<String> monthNameList = yearMonths.stream().map(yearMonth -> languageManager.get(LanguageManager.MONTH_NAMES.get(yearMonth.getMonthValue() - 1))).toList();
 
         CategorySeries budgetSeries = chart.addSeries("Budget",
                                                       monthNameList,
-                                                      Collections.nCopies(monthYearList.size(), budgetValue));
+                                                      Collections.nCopies(yearMonths.size(), budgetValue));
 
         if (budgetType == BudgetType.MONTHLY) {
             budgetSeries.setYAxisGroup(0);
@@ -205,21 +222,11 @@ public class AnalysisView implements View, Initializable {
         } else {
             yearMonth = Year.now().atMonth(Month.JANUARY);
         }
-        yearMonth = yearMonth.plusMonths((long) chartX - 1);
-        MonthYear monthYear = MonthYear.of(yearMonth);
+        yearMonth = yearMonth.plusMonths(chartX);
 
-        Category category = categoryComboBox.getValue();
-        List<TableData> fixedData = category.getFixedExpenses()
-                                            .stream()
-                                            .map(turnover -> ToTableDataMapper.mapFixedExpense(turnover, monthYear))
-                                            .filter(tableData -> tableData.value() != 0.0)
-                                            .toList();
-        List<TableData> uniqueData = category.getUniqueTurnoverInformation(monthYear)
-                                             .stream()
-                                             .map(info -> ToTableDataMapper.mapUniqueExpense(info.getExpense()))
-                                             .toList();
+        Reference<CategoryDTO> category = categoryComboBox.getValue();
+        List<TableRowData> rowData = analysisService.getTurnoverList(category, yearMonth);
         turnoverTable.getItems().clear();
-        turnoverTable.getItems().addAll(fixedData);
-        turnoverTable.getItems().addAll(uniqueData);
+        turnoverTable.getItems().addAll(rowData);
     }
 }

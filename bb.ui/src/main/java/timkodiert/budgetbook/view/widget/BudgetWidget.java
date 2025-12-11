@@ -1,6 +1,7 @@
 package timkodiert.budgetbook.view.widget;
 
 import java.net.URL;
+import java.time.YearMonth;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
 
@@ -21,7 +22,6 @@ import timkodiert.budgetbook.budget.BudgetState;
 import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
 import timkodiert.budgetbook.domain.CategoryDTO;
 import timkodiert.budgetbook.domain.Reference;
-import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.view.View;
 
 import static timkodiert.budgetbook.util.ObjectUtils.nvl;
@@ -43,7 +43,7 @@ public class BudgetWidget implements Initializable, View {
     @Getter
     private final ObjectProperty<Reference<CategoryDTO>> categoryProperty = new SimpleObjectProperty<>();
     @Getter
-    private final ObjectProperty<MonthYear> selectedMonthYearProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<YearMonth> selectedYearMonthProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<BudgetState> budgetStateProperty = new SimpleObjectProperty<>();
 
     private final BbCurrencyStringConverter currencyStringConverter;
@@ -57,7 +57,7 @@ public class BudgetWidget implements Initializable, View {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        budgetStateProperty.bind(Bindings.createObjectBinding(this::loadBudgetState, categoryProperty, selectedMonthYearProperty));
+        budgetStateProperty.bind(Bindings.createObjectBinding(this::loadBudgetState, categoryProperty, selectedYearMonthProperty));
         budgetLabel.textProperty().bind(Bindings.createStringBinding(() -> nvl(categoryProperty.get(), Reference::name), categoryProperty));
         budgetProgressBar.progressProperty().addListener((observable, oldVal, newVal) -> {
             boolean criticalLimitReached = newVal.doubleValue() >= CRITICAL_BUDGET_LIMIT_FACTOR;
@@ -69,10 +69,10 @@ public class BudgetWidget implements Initializable, View {
     }
 
     private @Nullable BudgetState loadBudgetState() {
-        if (categoryProperty.get() == null || selectedMonthYearProperty.get() == null) {
+        if (categoryProperty.get() == null || selectedYearMonthProperty.get() == null) {
             return null;
         }
-        return budgetService.getBudgetState(categoryProperty.get(), selectedMonthYearProperty.get().asYearMonth());
+        return budgetService.getBudgetState(categoryProperty.get(), selectedYearMonthProperty.get());
     }
 
     private String getProgressLabel() {

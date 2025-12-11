@@ -8,9 +8,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.PaymentType;
 import timkodiert.budgetbook.domain.model.TurnoverDirection;
+import timkodiert.budgetbook.util.IntervalUtils;
 
 @Getter
 @Setter
@@ -36,15 +36,12 @@ public class FixedTurnoverDTO {
 
 
     public boolean hasOverlappingPaymentInformations() {
-        return paymentInformations.stream().noneMatch(info -> {
-            List<MonthYear> monthYears = info.getEnd() != null ? MonthYear.range(info.getEnd(), info.getStart()) : List.of(info.getStart());
-            return anyPaymentInformationInMonthYearList(monthYears, info);
-        });
+        return paymentInformations.stream().noneMatch(this::anyPaymentInformationInMonthYearList);
     }
 
-    private boolean anyPaymentInformationInMonthYearList(List<MonthYear> monthYears, PaymentInformationDTO ignore) {
+    private boolean anyPaymentInformationInMonthYearList(PaymentInformationDTO payInfo) {
         return paymentInformations.stream()
-                                  .filter(info -> info != ignore)
-                                  .anyMatch(info -> monthYears.contains(info.getStart()) || info.getEnd() != null && monthYears.contains(info.getEnd()));
+                                  .filter(info -> info != payInfo)
+                                  .anyMatch(info -> IntervalUtils.overlap(payInfo.getStart(), payInfo.getEnd(), info.getStart(), info.getEnd()));
     }
 }

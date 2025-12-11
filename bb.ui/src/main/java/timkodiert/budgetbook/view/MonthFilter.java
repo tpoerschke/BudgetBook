@@ -1,5 +1,6 @@
 package timkodiert.budgetbook.view;
 
+import java.time.YearMonth;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -14,17 +15,16 @@ import javafx.scene.control.ComboBox;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.i18n.LanguageManager;
 
-public class MonthFilter implements ObservableValue<MonthYear> {
+public class MonthFilter implements ObservableValue<YearMonth> {
 
     private final ComboBox<String> selectedMonthBox;
     private final ComboBox<Integer> selectedYearBox;
 
-    private final Set<ChangeListener<? super MonthYear>> listeners = new HashSet<>();
+    private final Set<ChangeListener<? super YearMonth>> listeners = new HashSet<>();
     private final Set<InvalidationListener> invalidationListeners = new HashSet<>();
-    private MonthYear value;
+    private YearMonth value;
 
     @AssistedInject
     public MonthFilter(LanguageManager languageManager,
@@ -40,7 +40,7 @@ public class MonthFilter implements ObservableValue<MonthYear> {
         prevBtn.setGraphic(new FontIcon(BootstrapIcons.CHEVRON_LEFT));
         prevBtn.setText("");
 
-        this.value = MonthYear.now();
+        this.value = YearMonth.now();
         selectedMonthBox.getItems().setAll(languageManager.getMonths());
         selectedYearBox.getItems().setAll(IntStream.rangeClosed(value.getYear() - 5, value.getYear() + 5).boxed().toList());
         selectedMonthBox.getSelectionModel().selectedIndexProperty().addListener(this::monthBoxListener);
@@ -52,36 +52,36 @@ public class MonthFilter implements ObservableValue<MonthYear> {
     }
 
     private void monthBoxListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        MonthYear oldMonthYear = value;
-        value = MonthYear.of(newValue.intValue() + 1, value.getYear());
+        YearMonth oldMonthYear = value;
+        value = YearMonth.of(value.getYear(), newValue.intValue() + 1);
         this.listeners.forEach(l -> l.changed(this, oldMonthYear, value));
         this.invalidationListeners.forEach(l -> l.invalidated(this));
     }
 
     private void yearBoxListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        MonthYear oldMonthYear = value;
-        value = MonthYear.of(value.getMonth(), newValue.intValue());
+        YearMonth oldMonthYear = value;
+        value = YearMonth.of(newValue.intValue(), value.getMonth());
         this.listeners.forEach(l -> l.changed(this, oldMonthYear, value));
         this.invalidationListeners.forEach(l -> l.invalidated(this));
     }
 
-    private void setSelection(MonthYear monthYear) {
-        selectedMonthBox.getSelectionModel().select(monthYear.getMonth() - 1);
+    private void setSelection(YearMonth monthYear) {
+        selectedMonthBox.getSelectionModel().select(monthYear.getMonthValue() - 1);
         selectedYearBox.getSelectionModel().select(Integer.valueOf(monthYear.getYear()));
     }
 
     @Override
-    public void addListener(ChangeListener<? super MonthYear> listener) {
+    public void addListener(ChangeListener<? super YearMonth> listener) {
         listeners.add(listener);
     }
 
     @Override
-    public void removeListener(ChangeListener<? super MonthYear> listener) {
+    public void removeListener(ChangeListener<? super YearMonth> listener) {
         listeners.remove(listener);
     }
 
     @Override
-    public MonthYear getValue() {
+    public YearMonth getValue() {
         return value;
     }
 
