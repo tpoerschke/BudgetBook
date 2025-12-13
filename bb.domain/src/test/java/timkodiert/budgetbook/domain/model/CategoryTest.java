@@ -13,6 +13,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import timkodiert.budgetbook.budget.BudgetType;
+import timkodiert.budgetbook.domain.PaymentType;
+import timkodiert.budgetbook.domain.TurnoverDirection;
+
 class CategoryTest {
 
     @ParameterizedTest

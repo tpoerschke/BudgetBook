@@ -8,8 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import timkodiert.budgetbook.domain.model.TurnoverDirection;
-
 @Getter
 @Setter
 public class UniqueTurnoverInformationDTO implements Serializable {

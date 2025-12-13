@@ -6,11 +6,11 @@ import java.util.Arrays;
 
 import org.jetbrains.annotations.Nullable;
 
+import timkodiert.budgetbook.domain.PaymentType;
+import timkodiert.budgetbook.domain.TurnoverDirection;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.PaymentInformation;
-import timkodiert.budgetbook.domain.model.PaymentType;
-import timkodiert.budgetbook.domain.model.TurnoverDirection;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 

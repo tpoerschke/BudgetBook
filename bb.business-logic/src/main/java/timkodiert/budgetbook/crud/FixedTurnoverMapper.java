@@ -1,6 +1,8 @@
 package timkodiert.budgetbook.crud;
 
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -11,12 +13,13 @@ import timkodiert.budgetbook.domain.AccountTurnoverDTO;
 import timkodiert.budgetbook.domain.CategoryDTO;
 import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.PaymentInformationDTO;
+import timkodiert.budgetbook.domain.PaymentType;
 import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.domain.model.AccountTurnover;
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
+import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.PaymentInformation;
-import timkodiert.budgetbook.domain.model.PaymentType;
 
 @Mapper
 public interface FixedTurnoverMapper {
@@ -44,8 +47,16 @@ public interface FixedTurnoverMapper {
 
     PaymentInformationDTO paymentInformationToPaymentInformationDto(PaymentInformation paymentInformation);
 
+    default YearMonth map(MonthYear value) {
+        return Optional.ofNullable(value).map(MonthYear::asYearMonth).orElse(null);
+    }
+
     AccountTurnoverDTO accountTurnoverToDto(AccountTurnover accountTurnover);
 
     @Mapping(target = "category", expression = "java(referenceResolver.resolve(dto.getCategory()))")
     void updateFixedTurnover(FixedTurnoverDTO dto, @MappingTarget FixedTurnover fixedTurnover, @Context ReferenceResolver referenceResolver);
+
+    default MonthYear map(YearMonth value) {
+        return Optional.ofNullable(value).map(MonthYear::of).orElse(null);
+    }
 }

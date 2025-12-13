@@ -14,7 +14,7 @@ import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetbook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
-import timkodiert.budgetbook.domain.table.RowType;
+import timkodiert.budgetbook.representation.RowType;
 
 public class MonthlyOverviewServiceImpl implements MonthlyOverviewService {
 

@@ -1,8 +1,6 @@
 package timkodiert.budgetbook.ui.control;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -18,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import timkodiert.budgetbook.exception.TechnicalException;
+import timkodiert.budgetbook.util.MoneyEssentials;
 
 import static timkodiert.budgetbook.util.MoneyEssentials.ROUNDING_MODE;
 import static timkodiert.budgetbook.util.MoneyEssentials.ZERO;
@@ -26,8 +25,6 @@ import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 
 class MoneyTextFieldController {
 
-    static final MathContext MATH_CONTEXT = new MathContext(2, RoundingMode.HALF_UP);
-    static final BigDecimal FACTOR_100 = new BigDecimal("100");
     private static final Pattern VALID_PATTERN = Pattern.compile("\\d+,\\d\\d");
 
     @Getter
@@ -48,7 +45,7 @@ class MoneyTextFieldController {
                 return;
             }
             mute = true;
-            integerValue.setValue(nvl(getValue(), v -> v.multiply(FACTOR_100).intValueExact()));
+            integerValue.setValue(nvl(getValue(), v -> v.multiply(MoneyEssentials.FACTOR_100).intValueExact()));
             mute = false;
         });
 
@@ -60,7 +57,7 @@ class MoneyTextFieldController {
             if (newValue == null) {
                 setValue(nullable ? null : ZERO);
             } else {
-                setValue(asBigDecimal(newValue).divide(FACTOR_100, ROUNDING_MODE));
+                setValue(asBigDecimal(newValue).divide(MoneyEssentials.FACTOR_100, ROUNDING_MODE));
             }
             mute = false;
         });

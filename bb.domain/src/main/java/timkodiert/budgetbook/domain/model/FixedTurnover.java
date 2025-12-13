@@ -21,6 +21,11 @@ import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.Nullable;
 
+import timkodiert.budgetbook.domain.FixedTurnoverDTO;
+import timkodiert.budgetbook.domain.PaymentType;
+import timkodiert.budgetbook.domain.Reference;
+import timkodiert.budgetbook.domain.TurnoverDirection;
+
 @Getter
 @Entity
 @ToString
@@ -128,5 +133,9 @@ public class FixedTurnover extends BaseEntity implements Categorizable {
 
     private List<UniqueTurnover> findUniqueTurnover(MonthYear monthYear) {
         return uniqueTurnovers.stream().filter(uq -> monthYear.containsDate(uq.getDate())).toList();
+    }
+
+    public Reference<FixedTurnoverDTO> toReference() {
+        return new Reference<>(FixedTurnoverDTO.class, this.getId(), this.getPosition());
     }
 }

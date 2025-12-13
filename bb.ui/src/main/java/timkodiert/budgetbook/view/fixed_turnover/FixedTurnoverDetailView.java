@@ -2,13 +2,13 @@ package timkodiert.budgetbook.view.fixed_turnover;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -49,13 +49,12 @@ import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
 import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.ImportRuleDTO;
 import timkodiert.budgetbook.domain.PaymentInformationDTO;
+import timkodiert.budgetbook.domain.PaymentType;
 import timkodiert.budgetbook.domain.Reference;
-import timkodiert.budgetbook.domain.model.MonthYear;
-import timkodiert.budgetbook.domain.model.PaymentType;
-import timkodiert.budgetbook.domain.model.TurnoverDirection;
+import timkodiert.budgetbook.domain.TurnoverDirection;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.table.cell.DateTableCell;
-import timkodiert.budgetbook.table.cell.MonthYearTableCell;
+import timkodiert.budgetbook.table.cell.YearMonthTableCell;
 import timkodiert.budgetbook.ui.helper.Bind;
 import timkodiert.budgetbook.util.StageBuilder;
 import timkodiert.budgetbook.validation.ValidationResult;
@@ -93,9 +92,9 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
     @FXML
     private TableColumn<PaymentInformationDTO, String> expenseInfoTypeCol;
     @FXML
-    private TableColumn<PaymentInformationDTO, MonthYear> expenseInfoStartCol;
+    private TableColumn<PaymentInformationDTO, YearMonth> expenseInfoStartCol;
     @FXML
-    private TableColumn<PaymentInformationDTO, MonthYear> expenseInfoEndCol;
+    private TableColumn<PaymentInformationDTO, YearMonth> expenseInfoEndCol;
 
     // Importe
     @FXML
@@ -171,8 +170,8 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         });
         expenseInfoStartCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStart()));
         expenseInfoEndCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getEnd()));
-        expenseInfoStartCol.setCellFactory(col -> new MonthYearTableCell<>());
-        expenseInfoEndCol.setCellFactory(col -> new MonthYearTableCell<>());
+        expenseInfoStartCol.setCellFactory(col -> new YearMonthTableCell<>());
+        expenseInfoEndCol.setCellFactory(col -> new YearMonthTableCell<>());
 
         // Importe
         bind.editableTableColumn(importRuleActiveCol, ImportRuleDTO::isActive, ImportRuleDTO::setActive);
@@ -228,8 +227,18 @@ public class FixedTurnoverDetailView extends EntityBaseDetailView<FixedTurnoverD
         if (bean == null) {
             return false;
         }
-        Predicate<FixedTurnoverDTO> crudMethod = bean.getId() <= 0 ? crudService::create : crudService::update;
-        boolean success = validate() && crudMethod.test(getBean());
+
+        if (!validate()) {
+            return false;
+        }
+
+        boolean success;
+        if (bean.getId() <= 0) {
+            success = crudService.create(bean) > 0;
+        } else {
+            success = crudService.update(bean);
+        }
+
         if (success) {
             beanAdapter.setDirty(false);
             onUpdate.accept(bean);

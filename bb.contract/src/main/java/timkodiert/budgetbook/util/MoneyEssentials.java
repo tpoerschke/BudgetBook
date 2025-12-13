@@ -7,6 +7,7 @@ public class MoneyEssentials {
 
 
     public static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_EVEN;
+    public static final BigDecimal FACTOR_100 = new BigDecimal("100");
     private static final int SCALE = 2;
 
     public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(SCALE, ROUNDING_MODE);

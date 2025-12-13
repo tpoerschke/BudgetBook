@@ -6,7 +6,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
-import timkodiert.budgetbook.domain.model.BudgetType;
+import timkodiert.budgetbook.budget.BudgetType;
+
 
 @Getter
 @Setter

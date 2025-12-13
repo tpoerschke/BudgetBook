@@ -11,5 +11,6 @@ import timkodiert.budgetbook.domain.Reference;
 public interface BudgetService {
 
     List<Reference<CategoryDTO>> findCategoriesWithActiveBudget();
-    @Nullable BudgetState getBudgetState(Reference<CategoryDTO> category, YearMonth yearMonth);
+    @Nullable BudgetState getBudgetState(Reference<CategoryDTO> categoryRef, YearMonth yearMonth);
+    @Nullable BudgetInfo getBudgetInfo(Reference<CategoryDTO> categoryRef);
 }

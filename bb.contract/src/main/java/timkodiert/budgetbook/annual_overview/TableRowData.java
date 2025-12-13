@@ -4,17 +4,17 @@ import java.util.Map;
 
 import timkodiert.budgetbook.domain.CategoryDTO;
 import timkodiert.budgetbook.domain.Reference;
-import timkodiert.budgetbook.domain.table.RowType;
-import timkodiert.budgetbook.domain.util.HasType;
+import timkodiert.budgetbook.representation.HasRowType;
+import timkodiert.budgetbook.representation.RowType;
 
-public record TableRowData(int id, String label, Map<Integer, Integer> monthValueMap, Reference<CategoryDTO> category, RowType type) implements HasType<RowType> {
+public record TableRowData(int id, String label, Map<Integer, Integer> monthValueMap, Reference<CategoryDTO> category, RowType type) implements HasRowType {
 
     public static TableRowData forCategory(Reference<CategoryDTO> category) {
         return new TableRowData(category.id(), category.name(), Map.of(), category, RowType.CATEGORY_GROUP);
     }
 
     @Override
-    public RowType getType() {
+    public RowType getRowType() {
         return type;
     }
 }

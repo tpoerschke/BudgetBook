@@ -13,14 +13,14 @@ import jakarta.inject.Inject;
 
 import timkodiert.budgetbook.domain.CategoryDTO;
 import timkodiert.budgetbook.domain.Reference;
+import timkodiert.budgetbook.domain.TurnoverDirection;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.model.MonthYear;
-import timkodiert.budgetbook.domain.model.TurnoverDirection;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetbook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
-import timkodiert.budgetbook.domain.table.RowType;
+import timkodiert.budgetbook.representation.RowType;
 
 public class AnnualOverviewServiceImpl implements AnnualOverviewService {
 

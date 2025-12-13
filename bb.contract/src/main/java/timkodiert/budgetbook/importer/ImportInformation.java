@@ -1,8 +1,6 @@
 package timkodiert.budgetbook.importer;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -14,16 +12,16 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import lombok.Getter;
 
-import timkodiert.budgetbook.domain.model.AccountTurnover;
-import timkodiert.budgetbook.domain.model.FixedTurnover;
-import timkodiert.budgetbook.domain.model.UniqueTurnover;
-import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
-import timkodiert.budgetbook.domain.table.RowType;
-import timkodiert.budgetbook.domain.util.HasType;
+import timkodiert.budgetbook.domain.FixedTurnoverDTO;
+import timkodiert.budgetbook.domain.Reference;
+import timkodiert.budgetbook.representation.HasRowType;
+import timkodiert.budgetbook.representation.RowType;
 
 
-// Aus den Werten der Properties wird u.a. eine einzigartige Ausgabe
-public class ImportInformation implements HasType<RowType> { // Bisschen hacky mit dem HasType hier ._.
+// TODO: Sollte eigentlich ein reines Client-Objekt sein, ähnliches
+//  gilt für die AccountCsvRow. Dann könnte JavaFX eine reine
+//  Client-Abhängigkeit sein und OpenCSV nur im Backend.
+public class ImportInformation implements HasRowType {
 
     private static final String ANNOTATION_EMPTY = "";
     public static final String ANNOTATION_UNIQUE_EXPENSE = "Wird zu einzigartiger Ausgabe.";
@@ -36,21 +34,21 @@ public class ImportInformation implements HasType<RowType> { // Bisschen hacky m
     private final StringProperty postingText = new SimpleStringProperty();
     private final StringProperty reference = new SimpleStringProperty();
     private final IntegerProperty amount = new SimpleIntegerProperty();
-    private final ObjectProperty<FixedTurnover> fixedExpense = new SimpleObjectProperty<>();
+    private final ObjectProperty<Reference<FixedTurnoverDTO>> fixedExpense = new SimpleObjectProperty<>();
     private final StringProperty annotation = new SimpleStringProperty();
     private final BooleanProperty alreadyImported = new SimpleBooleanProperty();
 
     @Getter
-    private final AccountTurnover accountTurnover;
+    private final AccountCsvRow accountCsvRow;
 
-    private ImportInformation(AccountTurnover accountTurnover) {
-        this.accountTurnover = accountTurnover;
+    private ImportInformation(AccountCsvRow accountCsvRow) {
+        this.accountCsvRow = accountCsvRow;
 
-        date.set(accountTurnover.getDate());
-        receiver.set(accountTurnover.getReceiver());
-        postingText.set(accountTurnover.getPostingText());
-        reference.set(accountTurnover.getReference());
-        amount.set(accountTurnover.getAmount());
+        date.set(accountCsvRow.getDate());
+        receiver.set(accountCsvRow.getReceiver());
+        postingText.set(accountCsvRow.getPostingText());
+        reference.set(accountCsvRow.getReference());
+        amount.set(accountCsvRow.getAmount());
 
         fixedExpense.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
         alreadyImported.addListener((observableValue, oldVal, newVal) -> updateAnnotation());
@@ -77,32 +75,8 @@ public class ImportInformation implements HasType<RowType> { // Bisschen hacky m
         annotation.set(ANNOTATION_EMPTY);
     }
 
-    static ImportInformation from(AccountTurnover accountTurnover) {
-        return new ImportInformation(accountTurnover);
-    }
-
-    public AccountTurnover accountTurnoverWithFixedExpense() {
-        UniqueTurnover ut = createUniqueTurnover();
-        ut.setFixedTurnover(fixedExpense.get());
-        fixedExpense.get().getUniqueTurnovers().add(ut);
-        return accountTurnover;
-    }
-
-    public AccountTurnover accountTurnoverWithUniqueExpense() {
-        createUniqueTurnover();
-        return accountTurnover;
-    }
-
-    private UniqueTurnover createUniqueTurnover() {
-        UniqueTurnover ut = new UniqueTurnover();
-        ut.setBiller(receiver.get());
-        ut.setDate(accountTurnover.getDate());
-        // List.of() hier gewrappt, da die UnmodifiableList sonst "überlebt" und
-        // der Umsatz nach dem Import nicht bearbeitet werden kann.
-        ut.setPaymentInformations(new ArrayList<>(List.of(UniqueTurnoverInformation.total(ut, accountTurnover.getAmount()))));
-        accountTurnover.setUniqueExpense(ut);
-        ut.setAccountTurnover(accountTurnover);
-        return ut;
+    static ImportInformation from(AccountCsvRow accountCsvRow) {
+        return new ImportInformation(accountCsvRow);
     }
 
     public boolean isSelectedForImport() {
@@ -137,7 +111,7 @@ public class ImportInformation implements HasType<RowType> { // Bisschen hacky m
         return amount;
     }
 
-    public ObjectProperty<FixedTurnover> fixedExpenseProperty() {
+    public ObjectProperty<Reference<FixedTurnoverDTO>> fixedExpenseProperty() {
         return fixedExpense;
     }
 
@@ -150,7 +124,7 @@ public class ImportInformation implements HasType<RowType> { // Bisschen hacky m
     }
 
     @Override
-    public RowType getType() {
+    public RowType getRowType() {
         return RowType.IMPORT;
     }
 }

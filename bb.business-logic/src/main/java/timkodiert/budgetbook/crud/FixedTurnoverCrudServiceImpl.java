@@ -41,13 +41,13 @@ public class FixedTurnoverCrudServiceImpl implements FixedTurnoverCrudService {
     }
 
     @Override
-    public boolean create(FixedTurnoverDTO fixedTurnoverDTO) {
+    public int create(FixedTurnoverDTO fixedTurnoverDTO) {
         FixedTurnover fixedTurnover = new FixedTurnover();
         FixedTurnoverMapper fixedTurnoverMapper = Mappers.getMapper(FixedTurnoverMapper.class);
         fixedTurnoverMapper.updateFixedTurnover(fixedTurnoverDTO, fixedTurnover, referenceResolver);
         linkSubEntities(fixedTurnover);
-        fixedTurnoverRepository.merge(fixedTurnover);
-        return true;
+        fixedTurnover = fixedTurnoverRepository.merge(fixedTurnover);
+        return fixedTurnover.getId();
     }
 
     @Override

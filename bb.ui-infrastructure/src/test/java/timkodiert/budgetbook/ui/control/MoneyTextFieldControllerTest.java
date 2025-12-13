@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static timkodiert.budgetbook.ui.control.MoneyTextFieldController.FACTOR_100;
+import static timkodiert.budgetbook.util.MoneyEssentials.FACTOR_100;
 import static timkodiert.budgetbook.util.MoneyEssentials.ROUNDING_MODE;
 import static timkodiert.budgetbook.util.MoneyEssentials.asBigDecimal;
 

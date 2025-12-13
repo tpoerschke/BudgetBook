@@ -29,13 +29,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
 import timkodiert.budgetbook.budget.BudgetService;
-import timkodiert.budgetbook.domain.model.MonthYear;
-import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.monthly_overview.MonthlyOverviewDTO;
 import timkodiert.budgetbook.monthly_overview.MonthlyOverviewService;
 import timkodiert.budgetbook.monthly_overview.TableRowData;
+import timkodiert.budgetbook.representation.RowType;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 import timkodiert.budgetbook.table.cell.DateTableCell;
 import timkodiert.budgetbook.table.cell.GroupTableCell;
@@ -128,7 +127,7 @@ public class MonthlyOverviewView implements Initializable, View {
 
         sumTable.setRowFactory(tableView -> new BoldTableRow<>(RowType.TOTAL_SUM));
 
-        loadAndDisplayViewData(MonthYear.now());
+        loadAndDisplayViewData(YearMonth.now());
         FilteredList<TableRowData> filteredData = new FilteredList<>(tableData);
 
         SimpleBooleanProperty isUniqueCollapsedProperty = new SimpleBooleanProperty(false);
@@ -144,7 +143,7 @@ public class MonthlyOverviewView implements Initializable, View {
             if (!isFixedCollapsedProperty.get()) {
                 toShow.add(RowType.FIXED_EXPENSE);
             }
-            filteredData.setPredicate(d -> toShow.contains(d.getType()));
+            filteredData.setPredicate(d -> toShow.contains(d.getRowType()));
         };
 
         buttonCol.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue()));
@@ -182,7 +181,7 @@ public class MonthlyOverviewView implements Initializable, View {
                 loader.load();
                 BudgetWidget budgetWidget = loader.getController();
                 budgetWidget.getCategoryProperty().set(cat);
-                budgetWidget.getSelectedMonthYearProperty().bind(monthFilter);
+                budgetWidget.getSelectedYearMonthProperty().bind(monthFilter);
                 budgetBox.getChildren().add(budgetWidget.getRoot());
             } catch (Exception e) {
                 throw TechnicalException.forFxmlNotFound(e);
@@ -190,8 +189,8 @@ public class MonthlyOverviewView implements Initializable, View {
         });
     }
 
-    private void loadAndDisplayViewData(MonthYear monthYear) {
-        MonthlyOverviewDTO data = monthlyOverviewService.generateOverview(YearMonth.of(monthYear.getYear(), monthYear.getMonth()));
+    private void loadAndDisplayViewData(YearMonth yearMonth) {
+        MonthlyOverviewDTO data = monthlyOverviewService.generateOverview(yearMonth);
         initDataGroups(data);
         initFooterTable(data);
     }

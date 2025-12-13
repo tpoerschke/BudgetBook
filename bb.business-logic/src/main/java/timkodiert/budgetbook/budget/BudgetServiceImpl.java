@@ -38,4 +38,13 @@ public class BudgetServiceImpl implements BudgetService {
         }
         return new BudgetState(category.getBudgetValue(), Math.abs(category.sumTurnovers(MonthYear.of(yearMonth))));
     }
+
+    @Override
+    public @Nullable BudgetInfo getBudgetInfo(Reference<CategoryDTO> categoryRef) {
+        Category category = categoryRepository.findById(categoryRef.id());
+        if (category == null || !category.hasActiveBudget()) {
+            return null;
+        }
+        return new BudgetInfo(category.getBudgetValue(), category.getBudgetType());
+    }
 }

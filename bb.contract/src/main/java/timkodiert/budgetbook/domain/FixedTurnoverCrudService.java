@@ -8,7 +8,7 @@ public interface FixedTurnoverCrudService {
     List<FixedTurnoverDTO> readAll();
     FixedTurnoverDTO readById(int id);
 
-    boolean create(FixedTurnoverDTO fixedTurnoverDTO);
+    int create(FixedTurnoverDTO fixedTurnoverDTO);
     boolean update(FixedTurnoverDTO fixedTurnoverDTO);
     boolean delete(int id);
 }

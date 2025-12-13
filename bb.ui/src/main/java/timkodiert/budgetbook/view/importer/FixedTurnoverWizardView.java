@@ -23,17 +23,18 @@ import lombok.Setter;
 
 import timkodiert.budgetbook.converter.Converters;
 import timkodiert.budgetbook.dialog.DialogFactory;
-import timkodiert.budgetbook.domain.model.FixedTurnover;
-import timkodiert.budgetbook.domain.model.ImportRule;
-import timkodiert.budgetbook.domain.model.TurnoverDirection;
-import timkodiert.budgetbook.domain.repository.Repository;
+import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
+import timkodiert.budgetbook.domain.FixedTurnoverDTO;
+import timkodiert.budgetbook.domain.ImportRuleDTO;
+import timkodiert.budgetbook.domain.Reference;
+import timkodiert.budgetbook.domain.TurnoverDirection;
 import timkodiert.budgetbook.importer.ImportInformation;
 import timkodiert.budgetbook.ui.control.MoneyTextField;
 import timkodiert.budgetbook.view.View;
 
 public class FixedTurnoverWizardView implements View, Initializable {
 
-    private final Repository<FixedTurnover> fixedTurnoverRepository;
+    private final FixedTurnoverCrudService fixedTurnoverCrudService;
     private final DialogFactory dialogFactory;
 
     private final ObjectProperty<ImportInformation> importInformation = new SimpleObjectProperty<>();
@@ -52,11 +53,11 @@ public class FixedTurnoverWizardView implements View, Initializable {
     private TextField importReferenceTextField;
 
     @Setter
-    private Consumer<FixedTurnover> onSaveCallback;
+    private Consumer<Reference<FixedTurnoverDTO>> onSaveCallback;
 
     @Inject
-    public FixedTurnoverWizardView(Repository<FixedTurnover> fixedTurnoverRepository, DialogFactory dialogFactory) {
-        this.fixedTurnoverRepository = fixedTurnoverRepository;
+    public FixedTurnoverWizardView(FixedTurnoverCrudService fixedTurnoverCrudService, DialogFactory dialogFactory) {
+        this.fixedTurnoverCrudService = fixedTurnoverCrudService;
         this.dialogFactory = dialogFactory;
     }
 
@@ -78,19 +79,19 @@ public class FixedTurnoverWizardView implements View, Initializable {
 
     @FXML
     private void createTurnover(ActionEvent event) {
-        ImportRule importRule = new ImportRule(importActiveCheckbox.isSelected(), importReceiverTextField.getText(), importReferenceTextField.getText());
-        FixedTurnover turnover = FixedTurnover.create(positionTextField.getText(), directionComboBox.getSelectionModel().getSelectedItem(), importRule);
+        ImportRuleDTO importRule = ImportRuleDTO.create(importActiveCheckbox.isSelected(), importReceiverTextField.getText(), importReferenceTextField.getText());
+        FixedTurnoverDTO turnover = FixedTurnoverDTO.create(positionTextField.getText(), directionComboBox.getSelectionModel().getSelectedItem(), importRule);
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<FixedTurnover>> violationSet = validator.validate(turnover);
+        Set<ConstraintViolation<FixedTurnoverDTO>> violationSet = validator.validate(turnover);
 
         if (!violationSet.isEmpty()) {
             dialogFactory.buildValidationErrorDialog(violationSet).showAndWait();
             return;
         }
 
-        fixedTurnoverRepository.persist(turnover);
-        onSaveCallback.accept(turnover);
+        int id = fixedTurnoverCrudService.create(turnover);
+        onSaveCallback.accept(new Reference<>(FixedTurnoverDTO.class, id, turnover.getPosition()));
 
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }

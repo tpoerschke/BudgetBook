@@ -9,6 +9,8 @@ import jakarta.validation.MessageInterpolator;
 import javafx.fxml.FXMLLoader;
 import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
 
+import timkodiert.budgetbook.analysis.AnalysisService;
+import timkodiert.budgetbook.analysis.AnalysisServiceImpl;
 import timkodiert.budgetbook.analysis.CategorySeriesGenerator;
 import timkodiert.budgetbook.analysis.CategorySeriesGeneratorImpl;
 import timkodiert.budgetbook.annual_overview.AnnualOverviewService;
@@ -59,5 +61,6 @@ public interface ServiceModule {
     @Binds MonthlyOverviewService bindMonthlyOverviewService(MonthlyOverviewServiceImpl impl);
     @Binds BudgetService bindBudgetService(BudgetServiceImpl impl);
     @Binds AnnualOverviewService bindAnnualOverviewService(AnnualOverviewServiceImpl impl);
+    @Binds AnalysisService bindAnalysisService(AnalysisServiceImpl impl);
 }
 // @formatter:on

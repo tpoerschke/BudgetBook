@@ -4,16 +4,17 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.util.List;
 
-import timkodiert.budgetbook.domain.model.MonthYear;
+import timkodiert.budgetbook.util.IntervalUtils;
 
 public enum AnalysisPeriod {
     LAST_12_MONTH, THIS_YEAR;
 
-    public List<MonthYear> getMonths() {
+    public List<YearMonth> getMonths() {
         YearMonth now = YearMonth.now();
         if (this == AnalysisPeriod.LAST_12_MONTH) {
-            return MonthYear.range(MonthYear.of(now.minusMonths(12)), MonthYear.now());
+            return IntervalUtils.yearMonthRange(now.minusMonths(12), now);
         }
-        return MonthYear.range(MonthYear.of(Month.JANUARY.getValue(), now.getYear()), MonthYear.of(Month.DECEMBER.getValue(), now.getYear()));
+        return IntervalUtils.yearMonthRange(YearMonth.of(now.getYear(), Month.JANUARY.getValue()),
+                                            YearMonth.of(now.getYear(), Month.DECEMBER.getValue()));
     }
 }

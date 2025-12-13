@@ -2,6 +2,7 @@ package timkodiert.budgetbook.view.widget;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
@@ -29,7 +30,6 @@ import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import timkodiert.budgetbook.dialog.StackTraceAlert;
-import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.i18n.LanguageManager;
 
 import static timkodiert.budgetbook.view.FxmlResource.MONTH_YEAR_PICKER_WIDGET;
@@ -56,7 +56,7 @@ public class MonthYearPickerWidget implements Initializable {
     private final String labelStr;
     private final boolean showResetBtn;
     private final ViewMode viewMode;
-    private final ObjectProperty<MonthYear> value = new SimpleObjectProperty<>();
+    private final ObjectProperty<YearMonth> value = new SimpleObjectProperty<>();
 
     private boolean muteListener = false;
 
@@ -64,7 +64,7 @@ public class MonthYearPickerWidget implements Initializable {
     public MonthYearPickerWidget(LanguageManager languageManager,
                                  @Assisted Pane parent,
                                  @Assisted String labelStr,
-                                 @Assisted MonthYear initialValue,
+                                 @Assisted YearMonth initialValue,
                                  @Assisted boolean showResetBtn,
                                  @Assisted ViewMode viewMode) {
         this.languageManager = languageManager;
@@ -90,14 +90,14 @@ public class MonthYearPickerWidget implements Initializable {
         if (monthChoiceBox.getSelectionModel().isEmpty() || StringUtils.isEmpty(yearTextField.getText())) {
             value.set(null);
         }
-        // FIXME: Hier fliegen NFEs, besseres Handling einbauen. Dabei am MoneyTextField orientieren
-        value.set(MonthYear.of(monthChoiceBox.getSelectionModel().getSelectedIndex() + 1, Integer.valueOf(yearTextField.getText())));
+        // FIXME: Hier fliegen NPEs, besseres Handling einbauen. Dabei am MoneyTextField orientieren
+        value.set(YearMonth.of(Integer.parseInt(yearTextField.getText()), monthChoiceBox.getSelectionModel().getSelectedIndex() + 1));
     }
 
     private void updateUi() {
         muteListener = true;
         if (this.value.get() != null) {
-            monthChoiceBox.getSelectionModel().select(this.value.get().getMonth() - 1);
+            monthChoiceBox.getSelectionModel().select(this.value.get().getMonthValue() - 1);
             yearTextField.setText("" + this.value.get().getYear());
         } else {
             monthChoiceBox.getSelectionModel().clearSelection();
@@ -106,7 +106,7 @@ public class MonthYearPickerWidget implements Initializable {
         muteListener = false;
     }
 
-    public ObjectProperty<MonthYear> valueProperty() {
+    public ObjectProperty<YearMonth> valueProperty() {
         return value;
     }
 
@@ -132,7 +132,7 @@ public class MonthYearPickerWidget implements Initializable {
         monthChoiceBox.getItems().setAll(Arrays.asList(languageManager.getMonths()));
 
         if (this.value.get() != null) {
-            monthChoiceBox.getSelectionModel().select(this.value.get().getMonth() - 1);
+            monthChoiceBox.getSelectionModel().select(this.value.get().getMonthValue() - 1);
             yearTextField.setText("" + this.value.get().getYear());
         } else {
             yearTextField.setText("");

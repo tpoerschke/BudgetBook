@@ -1,4 +1,4 @@
-package timkodiert.budgetbook.domain.converter;
+package timkodiert.budgetbook.importer;
 
 import java.text.NumberFormat;
 import java.text.ParseException;

@@ -31,8 +31,8 @@ public abstract class Repository<T> {
         entities.forEach(this.entityManager::persist);
     }
 
-    public void merge(T entity) {
-        this.merge(List.of(entity));
+    public T merge(T entity) {
+        return this.entityManager.merge(entity);
     }
 
     public void merge(Collection<T> entities) {
