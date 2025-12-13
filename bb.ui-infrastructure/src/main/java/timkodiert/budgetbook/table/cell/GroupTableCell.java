@@ -9,10 +9,10 @@ import javafx.scene.control.TableCell;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import timkodiert.budgetbook.domain.table.RowType;
-import timkodiert.budgetbook.domain.util.HasType;
+import timkodiert.budgetbook.representation.HasRowType;
+import timkodiert.budgetbook.representation.RowType;
 
-public class GroupTableCell<S extends HasType<RowType>, T extends HasType<RowType>> extends TableCell<S, T> {
+public class GroupTableCell<S extends HasRowType, T extends HasRowType> extends TableCell<S, T> {
 
     private final Map<RowType, BooleanProperty> dataGroupProperties;
     private final Button btn = new Button();
@@ -25,7 +25,7 @@ public class GroupTableCell<S extends HasType<RowType>, T extends HasType<RowTyp
     private void handleClick(ActionEvent event) {
         T item = getItem();
 
-        BooleanProperty collapsedProperty = dataGroupProperties.get(item.getType());
+        BooleanProperty collapsedProperty = dataGroupProperties.get(item.getRowType());
         collapsedProperty.set(!collapsedProperty.get());
         displayIcon(collapsedProperty.get());
     }
@@ -40,10 +40,10 @@ public class GroupTableCell<S extends HasType<RowType>, T extends HasType<RowTyp
     protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
 
-        if (!empty && RowType.getGroupTypes().contains(item.getType())) {
+        if (!empty && RowType.getGroupTypes().contains(item.getRowType())) {
             this.setGraphic(btn);
 
-            BooleanProperty isCollapsedProperty = dataGroupProperties.get(item.getType());
+            BooleanProperty isCollapsedProperty = dataGroupProperties.get(item.getRowType());
             displayIcon(isCollapsedProperty.get());
         } else {
             this.setGraphic(null);

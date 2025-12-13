@@ -45,10 +45,11 @@ import javafx.stage.Modality;
 import javafx.util.converter.DefaultStringConverter;
 import lombok.Setter;
 
-import timkodiert.budgetbook.converter.FixedExpenseStringConverter;
+import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.dialog.DialogFactory;
-import timkodiert.budgetbook.domain.model.FixedTurnover;
-import timkodiert.budgetbook.domain.repository.Repository;
+import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
+import timkodiert.budgetbook.domain.FixedTurnoverDTO;
+import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.importer.ImportInformation;
@@ -66,8 +67,8 @@ import static timkodiert.budgetbook.view.FxmlResource.MONTHLY_OVERVIEW;
 public class ImportView implements View, Initializable {
 
     private final LanguageManager languageManager;
-    private final Repository<FixedTurnover> fixedExpenseRepository;
     private final TurnoverImporter importer;
+    private final FixedTurnoverCrudService fixedTurnoverCrudService;
     private final Provider<StageBuilder> stageBuilderProvider;
 
     @FXML
@@ -81,7 +82,7 @@ public class ImportView implements View, Initializable {
     @FXML
     private TableColumn<ImportInformation, Number> amountCol;
     @FXML
-    private TableColumn<ImportInformation, FixedTurnover> associatedCol;
+    private TableColumn<ImportInformation, Reference<FixedTurnoverDTO>> associatedCol;
     @FXML
     public TableColumn<ImportInformation, String> annotationCol;
 
@@ -95,19 +96,19 @@ public class ImportView implements View, Initializable {
     private final CheckBox selectAll = new CheckBox();
     private final BooleanProperty allSelected = new SimpleBooleanProperty();
 
-    private final ObservableList<FixedTurnover> fixedTurnovers = FXCollections.observableArrayList();
+    private final ObservableList<Reference<FixedTurnoverDTO>> fixedTurnovers = FXCollections.observableArrayList();
 
     @Setter
     private MainView mainView;
 
     @Inject
     public ImportView(LanguageManager languageManager,
-                      Repository<FixedTurnover> fixedExpenseRepository,
                       TurnoverImporter importer,
+                      FixedTurnoverCrudService fixedTurnoverCrudService,
                       Provider<StageBuilder> stageBuilderProvider) {
         this.languageManager = languageManager;
-        this.fixedExpenseRepository = fixedExpenseRepository;
         this.importer = importer;
+        this.fixedTurnoverCrudService = fixedTurnoverCrudService;
         this.stageBuilderProvider = stageBuilderProvider;
     }
 
@@ -127,7 +128,7 @@ public class ImportView implements View, Initializable {
         postingTextCol.setCellValueFactory(new PropertyValueFactory<>("postingText"));
         referenceCol.setCellValueFactory(new PropertyValueFactory<>("reference"));
         associatedCol.setCellValueFactory(new PropertyValueFactory<>("fixedExpense"));
-        associatedCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(new FixedExpenseStringConverter(), fixedTurnovers));
+        associatedCol.setCellFactory(ChoiceBoxTableCell.forTableColumn(new ReferenceStringConverter<>(), fixedTurnovers));
         annotationCol.setCellValueFactory(new PropertyValueFactory<>("annotation"));
 
         importTable.getItems().addListener((ListChangeListener<? super ImportInformation>) change -> {
@@ -150,6 +151,7 @@ public class ImportView implements View, Initializable {
         importTable.contextMenuProperty()
                    .bind(Bindings.when(importTable.getSelectionModel().selectedItemProperty().isNotNull()).then(contextMenu).otherwise((ContextMenu) null));
 
+        @SuppressWarnings("java:S1602")
         ChangeListener<Boolean> selectAllListener = (observableValue, oldVal, newVal) -> {
             importTable.getItems()
                        .stream()
@@ -175,9 +177,9 @@ public class ImportView implements View, Initializable {
     }
 
     private void reloadFixedTurnover() {
-        List<FixedTurnover> turnovers = new ArrayList<>();
+        List<Reference<FixedTurnoverDTO>> turnovers = new ArrayList<>();
         turnovers.add(null);
-        turnovers.addAll(fixedExpenseRepository.findAll());
+        turnovers.addAll(fixedTurnoverCrudService.findAllAsReference());
         fixedTurnovers.setAll(turnovers);
     }
 
@@ -198,7 +200,7 @@ public class ImportView implements View, Initializable {
                 displayNotification(Styles.WARNING, languageManager.get("alert.noTurnOversFoundInFile_maybeNotCompatible"));
             }
         } catch (Exception e) {
-            displayNotification(Styles.DANGER, e.getMessage());
+            throw TechnicalException.forProgrammingError(e);
         }
     }
 
@@ -217,7 +219,7 @@ public class ImportView implements View, Initializable {
         }
     }
 
-    private void selectCreatedFixedTurnover(FixedTurnover turnover) {
+    private void selectCreatedFixedTurnover(Reference<FixedTurnoverDTO> turnover) {
         reloadFixedTurnover();
         importTable.getSelectionModel().getSelectedItem().fixedExpenseProperty().set(turnover);
     }

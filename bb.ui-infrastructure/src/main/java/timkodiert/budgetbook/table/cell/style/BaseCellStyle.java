@@ -3,7 +3,7 @@ package timkodiert.budgetbook.table.cell.style;
 import javafx.scene.control.TableCell;
 import org.jspecify.annotations.Nullable;
 
-import timkodiert.budgetbook.domain.table.RowType;
+import timkodiert.budgetbook.representation.RowType;
 
 public abstract class BaseCellStyle implements CellStyle {
 

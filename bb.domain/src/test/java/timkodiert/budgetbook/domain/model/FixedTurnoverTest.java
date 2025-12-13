@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import timkodiert.budgetbook.domain.TurnoverDirection;
+
 import static timkodiert.budgetbook.domain.model.TestDataProvider.createFixedTurnover;
 
 class FixedTurnoverTest {

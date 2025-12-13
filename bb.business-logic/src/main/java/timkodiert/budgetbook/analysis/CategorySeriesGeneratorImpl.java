@@ -1,5 +1,6 @@
 package timkodiert.budgetbook.analysis;
 
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,11 +26,11 @@ public class CategorySeriesGeneratorImpl implements CategorySeriesGenerator {
     @Override
     public List<Double> generateCumulativeCategorySeries(AnalysisPeriod period, Reference<CategoryDTO> categoryRef) {
         Category category = loadCategory(categoryRef);
-        List<MonthYear> monthYearList = period.getMonths();
+        List<YearMonth> monthYearList = period.getMonths();
         List<Number> items = new ArrayList<>(monthYearList.size());
         AtomicReference<Double> lastValue = new AtomicReference<>(0.0);
         IntStream.range(0, monthYearList.size()).forEach(i -> {
-            int categoryVal = category.sumTurnoversForMonth(monthYearList.get(i));
+            int categoryVal = category.sumTurnoversForMonth(MonthYear.of(monthYearList.get(i)));
             items.add(lastValue.updateAndGet(v -> v + Math.min(categoryVal, 0)));
         });
         return items.stream().map(this::asEuro).map(Math::abs).toList();
@@ -38,10 +39,10 @@ public class CategorySeriesGeneratorImpl implements CategorySeriesGenerator {
     @Override
     public List<Double> generateCategorySeries(AnalysisPeriod period, Reference<CategoryDTO> categoryRef) {
         Category category = loadCategory(categoryRef);
-        List<MonthYear> monthYearList = period.getMonths();
+        List<YearMonth> monthYearList = period.getMonths();
         List<Double> items = new ArrayList<>(monthYearList.size());
         IntStream.range(0, monthYearList.size()).forEach(i -> {
-            double categoryVal = category.sumTurnoversForMonth(monthYearList.get(i));
+            double categoryVal = category.sumTurnoversForMonth(MonthYear.of(monthYearList.get(i)));
             items.add(categoryVal);
         });
         return items.stream().map(item -> Math.min(item, 0)).map(this::asEuro).map(Math::abs).toList();

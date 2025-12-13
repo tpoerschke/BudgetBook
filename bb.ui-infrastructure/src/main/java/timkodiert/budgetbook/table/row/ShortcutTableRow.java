@@ -6,9 +6,8 @@ import javafx.scene.control.TableRow;
 import javafx.scene.input.MouseEvent;
 import org.jetbrains.annotations.Nullable;
 
-import timkodiert.budgetbook.domain.table.RowType;
-import timkodiert.budgetbook.domain.util.HasType;
 import timkodiert.budgetbook.monthly_overview.TableRowData;
+import timkodiert.budgetbook.representation.HasRowType;
 import timkodiert.budgetbook.view.FxmlResource;
 import timkodiert.budgetbook.view.ShortcutFunction;
 
@@ -33,8 +32,8 @@ public class ShortcutTableRow extends TableRow<TableRowData> {
         }
     }
 
-    private @Nullable FxmlResource mapRowDataToFxmlResource(HasType<RowType> tableData) {
-        return switch (tableData.getType()) {
+    private @Nullable FxmlResource mapRowDataToFxmlResource(HasRowType tableData) {
+        return switch (tableData.getRowType()) {
             case FIXED_EXPENSE -> FxmlResource.MANAGE_REGULAR_TURNOVER_VIEW;
             case UNIQUE_EXPENSE -> FxmlResource.MANAGE_UNIQUE_TURNOVER_VIEW;
             default -> null;

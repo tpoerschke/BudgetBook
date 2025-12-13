@@ -19,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
+import timkodiert.budgetbook.budget.BudgetType;
 import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
 import timkodiert.budgetbook.converter.Converters;
 import timkodiert.budgetbook.converter.ReferenceStringConverter;
@@ -27,7 +28,6 @@ import timkodiert.budgetbook.domain.CategoryDTO;
 import timkodiert.budgetbook.domain.CategoryGroupCrudService;
 import timkodiert.budgetbook.domain.CategoryGroupDTO;
 import timkodiert.budgetbook.domain.Reference;
-import timkodiert.budgetbook.domain.model.BudgetType;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.ui.helper.Bind;
 import timkodiert.budgetbook.validation.ValidationWrapperFactory;

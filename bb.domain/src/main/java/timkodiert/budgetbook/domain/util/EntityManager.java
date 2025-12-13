@@ -57,6 +57,13 @@ public class EntityManager {
         this.session.getTransaction().commit();
     }
 
+    public <T> T merge(T entity) {
+        this.session.beginTransaction();
+        entity = this.session.merge(entity);
+        this.session.getTransaction().commit();
+        return entity;
+    }
+
     public void merge(Object... objects) {
         this.session.beginTransaction();
         Arrays.stream(objects).forEach(this.session::merge);

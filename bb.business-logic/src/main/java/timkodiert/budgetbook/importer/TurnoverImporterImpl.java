@@ -14,31 +14,37 @@ import javafx.collections.ObservableList;
 import lombok.Getter;
 
 import timkodiert.budgetbook.domain.model.AccountTurnover;
+import timkodiert.budgetbook.domain.model.FixedTurnover;
 import timkodiert.budgetbook.domain.model.ImportRule;
 import timkodiert.budgetbook.domain.repository.AccountTurnoverRepository;
+import timkodiert.budgetbook.domain.repository.FixedExpensesRepository;
 import timkodiert.budgetbook.domain.repository.ImportRulesRepository;
 
-import static timkodiert.budgetbook.domain.model.AccountTurnover.SKIP_LINES;
+import static timkodiert.budgetbook.importer.AccountCsvRow.SKIP_LINES;
 import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 
 public class TurnoverImporterImpl implements TurnoverImporter {
 
     private final ImportRulesRepository importRulesRepository;
     private final AccountTurnoverRepository accountTurnoverRepository;
+    private final FixedExpensesRepository fixedTurnoverRepository;
 
     @Getter
     private final ObservableList<ImportInformation> importInformationList = FXCollections.observableArrayList();
 
     @Inject
-    public TurnoverImporterImpl(ImportRulesRepository importRulesRepository, AccountTurnoverRepository accountTurnoverRepository) {
+    public TurnoverImporterImpl(ImportRulesRepository importRulesRepository,
+                                AccountTurnoverRepository accountTurnoverRepository,
+                                FixedExpensesRepository fixedTurnoverRepository) {
         this.importRulesRepository = importRulesRepository;
         this.accountTurnoverRepository = accountTurnoverRepository;
+        this.fixedTurnoverRepository = fixedTurnoverRepository;
     }
 
     @Override
     public TurnoverImporter parse(File file) throws IOException, IllegalStateException {
-        var builder = new CsvToBeanBuilder<AccountTurnover>(new FileReader(file, StandardCharsets.ISO_8859_1));
-        List<AccountTurnover> imports = builder.withSkipLines(SKIP_LINES).withSeparator(';').withType(AccountTurnover.class).build().parse();
+        var builder = new CsvToBeanBuilder<AccountCsvRow>(new FileReader(file, StandardCharsets.ISO_8859_1));
+        List<AccountCsvRow> imports = builder.withSkipLines(SKIP_LINES).withSeparator(';').withType(AccountCsvRow.class).build().parse();
         importInformationList.setAll(imports.stream().map(ImportInformation::from).toList());
         return this;
     }
@@ -49,16 +55,16 @@ public class TurnoverImporterImpl implements TurnoverImporter {
         importInformationList.forEach(info -> rules.stream()
                                                    .filter(filterRule(info))
                                                    .findAny()
-                                                   .ifPresent(rule -> info.fixedExpenseProperty().set(rule.getLinkedFixedExpense())));
+                                                   .ifPresent(rule -> info.fixedExpenseProperty().set(nvl(rule.getLinkedFixedExpense(), FixedTurnover::toReference))));
         return this;
     }
 
     @Override
     public TurnoverImporter filterDuplicates() {
-        List<AccountTurnover> allImports = accountTurnoverRepository.findAll();
+        List<AccountCsvRow> allImports = accountTurnoverRepository.findAll().stream().map(AccountTurnover::asAccountCsvRow).toList();
 
         importInformationList.forEach(importInfo -> {
-            if (allImports.contains(importInfo.getAccountTurnover())) {
+            if (allImports.contains(importInfo.getAccountCsvRow())) {
                 importInfo.selectedForImportProperty().set(false);
                 importInfo.alreadyImportedProperty().set(true);
             }
@@ -72,17 +78,21 @@ public class TurnoverImporterImpl implements TurnoverImporter {
         List<AccountTurnover> importsWithFixedExpense = importInformationList.stream()
                                                                              .filter(ImportInformation::isSelectedForImport)
                                                                              .filter(ImportInformation::hasFixedExpense)
-                                                                             .map(ImportInformation::accountTurnoverWithFixedExpense)
+                                                                             .map(this::mapImportInfoToFixedTurnover)
                                                                              .toList();
 
         List<AccountTurnover> importsWithUniqueExpense = importInformationList.stream()
                                                                               .filter(ImportInformation::isSelectedForImport)
                                                                               .filter(Predicate.not(ImportInformation::hasFixedExpense))
-                                                                              .map(ImportInformation::accountTurnoverWithUniqueExpense)
+                                                                              .map(AccountTurnover::withUniqueTurnover)
                                                                               .toList();
 
         accountTurnoverRepository.persist(importsWithFixedExpense);
         accountTurnoverRepository.persist(importsWithUniqueExpense);
+    }
+
+    private AccountTurnover mapImportInfoToFixedTurnover(ImportInformation info) {
+        return AccountTurnover.withFixedTurnover(info, fixedTurnoverRepository.findById(info.fixedExpenseProperty().get().id()));
     }
 
     private Predicate<ImportRule> filterRule(ImportInformation importInformation) {

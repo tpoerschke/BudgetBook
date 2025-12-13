@@ -2,7 +2,6 @@ package timkodiert.budgetbook.table.cell;
 
 import java.net.URL;
 import java.util.Optional;
-import java.util.Set;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
@@ -10,12 +9,11 @@ import javafx.scene.text.Font;
 import org.jspecify.annotations.Nullable;
 
 import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
-import timkodiert.budgetbook.domain.model.PaymentType;
-import timkodiert.budgetbook.domain.table.RowType;
-import timkodiert.budgetbook.domain.util.HasType;
+import timkodiert.budgetbook.representation.HasRowType;
+import timkodiert.budgetbook.representation.RowType;
 import timkodiert.budgetbook.table.cell.style.CellStyle;
 
-public class CurrencyTableCell<S extends HasType<RowType>, T extends Number> extends TableCell<S, T> {
+public class CurrencyTableCell<S extends HasRowType, T extends Number> extends TableCell<S, T> {
 
     private static final String STYLE_CLASS = "value-col";
 
@@ -42,7 +40,7 @@ public class CurrencyTableCell<S extends HasType<RowType>, T extends Number> ext
     protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
 
-        RowType rowType = Optional.ofNullable(getTableRow()).map(TableRow::getItem).map(HasType::getType).orElse(RowType.EMPTY);
+        RowType rowType = Optional.ofNullable(getTableRow()).map(TableRow::getItem).map(HasRowType::getRowType).orElse(RowType.EMPTY);
 
         getStyleClass().remove(STYLE_CLASS);
         getStyleClass().add(STYLE_CLASS);
@@ -69,7 +67,7 @@ public class CurrencyTableCell<S extends HasType<RowType>, T extends Number> ext
     }
 
     private boolean shouldBeBold(RowType rowType) {
-        return forceBold || Set.of(RowType.TOTAL_SUM, PaymentType.CUMULATIVE).contains(rowType);
+        return forceBold || rowType == RowType.TOTAL_SUM;
     }
 
 }

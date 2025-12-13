@@ -1,12 +1,12 @@
 package timkodiert.budgetbook.analysis;
 
-import timkodiert.budgetbook.domain.table.RowType;
-import timkodiert.budgetbook.domain.util.HasType;
+import timkodiert.budgetbook.representation.HasRowType;
+import timkodiert.budgetbook.representation.RowType;
 
-public record TableRowData(String position, int value, RowType rowType) implements HasType<RowType> {
+public record TableRowData(String position, int value, RowType rowType) implements HasRowType {
 
     @Override
-    public RowType getType() {
+    public RowType getRowType() {
         return rowType;
     }
 }

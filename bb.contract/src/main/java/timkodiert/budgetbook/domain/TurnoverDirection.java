@@ -1,4 +1,4 @@
-package timkodiert.budgetbook.domain.model;
+package timkodiert.budgetbook.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

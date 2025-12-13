@@ -8,10 +8,10 @@ import javax.inject.Singleton;
 import javafx.util.StringConverter;
 
 import timkodiert.budgetbook.analysis.AnalysisPeriod;
+import timkodiert.budgetbook.budget.BudgetType;
 import timkodiert.budgetbook.domain.CategoryGroupDTO;
-import timkodiert.budgetbook.domain.model.BudgetType;
-import timkodiert.budgetbook.domain.model.PaymentType;
-import timkodiert.budgetbook.domain.model.TurnoverDirection;
+import timkodiert.budgetbook.domain.PaymentType;
+import timkodiert.budgetbook.domain.TurnoverDirection;
 import timkodiert.budgetbook.i18n.LanguageManager;
 
 @Singleton

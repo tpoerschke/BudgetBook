@@ -10,8 +10,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import timkodiert.budgetbook.domain.model.PaymentType;
-
 @Getter
 @Setter
 public class PaymentInformationDTO implements Serializable {

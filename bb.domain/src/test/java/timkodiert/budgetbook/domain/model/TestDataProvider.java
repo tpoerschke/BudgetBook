@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 import org.jetbrains.annotations.Nullable;
 
+import timkodiert.budgetbook.domain.PaymentType;
+import timkodiert.budgetbook.domain.TurnoverDirection;
+
 public class TestDataProvider {
 
     private TestDataProvider() {}

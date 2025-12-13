@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.SerializationUtils;
 
 import timkodiert.budgetbook.domain.PaymentInformationDTO;
-import timkodiert.budgetbook.domain.model.PaymentType;
+import timkodiert.budgetbook.domain.PaymentType;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.ui.control.MoneyTextField;
 import timkodiert.budgetbook.ui.helper.Bind;

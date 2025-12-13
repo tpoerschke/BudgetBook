@@ -2,7 +2,7 @@ package timkodiert.budgetbook.table.cell.style;
 
 import javafx.scene.control.TableCell;
 
-import timkodiert.budgetbook.domain.table.RowType;
+import timkodiert.budgetbook.representation.RowType;
 
 public interface CellStyle {
 

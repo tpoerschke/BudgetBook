@@ -18,4 +18,12 @@ public class ImportRuleDTO {
         id = new Random().nextInt(Integer.MIN_VALUE, 0);
         active = true;
     }
+
+    public static ImportRuleDTO create(boolean active, String receiverContains, String referenceContains) {
+        ImportRuleDTO dto = new ImportRuleDTO();
+        dto.setActive(active);
+        dto.setReceiverContains(receiverContains);
+        dto.setReferenceContains(referenceContains);
+        return dto;
+    }
 }

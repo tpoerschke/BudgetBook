@@ -29,12 +29,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
 import timkodiert.budgetbook.budget.BudgetService;
-import timkodiert.budgetbook.domain.table.RowType;
 import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.monthly_overview.MonthlyOverviewDTO;
 import timkodiert.budgetbook.monthly_overview.MonthlyOverviewService;
 import timkodiert.budgetbook.monthly_overview.TableRowData;
+import timkodiert.budgetbook.representation.RowType;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 import timkodiert.budgetbook.table.cell.DateTableCell;
 import timkodiert.budgetbook.table.cell.GroupTableCell;
@@ -143,7 +143,7 @@ public class MonthlyOverviewView implements Initializable, View {
             if (!isFixedCollapsedProperty.get()) {
                 toShow.add(RowType.FIXED_EXPENSE);
             }
-            filteredData.setPredicate(d -> toShow.contains(d.getType()));
+            filteredData.setPredicate(d -> toShow.contains(d.getRowType()));
         };
 
         buttonCol.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue()));

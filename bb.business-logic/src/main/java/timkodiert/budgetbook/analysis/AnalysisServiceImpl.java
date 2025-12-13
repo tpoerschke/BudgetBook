@@ -13,7 +13,7 @@ import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetbook.domain.repository.CategoriesRepository;
-import timkodiert.budgetbook.domain.table.RowType;
+import timkodiert.budgetbook.representation.RowType;
 import timkodiert.budgetbook.util.CollectionUtils;
 
 public class AnalysisServiceImpl implements AnalysisService {

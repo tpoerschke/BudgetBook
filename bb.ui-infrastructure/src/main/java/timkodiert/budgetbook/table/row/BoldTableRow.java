@@ -2,16 +2,18 @@ package timkodiert.budgetbook.table.row;
 
 import javafx.scene.control.TableRow;
 
-import timkodiert.budgetbook.domain.util.HasType;
+import timkodiert.budgetbook.representation.HasRowType;
+import timkodiert.budgetbook.representation.RowType;
 
-public class BoldTableRow<I extends HasType<T>, T> extends TableRow<I> {
+
+public class BoldTableRow<I extends HasRowType> extends TableRow<I> {
 
     private static final String CSS_CLASS = "text-bold";
 
     // Die Rows dieses Typs werden fett dargestellt
-    private final T type;
+    private final RowType type;
 
-    public BoldTableRow(T type) {
+    public BoldTableRow(RowType type) {
         super();
         this.type = type;
     }
@@ -19,7 +21,7 @@ public class BoldTableRow<I extends HasType<T>, T> extends TableRow<I> {
     @Override
     protected void updateItem(I item, boolean empty) {
         super.updateItem(item, empty);
-        if (!empty && this.type.equals(item.getType())) {
+        if (!empty && item.getRowType() == type) {
             getStyleClass().add(CSS_CLASS);
         } else {
             getStyleClass().remove(CSS_CLASS);

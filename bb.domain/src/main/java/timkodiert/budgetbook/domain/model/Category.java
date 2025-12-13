@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import timkodiert.budgetbook.budget.BudgetType;
+
 @Getter
 @NoArgsConstructor
 @Entity

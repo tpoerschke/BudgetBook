@@ -9,12 +9,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import timkodiert.budgetbook.domain.table.RowType;
-import timkodiert.budgetbook.domain.util.HasType;
+import timkodiert.budgetbook.representation.HasRowType;
+import timkodiert.budgetbook.representation.RowType;
 
 @Getter
 @Setter
-public class UniqueTurnoverDTO implements HasType<RowType> {
+public class UniqueTurnoverDTO implements HasRowType {
 
     private int id;
     @NotBlank(message = "{uniqueTurnover.biller.notBlank}")
@@ -32,7 +32,7 @@ public class UniqueTurnoverDTO implements HasType<RowType> {
     }
 
     @Override
-    public RowType getType() {
+    public RowType getRowType() {
         return RowType.UNIQUE_EXPENSE;
     }
 }

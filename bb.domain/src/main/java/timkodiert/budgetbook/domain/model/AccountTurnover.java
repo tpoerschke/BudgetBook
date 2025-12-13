@@ -1,11 +1,10 @@
 package timkodiert.budgetbook.domain.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import com.opencsv.bean.CsvBindByPosition;
-import com.opencsv.bean.CsvCustomBindByPosition;
-import com.opencsv.bean.CsvDate;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,34 +15,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
-import timkodiert.budgetbook.domain.converter.CsvAmountToIntegerConverter;
+import timkodiert.budgetbook.importer.AccountCsvRow;
+import timkodiert.budgetbook.importer.ImportInformation;
 
-
-/**
- * Nutzt die @CsvBindByPosition wegen Encoding-Problemen (s. Auftraggeber/Empfänger)
- */
 @Getter
 @NoArgsConstructor
 @Entity
 public class AccountTurnover extends BaseEntity implements Comparable<AccountTurnover> {
 
-    public static final int SKIP_LINES = 14;
-
-    @CsvBindByPosition(position = 1)
-    @CsvDate("dd.MM.yyyy")
     @Column(nullable = false)
     private LocalDate date;
 
-    @CsvBindByPosition(position = 2)
     private String receiver;
 
-    @CsvBindByPosition(position = 3)
     private String postingText;
 
-    @CsvBindByPosition(position = 4)
     private String reference;
 
-    @CsvCustomBindByPosition(position = 7, converter = CsvAmountToIntegerConverter.class)
     @Column(nullable = false)
     private int amount;
 
@@ -58,6 +46,43 @@ public class AccountTurnover extends BaseEntity implements Comparable<AccountTur
         this.postingText = postingText;
         this.reference = reference;
         this.amount = amount;
+    }
+
+    public AccountTurnover(AccountCsvRow accountCsvRow) {
+        this.date = accountCsvRow.getDate();
+        this.receiver = accountCsvRow.getReceiver();
+        this.postingText = accountCsvRow.getPostingText();
+        this.reference = accountCsvRow.getReference();
+        this.amount = accountCsvRow.getAmount();
+    }
+
+    public static AccountTurnover withFixedTurnover(ImportInformation importInformation, FixedTurnover fixedTurnover) {
+        AccountTurnover accountTurnover = withUniqueTurnover(importInformation);
+        accountTurnover.getUniqueExpense().setFixedTurnover(fixedTurnover);
+        fixedTurnover.getUniqueTurnovers().add(accountTurnover.getUniqueExpense());
+        return accountTurnover;
+    }
+
+    public static AccountTurnover withUniqueTurnover(ImportInformation importInformation) {
+        UniqueTurnover ut = createUniqueTurnover(importInformation);
+        AccountTurnover accountTurnover = new AccountTurnover(importInformation.getAccountCsvRow());
+        accountTurnover.setUniqueExpense(ut);
+        ut.setAccountTurnover(accountTurnover);
+        return accountTurnover;
+    }
+
+    private static UniqueTurnover createUniqueTurnover(ImportInformation importInformation) {
+        UniqueTurnover ut = new UniqueTurnover();
+        ut.setBiller(importInformation.receiverProperty().get());
+        ut.setDate(importInformation.getAccountCsvRow().getDate());
+        // List.of() hier gewrappt, da die UnmodifiableList sonst "überlebt" und
+        // der Umsatz nach dem Import nicht bearbeitet werden kann.
+        ut.setPaymentInformations(new ArrayList<>(List.of(UniqueTurnoverInformation.total(ut, importInformation.getAccountCsvRow().getAmount()))));
+        return ut;
+    }
+
+    public AccountCsvRow asAccountCsvRow() {
+        return new AccountCsvRow(date, receiver, postingText, reference, amount);
     }
 
     @SuppressWarnings("java:S1210")

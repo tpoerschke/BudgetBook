@@ -16,9 +16,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>timkodiert.budgetbook</groupId>
-      <artifactId>bb.domain</artifactId>
-      <version>${project.version}</version>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
     </dependency>
   </dependencies>
 

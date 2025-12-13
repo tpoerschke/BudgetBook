@@ -1,4 +1,4 @@
-package timkodiert.budgetbook.domain.model;
+package timkodiert.budgetbook.budget;
 
 public enum BudgetType {
     MONTHLY, ANNUAL

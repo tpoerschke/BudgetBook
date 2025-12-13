@@ -3,10 +3,10 @@ package timkodiert.budgetbook.monthly_overview;
 import java.time.LocalDate;
 import java.util.List;
 
-import timkodiert.budgetbook.domain.table.RowType;
-import timkodiert.budgetbook.domain.util.HasType;
+import timkodiert.budgetbook.representation.HasRowType;
+import timkodiert.budgetbook.representation.RowType;
 
-public record TableRowData(int id, RowType rowType, String label, LocalDate date, int value, List<String> categories, boolean hasImport) implements HasType<RowType> {
+public record TableRowData(int id, RowType rowType, String label, LocalDate date, int value, List<String> categories, boolean hasImport) implements HasRowType {
 
     public static TableRowData forSum(String label, int value) {
         return new TableRowData(-1, RowType.SUM, label, null, value, List.of(), false);
@@ -21,7 +21,7 @@ public record TableRowData(int id, RowType rowType, String label, LocalDate date
     }
 
     @Override
-    public RowType getType() {
+    public RowType getRowType() {
         return rowType;
     }
 }
