@@ -1,4 +1,4 @@
-package timkodiert.budgetbook.domain.converter;
+package timkodiert.budgetbook.importer;
 
 import java.util.stream.Stream;
 
@@ -11,8 +11,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import timkodiert.budgetbook.importer.CsvAmountToIntegerConverter;
 
 class CsvAmountToIntegerConverterTest {
 
