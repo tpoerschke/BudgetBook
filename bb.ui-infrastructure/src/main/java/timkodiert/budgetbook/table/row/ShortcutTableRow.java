@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import javafx.scene.control.TableRow;
 import javafx.scene.input.MouseEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import timkodiert.budgetbook.monthly_overview.TableRowData;
 import timkodiert.budgetbook.representation.HasRowType;

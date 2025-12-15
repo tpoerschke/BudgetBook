@@ -1,6 +1,6 @@
 package timkodiert.budgetbook.view;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface MainView {
     @Nullable

@@ -3,7 +3,7 @@ package timkodiert.budgetbook.view;
 import javafx.fxml.FXMLLoader;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @RequiredArgsConstructor
 @Getter

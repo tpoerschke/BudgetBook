@@ -13,7 +13,7 @@ import javafx.beans.property.StringProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.util.MoneyEssentials;

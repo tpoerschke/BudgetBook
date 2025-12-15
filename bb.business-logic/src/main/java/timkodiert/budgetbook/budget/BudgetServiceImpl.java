@@ -4,7 +4,7 @@ import java.time.YearMonth;
 import java.util.List;
 
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import timkodiert.budgetbook.domain.CategoryDTO;
 import timkodiert.budgetbook.domain.Reference;

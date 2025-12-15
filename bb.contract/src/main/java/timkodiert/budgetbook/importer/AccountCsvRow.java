@@ -6,7 +6,6 @@ import java.util.Objects;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvCustomBindByPosition;
 import com.opencsv.bean.CsvDate;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,6 @@ public class AccountCsvRow {
 
     @CsvBindByPosition(position = 1)
     @CsvDate("dd.MM.yyyy")
-    @Column(nullable = false)
     private LocalDate date;
 
     @CsvBindByPosition(position = 2)
@@ -36,7 +34,6 @@ public class AccountCsvRow {
     private String reference;
 
     @CsvCustomBindByPosition(position = 7, converter = CsvAmountToIntegerConverter.class)
-    @Column(nullable = false)
     private int amount;
 
     @Override

@@ -20,6 +20,25 @@
       <artifactId>bb.contract</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <!-- Icons -->
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-javafx</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-bootstrapicons-pack</artifactId>
+    </dependency>
+    <!-- Charts -->
+    <dependency>
+      <groupId>org.knowm.xchart</groupId>
+      <artifactId>xchart</artifactId>
+    </dependency>
+    <!-- Theme -->
+    <dependency>
+      <groupId>io.github.mkpaz</groupId>
+      <artifactId>atlantafx-base</artifactId>
+    </dependency>
   </dependencies>
 
 </project>

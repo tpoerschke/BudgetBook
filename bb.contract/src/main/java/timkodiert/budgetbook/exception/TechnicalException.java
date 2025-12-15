@@ -1,7 +1,7 @@
 package timkodiert.budgetbook.exception;
 
 import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Getter
 public class TechnicalException extends RuntimeException {

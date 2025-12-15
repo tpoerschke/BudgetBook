@@ -2,7 +2,7 @@ package timkodiert.budgetbook.domain;
 
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface UniqueTurnoverCrudService {
 
