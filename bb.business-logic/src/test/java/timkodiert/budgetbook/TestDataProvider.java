@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import timkodiert.budgetbook.domain.PaymentType;
 import timkodiert.budgetbook.domain.TurnoverDirection;

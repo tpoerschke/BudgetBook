@@ -15,7 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import timkodiert.budgetbook.exception.TechnicalException;
 

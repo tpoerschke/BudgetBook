@@ -3,7 +3,7 @@ package timkodiert.budgetbook.validation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ValidationResult {

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javafx.scene.control.Control;
 import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import timkodiert.budgetbook.validation.ValidationWrapper;
 import timkodiert.budgetbook.validation.ValidationWrapperFactory;

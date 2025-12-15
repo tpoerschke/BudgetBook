@@ -13,7 +13,7 @@ import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import timkodiert.budgetbook.importer.AccountCsvRow;
 import timkodiert.budgetbook.importer.ImportInformation;
@@ -87,7 +87,7 @@ public class AccountTurnover extends BaseEntity implements Comparable<AccountTur
 
     @SuppressWarnings("java:S1210")
     @Override
-    public int compareTo(@NotNull AccountTurnover o) {
+    public int compareTo(@NonNull AccountTurnover o) {
         return date.compareTo(o.getDate());
     }
 
