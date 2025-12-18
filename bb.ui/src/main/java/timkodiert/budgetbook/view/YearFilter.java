@@ -1,6 +1,5 @@
 package timkodiert.budgetbook.view;
 
-import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -21,7 +20,7 @@ public class YearFilter implements ObservableValue<Integer> {
     private final Set<InvalidationListener> invalidationListeners = new HashSet<>();
     private Integer value;
 
-    public YearFilter(ComboBox<Integer> selectedYearBox, Button prevBtn, Button nextBtn) {
+    public YearFilter(ComboBox<Integer> selectedYearBox, Button prevBtn, Button nextBtn, int year) {
         this.selectedYearBox = selectedYearBox;
 
         nextBtn.setGraphic(new FontIcon(BootstrapIcons.CHEVRON_RIGHT));
@@ -29,7 +28,7 @@ public class YearFilter implements ObservableValue<Integer> {
         prevBtn.setGraphic(new FontIcon(BootstrapIcons.CHEVRON_LEFT));
         prevBtn.setText("");
 
-        this.value = Year.now().getValue();
+        this.value = year;
         selectedYearBox.getItems().setAll(IntStream.rangeClosed(value - 5, value + 5).boxed().toList());
         selectedYearBox.getSelectionModel().selectedItemProperty().addListener(this::yearBoxListener);
         setSelection(value);

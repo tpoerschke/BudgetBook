@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 
 import atlantafx.base.theme.PrimerDark;
 import atlantafx.base.theme.PrimerLight;
 import atlantafx.base.theme.Theme;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -31,8 +31,8 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
-import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.Constants;
+import timkodiert.budgetbook.i18n.LanguageManager;
 
 @Singleton
 public class PropertiesServiceImpl implements PropertiesService {

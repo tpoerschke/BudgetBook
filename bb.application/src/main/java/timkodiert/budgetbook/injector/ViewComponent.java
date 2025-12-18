@@ -1,8 +1,7 @@
 package timkodiert.budgetbook.injector;
 
-import javax.inject.Singleton;
-
 import dagger.Component;
+import jakarta.inject.Singleton;
 
 import timkodiert.budgetbook.converter.Converters;
 import timkodiert.budgetbook.db.MigrationService;

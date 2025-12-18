@@ -21,6 +21,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.jspecify.annotations.Nullable;
 
+import timkodiert.budgetbook.SystemClock;
 import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.PaymentType;
 import timkodiert.budgetbook.domain.Reference;
@@ -105,7 +106,7 @@ public class FixedTurnover extends BaseEntity implements Categorizable {
             return uniqueTurnoverForMonth.stream().mapToInt(UniqueTurnover::getTotalValue).sum();
         }
         // Konfigurierten Rhythmus auswerten
-        if (YearMonth.of(year, month).isBefore(YearMonth.now()) && isUsePaymentInfoForFutureOnly()) {
+        if (YearMonth.of(year, month).isBefore(SystemClock.getYearMonthNow()) && isUsePaymentInfoForFutureOnly()) {
             return 0;
         }
         PaymentInformation payInfo = findPaymentInformation(MonthYear.of(month, year));

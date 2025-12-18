@@ -30,7 +30,7 @@ public class Category extends BaseEntity {
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "group_id", nullable = false)
+    @JoinColumn(name = "group_id")
     private CategoryGroup group;
 
     @Setter
