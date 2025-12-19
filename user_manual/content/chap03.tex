@@ -16,23 +16,41 @@ Auf der rechten Seite werden alle aktiven Budgets mit deren Füllstand angezeigt
 
 \section{Jahresansicht}
 
-Die Jahresansicht ermöglicht die Übersicht aller wiederkehrenden Umsätze über ein ausgewähltes Jahr in Form einer Matrix. Dabei sind zwei Betrachtungsweisen möglich:
+Die Jahresansicht ermöglicht die Übersicht aller wiederkehrenden Ausgaben eines Jahres -- gruppiert nach Kategorie (s. Abbildung \ref{fig:AnnualOverview}). Dabei ist die Ansicht in 2 Tabellen unterteilt:
 
-\begin{itemize}[nosep]
-	\item Die Summe der einzelnen Zeilen zeigt die (erwarteten) Ein- und Ausgaben je wiederkehrendem Umsatz an. 
-	\item Die Summe der einzelnen Spalten zeigt den Saldo für den jeweiligen Monat an -- sofern Einnahmen im System gepflegt, ansonsten die Summe der Ausgaben.
-\end{itemize}
+Die obere Tabelle stellt die Ein- und Ausgaben eines jeden Monats gegenüber, sodass der Saldo pro Monat schnell abgelesen werden kann. Außerdem kann der oberen Tabelle unten rechts das Gesamtsaldo des betrachteten Jahres entnommen werden.
 
-Unten rechts in der Matrix findet sich das gesamte Saldo für das betrachtete Jahr. 
+Während die Einnahmen nicht weiter aufgeschlüsselt werden, werden die wiederkehrenden Ausgaben gruppiert nach Kategorien in der unteren Tabelle detaillierter dargestellt. Eine Zelle enthält jeweils die Höhe einer wiederkehrenden Ausgabe pro Monat und ganz rechts in der Spalte "`Jahr"' die Gesamtsumme der Ausgabe (also bspw. wie viel Geld für Tanken fällig wurde). Alle anderen -- also einzigartige -- Ausgaben, die keinem wiederkehrenden Umsatz zugeordnet sind, werden pro Kategorie als "`Sonstige"' zusammengefasst.
 
-\textit{Anmerkung: Die Jahresansicht soll überarbeitet werden...}
+\subsection*{Beispiel: Wocheneinkauf}
+
+In Abbildung \ref{fig:AnnualOverview} kann erkannt werden, dass die geplanten Ausgaben für den Wocheneinkauf pro Monat überschritten werden. Ab August 2025 werden 350 Euro bis zum Ende des Jahres aufgeführt, das ist das Planungselement, welches bei dem wiederkehrenden Umsatz "`Wocheneinkauf"' unter "`Zahlungen"' hinterlegt ist (s. Abschnitt \ref{sec:fixedExpenses}). Hier könnte jetzt genauer in die Analyse gegangen werden, weshalb die Ausgaben höher als erwartet sind oder das Planungselement nach oben korrigiert werden. Dann würden bspw. 400 Euro in Zukunft geplant werden und bspw. im Jahr 2026 pro Monat für Wocheneinkäufe angezeigt werden. Somit kann Ende des Jahres bpsw. in das nächste Jahr geschaut werden, um herauszufinden, wie hoch die Fixkosten pro Monat voraussichtlich sein werden.
+
+\textit{Anmerkung}: Es gibt aktuell keine Ansicht, die eine Auflistung aller Ausgaben (inkl. einzigartiger Ausgaben) pro Monat oder Jahr ermöglicht und dabei eine Summe bildet. Sollte eine solche Ansicht benötigt werden, kann etwas ähnliches über die Analyseansicht erreicht werden, indem eine Kategorie ausgewählt und im Diagramm auf den Balken des entsprechenden Monats geklickt wird. So kann -- etwas umständlich -- eine Aufschlüsselung aller Ausgaben eines Monats mit dazugehöriger Summe vorgenommen werden.
+
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=\textwidth]{img/Screenshot-AnnualOverview}
+	\vspace{-2em}
+	\caption{Jahresansicht (aktueller Monat: August 2025)}
+	\label{fig:AnnualOverview}
+\end{figure}
 
 \section{Analyseansicht}
 
-Die Analyse Ansicht ermöglicht die Untersuchung der Ausgaben einer Umsatzkategorie, um die Entwicklung der Ausgaben innerhalb eines gewählten Zeitraums nachvollziehen zu können. Die Visualisierung erfolgt mithilfe eines Balkendiagramms, welches drei Achsen hat: Eine Abszissenachse (x-Achse) und zwei Ordinatenachsen (y-Achsen). 
+Die Analyseansicht ermöglicht die Untersuchung der Ausgaben einer Umsatzkategorie, um die Entwicklung der Ausgaben innerhalb eines gewählten Zeitraums nachvollziehen zu können. Die Visualisierung erfolgt mithilfe eines Balkendiagramms, welches drei Achsen hat: Eine Abszissenachse (x-Achse) und zwei Ordinatenachsen (y-Achsen). 
 
 Die x-Achse zeigt die Monate und die linke y-Achse zeigt die Höhe der Ausgaben in dieser Kategorie für den jeweiligen Monat. Die rechte x-Achse zeigt die kumulierte Höhe der Ausgaben für den dargestellten Zeitraum. Diese Kumulation wird als Linie auf dem Balkendiagramm dargestellt.   
 
 Sollte ein Budget für die ausgewählte Kategorie gepflegt sein, wird dieses als horizontale, rot gestrichelte Linie angezeigt. Diese Linie richtet sich in Abhängigkeit des eingestellten Budgettyps ("`monatlich"' oder "`jährlich"') entweder an der linken oder rechten Abszissenachse aus. 
 
-Ein Klick auf einen Balken befüllt die Tabelle auf der rechten Seite der Ansicht und deckt somit alle Ausgaben des Monats innerhalb dieser Kategorie auf.
+Ein Klick auf einen Balken befüllt die Tabelle auf der rechten Seite der Ansicht und deckt somit alle Ausgaben des Monats innerhalb dieser Kategorie auf (s. Abbildung \ref{fig:AnalsisView}).
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=\textwidth]{img/Screenshot-AnalysisView}
+	\vspace{-2em}
+	\caption{Analyseansicht (geklickt auf den Balken "`November 2024"')}
+	\label{fig:AnalsisView}
+\end{figure}
