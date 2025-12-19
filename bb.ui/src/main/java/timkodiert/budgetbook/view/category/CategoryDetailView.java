@@ -20,7 +20,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 import timkodiert.budgetbook.budget.BudgetType;
-import timkodiert.budgetbook.converter.BbCurrencyStringConverter;
 import timkodiert.budgetbook.converter.Converters;
 import timkodiert.budgetbook.converter.ReferenceStringConverter;
 import timkodiert.budgetbook.domain.CategoryCrudService;
@@ -29,7 +28,9 @@ import timkodiert.budgetbook.domain.CategoryGroupCrudService;
 import timkodiert.budgetbook.domain.CategoryGroupDTO;
 import timkodiert.budgetbook.domain.Reference;
 import timkodiert.budgetbook.i18n.LanguageManager;
+import timkodiert.budgetbook.ui.control.MoneyTextField;
 import timkodiert.budgetbook.ui.helper.Bind;
+import timkodiert.budgetbook.validation.ValidationResult;
 import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
 
@@ -44,7 +45,7 @@ public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implem
     @FXML
     private ComboBox<Reference<CategoryGroupDTO>> groupComboBox;
     @FXML
-    private TextField budgetValueTextField;
+    private MoneyTextField budgetValueTextField;
     @FXML
     private CheckBox budgetActiveCheckBox;
     @FXML
@@ -93,13 +94,18 @@ public class CategoryDetailView extends EntityBaseDetailView<CategoryDTO> implem
         Bind.comboBox(groupComboBox, beanAdapter.getProperty(CategoryDTO::getGroup, CategoryDTO::setGroup));
         // Budget
         budgetActiveCheckBox.selectedProperty().bindBidirectional(beanAdapter.getProperty(CategoryDTO::isBudgetActive, CategoryDTO::setBudgetActive));
-        budgetValueTextField.textProperty().bindBidirectional(beanAdapter.getProperty(CategoryDTO::getBudgetValue, CategoryDTO::setBudgetValue),
-                                                              new BbCurrencyStringConverter());
+        budgetValueTextField.integerValueProperty().bindBidirectional(beanAdapter.getProperty(CategoryDTO::getBudgetValue, CategoryDTO::setBudgetValue));
         Bind.comboBox(budgetTypeComboBox, beanAdapter.getProperty(CategoryDTO::getBudgetType, CategoryDTO::setBudgetType));
 
         // Validierungen
         validationMap.put("name", nameTextField);
         validationWrapper.register(beanAdapter.getProperty(CategoryDTO::getName, CategoryDTO::setName));
+        validationWrapper.registerCustomValidation("budgetValueValid",
+                                                   budgetValueTextField.getTextField(),
+                                                   () -> budgetValueTextField.isStringFormatValid()
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error("{amount.format.valid}"),
+                                                   budgetValueTextField.getTextField().textProperty());
     }
 
     @Override

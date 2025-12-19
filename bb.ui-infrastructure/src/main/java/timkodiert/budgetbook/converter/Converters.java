@@ -2,9 +2,9 @@ package timkodiert.budgetbook.converter;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javafx.util.StringConverter;
 
 import timkodiert.budgetbook.analysis.AnalysisPeriod;

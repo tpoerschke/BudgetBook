@@ -53,6 +53,7 @@
     <li>
       <a href="#über-das-projekt">Über das Projekt</a>
       <ul>
+        <li><a href="#screenshots">Screenshots</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
@@ -83,7 +84,7 @@
 
 ## Über das Projekt
 
-[![JBudgetBook-MainView][product-screenshot]](https://github.com/tpoerschke/BudgetBook)
+[![JBudgetBook-MainView][product-screenshot-1]](https://github.com/tpoerschke/BudgetBook)
 
 In Zeiten vieler Abonnements und weitverbreiteter Kartenzahlung kann man schnell die Übersicht über seine Ausgaben verlieren.
 Dabei unterstützt dich dieses Haushaltsbuch, indem es die Nachverfolgung -- via Import oder manueller Pflege --, Planung und Analyse deiner Ausgaben ermöglicht.
@@ -92,7 +93,10 @@ Das Projekt befindet sich noch in einem frühen Stadium, weswegen Bugs auftreten
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Screenshots
 
+[![JBudgetBook-AnnualOverview][product-screenshot-2]](https://github.com/tpoerschke/BudgetBook)
+[![JBudgetBook-AnalysisView][product-screenshot-3]](https://github.com/tpoerschke/BudgetBook)
 
 ### Built With
 
@@ -125,7 +129,7 @@ auszuführen.
 
 ## Getting Started für Entwickler
 
-Das Projekt kann lokal wie folgt aufgesetzt werden. Eine Installation als `.exe` (Windows) oder `.app` (Mac) ist aktuell nicht möglich.
+Das Projekt kann lokal wie folgt aufgesetzt werden.
 
 ### Installation
 
@@ -241,7 +245,11 @@ Project Link: [https://github.com/tpoerschke/BudgetBook](https://github.com/tpoe
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[product-screenshot]: images/MonatsansichtScreenshot.png
+[product-screenshot-1]: images/Screenshot-MonthlyOverview.png
+
+[product-screenshot-2]: images/Screenshot-AnnualOverview.png
+
+[product-screenshot-3]: images/Screenshot-AnalysisView.png
 
 [OpenJDK-shield]: https://img.shields.io/badge/OpenJDK-222?style=for-the-badge&logo=OpenJDK
 [OpenJDK-url]: https://aws.amazon.com/corretto/

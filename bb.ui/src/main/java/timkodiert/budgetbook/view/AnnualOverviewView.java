@@ -19,6 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import timkodiert.budgetbook.SystemClock;
 import timkodiert.budgetbook.annual_overview.AnnualOverviewDTO;
 import timkodiert.budgetbook.annual_overview.AnnualOverviewService;
 import timkodiert.budgetbook.annual_overview.TableRowData;
@@ -67,7 +68,7 @@ public class AnnualOverviewView implements Initializable, View {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        yearFilter = new YearFilter(selectedYearBox, prevYearBtn, nextYearBtn);
+        yearFilter = new YearFilter(selectedYearBox, prevYearBtn, nextYearBtn, SystemClock.getYearMonthNow().getYear());
         yearFilter.addListener((observable, oldValue, newValue) -> loadAndDisplayData());
         loadAndDisplayData();
 

@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.net.URL;
 import java.time.Month;
-import java.time.Year;
 import java.time.YearMonth;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +31,7 @@ import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
+import timkodiert.budgetbook.SystemClock;
 import timkodiert.budgetbook.analysis.AnalysisPeriod;
 import timkodiert.budgetbook.analysis.AnalysisService;
 import timkodiert.budgetbook.analysis.CategorySeriesGenerator;
@@ -191,7 +191,7 @@ public class AnalysisView implements View, Initializable {
         if (periodComboBox.getSelectionModel().getSelectedItem() == AnalysisPeriod.THIS_YEAR) {
             return;
         }
-        YearMonth yearMonth = YearMonth.now();
+        YearMonth yearMonth = SystemClock.getYearMonthNow();
         int xVal = 12 - yearMonth.getMonthValue() + 1;
         AnnotationLine yearLine = new AnnotationLine(xVal, true, false);
         String monthStr = String.format("%d →", yearMonth.getYear());
@@ -218,9 +218,9 @@ public class AnalysisView implements View, Initializable {
         int chartX = (int) chart.getChartXFromCoordinate((int) event.getScreenX());
         YearMonth yearMonth;
         if (analysisPeriod == AnalysisPeriod.LAST_12_MONTH) {
-            yearMonth = YearMonth.now().minusMonths(12);
+            yearMonth = SystemClock.getYearMonthNow().minusMonths(12);
         } else {
-            yearMonth = Year.now().atMonth(Month.JANUARY);
+            yearMonth = SystemClock.getYearNow().atMonth(Month.JANUARY);
         }
         yearMonth = yearMonth.plusMonths(chartX);
 

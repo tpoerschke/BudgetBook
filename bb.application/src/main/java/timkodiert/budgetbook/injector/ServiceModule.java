@@ -1,10 +1,9 @@
 package timkodiert.budgetbook.injector;
 
-import javax.inject.Singleton;
-
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import jakarta.inject.Singleton;
 import jakarta.validation.MessageInterpolator;
 import javafx.fxml.FXMLLoader;
 import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
