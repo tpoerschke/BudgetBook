@@ -10,10 +10,10 @@ public class SystemClock {
     }
 
     public static YearMonth getYearMonthNow() {
-        return YearMonth.of(2025, 8); //YearMonth.now();
+        return YearMonth.now(); // für Testdaten: YearMonth.of(2025, 8)
     }
 
     public static Year getYearNow() {
-        return Year.of(2025); //Year.now();
+        return Year.now(); // für Testdaten: Year.of(2025)
     }
 }
