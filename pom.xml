@@ -13,7 +13,7 @@
 
   <properties>
     <app.name>JBudgetBook</app.name>
-    <app.version>${version}</app.version>
+    <app.version>0.4.1</app.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <windows.upgrade.uuid>1c8b974d-68c5-4d0c-8b4d-6446bbbb2451</windows.upgrade.uuid>
