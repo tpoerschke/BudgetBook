@@ -58,6 +58,56 @@
               <goal>copy-dependencies</goal>
             </goals>
           </execution>
+          <!-- 1) Main-JAR (bb.application) ins Input-Verzeichnis -->
+          <execution>
+            <id>copy-main-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${groupId}</groupId>
+                  <artifactId>bb.application</artifactId>
+                  <version>${project.version}</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+                  <destFileName>bb.application.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+
+          <!-- 2) Alle Runtime-Dependencies (inkl. bb.* + Third Party) nach dependency -->
+          <execution>
+            <id>copy-runtime-deps</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeScope>runtime</includeScope>
+              <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+
+              <!-- damit du dein Main-JAR nicht doppelt in /app bekommst -->
+              <excludeArtifactIds>bb.application</excludeArtifactIds>
+
+              <excludeTransitive>false</excludeTransitive>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-openjfx</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeArtifactIds>bb.ui</includeArtifactIds>
+              <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+<!--              <includeGroupIds>org.openjfx</includeGroupIds>-->
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -82,6 +132,7 @@
 
               <!-- Clean target dir before building image -->
               <removeDirectories>${project.build.directory}/jvm-image</removeDirectories>
+              <addModules>${jvm.modules}</addModules>
 
               <!-- Pass jlink args explicitly -->
               <args>
@@ -91,7 +142,7 @@
                 <arg>--output</arg>
                 <arg>${project.build.directory}/jvm-image</arg>
 
-                <arg>--strip-native-commands</arg>
+<!--                <arg>&#45;&#45;strip-native-commands</arg>-->
                 <arg>--no-header-files</arg>
                 <arg>--strip-debug</arg>
                 <arg>--no-man-pages</arg>
