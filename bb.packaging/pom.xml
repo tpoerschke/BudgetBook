@@ -13,6 +13,30 @@
     <maven.exec.skip>true</maven.exec.skip>
   </properties>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>${version.jfx}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>${version.jfx}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-web</artifactId>
+      <version>${version.jfx}</version>
+    </dependency>
+    <dependency>
+      <!-- Benötigt für xchart -->
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>${version.jfx}</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -99,13 +123,13 @@
           <execution>
             <id>copy-openjfx</id>
             <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
+            <goals><goal>copy-dependencies</goal></goals>
             <configuration>
-              <includeArtifactIds>bb.ui</includeArtifactIds>
-              <outputDirectory>${project.build.directory}/dependency</outputDirectory>
-<!--              <includeGroupIds>org.openjfx</includeGroupIds>-->
+              <outputDirectory>${build.platformModulesDir}</outputDirectory>
+              <includeGroupIds>org.openjfx</includeGroupIds>
+              <!-- bewusst KEIN includeScope, damit nichts “versehentlich” rausgefiltert wird -->
+              <excludeTypes>pom</excludeTypes>
+              <excludeClassifiers>sources,javadoc</excludeClassifiers>
             </configuration>
           </execution>
         </executions>
@@ -132,7 +156,7 @@
 
               <!-- Clean target dir before building image -->
               <removeDirectories>${project.build.directory}/jvm-image</removeDirectories>
-              <addModules>${jvm.modules}</addModules>
+<!--              <addModules>${jvm.modules}</addModules>-->
 
               <!-- Pass jlink args explicitly -->
               <args>

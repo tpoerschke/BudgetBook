@@ -18,6 +18,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <windows.upgrade.uuid>1c8b974d-68c5-4d0c-8b4d-6446bbbb2451</windows.upgrade.uuid>
     <windows.vendor>${groupId}</windows.vendor>
+    <javafx.platform></javafx.platform> <!-- Wird über profile gesetzt -->
 
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
@@ -28,7 +29,7 @@
 
     <main.class>timkodiert.budgetbook.Main</main.class>
     <launcher.class>timkodiert.budgetbook.Launch</launcher.class>
-    <jvm.modules>java.logging</jvm.modules>
+    <jvm.modules>bb.application,javafx.controls,javafx.fxml</jvm.modules>
 
     <!-- Infrastructure -->
     <version.jfx>21.0.6</version.jfx>
@@ -249,6 +250,32 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>windows</id>
+      <activation><os><family>Windows</family></os></activation>
+      <properties>
+        <javafx.platform>win</javafx.platform>
+        <jpackage.type>msi</jpackage.type>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>linux</id>
+      <activation><os><family>unix</family></os></activation>
+      <properties>
+        <javafx.platform>linux</javafx.platform>
+        <jpackage.type>rpm</jpackage.type>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>mac</id>
+      <activation><os><family>mac</family></os></activation>
+      <properties>
+        <javafx.platform>mac</javafx.platform>
+        <jpackage.type>dmg</jpackage.type>
+      </properties>
+    </profile>
   </profiles>
 
   <dependencyManagement>
@@ -279,26 +306,22 @@
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-controls</artifactId>
         <version>${version.jfx}</version>
-        <scope>compile</scope>
       </dependency>
       <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-fxml</artifactId>
         <version>${version.jfx}</version>
-        <scope>compile</scope>
       </dependency>
       <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-web</artifactId>
         <version>${version.jfx}</version>
-        <scope>compile</scope>
       </dependency>
       <dependency>
         <!-- Benötigt für xchart -->
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-swing</artifactId>
         <version>${version.jfx}</version>
-        <scope>compile</scope>
       </dependency>
       <!-- Icons -->
       <dependency>
