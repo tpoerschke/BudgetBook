@@ -40,7 +40,7 @@ public class UniqueTurnover extends BaseEntity {
     private List<UniqueTurnoverInformation> paymentInformations = new ArrayList<>();
 
     @Setter
-    @OneToOne(mappedBy = "uniqueExpense", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(mappedBy = "uniqueExpense", cascade = CascadeType.ALL, orphanRemoval = true)
     private AccountTurnover accountTurnover;
 
     @Setter

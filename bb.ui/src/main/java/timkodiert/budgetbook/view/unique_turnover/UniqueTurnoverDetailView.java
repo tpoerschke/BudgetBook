@@ -210,10 +210,11 @@ public class UniqueTurnoverDetailView extends EntityBaseDetailView<UniqueTurnove
 
     @Override
     protected void beanSet() {
-        importReceiverTextField.setText(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getReceiver));
-        importReferenceTextField.setText(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getReference));
-        importPostingTextTextField.setText(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getPostingText));
-        importAmountTextField.setText(bbCurrencyStringConverter.toString(nvl(beanAdapter.getBean().getAccountTurnover(), AccountTurnoverDTO::getAmount)));
+        AccountTurnoverDTO accountTurnover = nvl(beanAdapter.getBean(), UniqueTurnoverDTO::getAccountTurnover);
+        importReceiverTextField.setText(nvl(accountTurnover, AccountTurnoverDTO::getReceiver));
+        importReferenceTextField.setText(nvl(accountTurnover, AccountTurnoverDTO::getReference));
+        importPostingTextTextField.setText(nvl(accountTurnover, AccountTurnoverDTO::getPostingText));
+        importAmountTextField.setText(bbCurrencyStringConverter.toString(nvl(accountTurnover, AccountTurnoverDTO::getAmount)));
         updateImportAmountWarning();
     }
 

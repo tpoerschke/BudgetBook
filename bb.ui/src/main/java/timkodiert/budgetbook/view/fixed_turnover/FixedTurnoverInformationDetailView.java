@@ -25,12 +25,12 @@ import timkodiert.budgetbook.domain.PaymentInformationDTO;
 import timkodiert.budgetbook.domain.PaymentType;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.ui.control.MoneyTextField;
+import timkodiert.budgetbook.ui.control.MonthYearPickerWidget;
+import timkodiert.budgetbook.ui.control.MonthYearPickerWidgetFactory;
 import timkodiert.budgetbook.ui.helper.Bind;
 import timkodiert.budgetbook.validation.ValidationResult;
 import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.BaseDetailView;
-import timkodiert.budgetbook.view.widget.MonthYearPickerWidget;
-import timkodiert.budgetbook.view.widget.MonthYearPickerWidgetFactory;
 
 public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentInformationDTO> implements Initializable {
 

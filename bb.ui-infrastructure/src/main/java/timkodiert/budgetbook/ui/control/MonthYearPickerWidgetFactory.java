@@ -1,11 +1,11 @@
-package timkodiert.budgetbook.view.widget;
+package timkodiert.budgetbook.ui.control;
 
 import java.time.YearMonth;
 
 import dagger.assisted.AssistedFactory;
 import javafx.scene.layout.Pane;
 
-import static timkodiert.budgetbook.view.widget.MonthYearPickerWidget.ViewMode;
+import static timkodiert.budgetbook.ui.control.MonthYearPickerWidget.ViewMode;
 
 @AssistedFactory
 public interface MonthYearPickerWidgetFactory {

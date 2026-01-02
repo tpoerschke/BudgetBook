@@ -1,4 +1,4 @@
-package timkodiert.budgetbook.view.widget;
+package timkodiert.budgetbook.ui.control;
 
 import java.io.IOException;
 import java.net.URL;
