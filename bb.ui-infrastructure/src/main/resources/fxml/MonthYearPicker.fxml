@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/">
+  <HBox fx:id="widgetInnerContainer">
+    <ChoiceBox fx:id="monthChoiceBox" prefWidth="100.0"/>
+    <TextField fx:id="yearTextField" prefWidth="80.0" promptText="%label.empty"/>
+  </HBox>
+</fx:root>
