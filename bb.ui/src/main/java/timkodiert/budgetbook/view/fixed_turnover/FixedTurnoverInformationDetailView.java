@@ -12,12 +12,12 @@ import dagger.assisted.AssistedInject;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -25,16 +25,13 @@ import timkodiert.budgetbook.domain.PaymentInformationDTO;
 import timkodiert.budgetbook.domain.PaymentType;
 import timkodiert.budgetbook.i18n.LanguageManager;
 import timkodiert.budgetbook.ui.control.MoneyTextField;
-import timkodiert.budgetbook.ui.control.MonthYearPickerWidget;
-import timkodiert.budgetbook.ui.control.MonthYearPickerWidgetFactory;
+import timkodiert.budgetbook.ui.control.MonthYearPicker;
 import timkodiert.budgetbook.ui.helper.Bind;
 import timkodiert.budgetbook.validation.ValidationResult;
 import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.BaseDetailView;
 
 public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentInformationDTO> implements Initializable {
-
-    private static final String MONTH_SELECTED_VALIDATION_KEY = "{fixedTurnover.month.selected}";
 
     @FXML
     private MoneyTextField valueTextField;
@@ -57,33 +54,32 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
     @FXML
     private ComboBox<PaymentType> typeChoiceBox;
     @FXML
-    private HBox dateContainer;
-
-    private MonthYearPickerWidget startMonthWidget;
-    private MonthYearPickerWidget endMonthWidget;
+    private MonthYearPicker startMonthWidget;
+    @FXML
+    private MonthYearPicker endMonthWidget;
 
     private Stage stage;
     private PaymentInformationDTO backupBean;
 
     private final LanguageManager languageManager;
-    private final MonthYearPickerWidgetFactory monthYearPickerWidgetFactory;
+    private final FXMLLoader fxmlLoader;
     private final BiConsumer<PaymentInformationDTO, PaymentInformationDTO> onSaveCallback;
 
     @AssistedInject
     public FixedTurnoverInformationDetailView(ValidationWrapperFactory<PaymentInformationDTO> validationWrapperFactory,
                                               LanguageManager languageManager,
-                                              MonthYearPickerWidgetFactory monthYearPickerWidgetFactory,
+                                              FXMLLoader fxmlLoader,
                                               @Assisted BiConsumer<PaymentInformationDTO, PaymentInformationDTO> updateCallback) {
         super(validationWrapperFactory);
         this.languageManager = languageManager;
-        this.monthYearPickerWidgetFactory = monthYearPickerWidgetFactory;
+        this.fxmlLoader = fxmlLoader;
         this.onSaveCallback = updateCallback;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        startMonthWidget = monthYearPickerWidgetFactory.create(dateContainer, "Erster Monat", null, false);
-        endMonthWidget = monthYearPickerWidgetFactory.create(dateContainer, "Letzter Monat (optional)", null, true);
+        startMonthWidget.init(fxmlLoader, languageManager);
+        endMonthWidget.init(fxmlLoader, languageManager);
 
         typeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> typeChoiceBoxListener(newValue));
 
@@ -103,6 +99,10 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
         endMonthWidget.valueProperty().bindBidirectional(beanAdapter.getProperty(PaymentInformationDTO::getEnd, PaymentInformationDTO::setEnd));
 
         // Validierungen
+        initValidation();
+    }
+
+    private void initValidation() {
         validationMap.put("start", startMonthWidget.getMonthChoiceBox());
         validationMap.put("type", typeChoiceBox);
         validationWrapper.register(typeChoiceBox.getSelectionModel().selectedItemProperty(),
@@ -114,34 +114,10 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
                                                            ? ValidationResult.valid()
                                                            : ValidationResult.error("{amount.format.valid}"),
                                                    valueTextField.getTextField().textProperty());
-        validationWrapper.registerCustomValidation("month1Valid",
-                                                   month1ChoiceBox,
-                                                   () -> !month1ChoiceBox.isVisible() || month1ChoiceBox.getSelectionModel().getSelectedItem() != null
-                                                           ? ValidationResult.valid()
-                                                           : ValidationResult.error(MONTH_SELECTED_VALIDATION_KEY),
-                                                   month1ChoiceBox.getSelectionModel().selectedItemProperty(),
-                                                   typeChoiceBox.getSelectionModel().selectedItemProperty());
-        validationWrapper.registerCustomValidation("month2Valid",
-                                                   month2ChoiceBox,
-                                                   () -> !month2ChoiceBox.isVisible() || month2ChoiceBox.getSelectionModel().getSelectedItem() != null
-                                                           ? ValidationResult.valid()
-                                                           : ValidationResult.error(MONTH_SELECTED_VALIDATION_KEY),
-                                                   month2ChoiceBox.getSelectionModel().selectedItemProperty(),
-                                                   typeChoiceBox.getSelectionModel().selectedItemProperty());
-        validationWrapper.registerCustomValidation("month3Valid",
-                                                   month3ChoiceBox,
-                                                   () -> !month3ChoiceBox.isVisible() || month3ChoiceBox.getSelectionModel().getSelectedItem() != null
-                                                           ? ValidationResult.valid()
-                                                           : ValidationResult.error(MONTH_SELECTED_VALIDATION_KEY),
-                                                   month3ChoiceBox.getSelectionModel().selectedItemProperty(),
-                                                   typeChoiceBox.getSelectionModel().selectedItemProperty());
-        validationWrapper.registerCustomValidation("month4Valid",
-                                                   month4ChoiceBox,
-                                                   () -> !month4ChoiceBox.isVisible() || month4ChoiceBox.getSelectionModel().getSelectedItem() != null
-                                                           ? ValidationResult.valid()
-                                                           : ValidationResult.error(MONTH_SELECTED_VALIDATION_KEY),
-                                                   month4ChoiceBox.getSelectionModel().selectedItemProperty(),
-                                                   typeChoiceBox.getSelectionModel().selectedItemProperty());
+        initCustomValidationForMonthChoiceBox("month1Valid", month1ChoiceBox);
+        initCustomValidationForMonthChoiceBox("month2Valid", month2ChoiceBox);
+        initCustomValidationForMonthChoiceBox("month3Valid", month3ChoiceBox);
+        initCustomValidationForMonthChoiceBox("month4Valid", month4ChoiceBox);
         validationWrapper.registerCustomValidation("endBeforeStart",
                                                    endMonthWidget.getMonthChoiceBox(),
                                                    () -> endMonthWidget.valueProperty().get() == null ||
@@ -149,6 +125,16 @@ public class FixedTurnoverInformationDetailView extends BaseDetailView<PaymentIn
                                                            ? ValidationResult.valid()
                                                            : ValidationResult.error("{fixedTurnover.end.afterStart}"),
                                                    month4ChoiceBox.getSelectionModel().selectedItemProperty(),
+                                                   typeChoiceBox.getSelectionModel().selectedItemProperty());
+    }
+
+    private void initCustomValidationForMonthChoiceBox(String name, ChoiceBox<String> monthChoiceBox) {
+        validationWrapper.registerCustomValidation(name,
+                                                   monthChoiceBox,
+                                                   () -> !monthChoiceBox.isVisible() || monthChoiceBox.getSelectionModel().getSelectedItem() != null
+                                                           ? ValidationResult.valid()
+                                                           : ValidationResult.error("{fixedTurnover.month.selected}"),
+                                                   monthChoiceBox.getSelectionModel().selectedItemProperty(),
                                                    typeChoiceBox.getSelectionModel().selectedItemProperty());
     }
 
