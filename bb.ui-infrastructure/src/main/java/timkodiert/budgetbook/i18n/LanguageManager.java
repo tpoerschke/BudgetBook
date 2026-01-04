@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import static java.util.Locale.ENGLISH;
 import static java.util.Locale.GERMAN;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import lombok.Getter;
 import org.hibernate.validator.spi.messageinterpolation.LocaleResolver;
 import org.hibernate.validator.spi.messageinterpolation.LocaleResolverContext;

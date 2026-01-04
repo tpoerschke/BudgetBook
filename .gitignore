@@ -4,6 +4,9 @@ target/
 *.db
 *.app
 *.bkp
+
+_output.csv
+
 dependency-reduced-pom.xml
 JBudgetBook.app.zip
 JBudgetBook.tar.gz

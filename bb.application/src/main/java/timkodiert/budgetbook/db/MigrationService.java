@@ -1,9 +1,9 @@
 package timkodiert.budgetbook.db;
 
 import java.util.Set;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;

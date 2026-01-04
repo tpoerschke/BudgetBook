@@ -70,6 +70,9 @@ public class CategoryCrudServiceImpl implements CategoryCrudService {
     }
 
     private void linkEntities(Category category) {
+        if (category.getGroup() == null) {
+            return;
+        }
         boolean notYetLinked = category.getGroup().getCategories().stream().noneMatch(c -> c.getId() == category.getId());
         if (notYetLinked) {
             category.getGroup().getCategories().add(category);

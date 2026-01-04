@@ -8,12 +8,11 @@
   <name>jBudgetBook</name>
   <url>https://timkodiert.de</url>
   <packaging>pom</packaging>
-  <version>BETA-4.1</version>
-  <description>Nachverfolgen, Planen &amp; Analysieren – JBudgetBook verwandelt Zahlen in Klarheit und gibt dir die Kontrolle über deine Finanzen zurück. </description>
+  <version>0.5.0</version>
 
   <properties>
     <app.name>JBudgetBook</app.name>
-    <app.version>0.4.1</app.version>
+    <app.version>${version}</app.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <windows.upgrade.uuid>1c8b974d-68c5-4d0c-8b4d-6446bbbb2451</windows.upgrade.uuid>

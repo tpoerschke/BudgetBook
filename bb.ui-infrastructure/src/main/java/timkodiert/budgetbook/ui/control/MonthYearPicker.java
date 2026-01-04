@@ -1,15 +1,12 @@
-package timkodiert.budgetbook.view.widget;
+package timkodiert.budgetbook.ui.control;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.YearMonth;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
 import atlantafx.base.theme.Styles;
-import dagger.assisted.Assisted;
-import dagger.assisted.AssistedInject;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -22,23 +19,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.kordamp.ikonli.bootstrapicons.BootstrapIcons;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import timkodiert.budgetbook.dialog.StackTraceAlert;
+import timkodiert.budgetbook.exception.TechnicalException;
 import timkodiert.budgetbook.i18n.LanguageManager;
 
-import static timkodiert.budgetbook.view.FxmlResource.MONTH_YEAR_PICKER_WIDGET;
+public class MonthYearPicker extends VBox implements Initializable {
 
-public class MonthYearPickerWidget implements Initializable {
-
-    public enum ViewMode {
-        DEFAULT, INLINE
-    }
+    private static final String RESOURCE_LOCATION = "/fxml/MonthYearPicker.fxml";
 
     @FXML
     @Getter
@@ -46,40 +39,30 @@ public class MonthYearPickerWidget implements Initializable {
     @FXML
     private TextField yearTextField;
     @FXML
-    private VBox widgetContainer;
-    @FXML
     private HBox widgetInnerContainer;
+
     private final Label label = new Label();
     private final Button resetBtn = new Button("", new FontIcon(BootstrapIcons.TRASH));
-
-    private final LanguageManager languageManager;
-    private final String labelStr;
-    private final boolean showResetBtn;
-    private final ViewMode viewMode;
     private final ObjectProperty<YearMonth> value = new SimpleObjectProperty<>();
+
+    @Getter
+    @Setter // Getter und Setter für die Verwendung durch JavaFX / FXML
+    private boolean nullable;
 
     private boolean muteListener = false;
 
-    @AssistedInject
-    public MonthYearPickerWidget(LanguageManager languageManager,
-                                 @Assisted Pane parent,
-                                 @Assisted String labelStr,
-                                 @Assisted YearMonth initialValue,
-                                 @Assisted boolean showResetBtn,
-                                 @Assisted ViewMode viewMode) {
-        this.languageManager = languageManager;
-        this.value.setValue(initialValue);
-        this.labelStr = labelStr;
-        this.showResetBtn = showResetBtn;
-        this.viewMode = viewMode;
+    private LanguageManager languageManager;
 
+    public void init(FXMLLoader fxmlLoader, LanguageManager languageManager) {
+        this.languageManager = languageManager;
+
+        fxmlLoader.setLocation(getClass().getResource(RESOURCE_LOCATION));
+        fxmlLoader.setRoot(this);
+        fxmlLoader.setController(this);
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(MONTH_YEAR_PICKER_WIDGET.toString()));
-            loader.setController(this);
-            loader.setResources(languageManager.getResourceBundle());
-            parent.getChildren().add(loader.load());
-        } catch (IOException e) {
-            StackTraceAlert.createAndLog(languageManager.get("alert.widgetCouldNotBeOpened"), e).showAndWait();
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw TechnicalException.forFxmlNotFound(exception);
         }
     }
 
@@ -89,8 +72,8 @@ public class MonthYearPickerWidget implements Initializable {
         }
         if (monthChoiceBox.getSelectionModel().isEmpty() || StringUtils.isEmpty(yearTextField.getText())) {
             value.set(null);
+            return;
         }
-        // FIXME: Hier fliegen NPEs, besseres Handling einbauen. Dabei am MoneyTextField orientieren
         value.set(YearMonth.of(Integer.parseInt(yearTextField.getText()), monthChoiceBox.getSelectionModel().getSelectedIndex() + 1));
     }
 
@@ -112,6 +95,8 @@ public class MonthYearPickerWidget implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        monthChoiceBox.getItems().addAll(languageManager.getMonths());
+
         resetBtn.setOnAction(event -> {
             monthChoiceBox.getSelectionModel().clearSelection();
             yearTextField.setText("");
@@ -124,40 +109,29 @@ public class MonthYearPickerWidget implements Initializable {
             }
             return null;
         };
-        yearTextField.setPromptText("(leer)");
         yearTextField.setTextFormatter(new TextFormatter<>(integerFilter));
-
-        label.setText(labelStr);
-
-        monthChoiceBox.getItems().setAll(Arrays.asList(languageManager.getMonths()));
-
-        if (this.value.get() != null) {
-            monthChoiceBox.getSelectionModel().select(this.value.get().getMonthValue() - 1);
-            yearTextField.setText("" + this.value.get().getYear());
-        } else {
-            yearTextField.setText("");
-        }
 
         valueProperty().addListener((observable, oldValue, newValue) -> updateUi());
         monthChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> updateValue());
         yearTextField.textProperty().addListener((observable, oldValue, newValue) -> updateValue());
 
         // Styling setzen
-        if (viewMode == ViewMode.INLINE) {
-            widgetInnerContainer.getChildren().addFirst(label);
-            label.getStyleClass().add(Styles.LEFT_PILL);
-            monthChoiceBox.getStyleClass().add(Styles.CENTER_PILL);
-        } else {
-            widgetContainer.getChildren().addFirst(label);
-            monthChoiceBox.getStyleClass().add(Styles.LEFT_PILL);
-        }
+        this.getChildren().addFirst(label);
+        monthChoiceBox.getStyleClass().add(Styles.LEFT_PILL);
+        yearTextField.getStyleClass().add(Styles.RIGHT_PILL);
 
-        if (showResetBtn) {
-            resetBtn.getStyleClass().add(Styles.RIGHT_PILL);
-            yearTextField.getStyleClass().add(Styles.CENTER_PILL);
+        if (nullable) {
             widgetInnerContainer.getChildren().addAll(resetBtn);
-        } else {
-            yearTextField.getStyleClass().add(Styles.RIGHT_PILL);
         }
+    }
+
+    // Zur Verwendung durch JavaFX / FXML
+    public String getLabel() {
+        return label.getText();
+    }
+
+    // Zur Verwendung durch JavaFX / FXML
+    public void setLabel(String labelText) {
+        label.setText(labelText);
     }
 }

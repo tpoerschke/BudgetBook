@@ -37,11 +37,12 @@ class CsvAmountToIntegerConverterTest {
                          Arguments.of("100000,99", 10000099),
                          Arguments.of("0,123", 12),
                          Arguments.of("1,123", 112),
-                         Arguments.of("100.000,556", 10000055),
-                         Arguments.of("100000,556", 10000055),
+                         Arguments.of("100.000,556", 10000056),
+                         Arguments.of("100000,556", 10000056),
                          Arguments.of("10.", 1000),
                          Arguments.of("1,", 100),
-                         Arguments.of(",1", 10));
+                         Arguments.of(",1", 10),
+                         Arguments.of("16,90", "1690"));
     }
 
     @ParameterizedTest
