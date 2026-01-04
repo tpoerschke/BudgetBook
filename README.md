@@ -153,6 +153,8 @@ Das Projekt kann lokal wie folgt aufgesetzt werden. Eine Installation als `.exe`
 
 ### Bauen 
 
+Um einen Windows-Installer (.msi) zu bauen, wird das WIX-Toolset lokal benötigt.
+
 Mithilfe des Shell-Skripts `build_app.sh` kann die Applikation für das vorliegende Betriebssystem gebaut werden. Untestützt werden MacOS und Linux.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

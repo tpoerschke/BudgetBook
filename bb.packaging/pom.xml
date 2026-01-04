@@ -10,30 +10,56 @@
   <artifactId>bb.packaging</artifactId>
 
   <properties>
+    <!-- OpenJFX version used by the build -->
+    <version.jfx>21.0.6</version.jfx>
     <maven.exec.skip>true</maven.exec.skip>
+    <!-- Ort, wohin die plattformspezifischen JavaFX-JARs kopiert werden -->
+    <build.platformModulesDir>${project.build.directory}/platform-modules</build.platformModulesDir>
   </properties>
 
   <dependencies>
+    <!-- platform-specific JavaFX jars (copied by copy-openjfx into platform-modules) -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>${version.jfx}</version>
+      <classifier>${javafx.platform}</classifier>
+      <scope>runtime</scope>
+    </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>${version.jfx}</version>
+      <classifier>${javafx.platform}</classifier>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
       <version>${version.jfx}</version>
+      <classifier>${javafx.platform}</classifier>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>${version.jfx}</version>
+      <classifier>${javafx.platform}</classifier>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-web</artifactId>
       <version>${version.jfx}</version>
+      <classifier>${javafx.platform}</classifier>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
-      <!-- Benötigt für xchart -->
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-swing</artifactId>
       <version>${version.jfx}</version>
+      <classifier>${javafx.platform}</classifier>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 
@@ -81,6 +107,13 @@
             <goals>
               <goal>copy-dependencies</goal>
             </goals>
+            <configuration>
+              <!-- Verhindere, dass JavaFX-JARs sowie das Packaging-Modul selbst in das allgemeine dependency-Verzeichnis gelangen -->
+              <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+              <excludeGroupIds>org.openjfx</excludeGroupIds>
+              <!-- exclude this project artifact and other non-modular libs so they are not placed on the module-path -->
+              <excludeArtifactIds>${project.artifactId},bb.packaging,dagger,objenesis,mockito-core,mockito-junit-jupiter,javax.inject</excludeArtifactIds>
+            </configuration>
           </execution>
           <!-- 1) Main-JAR (bb.application) ins Input-Verzeichnis -->
           <execution>
@@ -114,9 +147,12 @@
               <includeScope>runtime</includeScope>
               <outputDirectory>${project.build.directory}/dependency</outputDirectory>
 
-              <!-- damit du dein Main-JAR nicht doppelt in /app bekommst -->
-              <excludeArtifactIds>bb.application</excludeArtifactIds>
+              <!-- exclude non-modular libs so they don't end up on the module-path for jlink -->
+              <!-- also exclude the packaging artifact itself to avoid automatic-module on module-path -->
+              <excludeArtifactIds>${project.artifactId},bb.packaging,bb.application,dagger,objenesis,mockito-core,javax.inject</excludeArtifactIds>
 
+              <!-- Prevent plain (non-classifier) JavaFX jars from being copied -->
+              <excludeGroupIds>org.openjfx</excludeGroupIds>
               <excludeTransitive>false</excludeTransitive>
             </configuration>
           </execution>
@@ -127,13 +163,100 @@
             <configuration>
               <outputDirectory>${build.platformModulesDir}</outputDirectory>
               <includeGroupIds>org.openjfx</includeGroupIds>
-              <!-- bewusst KEIN includeScope, damit nichts “versehentlich” rausgefiltert wird -->
+              <!-- nur plattformspezifische (classifier) JavaFX-JARs kopieren -->
+              <includeClassifiers>${javafx.platform}</includeClassifiers>
               <excludeTypes>pom</excludeTypes>
               <excludeClassifiers>sources,javadoc</excludeClassifiers>
             </configuration>
           </execution>
+
+          <!-- Fallback: falls classifier 'win' nicht verfügbar ist, versuche 'win-x64' -->
+          <execution>
+            <id>copy-openjfx-win-x64</id>
+            <phase>package</phase>
+            <goals><goal>copy-dependencies</goal></goals>
+            <configuration>
+              <outputDirectory>${build.platformModulesDir}</outputDirectory>
+              <includeGroupIds>org.openjfx</includeGroupIds>
+              <includeClassifiers>win-x64</includeClassifiers>
+              <excludeTypes>pom</excludeTypes>
+              <excludeClassifiers>sources,javadoc</excludeClassifiers>
+            </configuration>
+          </execution>
+
+          <!-- Kopiere nicht-modulare Bibliotheken separat, damit sie außerhalb des module-path landen -->
+          <execution>
+            <id>copy-nonmod-deps</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.google.dagger</groupId>
+                  <artifactId>dagger</artifactId>
+                  <version>2.55</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}/non-modular-deps</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.objenesis</groupId>
+                  <artifactId>objenesis</artifactId>
+                  <version>3.3</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}/non-modular-deps</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.mockito</groupId>
+                  <artifactId>mockito-core</artifactId>
+                  <version>5.15.2</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}/non-modular-deps</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.mockito</groupId>
+                  <artifactId>mockito-junit-jupiter</artifactId>
+                  <version>5.15.2</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}/non-modular-deps</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>javax.inject</groupId>
+                  <artifactId>javax.inject</artifactId>
+                  <version>1</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}/non-modular-deps</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
+
+      <!-- Entferne bb.packaging-*.jar aus target/dependency bevor jlink läuft -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>remove-packaging-jar</id>
+            <phase>package</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <target>
+                <delete>
+                  <fileset dir="${project.build.directory}/dependency">
+                    <include name="${project.artifactId}*.jar"/>
+                  </fileset>
+                </delete>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>io.github.wiverson</groupId>
         <artifactId>jtoolprovider-plugin</artifactId>
@@ -160,8 +283,13 @@
 
               <!-- Pass jlink args explicitly -->
               <args>
+                <!-- Modulpfad muss JavaFX (platform JARs) + project deps enthalten -->
+                <arg>--module-path</arg>
+                <arg>${build.platformModulesDir}${path.separator}${project.build.directory}/dependency</arg>
+
+                <!-- explizit benötigte Module (inkl. App-Modul) -->
                 <arg>--add-modules</arg>
-                <arg>ALL-MODULE-PATH</arg>
+                <arg>bb.application,javafx.controls,javafx.fxml,javafx.graphics,javafx.base,javafx.swing,javafx.web</arg>
 
                 <arg>--output</arg>
                 <arg>${project.build.directory}/jvm-image</arg>
@@ -198,17 +326,33 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.2</version>
+        <configuration>
+          <!-- Stelle sicher, dass keine javafx.*-Packages in das bb.packaging-JAR gelangen -->
+          <excludes>
+            <exclude>**/javafx/**</exclude>
+            <exclude>javafx/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
   <profiles>
     <profile>
-      <id>windows-active</id>
+      <id>windows</id>
       <activation>
         <os>
           <family>windows</family>
         </os>
       </activation>
+      <properties>
+        <!-- must match OpenJFX classifier available in your repos (try 'win' or 'win-x64') -->
+        <javafx.platform>win</javafx.platform>
+      </properties>
       <build>
         <plugins>
           <plugin>

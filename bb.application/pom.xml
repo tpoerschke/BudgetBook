@@ -27,4 +27,78 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.2</version>
+        <configuration>
+          <excludes>
+            <!-- Verhindert, dass javafx-Pakete (Split-Package mit OpenJFX) ins App-JAR gelangen -->
+            <exclude>**/javafx/**</exclude>
+            <exclude>javafx/**</exclude>
+
+            <!-- Vermeidet Duplikate von DI-/Test-Libs im App-JAR -->
+            <exclude>**/dagger/**</exclude>
+            <exclude>**/javax/inject/**</exclude>
+            <exclude>**/org/objenesis/**</exclude>
+            <exclude>**/org/mockito/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.4.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <filters>
+                <!-- remove any javafx classes from any artifact -->
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>javafx/**</exclude>
+                    <exclude>**/javafx/**</exclude>
+                    <!-- avoid packaging dagger implementation classes into the app (split-package) -->
+                    <exclude>dagger/**</exclude>
+                    <exclude>**/dagger/**</exclude>
+                    <exclude>**/dagger/internal/**</exclude>
+                    <!-- avoid packaging javax.inject / mockito / objenesis into the app -->
+                    <exclude>javax/inject/**</exclude>
+                    <exclude>org/objenesis/**</exclude>
+                    <exclude>org/mockito/**</exclude>
+                  </excludes>
+                </filter>
+
+                <!-- explicitly exclude OpenJFX artifacts if they would be shaded -->
+                <filter>
+                  <artifact>org.openjfx:*</artifact>
+                  <excludes>
+                    <exclude>**/*</exclude>
+                  </excludes>
+                </filter>
+
+                <!-- explicitly exclude dagger and mockito artifacts from shading -->
+                <filter>
+                  <artifact>com.google.dagger:*</artifact>
+                  <excludes><exclude>**/*</exclude></excludes>
+                </filter>
+                <filter>
+                  <artifact>org.mockito:*</artifact>
+                  <excludes><exclude>**/*</exclude></excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
