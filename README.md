@@ -58,18 +58,15 @@
       </ul>
     </li>
     <li>
-      <a href="#getting-started-für-benutzer">Getting Started für Benutzer</a>
+      <a href="#installation">Installation</a>
     </li>
     <li>
-      <a href="#getting-started-für-entwickler">Getting Started für Entwickler</a>
+      <a href="#contributing">Contributing</a>
       <ul>
-        <!--<li><a href="#prerequisites">Prerequisites</a></li>-->
-        <li><a href="#installation">Installation</a></li>
-        <li><a href="#debug">Debug</a></li>
-        <li><a href="#debug">Bauen</a></li>
+        <li><a href="#entwickeln">Entwickeln</a></li>
+        <li><a href="#bauen">Bauen</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -87,9 +84,14 @@
 [![JBudgetBook-MainView][product-screenshot-1]](https://github.com/tpoerschke/BudgetBook)
 
 In Zeiten vieler Abonnements und weitverbreiteter Kartenzahlung kann man schnell die Übersicht über seine Ausgaben verlieren.
-Dabei unterstützt dich dieses Haushaltsbuch, indem es die Nachverfolgung -- via Import oder manueller Pflege --, Planung und Analyse deiner Ausgaben ermöglicht.
+Dabei unterstützt dich dieses Haushaltsbuch, indem es die Nachverfolgung – via Import oder manueller Pflege –, Planung und Analyse deiner Ausgaben ermöglicht.
 
-Das Projekt befindet sich noch in einem frühen Stadium, weswegen Bugs auftreten können. Solltest du Bugs finden, kannst du dazu gerne Issues anlegen.
+Features:
+- **Planung** von wiederkehrenden Ausgaben (und Einnahmen) (**Fixkosten**)
+- **Nachverfolgung realer Ausgaben** (und Einnahmen) durch Import oder manueller Pflege
+- **Kategoriesierung** von Ausgaben (und Einnahmen)
+- Verwaltung von **Budgets je Kategorie**
+- **Analyse**, die Entwicklung einer Ausgabenkategorie darstellt
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -115,7 +117,9 @@ Das Projekt befindet sich noch in einem frühen Stadium, weswegen Bugs auftreten
 
 <!-- GETTING STARTED -->
 
-## Getting Started für Benutzer
+## Installation
+
+Die Anwendung steht beim aktuellen Release zum Download bereit: https://github.com/tpoerschke/BudgetBook/releases
 
 Anleitung für Mac:
 
@@ -127,11 +131,11 @@ Hinweis: Ggf. muss man die Ausführung explizit erlauben, wenn MacOS meldet, das
 In den Systemeinstelllungen (Systemeinstellungen > Datenschutz & Sicherheit) kann die Ausführung der App erlaubt werden, sobald ein Versuch unternommen wurde, sie
 auszuführen.
 
-## Getting Started für Entwickler
+## Contributing
 
-Das Projekt kann lokal wie folgt aufgesetzt werden.
+### Entwickeln
 
-### Installation
+Das Projekt kann lokal wie folgt aufgesetzt werden: 
 
 1. Repo klonen
    ```sh
@@ -139,34 +143,15 @@ Das Projekt kann lokal wie folgt aufgesetzt werden.
    ```
 2. Starten
 
-   VS Code: `mvn clean javafx:run`
+   VS Code: `mvn clean javafx:run` oder `mvn clean javafx:run@debug` und per Visual Studio Code attachen (`.vscode/launch.json`)
 
    IntelliJ: Run Configuration `Launch`
 
-3. Viel Spaß! :)
-
-### Debug
-
-1. Debug-Server starten
-
-   VS Code:`mvn clean javafx:run@debug`
-
-   IntelliJ:Run Configuration `Launch`
-2. Per Visual Studio Code attachen (`.vscode/launch.json`)
-
+3. Los entwickeln :)
 
 ### Bauen 
 
 Mithilfe des Shell-Skripts `build_app.sh` kann die Applikation für das vorliegende Betriebssystem gebaut werden. Untestützt werden MacOS und Linux.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-WIP
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
