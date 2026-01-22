@@ -8,7 +8,7 @@
   <name>jBudgetBook</name>
   <url>https://timkodiert.de</url>
   <packaging>pom</packaging>
-  <version>BETA-5</version>
+  <version>BETA-5.1</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
