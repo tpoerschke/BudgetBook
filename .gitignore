@@ -15,3 +15,4 @@ BB-THIRD-PARTY.txt
 
 .idea/ClojureProjectResolveSettings.xml
 .idea/sonarlint.xml
+.idea/copilot.*
