@@ -13,13 +13,15 @@
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="%menuBar.buttonEdit">
-              <MenuItem mnemonicParsing="false" onAction="#openManageExpensesView" text="%menuItem.openManageExpensesView"/>
-              <MenuItem mnemonicParsing="false" onAction="#openUniqueExpensesManageView" text="%menuItem.openUniqueExpensesView"/>
-              <SeparatorMenuItem mnemonicParsing="false"/>
-              <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="%menuItem.manageCategoriesView"/>
-              <MenuItem mnemonicParsing="false" onAction="#openManageCategoryGroupsView" text="%menuItem.manageCategoryGroupsView"/>
-              <SeparatorMenuItem mnemonicParsing="false"/>
-              <MenuItem mnemonicParsing="false" onAction="#openSettingsView" text="%menuItem.openSettingsView"/>
+            <MenuItem mnemonicParsing="false" onAction="#openManageExpensesView" text="%menuItem.openManageExpensesView"/>
+            <MenuItem mnemonicParsing="false" onAction="#openUniqueExpensesManageView" text="%menuItem.openUniqueExpensesView"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" onAction="#openBillingsManageView" text="%menuItem.openBillingsManageView"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" onAction="#openManageCategoriesView" text="%menuItem.manageCategoriesView"/>
+            <MenuItem mnemonicParsing="false" onAction="#openManageCategoryGroupsView" text="%menuItem.manageCategoryGroupsView"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" onAction="#openSettingsView" text="%menuItem.openSettingsView"/>
           </Menu>
             <Menu mnemonicParsing="false" text="%menuBar.buttonViews">
                 <MenuItem mnemonicParsing="false" onAction="#showAnnualOverview" text="%menuItem.showAnnualOverview"/>

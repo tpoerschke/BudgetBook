@@ -170,6 +170,11 @@ public class MainViewImpl implements Initializable, MainView {
     }
 
     @FXML
+    private void openBillingsManageView(ActionEvent event) {
+        loadViewPartial(FxmlResource.BILLING_MANAGE_VIEW);
+    }
+
+    @FXML
     private void openSettingsView() {
         propertiesService.buildWindow().showAndWait();
     }

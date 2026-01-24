@@ -11,6 +11,8 @@ import timkodiert.budgetbook.view.MonthlyOverviewView;
 import timkodiert.budgetbook.view.View;
 import timkodiert.budgetbook.view.about.AboutView;
 import timkodiert.budgetbook.view.analysis.AnalysisView;
+import timkodiert.budgetbook.view.billing.BillingDetailView;
+import timkodiert.budgetbook.view.billing.BillingManageView;
 import timkodiert.budgetbook.view.category.CategoriesManageView;
 import timkodiert.budgetbook.view.category.CategoryDetailView;
 import timkodiert.budgetbook.view.category_group.CategoryGroupDetailView;
@@ -43,7 +45,7 @@ public class ControllerFactory {
         viewControllerMap.put(ImportView.class, viewComponent::getImportView);
         viewControllerMap.put(FixedTurnoverWizardView.class, viewComponent::getFixedTurnoverWizardView);
         viewControllerMap.put(AnalysisView.class, viewComponent::getAnalysisView);
-        // MDV / Stammdaten
+        // MDV / Stammdaten / Bewegungsdaten
         viewControllerMap.put(FixedTurnoverManageView.class, viewComponent::getFixedTurnoverManageView);
         viewControllerMap.put(FixedTurnoverDetailView.class, viewComponent::getFixedTurnoverDetailView);
         viewControllerMap.put(UniqueTurnoverManageView.class, viewComponent::getUniqueExpensesManageView);
@@ -52,6 +54,8 @@ public class ControllerFactory {
         viewControllerMap.put(CategoryDetailView.class, viewComponent::getCategoryDetailView);
         viewControllerMap.put(CategoryGroupManageView.class, viewComponent::getCategoryGroupManageView);
         viewControllerMap.put(CategoryGroupDetailView.class, viewComponent::getCategoryGroupDetailView);
+        viewControllerMap.put(BillingManageView.class, viewComponent::getBillingManageView);
+        viewControllerMap.put(BillingDetailView.class, viewComponent::getBillingDetailView);
         // Technische Ansichten
         viewControllerMap.put(MigrationView.class, viewComponent::getMigrationView);
         // Sonstige Ansichten
