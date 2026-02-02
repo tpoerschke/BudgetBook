@@ -116,6 +116,11 @@
               <artifactId>lombok</artifactId>
               <version>${version.lombok}</version>
             </path>
+            <path>
+              <groupId>org.hibernate.orm</groupId>
+              <artifactId>hibernate-jpamodelgen</artifactId>
+              <version>${version.hibernate}</version>
+            </path>
           </annotationProcessorPaths>
         </configuration>
       </plugin>

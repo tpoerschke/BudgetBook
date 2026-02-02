@@ -9,6 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 import timkodiert.budgetbook.domain.FixedTurnoverDTO;
 import timkodiert.budgetbook.domain.Reference;
+import timkodiert.budgetbook.domain.SimplifiedUniqueTurnoverDTO;
 import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.domain.UniqueTurnoverDTO;
 import timkodiert.budgetbook.domain.model.BaseEntity;
@@ -42,6 +43,14 @@ public class UniqueTurnoverCrudServiceImpl implements UniqueTurnoverCrudService 
                                        .stream()
                                        .filter(uq -> Objects.equals(nvl(uq.getFixedTurnover(), BaseEntity::getId), nvl(fixedTurnoverRef, Reference::id)))
                                        .map(mapper::uniqueTurnoverToUniqueTurnoverDto)
+                                       .toList();
+    }
+
+    @Override
+    public List<SimplifiedUniqueTurnoverDTO> readSortedByDateDesc(int limit) {
+        return uniqueTurnoverRepository.findByLimitSortedByDateDesc(limit)
+                                       .stream()
+                                       .map(ut -> new SimplifiedUniqueTurnoverDTO(ut.getId(), ut.getBiller(), ut.getDate(), ut.getTotalValue()))
                                        .toList();
     }
 

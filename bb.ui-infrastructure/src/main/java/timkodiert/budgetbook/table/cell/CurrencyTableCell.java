@@ -31,7 +31,7 @@ public class CurrencyTableCell<S extends HasRowType, T extends Number> extends T
         this.cellStyle = null;
     }
 
-    public CurrencyTableCell(CellStyle cellStyle) {
+    public CurrencyTableCell(@Nullable CellStyle cellStyle) {
         this.cellStyle = cellStyle;
         this.forceBold = false;
     }

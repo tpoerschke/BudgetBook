@@ -1,23 +1,43 @@
 package timkodiert.budgetbook.view.billing;
 
+import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import javax.inject.Provider;
 
+import atlantafx.base.theme.Styles;
 import jakarta.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
+import timkodiert.budgetbook.dialog.StackTraceAlert;
 import timkodiert.budgetbook.domain.BillingCrudService;
 import timkodiert.budgetbook.domain.BillingDTO;
+import timkodiert.budgetbook.domain.SimplifiedUniqueTurnoverDTO;
+import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
+import timkodiert.budgetbook.i18n.LanguageManager;
+import timkodiert.budgetbook.table.cell.CurrencyTableCell;
+import timkodiert.budgetbook.table.cell.DateTableCell;
+import timkodiert.budgetbook.util.StageBuilder;
 import timkodiert.budgetbook.validation.ValidationWrapperFactory;
 import timkodiert.budgetbook.view.mdv_base.EntityBaseDetailView;
+
+import static timkodiert.budgetbook.view.FxmlResource.UNIQUE_TURNOVER_SELECTOR_MODAL;
 
 public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implements Initializable {
 
@@ -25,6 +45,31 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
     private BorderPane root;
     @FXML
     private TextField titleTextField;
+    @FXML
+    private TextArea descriptionTextArea;
+
+    @FXML
+    private TableView<SimplifiedUniqueTurnoverDTO> turnoverTable;
+    @FXML
+    private TableColumn<SimplifiedUniqueTurnoverDTO, String> billerColumn;
+    @FXML
+    private TableColumn<SimplifiedUniqueTurnoverDTO, LocalDate> dateColumn;
+    @FXML
+    private TableColumn<SimplifiedUniqueTurnoverDTO, Double> valueColumn;
+
+    @FXML
+    private TableView<SimplifiedUniqueTurnoverDTO> totalTable;
+    @FXML
+    private TableColumn<SimplifiedUniqueTurnoverDTO, String> totalBillerColumn;
+    @FXML
+    private TableColumn<SimplifiedUniqueTurnoverDTO, String> totalDateColumn;
+    @FXML
+    private TableColumn<SimplifiedUniqueTurnoverDTO, Double> totalValueColumn;
+
+    @FXML
+    private Button addTurnoverButton;
+    @FXML
+    private Button removeTurnoverButton;
 
     @FXML
     private Button saveButton;
@@ -32,11 +77,21 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
     private Button discardButton;
 
     private final BillingCrudService crudService;
+    private final UniqueTurnoverCrudService uniqueTurnoverCrudService;
+    private final LanguageManager languageManager;
+    private final Provider<StageBuilder> stageBuilderProvider;
 
     @Inject
-    public BillingDetailView(ValidationWrapperFactory<BillingDTO> validationWrapperFactory, BillingCrudService crudService) {
+    public BillingDetailView(ValidationWrapperFactory<BillingDTO> validationWrapperFactory,
+                             BillingCrudService crudService,
+                             UniqueTurnoverCrudService uniqueTurnoverCrudService,
+                             LanguageManager languageManager,
+                             Provider<StageBuilder> stageBuilderProvider) {
         super(validationWrapperFactory);
         this.crudService = crudService;
+        this.uniqueTurnoverCrudService = uniqueTurnoverCrudService;
+        this.languageManager = languageManager;
+        this.stageBuilderProvider = stageBuilderProvider;
     }
 
     @Override
@@ -47,9 +102,34 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
 
         titleTextField.textProperty().bindBidirectional(beanAdapter.getProperty(BillingDTO::getTitle, BillingDTO::setTitle));
 
+        // Tabelle konfigurieren
+        initializeTable();
+
+        turnoverTable.getItems().add(new SimplifiedUniqueTurnoverDTO(-1, "Edeka", LocalDate.now(), -1990));
+        turnoverTable.getItems().add(new SimplifiedUniqueTurnoverDTO(-1, "Eisdiele", null, -250));
+        totalTable.getItems().add(new SimplifiedUniqueTurnoverDTO(-1, "Insgesamt", null, -999999));
+
+        // Bindings
+        //        Bindings.bindContentBidirectional(turnoverTable.getItems(),
+        //                                          beanAdapter.getListProperty(BillingDTO::getUniqueTurnovers, BillingDTO::setUniqueTurnovers));
+
         // Validierungen
         validationMap.put("title", titleTextField);
         validationWrapper.register(beanAdapter.getProperty(BillingDTO::getTitle, BillingDTO::setTitle));
+    }
+
+    private void initializeTable() {
+        billerColumn.setCellValueFactory(new PropertyValueFactory<>("biller"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateColumn.setCellFactory(col -> new DateTableCell<>());
+        valueColumn.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
+        valueColumn.setCellFactory(col -> new CurrencyTableCell<>());
+        turnoverTable.getStyleClass().addAll(Styles.BORDERED);
+
+        totalBillerColumn.setCellValueFactory(new PropertyValueFactory<>("biller"));
+        totalDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        totalValueColumn.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
+        totalValueColumn.setCellFactory(col -> new CurrencyTableCell<>());
     }
 
     @Override
@@ -81,8 +161,52 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
     @FXML
     private void delete(ActionEvent event) {
         BillingDTO billingDTO = this.getBean();
-        crudService.delete(billingDTO.getId());
-        beanAdapter.setBean(null);
-        onUpdate.accept(null);
+        if (billingDTO != null) {
+            crudService.delete(billingDTO.getId());
+            beanAdapter.setBean(null);
+            onUpdate.accept(null);
+        }
+    }
+
+    @FXML
+    private void addTurnover(ActionEvent event) {
+        try {
+            UniqueTurnoverSelectorModalView selectorView = new UniqueTurnoverSelectorModalView(uniqueTurnoverCrudService);
+            selectorView.setSelectionCallback(this::addSelectedTurnoverToTable);
+
+            Stage modalStage = stageBuilderProvider.get()
+                                                   .withFXMLResource(UNIQUE_TURNOVER_SELECTOR_MODAL.toString())
+                                                   .withModality(Modality.APPLICATION_MODAL)
+                                                   .withOwner(Window.getWindows().getFirst())
+                                                   .withTitle(languageManager.get("billingDV.modal.selectTurnover"))
+                                                   .minSize(650, 500)
+                                                   .withView(selectorView)
+                                                   .build()
+                                                   .stage();
+            selectorView.setStage(modalStage);
+            modalStage.showAndWait();
+        } catch (IOException e) {
+            StackTraceAlert.createAndLog("Modal konnte nicht geöffnet werden", e).showAndWait();
+        }
+    }
+
+    private void addSelectedTurnoverToTable(SimplifiedUniqueTurnoverDTO turnover) {
+        // Überprüfen, ob der Umsatz bereits in der Tabelle vorhanden ist
+        boolean alreadyExists = turnoverTable.getItems().stream().anyMatch(t -> Objects.equals(t.getId(), turnover.getId()));
+        if (!alreadyExists) {
+            turnoverTable.getItems().add(turnover);
+            beanAdapter.setDirty(true);
+            updateTotalTable();
+        }
+    }
+
+    private void updateTotalTable() {
+        double totalValue = turnoverTable.getItems()
+                                         .stream()
+                                         .mapToDouble(SimplifiedUniqueTurnoverDTO::getTotalValue)
+                                         .sum();
+        totalTable.getItems().clear();
+        totalTable.getItems().add(new SimplifiedUniqueTurnoverDTO(-1, languageManager.get("billingDV.label.total"), null, totalValue));
     }
 }
+

@@ -3,6 +3,11 @@ package timkodiert.budgetbook.domain.repository;
 import java.util.Collection;
 import java.util.List;
 
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import org.hibernate.Session;
+
+import timkodiert.budgetbook.domain.util.CriteriaContext;
 import timkodiert.budgetbook.domain.util.EntityManager;
 
 public abstract class Repository<T> {
@@ -45,5 +50,16 @@ public abstract class Repository<T> {
 
     public void remove(Collection<T> entities) {
         entities.forEach(this.entityManager::remove);
+    }
+
+    protected CriteriaContext<T> getQueryContext() {
+        Session session = entityManager.getSession();
+        CriteriaQuery<T> criteriaQuery = session.getCriteriaBuilder().createQuery(entityType);
+        Root<T> root = criteriaQuery.from(entityType);
+        return new CriteriaContext<>(criteriaQuery, session.getCriteriaBuilder(), root);
+    }
+
+    protected List<T> executeQuery(CriteriaQuery<T> criteriaQuery, int limit) {
+        return entityManager.getSession().createQuery(criteriaQuery).setMaxResults(limit).getResultList();
     }
 }
