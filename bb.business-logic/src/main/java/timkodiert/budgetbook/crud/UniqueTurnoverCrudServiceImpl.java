@@ -18,6 +18,7 @@ import timkodiert.budgetbook.domain.model.UniqueTurnover;
 import timkodiert.budgetbook.domain.model.UniqueTurnoverInformation;
 import timkodiert.budgetbook.domain.repository.UniqueExpenseInformationRepository;
 import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
+import timkodiert.budgetbook.representation.RowType;
 
 import static timkodiert.budgetbook.util.ObjectUtils.nvl;
 
@@ -50,7 +51,7 @@ public class UniqueTurnoverCrudServiceImpl implements UniqueTurnoverCrudService 
     public List<SimplifiedUniqueTurnoverDTO> readSortedByDateDesc(int limit) {
         return uniqueTurnoverRepository.findByLimitSortedByDateDesc(limit)
                                        .stream()
-                                       .map(ut -> new SimplifiedUniqueTurnoverDTO(ut.getId(), ut.getBiller(), ut.getDate(), ut.getTotalValue()))
+                                       .map(ut -> new SimplifiedUniqueTurnoverDTO(ut.getId(), ut.getBiller(), ut.getDate(), ut.getTotalValue(), RowType.DEFAULT))
                                        .toList();
     }
 

@@ -24,6 +24,7 @@ import lombok.Setter;
 import timkodiert.budgetbook.domain.SimplifiedUniqueTurnoverDTO;
 import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
+import timkodiert.budgetbook.table.cell.DateTableCell;
 import timkodiert.budgetbook.view.View;
 
 public class UniqueTurnoverSelectorModalView implements View, Initializable {
@@ -43,7 +44,7 @@ public class UniqueTurnoverSelectorModalView implements View, Initializable {
     @FXML
     private TableColumn<SimplifiedUniqueTurnoverDTO, String> billerColumn;
     @FXML
-    private TableColumn<SimplifiedUniqueTurnoverDTO, String> dateColumn;
+    private TableColumn<SimplifiedUniqueTurnoverDTO, LocalDate> dateColumn;
     @FXML
     private TableColumn<SimplifiedUniqueTurnoverDTO, Double> valueColumn;
 
@@ -70,6 +71,7 @@ public class UniqueTurnoverSelectorModalView implements View, Initializable {
         // Tabelle konfigurieren
         billerColumn.setCellValueFactory(new PropertyValueFactory<>("biller"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateColumn.setCellFactory(col -> new DateTableCell<>());
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
         valueColumn.setCellFactory(col -> new CurrencyTableCell<>());
         turnoverTable.getStyleClass().addAll(Styles.BORDERED);

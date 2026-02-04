@@ -55,7 +55,7 @@
                 </VBox>
                 <HBox spacing="10.0" GridPane.rowIndex="2">
                     <Button fx:id="addTurnoverButton" mnemonicParsing="false" onAction="#addTurnover" text="%button.add"/>
-                    <Button fx:id="removeTurnoverButton" mnemonicParsing="false" text="%button.remove"/>
+                    <Button fx:id="removeTurnoverButton" mnemonicParsing="false" onAction="#removeTurnover" text="%button.remove"/>
                 </HBox>
                 <columnConstraints>
                     <ColumnConstraints hgrow="ALWAYS"/>

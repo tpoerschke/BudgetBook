@@ -16,9 +16,6 @@ public class SimplifiedUniqueTurnoverDTO implements HasRowType {
     private String biller;
     private LocalDate date;
     private double totalValue;
-
-    @Override
-    public RowType getRowType() {
-        return RowType.SUM;
-    }
+    private RowType rowType;
+    
 }

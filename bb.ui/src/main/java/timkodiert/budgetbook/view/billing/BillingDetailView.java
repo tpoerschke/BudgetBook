@@ -11,6 +11,7 @@ import javax.inject.Provider;
 
 import atlantafx.base.theme.Styles;
 import jakarta.inject.Inject;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,6 +32,7 @@ import timkodiert.budgetbook.domain.BillingDTO;
 import timkodiert.budgetbook.domain.SimplifiedUniqueTurnoverDTO;
 import timkodiert.budgetbook.domain.UniqueTurnoverCrudService;
 import timkodiert.budgetbook.i18n.LanguageManager;
+import timkodiert.budgetbook.representation.RowType;
 import timkodiert.budgetbook.table.cell.CurrencyTableCell;
 import timkodiert.budgetbook.table.cell.DateTableCell;
 import timkodiert.budgetbook.util.StageBuilder;
@@ -100,18 +102,15 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
         saveButton.disableProperty().bind(beanAdapter.dirty().not());
         discardButton.disableProperty().bind(beanAdapter.dirty().not());
 
-        titleTextField.textProperty().bindBidirectional(beanAdapter.getProperty(BillingDTO::getTitle, BillingDTO::setTitle));
+        removeTurnoverButton.disableProperty().bind(turnoverTable.getSelectionModel().selectedItemProperty().isNull());
 
         // Tabelle konfigurieren
         initializeTable();
 
-        turnoverTable.getItems().add(new SimplifiedUniqueTurnoverDTO(-1, "Edeka", LocalDate.now(), -1990));
-        turnoverTable.getItems().add(new SimplifiedUniqueTurnoverDTO(-1, "Eisdiele", null, -250));
-        totalTable.getItems().add(new SimplifiedUniqueTurnoverDTO(-1, "Insgesamt", null, -999999));
-
         // Bindings
-        //        Bindings.bindContentBidirectional(turnoverTable.getItems(),
-        //                                          beanAdapter.getListProperty(BillingDTO::getUniqueTurnovers, BillingDTO::setUniqueTurnovers));
+        titleTextField.textProperty().bindBidirectional(beanAdapter.getProperty(BillingDTO::getTitle, BillingDTO::setTitle));
+        Bindings.bindContentBidirectional(turnoverTable.getItems(),
+                                          beanAdapter.getListProperty(BillingDTO::getUniqueTurnovers, BillingDTO::setUniqueTurnovers));
 
         // Validierungen
         validationMap.put("title", titleTextField);
@@ -130,6 +129,11 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
         totalDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         totalValueColumn.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
         totalValueColumn.setCellFactory(col -> new CurrencyTableCell<>());
+    }
+
+    @Override
+    protected void beanSet() {
+        updateTotalTable();
     }
 
     @Override
@@ -190,8 +194,17 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
         }
     }
 
+    @FXML
+    private void removeTurnover() {
+        SimplifiedUniqueTurnoverDTO selectedTurnover = turnoverTable.getSelectionModel().getSelectedItem();
+        if (selectedTurnover != null) {
+            turnoverTable.getItems().remove(selectedTurnover);
+            beanAdapter.setDirty(true);
+            updateTotalTable();
+        }
+    }
+
     private void addSelectedTurnoverToTable(SimplifiedUniqueTurnoverDTO turnover) {
-        // Überprüfen, ob der Umsatz bereits in der Tabelle vorhanden ist
         boolean alreadyExists = turnoverTable.getItems().stream().anyMatch(t -> Objects.equals(t.getId(), turnover.getId()));
         if (!alreadyExists) {
             turnoverTable.getItems().add(turnover);
@@ -206,7 +219,7 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
                                          .mapToDouble(SimplifiedUniqueTurnoverDTO::getTotalValue)
                                          .sum();
         totalTable.getItems().clear();
-        totalTable.getItems().add(new SimplifiedUniqueTurnoverDTO(-1, languageManager.get("billingDV.label.total"), null, totalValue));
+        totalTable.getItems().add(new SimplifiedUniqueTurnoverDTO(-1, languageManager.get("billingDV.label.total"), null, totalValue, RowType.TOTAL_SUM));
     }
 }
 

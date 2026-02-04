@@ -9,16 +9,17 @@ import timkodiert.budgetbook.domain.BillingCrudService;
 import timkodiert.budgetbook.domain.BillingDTO;
 import timkodiert.budgetbook.domain.model.Billing;
 import timkodiert.budgetbook.domain.repository.Repository;
+import timkodiert.budgetbook.domain.repository.UniqueExpensesRepository;
 
 public class BillingCrudServiceImpl implements BillingCrudService {
 
     private final Repository<Billing> billingRepository;
-    private final ReferenceResolver referenceResolver;
+    private final UniqueExpensesRepository uniqueTurnoverRepository;
 
     @Inject
-    public BillingCrudServiceImpl(Repository<Billing> billingRepository, ReferenceResolver referenceResolver) {
+    public BillingCrudServiceImpl(Repository<Billing> billingRepository, UniqueExpensesRepository uniqueTurnoverRepository) {
         this.billingRepository = billingRepository;
-        this.referenceResolver = referenceResolver;
+        this.uniqueTurnoverRepository = uniqueTurnoverRepository;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class BillingCrudServiceImpl implements BillingCrudService {
     public boolean create(BillingDTO billingDTO) {
         Billing billing = new Billing();
         BillingMapper mapper = Mappers.getMapper(BillingMapper.class);
-        mapper.updateBilling(billingDTO, billing, referenceResolver);
+        mapper.updateBilling(billingDTO, billing, uniqueTurnoverRepository);
         billingRepository.persist(billing);
         return true;
     }
@@ -46,7 +47,7 @@ public class BillingCrudServiceImpl implements BillingCrudService {
     public boolean update(BillingDTO billingDTO) {
         Billing billing = billingRepository.findById(billingDTO.getId());
         BillingMapper mapper = Mappers.getMapper(BillingMapper.class);
-        mapper.updateBilling(billingDTO, billing, referenceResolver);
+        mapper.updateBilling(billingDTO, billing, uniqueTurnoverRepository);
         billingRepository.merge(billing);
         return true;
     }
