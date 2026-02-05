@@ -1,16 +1,16 @@
 package timkodiert.budgetbook.table.cell;
 
+import java.time.LocalDate;
+
 import javafx.scene.control.TableCell;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import timkodiert.budgetbook.converter.Converters;
 
-public class DateTableCell<S, T extends LocalDate> extends TableCell<S, T> {
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+public class DateTableCell<S> extends TableCell<S, LocalDate> {
 
     @Override
-    protected void updateItem(T item, boolean empty) {
+    protected void updateItem(LocalDate item, boolean empty) {
         super.updateItem(item, empty);
-        setText(item == null ? "" : formatter.format(item));
+        setText(item == null ? "" : Converters.get(LocalDate.class).toString(item));
     }
 }

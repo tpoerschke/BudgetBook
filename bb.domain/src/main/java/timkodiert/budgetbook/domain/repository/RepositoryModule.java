@@ -4,6 +4,7 @@ import dagger.Binds;
 import dagger.Module;
 
 import timkodiert.budgetbook.domain.model.AccountTurnover;
+import timkodiert.budgetbook.domain.model.Billing;
 import timkodiert.budgetbook.domain.model.Category;
 import timkodiert.budgetbook.domain.model.CategoryGroup;
 import timkodiert.budgetbook.domain.model.FixedTurnover;
@@ -38,4 +39,7 @@ public interface RepositoryModule {
 
     @Binds
     Repository<ImportRule> provideImportRulesRepository(ImportRulesRepository impl);
+
+    @Binds
+    Repository<Billing> provideBillingRepository(BillingRepository impl);
 }

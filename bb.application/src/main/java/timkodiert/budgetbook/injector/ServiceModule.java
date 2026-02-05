@@ -16,10 +16,12 @@ import timkodiert.budgetbook.annual_overview.AnnualOverviewService;
 import timkodiert.budgetbook.annual_overview.AnnualOverviewServiceImpl;
 import timkodiert.budgetbook.budget.BudgetService;
 import timkodiert.budgetbook.budget.BudgetServiceImpl;
+import timkodiert.budgetbook.crud.BillingCrudServiceImpl;
 import timkodiert.budgetbook.crud.CategoryCrudServiceImpl;
 import timkodiert.budgetbook.crud.CategoryGroupCrudServiceImpl;
 import timkodiert.budgetbook.crud.FixedTurnoverCrudServiceImpl;
 import timkodiert.budgetbook.crud.UniqueTurnoverCrudServiceImpl;
+import timkodiert.budgetbook.domain.BillingCrudService;
 import timkodiert.budgetbook.domain.CategoryCrudService;
 import timkodiert.budgetbook.domain.CategoryGroupCrudService;
 import timkodiert.budgetbook.domain.FixedTurnoverCrudService;
@@ -56,6 +58,7 @@ public interface ServiceModule {
     @Binds UniqueTurnoverCrudService bindUniqueTurnoverCrudService(UniqueTurnoverCrudServiceImpl impl);
     @Binds CategoryCrudService bindCategoryCrudService(CategoryCrudServiceImpl impl);
     @Binds CategoryGroupCrudService bindCategoryGroupCrudService(CategoryGroupCrudServiceImpl impl);
+    @Binds BillingCrudService bindBillingCrudService(BillingCrudServiceImpl impl);
 
     @Binds MonthlyOverviewService bindMonthlyOverviewService(MonthlyOverviewServiceImpl impl);
     @Binds BudgetService bindBudgetService(BudgetServiceImpl impl);

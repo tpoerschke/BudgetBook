@@ -38,6 +38,7 @@
         <mapping class="timkodiert.budgetbook.domain.model.CategoryGroup"/>
         <mapping class="timkodiert.budgetbook.domain.model.UniqueTurnover" />
         <mapping class="timkodiert.budgetbook.domain.model.UniqueTurnoverInformation" />
+        <mapping class="timkodiert.budgetbook.domain.model.Billing"/>
         <mapping class="timkodiert.budgetbook.domain.model.AccountTurnover"/>
         <mapping class="timkodiert.budgetbook.domain.model.ImportRule"/>
 

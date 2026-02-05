@@ -5,6 +5,7 @@ import javax.inject.Inject;
 
 import timkodiert.budgetbook.domain.model.MonthYear;
 import timkodiert.budgetbook.domain.model.UniqueTurnover;
+import timkodiert.budgetbook.domain.model.UniqueTurnover_;
 import timkodiert.budgetbook.domain.util.EntityManager;
 
 public class UniqueExpensesRepository extends Repository<UniqueTurnover> {
@@ -26,5 +27,13 @@ public class UniqueExpensesRepository extends Repository<UniqueTurnover> {
                         .filter(exp -> exp.getFixedTurnover() == null)
                         .filter(exp -> exp.getDate().getYear() == year)
                         .toList();
+    }
+
+    public List<UniqueTurnover> findByLimitSortedByDateDesc(int limit) {
+        var context = getQueryContext();
+        var root = context.root();
+        var query = context.query();
+        query.select(root).orderBy(context.criteriaBuilder().desc(root.get(UniqueTurnover_.date)));
+        return executeQuery(query, limit);
     }
 }
