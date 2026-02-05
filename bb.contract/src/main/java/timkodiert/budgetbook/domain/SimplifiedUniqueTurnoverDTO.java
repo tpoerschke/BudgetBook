@@ -15,7 +15,7 @@ public class SimplifiedUniqueTurnoverDTO implements HasRowType {
     private int id;
     private String biller;
     private LocalDate date;
-    private double totalValue;
+    private int totalValue;
     private RowType rowType;
     
 }

@@ -109,6 +109,7 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
 
         // Bindings
         titleTextField.textProperty().bindBidirectional(beanAdapter.getProperty(BillingDTO::getTitle, BillingDTO::setTitle));
+        descriptionTextArea.textProperty().bindBidirectional(beanAdapter.getProperty(BillingDTO::getDescription, BillingDTO::setDescription));
         Bindings.bindContentBidirectional(turnoverTable.getItems(),
                                           beanAdapter.getListProperty(BillingDTO::getUniqueTurnovers, BillingDTO::setUniqueTurnovers));
 
@@ -124,6 +125,7 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
         valueColumn.setCellFactory(col -> new CurrencyTableCell<>());
         turnoverTable.getStyleClass().addAll(Styles.BORDERED);
+        turnoverTable.getSortOrder().add(dateColumn);
 
         totalBillerColumn.setCellValueFactory(new PropertyValueFactory<>("biller"));
         totalDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -133,6 +135,7 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
 
     @Override
     protected void beanSet() {
+        turnoverTable.sort();
         updateTotalTable();
     }
 
@@ -200,6 +203,7 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
         if (selectedTurnover != null) {
             turnoverTable.getItems().remove(selectedTurnover);
             beanAdapter.setDirty(true);
+            turnoverTable.sort();
             updateTotalTable();
         }
     }
@@ -209,15 +213,13 @@ public class BillingDetailView extends EntityBaseDetailView<BillingDTO> implemen
         if (!alreadyExists) {
             turnoverTable.getItems().add(turnover);
             beanAdapter.setDirty(true);
+            turnoverTable.sort();
             updateTotalTable();
         }
     }
 
     private void updateTotalTable() {
-        double totalValue = turnoverTable.getItems()
-                                         .stream()
-                                         .mapToDouble(SimplifiedUniqueTurnoverDTO::getTotalValue)
-                                         .sum();
+        int totalValue = beanAdapter.getBean().getTotalValue();
         totalTable.getItems().clear();
         totalTable.getItems().add(new SimplifiedUniqueTurnoverDTO(-1, languageManager.get("billingDV.label.total"), null, totalValue, RowType.TOTAL_SUM));
     }

@@ -29,11 +29,11 @@
                     <TextArea fx:id="descriptionTextArea"/>
                 </VBox>
                 <VBox GridPane.vgrow="ALWAYS" GridPane.rowIndex="1">
-                    <TableView fx:id="turnoverTable" prefHeight="400.0">
+                    <TableView fx:id="turnoverTable" prefHeight="400.0" minWidth="610.0">
                         <columns>
-                            <TableColumn fx:id="billerColumn" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false"
+                            <TableColumn fx:id="billerColumn" editable="false" minWidth="-Infinity" prefWidth="350.0" sortable="false"
                                          text="%BillingDV.column.biller"/>
-                            <TableColumn fx:id="dateColumn" editable="false" minWidth="-Infinity" prefWidth="150.0" sortable="false"
+                            <TableColumn fx:id="dateColumn" editable="false" minWidth="-Infinity" prefWidth="90.0" sortable="false"
                                          text="%BillingDV.column.date"/>
                             <TableColumn fx:id="valueColumn" editable="false" minWidth="-Infinity" prefWidth="150.0" sortable="false"
                                          text="%BillingDV.column.totalValue"/>
@@ -41,9 +41,9 @@
                     </TableView>
                     <TableView fx:id="totalTable" prefHeight="44.0">
                         <columns>
-                            <TableColumn fx:id="totalBillerColumn" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false"
+                            <TableColumn fx:id="totalBillerColumn" editable="false" minWidth="-Infinity" prefWidth="350.0" sortable="false"
                                          text="%BillingDV.column.biller"/>
-                            <TableColumn fx:id="totalDateColumn" editable="false" minWidth="-Infinity" prefWidth="150.0" sortable="false"
+                            <TableColumn fx:id="totalDateColumn" editable="false" minWidth="-Infinity" prefWidth="90.0" sortable="false"
                                          text="%BillingDV.column.date"/>
                             <TableColumn fx:id="totalValueColumn" editable="false" minWidth="-Infinity" prefWidth="150.0" sortable="false"
                                          text="%BillingDV.column.totalValue"/>
@@ -59,7 +59,7 @@
                 </HBox>
                 <columnConstraints>
                     <ColumnConstraints hgrow="ALWAYS"/>
-                    <ColumnConstraints minWidth="300" prefWidth="300"/>
+                    <ColumnConstraints minWidth="350" prefWidth="400"/>
                 </columnConstraints>
                 <rowConstraints>
                     <RowConstraints/>

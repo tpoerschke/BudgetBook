@@ -1,5 +1,6 @@
 package timkodiert.budgetbook.converter;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class Converters {
     }
 
     public void register() {
+        CONVERTER_MAP.put(LocalDate.class, new LocalDateStringConverter());
         CONVERTER_MAP.put(TurnoverDirection.class, new EnumStringConverter<>(languageManager));
         CONVERTER_MAP.put(PaymentType.class, new EnumStringConverter<>(languageManager));
         CONVERTER_MAP.put(CategoryGroupDTO.class, new CategoryGroupStringConverter());

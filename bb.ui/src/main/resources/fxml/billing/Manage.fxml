@@ -29,8 +29,9 @@
         <center>
             <TableView fx:id="entityTable" BorderPane.alignment="CENTER">
                 <columns>
-                    <TableColumn fx:id="titleColumn" editable="false" minWidth="-Infinity" prefWidth="200.0" sortable="false"
-                                 text="%manageBilling.column.title"/>
+                    <TableColumn fx:id="titleColumn" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="%manageBilling.column.title"/>
+                    <TableColumn fx:id="periodColumn" editable="false" minWidth="-Infinity" prefWidth="200.0" sortable="false" text="%manageBilling.column.period"/>
+                    <TableColumn fx:id="totalColumn" editable="false" minWidth="-Infinity" prefWidth="150.0" sortable="false" text="%manageBilling.column.total"/>
                 </columns>
             </TableView>
         </center>
