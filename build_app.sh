@@ -22,12 +22,12 @@ fi
 mkdir target/input
 cp bb.application/target/$MAIN_JAR target/input/$MAIN_JAR
 
+echo "starting JPackage..."
 jpackage --input target/input \
-  --name $APP_NAME \
-  --icon $icon \
-  --app-version 1.0.0 \
-  --main-jar $MAIN_JAR \
-  --type app-image \
+  --name "${APP_NAME}" \
+  --icon "${icon}" \
+  --main-jar "${MAIN_JAR}" \
+  --type msi \
   --verbose
 
 jpackage_status=$?
