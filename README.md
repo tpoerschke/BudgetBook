@@ -151,7 +151,19 @@ Das Projekt kann lokal wie folgt aufgesetzt werden:
 
 ### Bauen 
 
-Mithilfe des Shell-Skripts `build_app.sh` kann die Applikation für das vorliegende Betriebssystem gebaut werden. Untestützt werden MacOS und Linux.
+Mithilfe des Shell-Skripts `build_app.sh` kann die Applikation für das vorliegende Betriebssystem gebaut werden. Unterstützt werden Windows, MacOS und Linux.
+
+#### Windows
+
+Um einen Windows-Installer lokal bauen zu können, werden folgende Packages vorausgesetzt:
+
+- Wix-Toolset
+
+#### Linux (RPM)
+
+Um eine rpm-Datei lokal bauen zu können, werden folgende Packages vorausgesetzt:
+
+- `rpmbuild`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
