@@ -19,7 +19,9 @@ jpackage_win() {
     --app-version "${APP_VERSION}" \
     --dest "${BUILD_DIR}" \
     --type msi \
-    --win-per-user-install
+    --win-dir-chooser \
+    --win-menu \
+    --win-shortcut \
     --verbose
 }
 
