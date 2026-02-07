@@ -14,7 +14,7 @@ jpackage_win() {
   echo "starting JPackage..."
   jpackage --input target/input \
     --name "${APP_NAME}" \
-    --icon "${icon}" \
+    --icon "images/app-icon.ico" \
     --main-jar "${MAIN_JAR}" \
     --app-version "${APP_VERSION}" \
     --dest "${BUILD_DIR}" \
@@ -29,10 +29,13 @@ jpackage_linux_rpm() {
   echo "starting JPackage..."
   jpackage --input target/input \
     --name "${APP_NAME}" \
-    --icon "${icon}" \
+    --icon "images/app-icon.png" \
     --main-jar "${MAIN_JAR}" \
     --app-version "${APP_VERSION}" \
-    --type msi \
+    --dest "${BUILD_DIR}" \
+    --type "rpm" \
+    --linux-menu-group "Office" \
+    --linux-shortcut \
     --verbose
 }
 
@@ -56,38 +59,24 @@ make_build_dir_and_copy_target() {
 
 main() {
   clean_output_dir
-  # run_maven_build
+  run_maven_build
   make_build_dir_and_copy_target
 
 
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Linux
-    icon="images/app-icon.png"
     jpackage_linux_rpm
   elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Mac OSX
     icon="images/mac-icon.icns"
   elif [[ "$OSTYPE" == "msys" ]]; then
     # Windows (MinGW / git bash)
-    icon="images/app-icon.ico"
     jpackage_win
   fi
 
   jpackage_status=$?
   if [ $jpackage_status -eq 0 ]; then
     exit 0
-  fi
-
-  if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    cp "platform/linux/install.sh" $APP_NAME/
-    cp ".env" $APP_NAME/
-    tar_name="$APP_NAME.tar.gz"
-    rm -rf $tar_name
-    tar -czf $tar_name $APP_NAME
-  elif [[ "$OSTYPE" == "darwin"* ]]; then
-    echo
-  elif [[ "$OSTYPE" == "msys" ]]; then
-    echo
   fi
 
   echo "Clean up..."
