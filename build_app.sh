@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 source .env
+LIB_DIR="lib/"
 
-rm -rf $APP_NAME
 mvn clean package || {
   echo "\n   (╯°□°）╯︵ ┻━┻\n"
   exit 1
@@ -19,14 +19,19 @@ elif [[ "$OSTYPE" == "msys" ]]; then
   echo # Windows (MinGW / git bash)
 fi
 
-mkdir target/input
+mkdir target/input/
+mkdir target/input/$LIB_DIR
 cp bb.application/target/$MAIN_JAR target/input/$MAIN_JAR
+cp bb.application/target/$LIB_DIR* target/input/$LIB_DIR
 
 jpackage --input target/input \
   --name $APP_NAME \
   --icon $icon \
   --app-version 1.0.0 \
   --main-jar $MAIN_JAR \
+  --java-options "--module-path \$APPDIR/$LIB_DIR" \
+  --java-options "--add-modules=javafx.controls,javafx.fxml,javafx.swing" \
+  --java-options "--add-reads=org.xerial.sqlitejdbc=ALL-UNNAMED" \
   --type app-image \
   --verbose
 
