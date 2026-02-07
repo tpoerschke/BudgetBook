@@ -62,13 +62,14 @@ main() {
 
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Linux
-    icon="images/icon-linux.png"
+    icon="images/app-icon.png"
     jpackage_linux_rpm
   elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Mac OSX
     icon="images/mac-icon.icns"
   elif [[ "$OSTYPE" == "msys" ]]; then
     # Windows (MinGW / git bash)
+    icon="images/app-icon.ico"
     jpackage_win
   fi
 
