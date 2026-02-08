@@ -1,0 +1,73 @@
+name: "Release on tag"
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Maven build
+        run: mvn -B clean install -DskipTests
+        shell: bash
+
+      - name: Run build_app.sh
+        run: bash build_app.sh
+        shell: bash
+
+      - name: Collect built executables/packages
+        run: |
+          mkdir -p release_artifacts
+          cp -r BUILD/* release_artifacts/ 2>/dev/null || true
+          find . -maxdepth 6 -type f \( -name "*.msi" -o -name "*.rpm" -o -name "*.tar.gz" -o -name "*.zip" -o -name "*.dmg" -o -name "*.pkg" -o -name "*.exe" \) -print0 | xargs -0 -I{} cp {} release_artifacts/ || true
+          ls -la release_artifacts || true
+        shell: bash
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: release-artifacts-${{ matrix.os }}
+          path: release_artifacts
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: all_artifacts
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
+          body: "Automated release for ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "all_artifacts/**"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
