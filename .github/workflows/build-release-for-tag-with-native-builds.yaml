@@ -12,7 +12,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [fedora-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +23,13 @@ jobs:
           distribution: corretto
           java-version: '21'
           cache: maven
+
+      - name: Install Dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y fakeroot rpm
+      - name: Install WiX
+        if: matrix.os == 'windows-latest'
+        run: choco install wixtoolset --yes
 
       - name: Maven build
         run: mvn -B clean install -DskipTests
@@ -44,6 +51,11 @@ jobs:
         with:
           name: release-artifacts-${{ matrix.os }}
           path: release_artifacts
+
+      - name: Install WiX Toolset (Windows)
+        if: runner.os == 'Windows'
+        run: choco install wixtoolset -y
+        shell: powershell
 
   release:
     needs: build
