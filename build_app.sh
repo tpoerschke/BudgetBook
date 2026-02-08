@@ -39,6 +39,18 @@ jpackage_linux_rpm() {
     --verbose
 }
 
+jpackage_mac() {
+  echo "starting JPackage..."
+  jpackage --input target/input \
+    --name "${APP_NAME}" \
+    --icon "images/mac-icon.icns" \
+    --main-jar "${MAIN_JAR}" \
+    --app-version "${APP_VERSION}" \
+    --dest "${BUILD_DIR}" \
+    --type dmg \
+    --verbose
+}
+
 clean_output_dir() {
   rm -rf $BUILD_DIR
 }
@@ -68,7 +80,7 @@ main() {
     jpackage_linux_rpm
   elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Mac OSX
-    icon="images/mac-icon.icns"
+    jpackage_mac
   elif [[ "$OSTYPE" == "msys" ]]; then
     # Windows (MinGW / git bash)
     jpackage_win
