@@ -47,7 +47,7 @@ jobs:
           ls -la release_artifacts || true
         shell: bash
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: release-artifacts-${{ matrix.os }}
           path: release_artifacts
