@@ -48,6 +48,7 @@ jpackage_mac() {
     --app-version "$(echo "$APP_VERSION" | awk -F. '{ $1=($1<1?100:$1); print $1"."$2"."$3 }')" \
     --dest "${BUILD_DIR}" \
     --type dmg \
+    --mac-app-category "finance" \
     --verbose
 }
 
