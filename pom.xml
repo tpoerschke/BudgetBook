@@ -62,7 +62,7 @@
   </modules>
 
   <scm>
-    <developerConnection>https://github.com/tpoerschke/BudgetBook.git</developerConnection>
+    <developerConnection>scm:git:https://github.com/tpoerschke/BudgetBook.git</developerConnection>
   </scm>
 
   <build>
