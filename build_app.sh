@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 source .env
-APP_VERSION="${APP_VERSION//BETA-/0.}"
-echo ${APP_VERSION}
+APP_VERSION=$(echo "$APP_VERSION" | cut -d'-' -f1) # Suffixe wie -SNAPSHOT oder -RC1 werden abgeschnitten
+echo "Cleaned version string: $APP_VERSION"
 
 BUILD_DIR="./BUILD"
 
