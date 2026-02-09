@@ -61,6 +61,10 @@
     <module>bb.contract</module>
   </modules>
 
+  <scm>
+    <developerConnection>https://github.com/tpoerschke/BudgetBook.git</developerConnection>
+  </scm>
+
   <build>
     <plugins>
       <plugin>
