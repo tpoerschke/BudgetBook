@@ -27,10 +27,10 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <outputDirectory>src/main/resources/licenses</outputDirectory>
               <resources>
                 <resource>
-                  <directory>../target/licence</directory>
+                  <directory>../target/generated-sources/license</directory>
                   <includes>
                     <include>BB-THIRD-PARTY.txt</include>
                   </includes>
