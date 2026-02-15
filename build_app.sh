@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 source .env
+LIB_DIR="lib/"
+
 APP_VERSION=$(echo "$APP_VERSION" | cut -d'-' -f1) # Suffixe wie -SNAPSHOT oder -RC1 werden abgeschnitten
 echo "Cleaned version string: $APP_VERSION"
 
@@ -18,6 +20,9 @@ jpackage_win() {
     --main-jar "${MAIN_JAR}" \
     --app-version "${APP_VERSION}" \
     --dest "${BUILD_DIR}" \
+    --java-options "--module-path \$APPDIR/$LIB_DIR" \
+    --java-options "--add-modules=javafx.controls,javafx.fxml,javafx.swing" \
+    --java-options "--add-reads=org.xerial.sqlitejdbc=ALL-UNNAMED" \
     --type msi \
     --win-dir-chooser \
     --win-menu \
@@ -33,6 +38,9 @@ jpackage_linux_rpm() {
     --main-jar "${MAIN_JAR}" \
     --app-version "${APP_VERSION}" \
     --dest "${BUILD_DIR}" \
+    --java-options "--module-path \$APPDIR/$LIB_DIR" \
+    --java-options "--add-modules=javafx.controls,javafx.fxml,javafx.swing" \
+    --java-options "--add-reads=org.xerial.sqlitejdbc=ALL-UNNAMED" \
     --type "rpm" \
     --linux-menu-group "Office" \
     --linux-shortcut \
@@ -47,6 +55,9 @@ jpackage_mac() {
     --main-jar "${MAIN_JAR}" \
     --app-version "$(echo "$APP_VERSION" | awk -F. '{ $1=($1<1?100:$1); print $1"."$2"."$3 }')" \
     --dest "${BUILD_DIR}" \
+    --java-options "--module-path \$APPDIR/$LIB_DIR" \
+    --java-options "--add-modules=javafx.controls,javafx.fxml,javafx.swing" \
+    --java-options "--add-reads=org.xerial.sqlitejdbc=ALL-UNNAMED" \
     --type dmg \
     --mac-app-category "finance" \
     --verbose
@@ -65,7 +76,9 @@ run_maven_build() {
 
 make_build_dir_and_copy_target() {
   mkdir target/input
+  mkdir target/input/$LIB_DIR
   cp bb.application/target/$MAIN_JAR target/input/$MAIN_JAR
+  cp bb.application/target/$LIB_DIR* target/input/$LIB_DIR
 }
 
 # -------- MAIN --------
