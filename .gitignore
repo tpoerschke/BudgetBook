@@ -13,6 +13,11 @@ JBudgetBook.tar.gz
 env.tex
 BB-THIRD-PARTY.txt
 
+# Maven Release-Plugin
+release.properties
+pom.xml.*
+
 .idea/ClojureProjectResolveSettings.xml
 .idea/sonarlint.xml
 .idea/copilot.*
+/BUILD
