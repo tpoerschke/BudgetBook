@@ -6,17 +6,14 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Attach",
-            "request": "attach",
-            "hostName": "localhost",
-            "port": "8001"
-        },
-        {
-            "type": "java",
-            "name": "Launch",
+            "name": "Debug BB",
             "request": "launch",
-            "mainClass": "timkodiert.budgetBook.Launch",
-            "projectName": "budget-book"
+            "mainClass": "timkodiert.budgetbook.Launch",
+            "vmArgs": "--add-opens javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "java (build): Build Workspace",
+            "console": "integratedTerminal",
+            "stopOnEntry": false
         }
     ]
 }
